@@ -1,0 +1,56 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Card from '@/components/ui/Card.astro';
+
+const metrics = [
+  {
+    value: '95',
+    label: 'Ytelse',
+    description: 'Siden er lynrask',
+  },
+  {
+    value: '<1s',
+    label: 'Lastetid',
+    description: 'Klar på under ett sekund',
+  },
+  {
+    value: '100',
+    label: 'Søkemotor',
+    description: 'Perfekt synlighet i Google',
+  },
+];
+
+const techStack = ['Astro', 'Tailwind CSS', 'TypeScript', 'Vercel'];
+---
+
+<Section>
+  <SectionHeader title="Resultater" subtitle="Tall som viser at siden faktisk fungerer" />
+
+  <!-- Metrics Grid -->
+  <div class="grid gap-6 md:grid-cols-3">
+    {
+      metrics.map((metric, index) => (
+        <Card padding="lg" class={`reveal-on-scroll reveal-delay-${index + 1} text-center`}>
+          <div class="text-4xl font-bold text-brand md:text-5xl">{metric.value}</div>
+          <div class="mt-2 text-lg font-medium">{metric.label}</div>
+          <div class="mt-1 text-sm text-text-muted">{metric.description}</div>
+        </Card>
+      ))
+    }
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="reveal-on-scroll reveal-delay-4 mt-16 text-center">
+    <h3 class="text-lg font-medium text-text-muted">Bygget med</h3>
+    <div class="mt-4 flex flex-wrap justify-center gap-3">
+      {
+        techStack.map((tech) => (
+          <span class="rounded-full border border-white/10 bg-surface-raised px-4 py-2 text-sm">
+            {tech}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</Section>

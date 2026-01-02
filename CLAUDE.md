@@ -23,8 +23,8 @@ React and animations are allowed here. This is our portfolio piece.
 |-------|---------|--------|
 | `/` | Homepage - hero, services overview, testimonials, CTA | ✅ Complete |
 | `/tjenester` | What we offer, pricing tiers | ✅ Complete |
-| `/om-oss` | About Nettup, values, how we work | Not started |
-| `/prosjekter` | Portfolio of client work | Not started |
+| `/om-oss` | About Nettup, values, how we work | ✅ Complete |
+| `/prosjekter` | Portfolio with iGive case study | ✅ Complete (placeholder content) |
 | `/kontakt` | Contact form, location, response time | Not started |
 
 ## Structure
@@ -95,9 +95,8 @@ This is our showcase, so animations should be polished:
 
 ## Current Tasks
 
-1. **Build /om-oss** - Intro, background, approach, values
-2. **Build /prosjekter** - Portfolio with iGive case study
-3. **Build /kontakt** - Contact form (React island), info section
+1. **Build /kontakt** - Contact form (React island), info section
+2. **Fill in /prosjekter content** - Replace placeholder text with real iGive details
 
 ## Don't
 
