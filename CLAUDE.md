@@ -25,7 +25,7 @@ React and animations are allowed here. This is our portfolio piece.
 | `/tjenester` | What we offer, pricing tiers | ✅ Complete |
 | `/om-oss` | About Nettup, values, how we work | ✅ Complete |
 | `/prosjekter` | Portfolio with iGive case study | ✅ Complete (placeholder content) |
-| `/kontakt` | Contact form, location, response time | Not started |
+| `/kontakt` | Contact form, response time | ✅ Complete (needs Formspree ID) |
 
 ## Structure
 
@@ -95,7 +95,7 @@ This is our showcase, so animations should be polished:
 
 ## Current Tasks
 
-1. **Build /kontakt** - Contact form (React island), info section
+1. **Add Formspree ID** - Replace `YOUR_FORM_ID` in ContactForm.tsx with real Formspree form ID
 2. **Fill in /prosjekter content** - Replace placeholder text with real iGive details
 
 ## Don't

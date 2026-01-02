@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+
+import Hero from './_sections/Hero.astro';
+import ContactForm from './_sections/ContactForm.tsx';
+import AlternativeContact from './_sections/AlternativeContact.astro';
+---
+
+<BaseLayout
+  title="Kontakt | Nettup"
+  description="Ta kontakt med Nettup. Vi svarer innen 24 timer. La oss snakke om din nettside."
+>
+  <main>
+    <Hero />
+    <Section>
+      <ContactForm client:load />
+    </Section>
+    <AlternativeContact />
+  </main>
+</BaseLayout>
