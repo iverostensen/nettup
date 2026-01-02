@@ -1,0 +1,20 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+import Hero from './_sections/Hero.astro';
+import Values from './_sections/Values.astro';
+import Approach from './_sections/Approach.astro';
+import CTA from '@/components/sections/CTA.astro';
+---
+
+<BaseLayout
+  title="Om Nettup | Nettup"
+  description="Vi så at norske småbedrifter slet med dyre byråer og trege prosesser. Derfor startet vi Nettup."
+>
+  <main>
+    <Hero />
+    <Values />
+    <Approach />
+    <CTA />
+  </main>
+</BaseLayout>

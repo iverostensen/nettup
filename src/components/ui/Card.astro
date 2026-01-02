@@ -17,7 +17,7 @@ const {
   ...rest
 } = Astro.props;
 
-const paddingSizes = {
+const paddingSizes: Record<NonNullable<Props['padding']>, string> = {
   none: '',
   sm: 'p-4',
   md: 'p-6',

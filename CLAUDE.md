@@ -1,12 +1,12 @@
 # nettup.no
 
-> Nettup's own website. This is our showcase — it should demonstrate what we can build.
+> Nettup's own website. This is our showcase - it should demonstrate what we can build.
 
 ## This Project
 
 **What:** Marketing website for Nettup web agency
 **URL:** nettup.no
-**Tier:** 3 (Expressive) — we can use the full stack here
+**Tier:** 3 (Expressive) - we can use the full stack here
 **Language:** Norwegian (bokmål)
 
 ## Stack
@@ -21,7 +21,7 @@ React and animations are allowed here. This is our portfolio piece.
 
 | Route | Purpose | Status |
 |-------|---------|--------|
-| `/` | Homepage — hero, services overview, testimonials, CTA | ✅ Complete |
+| `/` | Homepage - hero, services overview, testimonials, CTA | ✅ Complete |
 | `/tjenester` | What we offer, pricing tiers | ✅ Complete |
 | `/om-oss` | About Nettup, values, how we work | Not started |
 | `/prosjekter` | Portfolio of client work | Not started |
@@ -78,11 +78,11 @@ npm run preview  # Preview build
 
 ## Rules for This Project
 
-1. **Norwegian content** — all text in Norwegian (bokmål)
-2. **Animations allowed** — this is Tier 3, use Framer Motion where it adds value
-3. **Astro sections first** — but escalate to React when animations need sequencing
-4. **Mobile-first** — design for 375px, enhance for larger
-5. **Fast** — despite animations, LCP < 2s
+1. **Norwegian content** - all text in Norwegian (bokmål)
+2. **Animations allowed** - this is Tier 3, use Framer Motion where it adds value
+3. **Astro sections first** - but escalate to React when animations need sequencing
+4. **Mobile-first** - design for 375px, enhance for larger
+5. **Fast** - despite animations, LCP < 2s
 
 ## Animation Usage
 
@@ -95,9 +95,9 @@ This is our showcase, so animations should be polished:
 
 ## Current Tasks
 
-1. **Build /om-oss** — Intro, background, approach, values
-2. **Build /prosjekter** — Portfolio with iGive case study
-3. **Build /kontakt** — Contact form (React island), info section
+1. **Build /om-oss** - Intro, background, approach, values
+2. **Build /prosjekter** - Portfolio with iGive case study
+3. **Build /kontakt** - Contact form (React island), info section
 
 ## Don't
 
