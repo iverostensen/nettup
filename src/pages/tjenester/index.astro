@@ -1,18 +1,18 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-// Page-specific sections (only used on this page)
-import TjenesterHero from './_sections/TjenesterHero.astro';
+// Page-specific sections
 import Pakker from './_sections/Pakker.astro';
-
-// Shared sections (reused across multiple pages)
-import CTA from '@/components/sections/CTA.astro';
+import Inkludert from './_sections/Inkludert.astro';
+import FAQ from './_sections/FAQ.astro';
+import TjenesterCTA from './_sections/TjenesterCTA.astro';
 ---
 
-<BaseLayout title="Tjenester | Nettup">
+<BaseLayout title="Tjenester og priser | Nettup">
   <main>
-    <TjenesterHero />
     <Pakker />
-    <CTA />
+    <Inkludert />
+    <FAQ />
+    <TjenesterCTA />
   </main>
 </BaseLayout>

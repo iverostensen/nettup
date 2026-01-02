@@ -1,0 +1,45 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Hvor lang tid tar det?',
+    answer: 'De fleste nettsider er ferdige på 1-2 uker, avhengig av hvor raskt du leverer innhold.',
+  },
+  {
+    question: 'Må jeg levere alt innholdet selv?',
+    answer: 'Ja, du leverer tekst og bilder. Vi kan hjelpe med rådgivning og struktur.',
+  },
+  {
+    question: 'Hva med domene og hosting?',
+    answer: 'Domene kjøper du selv (vi hjelper med oppsett). Hosting første år er inkludert i alle pakker.',
+  },
+  {
+    question: 'Kan jeg oppdatere siden selv etterpå?',
+    answer: 'Nettsidene våre er statiske og raske. For hyppige oppdateringer kan vi sette opp en enkel CMS-løsning (tillegg).',
+  },
+  {
+    question: 'Hva dekker månedskostnaden?',
+    answer: 'Hosting, SSL-sertifikat, sikkerhetsoppdateringer og grunnleggende vedlikehold. Månedskostnaden starter fra dag én.',
+  },
+  {
+    question: 'Hva hvis jeg ikke er fornøyd?',
+    answer: 'Vi viser deg siden underveis og tar imot tilbakemeldinger. Du godkjenner før lansering.',
+  },
+];
+---
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class={`reveal-on-scroll py-6 first:pt-0 last:pb-0`}>
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>

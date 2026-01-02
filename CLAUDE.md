@@ -21,8 +21,8 @@ React and animations are allowed here. This is our portfolio piece.
 
 | Route | Purpose | Status |
 |-------|---------|--------|
-| `/` | Homepage — hero, services overview, testimonials, CTA | Skeleton |
-| `/tjenester` | What we offer, pricing tiers | Not started |
+| `/` | Homepage — hero, services overview, testimonials, CTA | ✅ Complete |
+| `/tjenester` | What we offer, pricing tiers | ✅ Complete |
 | `/om-oss` | About Nettup, values, how we work | Not started |
 | `/prosjekter` | Portfolio of client work | Not started |
 | `/kontakt` | Contact form, location, response time | Not started |
@@ -32,18 +32,21 @@ React and animations are allowed here. This is our portfolio piece.
 ```
 src/
 ├── components/
-│   ├── sections/      → Page sections (Astro, some React)
-│   ├── islands/       → React components (forms, carousels)
-│   ├── layout/        → Header, Footer, Navigation
-│   └── ui/            → Buttons, Cards, Inputs
+│   ├── sections/      → Shared sections (CTA, Testimonials)
+│   ├── islands/       → React components (FloatingNav, MobileMenu, forms)
+│   ├── layout/        → Footer
+│   └── ui/            → Button, Card, Section, SectionHeader, LinkWithArrow
 ├── layouts/
 │   └── BaseLayout.astro
 ├── pages/
-│   ├── index.astro
-│   ├── tjenester.astro
-│   ├── om-oss.astro
-│   ├── prosjekter.astro
-│   └── kontakt.astro
+│   ├── index.astro           → Homepage
+│   ├── _home/                → Homepage sections
+│   ├── tjenester/
+│   │   ├── index.astro
+│   │   └── _sections/        → Tjenester sections
+│   └── [other pages]/
+│       ├── index.astro
+│       └── _sections/        → Page-specific sections
 └── styles/
     └── global.css
 ```
@@ -92,7 +95,9 @@ This is our showcase, so animations should be polished:
 
 ## Current Tasks
 
-Check the actual state by reading the files. Update this section as work progresses.
+1. **Build /om-oss** — Intro, background, approach, values
+2. **Build /prosjekter** — Portfolio with iGive case study
+3. **Build /kontakt** — Contact form (React island), info section
 
 ## Don't
 

@@ -1,0 +1,62 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const features = [
+  {
+    title: 'Responsivt design',
+    description: 'Nettsiden ser bra ut på mobil, tablet og desktop.',
+  },
+  {
+    title: 'Rask lasting',
+    description: 'Under 2 sekunder. Besøkende blir, Google liker det.',
+  },
+  {
+    title: 'HTTPS/SSL',
+    description: 'Sikker tilkobling inkludert i alle pakker.',
+  },
+  {
+    title: 'Grunnleggende SEO',
+    description: 'Optimalisert for søkemotorer fra dag én.',
+  },
+  {
+    title: 'Kontaktskjema',
+    description: 'Enkelt for kunder å ta kontakt med deg.',
+  },
+  {
+    title: '30 dagers support',
+    description: 'Vi hjelper deg i gang etter lansering.',
+  },
+];
+---
+
+<Section background="raised">
+  <SectionHeader
+    title="Inkludert i alle pakker"
+    subtitle="Uansett hvilken pakke du velger, får du dette med på kjøpet."
+  />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <div class={`reveal-on-scroll reveal-delay-${(index % 3) + 1}`}>
+          <div class="flex items-start gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-5 w-5 shrink-0 text-brand"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <div>
+              <h3 class="font-semibold">{feature.title}</h3>
+              <p class="mt-1 text-sm text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
