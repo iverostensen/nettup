@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import FloatingNav from '../components/islands/FloatingNav';
+import Footer from '../components/layout/Footer.astro';
 
 interface Props {
   title: string;
@@ -54,6 +55,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <body class="min-h-screen bg-surface text-text antialiased">
     <FloatingNav client:load />
     <slot />
+    <Footer />
 
     <!-- Scroll reveal observer (Level 1 animations) -->
     <script>

@@ -1,0 +1,94 @@
+---
+const currentYear = new Date().getFullYear();
+
+const navLinks = [
+  { name: 'Hjem', href: '/' },
+  { name: 'Tjenester', href: '/tjenester' },
+  { name: 'Om oss', href: '/om-oss' },
+  { name: 'Prosjekter', href: '/prosjekter' },
+  { name: 'Kontakt', href: '/kontakt' },
+];
+---
+
+<footer class="border-t border-white/5 bg-surface">
+  <div class="container mx-auto px-4 py-12 md:py-16">
+    <!-- Main footer content -->
+    <div class="grid gap-10 md:grid-cols-3 md:gap-8">
+      <!-- Logo and tagline -->
+      <div class="space-y-4">
+        <a href="/" class="inline-block transition-opacity hover:opacity-80">
+          <img
+            src="/images/nettup-logo.png"
+            alt="Nettup"
+            class="h-7 w-auto"
+          />
+        </a>
+        <p class="max-w-xs text-sm leading-relaxed text-text-muted">
+          Moderne, raske nettsider for norske bedrifter. Uten stress, uten overpriser.
+        </p>
+      </div>
+
+      <!-- Navigation links -->
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">
+          Sider
+        </h3>
+        <nav class="flex flex-col gap-2">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class="text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- Contact info -->
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">
+          Kontakt
+        </h3>
+        <div class="space-y-3">
+          <a
+            href="mailto:post@nettup.no"
+            class="flex items-center gap-2 text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-4 w-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+              />
+            </svg>
+            post@nettup.no
+          </a>
+          <p class="text-sm text-text-muted">
+            Vi svarer innen 24 timer.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="my-8 h-px bg-white/5"></div>
+
+    <!-- Bottom bar -->
+    <div class="flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
+      <p class="text-xs text-text-muted">
+        &copy; {currentYear} Nettup. Alle rettigheter reservert.
+      </p>
+      <p class="text-xs text-text-muted">
+        Laget med moderne teknologi i Norge.
+      </p>
+    </div>
+  </div>
+</footer>
