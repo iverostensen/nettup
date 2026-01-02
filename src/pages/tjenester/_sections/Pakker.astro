@@ -1,0 +1,105 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Card from '@/components/ui/Card.astro';
+import Button from '@/components/ui/Button.astro';
+
+const pakker = [
+  {
+    name: 'Enkel',
+    description: 'Perfekt for små bedrifter som trenger en profesjonell nettside.',
+    price: '12 000',
+    features: [
+      'Inntil 5 sider',
+      'Responsivt design',
+      'Kontaktskjema',
+      'SEO-optimalisert',
+      'Rask lasting',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Standard',
+    description: 'For bedrifter som vil skille seg ut med mer innhold og funksjonalitet.',
+    price: '24 000',
+    features: [
+      'Inntil 10 sider',
+      'Alt i Enkel-pakken',
+      'Animasjoner og effekter',
+      'Blogg eller nyheter',
+      'Integrasjoner',
+      'CMS for enkel redigering',
+    ],
+    popular: true,
+  },
+  {
+    name: 'Premium',
+    description: 'Skreddersydd løsning for bedrifter med spesielle behov.',
+    price: 'Fra 40 000',
+    features: [
+      'Ubegrenset sider',
+      'Alt i Standard-pakken',
+      'Avansert funksjonalitet',
+      'E-handel eller booking',
+      'Prioritert support',
+      'Vedlikeholdsavtale',
+    ],
+    popular: false,
+  },
+];
+---
+
+<Section>
+  <SectionHeader
+    title="Velg pakken som passer deg"
+    subtitle="Alle pakker inkluderer hosting første år, SSL-sertifikat og grunnleggende opplæring."
+  />
+  <div class="grid gap-8 md:grid-cols-3">
+    {pakker.map((pakke, index) => (
+      <Card
+        padding="none"
+        class={`reveal-on-scroll reveal-delay-${index + 1} relative overflow-hidden ${pakke.popular ? 'ring-2 ring-brand' : ''}`}
+      >
+        {pakke.popular && (
+          <div class="absolute right-0 top-0 rounded-bl-lg bg-brand px-3 py-1 text-sm font-medium text-surface">
+            Mest populær
+          </div>
+        )}
+        <div class="p-8">
+          <h3 class="text-2xl font-bold">{pakke.name}</h3>
+          <p class="mt-2 text-sm text-text-muted">{pakke.description}</p>
+          <div class="mt-6">
+            <span class="text-4xl font-bold">{pakke.price}</span>
+            <span class="text-text-muted"> kr</span>
+          </div>
+          <ul class="mt-6 space-y-3">
+            {pakke.features.map((feature) => (
+              <li class="flex items-start gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="h-5 w-5 shrink-0 text-brand"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                <span class="text-sm text-text-muted">{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-8">
+            <Button
+              href="/kontakt"
+              variant={pakke.popular ? 'primary' : 'secondary'}
+              class="w-full"
+            >
+              Kom i gang
+            </Button>
+          </div>
+        </div>
+      </Card>
+    ))}
+  </div>
+</Section>

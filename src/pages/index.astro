@@ -1,58 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Page-specific sections
+import Hero from './_home/Hero.astro';
+import Problem from './_home/Problem.astro';
+import Solution from './_home/Solution.astro';
+import WhyNettup from './_home/WhyNettup.astro';
+import Process from './_home/Process.astro';
+import ProjectTeaser from './_home/ProjectTeaser.astro';
+
+// Shared sections
+import CTA from '@/components/sections/CTA.astro';
 ---
 
 <BaseLayout title="Nettup | Moderne nettsider for norske bedrifter">
   <main>
-    <!-- Hero Section -->
-    <section class="flex min-h-screen items-center justify-center px-4">
-      <div class="text-center">
-        <h1 class="animate-fade-up text-4xl font-bold md:text-6xl">
-          Nettsider som<br />
-          <span class="text-brand">bare funker.</span>
-        </h1>
-        <p
-          class="animate-fade-up mx-auto mt-6 max-w-2xl text-lg text-text-muted"
-          style="animation-delay: 100ms"
-        >
-          Moderne, raske og profesjonelle nettsider for norske bedrifter.
-        </p>
-        <div class="animate-fade-up mt-8" style="animation-delay: 200ms">
-          <a
-            href="/kontakt"
-            class="inline-block rounded-lg bg-brand px-6 py-3 font-medium text-surface transition-colors hover:bg-brand-light"
-          >
-            Ta kontakt
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="bg-surface-raised py-20">
-      <div class="container">
-        <h2 class="reveal-on-scroll text-center text-3xl font-bold">Hvorfor Nettup?</h2>
-        <div class="mt-12 grid gap-8 md:grid-cols-3">
-          <article class="reveal-on-scroll reveal-delay-1 rounded-lg border border-white/10 bg-surface p-6">
-            <h3 class="text-xl font-semibold">Rask</h3>
-            <p class="mt-2 text-text-muted">
-              Nettsider som laster på under 2 sekunder. Bedre opplevelse, høyere rangering.
-            </p>
-          </article>
-          <article class="reveal-on-scroll reveal-delay-2 rounded-lg border border-white/10 bg-surface p-6">
-            <h3 class="text-xl font-semibold">Moderne</h3>
-            <p class="mt-2 text-text-muted">
-              Design som imponerer kundene dine og skiller deg ut fra konkurrentene.
-            </p>
-          </article>
-          <article class="reveal-on-scroll reveal-delay-3 rounded-lg border border-white/10 bg-surface p-6">
-            <h3 class="text-xl font-semibold">Trygt</h3>
-            <p class="mt-2 text-text-muted">
-              HTTPS, sikker hosting og oppdatert teknologi inkludert i alle prosjekter.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
+    <Hero />
+    <Problem />
+    <Solution />
+    <WhyNettup />
+    <Process />
+    <ProjectTeaser />
+    <CTA />
   </main>
 </BaseLayout>

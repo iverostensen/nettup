@@ -1,0 +1,27 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const painPoints = [
+  'Du har ingen nettside, og vet at du trenger en',
+  'Nettsiden din er utdatert og representerer ikke bedriften din lenger',
+  'Du har fått tilbud på 50 000+ kr og lurer på om det må koste så mye',
+  'Du vil ha noe profesjonelt, men orker ikke masse møter og uklare prosesser',
+];
+---
+
+<Section>
+  <SectionHeader title="Kjenner du deg igjen?" />
+  <div class="mx-auto max-w-2xl space-y-4">
+    {painPoints.map((point, index) => (
+      <div
+        class={`reveal-on-scroll reveal-delay-${index + 1} flex items-start gap-4 rounded-lg border border-white/5 bg-surface-raised/50 p-5`}
+      >
+        <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/10 text-sm text-brand">
+          ?
+        </span>
+        <p class="text-text-muted">{point}</p>
+      </div>
+    ))}
+  </div>
+</Section>

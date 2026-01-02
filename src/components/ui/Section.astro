@@ -1,0 +1,45 @@
+---
+interface Props {
+  background?: 'default' | 'raised';
+  padding?: 'sm' | 'md' | 'lg' | 'hero';
+  rounded?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  background = 'default',
+  padding = 'md',
+  rounded = background === 'raised', // Auto-round raised sections
+  class: className,
+  ...rest
+} = Astro.props;
+
+const paddings = {
+  sm: 'py-12 md:py-16',
+  md: 'py-16 md:py-24',
+  lg: 'py-24 md:py-32',
+  hero: 'min-h-screen flex items-center justify-center pt-20',
+};
+
+const baseClasses = paddings[padding];
+
+// Raised sections get the "floating card" treatment
+const raisedClasses = rounded
+  ? 'bg-surface-raised mx-4 md:mx-8 lg:mx-auto lg:max-w-6xl rounded-3xl'
+  : 'bg-surface-raised';
+
+const defaultClasses = 'bg-surface';
+
+const sectionClasses = [
+  baseClasses,
+  background === 'raised' ? raisedClasses : defaultClasses,
+  className,
+].filter(Boolean).join(' ');
+---
+
+<section class={sectionClasses} {...rest}>
+  <div class:list={['container', rounded && 'px-8 md:px-12']}>
+    <slot />
+  </div>
+</section>

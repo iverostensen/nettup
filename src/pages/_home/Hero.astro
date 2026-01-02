@@ -1,0 +1,25 @@
+---
+import Button from '@/components/ui/Button.astro';
+---
+
+<section class="flex min-h-screen items-center justify-center px-4 pt-20">
+  <div class="text-center">
+    <h1 class="animate-fade-up text-4xl font-bold leading-tight md:text-6xl lg:text-7xl">
+      Nettsider som<br />
+      <span class="text-brand">bare funker.</span>
+    </h1>
+    <p
+      class="animate-fade-up mx-auto mt-6 max-w-2xl text-lg text-text-muted md:text-xl"
+      style="animation-delay: 100ms"
+    >
+      Vi lager moderne, raske nettsider for norske bedrifter. Uten stress, uten overpriser.
+    </p>
+    <div
+      class="animate-fade-up mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+      style="animation-delay: 200ms"
+    >
+      <Button href="/kontakt" size="lg">Ta kontakt</Button>
+      <Button href="/prosjekter" variant="secondary" size="lg">Se vårt arbeid</Button>
+    </div>
+  </div>
+</section>

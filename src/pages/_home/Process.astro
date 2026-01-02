@@ -1,0 +1,49 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const steps = [
+  {
+    number: '1',
+    title: 'Samtale',
+    description: 'Vi tar en kort prat om hva du trenger. Uforpliktende.',
+  },
+  {
+    number: '2',
+    title: 'Forslag',
+    description: 'Du får et konkret forslag med pris. Ingen overraskelser.',
+  },
+  {
+    number: '3',
+    title: 'Bygging',
+    description: 'Vi bygger nettsiden. Du ser fremgang underveis.',
+  },
+  {
+    number: '4',
+    title: 'Lansering',
+    description: 'Nettsiden går live. Vi sørger for at alt fungerer.',
+  },
+];
+---
+
+<Section background="raised">
+  <SectionHeader title="Slik jobber vi" />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {steps.map((step, index) => (
+        <div class={`reveal-on-scroll reveal-delay-${index + 1} relative`}>
+          <div class="flex flex-col items-center text-center md:items-start md:text-left">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg font-bold text-surface">
+              {step.number}
+            </div>
+            <h3 class="text-lg font-semibold">{step.title}</h3>
+            <p class="mt-2 text-sm text-text-muted">{step.description}</p>
+          </div>
+          {index < steps.length - 1 && (
+            <div class="absolute right-0 top-6 hidden h-px w-8 bg-white/10 lg:block" style="transform: translateX(100%)"></div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>

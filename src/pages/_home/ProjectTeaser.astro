@@ -1,0 +1,50 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+---
+
+<Section>
+  <SectionHeader title="Se hva vi har laget" />
+  <div class="reveal-on-scroll reveal-delay-1 mx-auto max-w-4xl">
+    <a
+      href="/prosjekter"
+      class="group block overflow-hidden rounded-2xl border border-white/10 bg-surface-raised transition-all hover:border-white/20"
+    >
+      <!-- Project image -->
+      <div class="aspect-video overflow-hidden">
+        <img
+          src="/images/salg.igive.no.png"
+          alt="Skjermbilde av salg.igive.no"
+          class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+      </div>
+      <!-- Project info -->
+      <div class="p-6 md:p-8">
+        <div class="flex items-center gap-3 text-sm">
+          <span class="rounded-full bg-brand/10 px-3 py-1 text-brand">B2B</span>
+          <span class="text-text-muted">Gavekort-plattform</span>
+        </div>
+        <h3 class="mt-4 text-xl font-semibold transition-colors group-hover:text-brand md:text-2xl">
+          iGive — Profesjonell salgsside
+        </h3>
+        <p class="mt-2 text-text-muted">
+          En moderne, rask nettside med fokus på tydelig produktpresentasjon og enkel vei til kontakt.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-2 font-medium text-brand">
+          Se prosjektet
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="h-4 w-4 transition-transform group-hover:translate-x-1"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </span>
+      </div>
+    </a>
+  </div>
+</Section>

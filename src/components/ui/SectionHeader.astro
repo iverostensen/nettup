@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  centered?: boolean;
+  class?: string;
+}
+
+const { title, subtitle, centered = true, class: className } = Astro.props;
+---
+
+<header class:list={['mb-12', centered && 'text-center', className]}>
+  <h2 class="reveal-on-scroll text-3xl font-bold md:text-4xl">
+    {title}
+  </h2>
+  {subtitle && (
+    <p class="reveal-on-scroll reveal-delay-1 mx-auto mt-4 max-w-2xl text-lg text-text-muted">
+      {subtitle}
+    </p>
+  )}
+</header>
