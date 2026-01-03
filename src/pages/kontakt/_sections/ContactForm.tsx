@@ -19,8 +19,7 @@ const PAKKE_OPTIONS = [
   { value: 'usikker', label: 'Usikker' },
 ];
 
-// Replace with your Formspree form ID
-const FORMSPREE_ID = 'YOUR_FORM_ID';
+const FORMSPREE_ID = 'xnjnzybj';
 
 export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
@@ -122,19 +121,20 @@ export default function ContactForm() {
       };
 
   const inputClasses =
-    'w-full rounded-lg border border-white/10 bg-surface-raised px-4 py-3 text-text placeholder:text-text-muted/50 transition-colors focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand';
+    'w-full rounded-lg border border-white/10 bg-surface px-4 py-3 text-text placeholder:text-text-muted/50 transition-colors focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand';
   const labelClasses = 'block text-sm font-medium text-text-muted mb-2';
   const errorClasses = 'mt-1 text-sm text-red-400';
 
   return (
     <div className="mx-auto max-w-xl">
-      <AnimatePresence mode="wait">
-        {status === 'success' ? (
-          <motion.div
-            key="success"
-            {...motionProps}
-            className="rounded-2xl border border-brand/20 bg-brand/5 p-8 text-center"
-          >
+      <div className="rounded-2xl border border-white/10 bg-surface-raised p-6 md:p-8">
+        <AnimatePresence mode="wait">
+          {status === 'success' ? (
+            <motion.div
+              key="success"
+              {...motionProps}
+              className="rounded-xl border border-brand/20 bg-brand/5 p-8 text-center"
+            >
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +301,8 @@ export default function ContactForm() {
             </button>
           </motion.form>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
