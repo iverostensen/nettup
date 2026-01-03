@@ -1,0 +1,93 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const supportPlans = [
+  {
+    name: 'Enkel',
+    price: '350',
+    devTime: '30 min',
+    features: [
+      'Hosting og drift',
+      'SSL-sertifikat',
+      'Ukentlig backup',
+      'E-post support',
+      'Responstid: 48 timer',
+    ],
+  },
+  {
+    name: 'Standard',
+    price: '500',
+    devTime: '1 time',
+    features: [
+      'Alt i Enkel',
+      'Daglig backup',
+      'Oppetidsovervåking',
+      'Månedlig rapport',
+      'Responstid: 24 timer',
+    ],
+    highlighted: true,
+  },
+  {
+    name: 'Premium',
+    price: '750',
+    devTime: '2 timer',
+    features: [
+      'Alt i Standard',
+      'Prioritert support',
+      'Detaljert ytelsesrapport',
+      'Proaktive anbefalinger',
+      'Responstid: Samme dag',
+    ],
+  },
+];
+---
+
+<Section>
+  <SectionHeader
+    title="Månedlig support"
+    subtitle="Hver pakke inkluderer hosting, drift og utviklingstid."
+  />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 md:grid-cols-3">
+      {supportPlans.map((plan, index) => (
+        <div
+          class={`reveal-on-scroll reveal-delay-${index + 1} rounded-xl border p-6 ${
+            plan.highlighted
+              ? 'border-brand bg-surface-raised'
+              : 'border-white/10 bg-surface-raised/50'
+          }`}
+        >
+          <div class="text-center">
+            <h3 class="text-lg font-semibold">{plan.name}</h3>
+            <div class="mt-2">
+              <span class="text-2xl font-bold">{plan.price}</span>
+              <span class="text-text-muted"> kr/mnd</span>
+            </div>
+            <div class="mt-1 text-sm text-brand">{plan.devTime} utvikling</div>
+          </div>
+          <ul class="mt-6 space-y-2">
+            {plan.features.map((feature) => (
+              <li class="flex items-center gap-2 text-sm text-text-muted">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="h-4 w-4 shrink-0 text-brand"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <p class="reveal-on-scroll mt-8 text-center text-sm text-text-muted">
+      Utviklingstid kan brukes til innholdsendringer, nye funksjoner, eller justeringer. Ubrukt tid overføres ikke.
+    </p>
+  </div>
+</Section>

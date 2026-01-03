@@ -8,12 +8,12 @@ const pakker = [
     description: 'For deg som trenger en enkel, profesjonell tilstedeværelse på nett.',
     price: '7 000',
     monthly: '350',
+    support: '30 min utvikling/mnd',
     features: [
       'Inntil 5 sider',
       'Responsivt design',
       'Kontaktskjema',
       'Grunnleggende SEO',
-      'Hosting inkludert',
     ],
     popular: false,
   },
@@ -22,6 +22,7 @@ const pakker = [
     description: 'For bedrifter som vil ha litt mer - animasjoner, flere sider, og SEO-fokus.',
     price: '15 000',
     monthly: '500',
+    support: '1 time utvikling/mnd',
     features: [
       'Inntil 10 sider',
       'Alt i Enkel-pakken',
@@ -36,6 +37,7 @@ const pakker = [
     description: 'For de som vil skille seg ut med skreddersydd design og avanserte funksjoner.',
     price: 'fra 25 000',
     monthly: '750',
+    support: '2 timer utvikling/mnd',
     features: [
       'Ubegrenset antall sider',
       'Alt i Standard-pakken',
@@ -52,7 +54,7 @@ const pakker = [
   <div class="container">
     <SectionHeader
       title="Velg pakken som passer deg"
-      subtitle="Alle pakker inkluderer SSL-sertifikat og 30 dager support etter lansering."
+      subtitle="Alle pakker inkluderer SSL-sertifikat, hosting og løpende support."
     />
     <div class="grid gap-6 md:grid-cols-3 md:gap-8">
       {pakker.map((pakke, index) => (
@@ -75,7 +77,7 @@ const pakker = [
                 <span class="text-text-muted"> kr</span>
               </div>
               <div class="mt-1 text-sm text-text-muted">
-                + {pakke.monthly} kr/mnd
+                + {pakke.monthly} kr/mnd <span class="text-text-muted/70">({pakke.support})</span>
               </div>
             </div>
             <ul class="mt-6 flex-1 space-y-3">
