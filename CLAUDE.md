@@ -8,6 +8,7 @@
 **URL:** nettup.no
 **Tier:** 3 (Expressive) - we can use the full stack here
 **Language:** Norwegian (bokmål)
+**Production Readiness:** ~95%
 
 ## Stack
 
@@ -24,8 +25,8 @@ React and animations are allowed here. This is our portfolio piece.
 | `/` | Homepage - hero, services overview, testimonials, CTA | ✅ Complete |
 | `/tjenester` | What we offer, pricing tiers | ✅ Complete |
 | `/om-oss` | About Nettup, values, how we work | ✅ Complete |
-| `/prosjekter` | Portfolio with iGive case study | ✅ Complete (placeholder content) |
-| `/kontakt` | Contact form, response time | ✅ Complete (needs Formspree ID) |
+| `/prosjekter` | Portfolio with iGive case study | ✅ Complete |
+| `/kontakt` | Contact form, response time | ✅ Complete |
 
 ## Structure
 
@@ -93,10 +94,54 @@ This is our showcase, so animations should be polished:
 - **Interactions:** Subtle hover states, button feedback
 - **Page transitions:** Optional, if it doesn't hurt performance
 
-## Current Tasks
+## Production Checklist
 
-1. **Add Formspree ID** - Replace `YOUR_FORM_ID` in ContactForm.tsx with real Formspree form ID
-2. **Fill in /prosjekter content** - Replace placeholder text with real iGive details
+### Completed
+
+- [x] All 5 pages built and working
+- [x] Formspree ID configured (`xnjnzybj`)
+- [x] Build passes cleanly (1.1s, 5 pages)
+- [x] Mobile-responsive design
+- [x] Accessibility: focus states, reduced motion, semantic HTML
+- [x] Form validation with honeypot spam protection
+- [x] `robots.txt` created
+- [x] `@astrojs/sitemap` integration (auto-generates sitemap)
+- [x] JSON-LD Organization schema in BaseLayout
+- [x] ESLint with TypeScript parser (0 errors)
+- [x] `og-image.jpg` created (1200x630px, 35KB)
+
+### Before Launch (Critical)
+
+- [ ] **Test form submission** end-to-end with Formspree
+
+### High Priority (Launch or Soon After)
+
+- [ ] Optimize `salg.igive.no.png` (1.1MB → WebP, resize for mobile)
+- [ ] Add `aria-live="polite"` to form success/error messages
+- [ ] Add preload hints for fonts and critical assets
+- [ ] Run Lighthouse audit and fix any issues
+
+### Medium Priority (Post-Launch)
+
+- [ ] Convert logo to SVG (currently 95KB PNG)
+- [ ] Add Google Analytics or Plausible
+- [ ] Create `manifest.json` for PWA support
+- [ ] Set up error monitoring (Sentry)
+- [ ] Add more projects to `/prosjekter`
+
+## Build Info
+
+```bash
+npm run dev      # localhost:4321
+npm run build    # Production build (1.1s)
+npm run preview  # Preview build
+npm run lint     # ESLint (0 errors)
+```
+
+**Bundle sizes (gzipped):**
+- React client: 58.47 kB
+- FloatingNav: 4.43 kB
+- ContactForm: 2.52 kB
 
 ## Don't
 

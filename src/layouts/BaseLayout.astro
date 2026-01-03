@@ -44,6 +44,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Nettup",
+      "url": "https://nettup.no",
+      "logo": "https://nettup.no/images/nettup-logo.png",
+      "description": "Nettup lager moderne, raske nettsider for norske bedrifter.",
+      "email": "post@nettup.no",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Norway"
+      },
+      "serviceType": ["Webdesign", "Webutvikling"],
+      "knowsLanguage": "nb"
+    })} />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
