@@ -88,8 +88,10 @@ export default function FloatingNav() {
             className="mr-2 flex shrink-0 items-center transition-opacity hover:opacity-80"
           >
             <img
-              src="/images/nettup-logo.png"
+              src="/images/nettup-logo.svg"
               alt="Nettup"
+              width={58}
+              height={24}
               className="h-6 w-auto"
             />
           </a>

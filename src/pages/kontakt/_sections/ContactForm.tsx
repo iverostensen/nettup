@@ -134,6 +134,8 @@ export default function ContactForm() {
               key="success"
               {...motionProps}
               className="rounded-xl border border-brand/20 bg-brand/5 p-8 text-center"
+              role="status"
+              aria-live="polite"
             >
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
               <svg
@@ -249,7 +251,11 @@ export default function ContactForm() {
             </div>
 
             {status === 'error' && (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-center">
+              <div
+                className="rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-center"
+                role="alert"
+                aria-live="assertive"
+              >
                 <p className="text-sm text-red-400">
                   Noe gikk galt. Vennligst prøv igjen eller send e-post til{' '}
                   <a href="mailto:post@nettup.no" className="underline hover:text-red-300">

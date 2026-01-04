@@ -104,8 +104,10 @@ export default function MobileMenu({
           <div className="flex items-center justify-between px-6 py-4">
             <a href="/" onClick={onClose}>
               <img
-                src="/images/nettup-logo.png"
+                src="/images/nettup-logo.svg"
                 alt="Nettup"
+                width={58}
+                height={24}
                 className="h-6 w-auto"
               />
             </a>

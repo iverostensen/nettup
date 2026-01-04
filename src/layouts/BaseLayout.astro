@@ -50,7 +50,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       "@type": "Organization",
       "name": "Nettup",
       "url": "https://nettup.no",
-      "logo": "https://nettup.no/images/nettup-logo.png",
+      "logo": "https://nettup.no/images/nettup-logo.svg",
       "description": "Nettup lager moderne, raske nettsider for norske bedrifter.",
       "email": "post@nettup.no",
       "areaServed": {
@@ -64,6 +64,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      as="style"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
