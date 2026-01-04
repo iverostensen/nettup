@@ -225,7 +225,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
           // Initialize gtag
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          function gtag(){window.dataLayer.push(arguments);}
           window.gtag = gtag;
           gtag('js', new Date());
           gtag('config', GTAG_ID);
