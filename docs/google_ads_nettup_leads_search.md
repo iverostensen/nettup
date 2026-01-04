@@ -118,7 +118,7 @@ https://www.nettup.no/nettside-for-bedrift
 
 - Nettside for Bedrifter
 - Lag Nettside for Bedrift
-- Fra 4.900 kr
+- Fra 7 000 kr
 - Rask Levering
 - Gratis Konsultasjon
 - Profesjonell Bedriftsnettside
@@ -132,7 +132,7 @@ https://www.nettup.no/nettside-for-bedrift
 
 ## 10. Beskrivelser (maks 90 tegn)
 
-- Profesjonelle nettsider for bedrifter. Fast pris fra 4.900 kr.
+- Profesjonelle nettsider for bedrifter. Fast pris fra 7 000 kr.
 - Moderne bedriftsnettside som skaper henvendelser. Rask levering.
 - Nettside for små og mellomstore bedrifter i Oslo og Nordre Follo.
 - Fokus på konvertering, struktur og synlighet i Google.

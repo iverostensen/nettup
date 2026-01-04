@@ -10,10 +10,16 @@
  * - Form embedded on page (no click to /kontakt/)
  * - Trust signals throughout
  * - Phone CTA in header
+ * - Results section for social proof (Lighthouse scores)
+ * - Testimonial from real customer (iGive)
+ * - FAQ section with JSON-LD schema for rich snippets
  */
 import LandingPageLayout from '@/layouts/LandingPageLayout.astro';
 import Hero from './_sections/Hero.astro';
+import Results from './_sections/Results.astro';
+import Testimonial from './_sections/Testimonial.astro';
 import PricingSummary from './_sections/PricingSummary.astro';
+import FAQ from './_sections/FAQ.astro';
 import FormSection from './_sections/FormSection.astro';
 ---
 
@@ -23,7 +29,10 @@ import FormSection from './_sections/FormSection.astro';
 >
   <main>
     <Hero />
+    <Results />
+    <Testimonial />
     <PricingSummary />
+    <FAQ />
     <FormSection />
   </main>
 </LandingPageLayout>
