@@ -2,7 +2,6 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/ui/Section.astro';
 
-import Hero from './_sections/Hero.astro';
 import ContactForm from './_sections/ContactForm.tsx';
 import AlternativeContact from './_sections/AlternativeContact.astro';
 ---
@@ -12,10 +11,60 @@ import AlternativeContact from './_sections/AlternativeContact.astro';
   description="Ta kontakt med Nettup. Vi svarer innen 24 timer. La oss snakke om din nettside."
 >
   <main>
-    <Hero />
-    <Section>
-      <ContactForm client:load />
+    <!-- Combined Hero + Form Section -->
+    <Section padding="lg" class="pt-32 md:pt-40">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
+        <!-- Left: Hero content -->
+        <div class="lg:sticky lg:top-32">
+          <h1 class="reveal-on-scroll text-4xl font-bold md:text-5xl">
+            La oss snakke om din nettside
+          </h1>
+          <p class="reveal-on-scroll reveal-delay-1 mt-6 text-lg text-text-muted">
+            Har du spørsmål, eller vil du vite mer om hva vi kan gjøre for deg?
+            Send oss en melding, så svarer vi innen 24 timer.
+          </p>
+
+          <!-- Trust indicators -->
+          <div class="reveal-on-scroll reveal-delay-2 mt-8 space-y-4">
+            <div class="flex items-center gap-3 text-text-muted">
+              <svg class="h-5 w-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              <span>Svar innen 24 timer</span>
+            </div>
+            <div class="flex items-center gap-3 text-text-muted">
+              <svg class="h-5 w-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              <span>Uforpliktende samtale</span>
+            </div>
+            <div class="flex items-center gap-3 text-text-muted">
+              <svg class="h-5 w-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+              </svg>
+              <span>Gratis tilbud på dagen</span>
+            </div>
+          </div>
+
+          <!-- Email alternative (visible on desktop) -->
+          <div class="reveal-on-scroll reveal-delay-3 mt-10 hidden lg:block">
+            <p class="text-sm text-text-muted">Foretrekker du e-post?</p>
+            <a
+              href="mailto:post@nettup.no"
+              class="mt-1 inline-block font-medium text-brand transition-colors hover:text-brand-light"
+            >
+              post@nettup.no
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Contact form -->
+        <div class="reveal-on-scroll reveal-delay-1 lg:reveal-delay-2">
+          <ContactForm client:load />
+        </div>
+      </div>
     </Section>
+
     <AlternativeContact />
   </main>
 </BaseLayout>
