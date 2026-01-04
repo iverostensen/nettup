@@ -1,0 +1,22 @@
+{
+  "name": "Nettup - Moderne nettsider for norske bedrifter",
+  "short_name": "Nettup",
+  "description": "Nettup lager moderne, raske nettsider for norske bedrifter.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#06b6d4",
+  "lang": "nb",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

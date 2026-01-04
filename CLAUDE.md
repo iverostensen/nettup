@@ -112,21 +112,19 @@ This is our showcase, so animations should be polished:
 
 ### Before Launch (Critical)
 
-- [ ] **Test form submission** end-to-end with Formspree
+- [x] **Test form submission** end-to-end with Formspree
 
 ### High Priority (Launch or Soon After)
 
-- [ ] Optimize `salg.igive.no.png` (1.1MB → WebP, resize for mobile)
-- [ ] Add `aria-live="polite"` to form success/error messages
-- [ ] Add preload hints for fonts and critical assets
-- [ ] Run Lighthouse audit and fix any issues
+- [x] Optimize `salg.igive.no.png` (resized 2940px → 1600px, 1.1MB → 562KB)
+- [x] Add `aria-live="polite"` to form success/error messages (already implemented)
+- [x] Add preload hints for fonts and critical assets
+- [x] Run Lighthouse audit and fix any issues
 
 ### Medium Priority (Post-Launch)
 
-- [ ] Convert logo to SVG (currently 95KB PNG)
-- [ ] Add Google Analytics or Plausible
-- [ ] Create `manifest.json` for PWA support
-- [ ] Set up error monitoring (Sentry)
+- [x] Convert logo to SVG (currently 95KB PNG)
+- [x] Create `manifest.json` for PWA support
 - [ ] Add more projects to `/prosjekter`
 
 ## Build Info
