@@ -4,8 +4,8 @@ import SectionHeader from '@/components/ui/SectionHeader.astro';
 
 const faqs = [
   {
-    question: 'Hvor lang tid tar det?',
-    answer: 'De fleste nettsider er ferdige på 1-2 uker, avhengig av hvor raskt du leverer innhold.',
+    question: 'Hvor lang tid tar det å lage en nettside?',
+    answer: 'De fleste nettsider er ferdige på 1-3 uker, avhengig av pakke og hvor raskt du leverer innhold.',
   },
   {
     question: 'Må jeg levere alt innholdet selv?',
@@ -16,7 +16,7 @@ const faqs = [
     answer: 'Domene kjøper du selv (vi hjelper med oppsett). Hosting første år er inkludert i alle pakker.',
   },
   {
-    question: 'Kan jeg oppdatere siden selv etterpå?',
+    question: 'Kan jeg oppdatere nettsiden selv etterpå?',
     answer: 'Nettsidene våre er statiske og raske. For hyppige oppdateringer kan vi sette opp en enkel CMS-løsning (tillegg).',
   },
   {
@@ -27,8 +27,41 @@ const faqs = [
     question: 'Hva hvis jeg ikke er fornøyd?',
     answer: 'Vi viser deg siden underveis og tar imot tilbakemeldinger. Du godkjenner før lansering.',
   },
+  {
+    question: 'Tilbyr dere SEO-tjenester?',
+    answer: 'Ja, grunnleggende SEO er inkludert i alle pakker. Standard og Premium inkluderer utvidet SEO-optimalisering.',
+  },
+  {
+    question: 'Hva skjer etter lansering?',
+    answer: 'Vi følger opp og sikrer at alt fungerer. Du har tilgang til support, og månedlig utviklingstid avhengig av pakke.',
+  },
+  {
+    question: 'Eier jeg nettsiden min?',
+    answer: 'Ja, du eier all kode og innhold. Ingen binding – du kan flytte nettsiden når du vil.',
+  },
+  {
+    question: 'Hva koster det å gjøre endringer senere?',
+    answer: 'Små endringer dekkes av månedlig utviklingstid. Større endringer avtales og faktureres separat.',
+  },
 ];
+
+// Generate FAQPage schema for SEO
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
 ---
+
+<!-- FAQ Schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 <Section>
   <SectionHeader title="Ofte stilte spørsmål" />

@@ -9,6 +9,7 @@ interface FormData {
   telefon: string;
   pakke: string;
   melding: string;
+  kilde: string;
 }
 
 const PAKKE_OPTIONS = [
@@ -29,6 +30,7 @@ export default function ContactForm() {
     telefon: '',
     pakke: '',
     melding: '',
+    kilde: '',
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const formRef = useRef<HTMLFormElement>(null);
@@ -41,6 +43,20 @@ export default function ContactForm() {
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  // Read URL parameters for pre-selection and tracking
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pakkeParam = params.get('pakke');
+    const kildeParam = params.get('kilde');
+
+    if (pakkeParam && ['enkel', 'standard', 'premium', 'usikker'].includes(pakkeParam)) {
+      setFormData((prev) => ({ ...prev, pakke: pakkeParam }));
+    }
+    if (kildeParam) {
+      setFormData((prev) => ({ ...prev, kilde: kildeParam }));
+    }
   }, []);
 
   const validateForm = (): boolean => {
@@ -83,6 +99,7 @@ export default function ContactForm() {
           telefon: formData.telefon || 'Ikke oppgitt',
           pakke: formData.pakke || 'Ikke valgt',
           melding: formData.melding,
+          kilde: formData.kilde || 'direkte',
         }),
       });
 

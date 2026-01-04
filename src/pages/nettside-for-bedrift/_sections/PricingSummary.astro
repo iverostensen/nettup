@@ -1,0 +1,114 @@
+---
+/**
+ * PricingSummary - Simplified pricing for landing page
+ *
+ * Shows 3 tiers with essential info only.
+ * CTAs link to the form section below (not to /kontakt/).
+ */
+
+const pakker = [
+  {
+    name: 'Enkel',
+    description: 'Profesjonell tilstedeværelse på nett',
+    price: '7 000',
+    monthly: '350',
+    features: ['Inntil 5 sider', 'Responsivt design', 'Kontaktskjema', 'Grunnleggende SEO'],
+    popular: false,
+    pakkeValue: 'enkel',
+  },
+  {
+    name: 'Standard',
+    description: 'For bedrifter som vil ha litt mer',
+    price: '15 000',
+    monthly: '500',
+    features: ['Inntil 10 sider', 'Alt i Enkel', 'Animasjoner', 'Google Analytics', 'Utvidet SEO'],
+    popular: true,
+    pakkeValue: 'standard',
+  },
+  {
+    name: 'Premium',
+    description: 'Skreddersydd design og funksjoner',
+    price: 'fra 25 000',
+    monthly: '750',
+    features: ['Ubegrenset sider', 'Alt i Standard', 'Skreddersydd design', 'Avanserte funksjoner'],
+    popular: false,
+    pakkeValue: 'premium',
+  },
+];
+---
+
+<section class="py-16 md:py-24">
+  <div class="container mx-auto px-4">
+    <!-- Section header -->
+    <div class="reveal-on-scroll mb-12 text-center">
+      <h2 class="text-3xl font-bold md:text-4xl">Velg pakken som passer deg</h2>
+      <p class="mt-4 text-text-muted">
+        Alle pakker inkluderer SSL, hosting og support. Ingen skjulte kostnader.
+      </p>
+    </div>
+
+    <!-- Pricing cards -->
+    <div class="grid gap-6 md:grid-cols-3 md:gap-8">
+      {pakker.map((pakke, index) => (
+        <div
+          class={`reveal-on-scroll reveal-delay-${index + 1} relative flex flex-col overflow-hidden rounded-2xl border bg-surface-raised ${pakke.popular ? 'border-brand ring-1 ring-brand' : 'border-white/10'}`}
+        >
+          {pakke.popular && (
+            <div class="absolute right-0 top-0 rounded-bl-lg bg-brand px-3 py-1 text-sm font-medium text-surface">
+              Mest populær
+            </div>
+          )}
+          <div class="flex flex-1 flex-col p-6">
+            <div>
+              <h3 class="text-xl font-bold">{pakke.name}</h3>
+              <p class="mt-1 text-sm text-text-muted">{pakke.description}</p>
+            </div>
+            <div class="mt-4">
+              <div>
+                <span class="text-3xl font-bold">{pakke.price}</span>
+                <span class="text-text-muted"> kr</span>
+              </div>
+              <div class="mt-1 text-sm text-text-muted">
+                + {pakke.monthly} kr/mnd
+              </div>
+            </div>
+            <ul class="mt-4 flex-1 space-y-2">
+              {pakke.features.map((feature) => (
+                <li class="flex items-start gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="h-4 w-4 shrink-0 text-brand mt-0.5"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                  <span class="text-sm text-text-muted">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="mt-6">
+              <a
+                href={`#kontakt?pakke=${pakke.pakkeValue}`}
+                class={`block w-full rounded-full px-6 py-3 text-center font-medium transition-all hover:scale-[1.02] active:scale-100 ${
+                  pakke.popular
+                    ? 'bg-brand text-surface hover:bg-brand-light hover:shadow-lg hover:shadow-brand/25'
+                    : 'border border-white/20 text-text hover:border-brand hover:text-brand'
+                }`}
+              >
+                Velg {pakke.name}
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Additional trust text -->
+    <p class="reveal-on-scroll mt-8 text-center text-sm text-text-muted">
+      Usikker? <a href="#kontakt" class="text-brand hover:text-brand-light">Ta en uforpliktende prat</a> – vi hjelper deg å velge riktig.
+    </p>
+  </div>
+</section>

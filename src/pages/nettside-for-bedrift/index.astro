@@ -1,0 +1,29 @@
+---
+/**
+ * Landing Page: /nettside-for-bedrift/
+ *
+ * Dedicated Google Ads landing page for keyword "nettside for bedrift"
+ *
+ * Key optimizations:
+ * - Headline matches ad keyword exactly
+ * - No navigation (reduces exits)
+ * - Form embedded on page (no click to /kontakt/)
+ * - Trust signals throughout
+ * - Phone CTA in header
+ */
+import LandingPageLayout from '@/layouts/LandingPageLayout.astro';
+import Hero from './_sections/Hero.astro';
+import PricingSummary from './_sections/PricingSummary.astro';
+import FormSection from './_sections/FormSection.astro';
+---
+
+<LandingPageLayout
+  title="Nettside for Bedrift | Fra 7 000 kr | Nettup"
+  description="Profesjonell nettside for din bedrift. Moderne, rask og SEO-optimalisert. Fra 7 000 kr, klar på 1-3 uker. Gratis tilbud!"
+>
+  <main>
+    <Hero />
+    <PricingSummary />
+    <FormSection />
+  </main>
+</LandingPageLayout>
