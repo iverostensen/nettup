@@ -1,30 +1,75 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import GradientBackground from '@/components/islands/GradientBackground';
+import DeviceMockup from '@/components/islands/DeviceMockup';
 import RotatingText from '@/components/islands/RotatingText';
 ---
 
-<section class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 pt-20">
+<section class="grain-overlay relative min-h-screen overflow-hidden px-4 pt-20">
   <!-- Animated gradient background -->
   <GradientBackground client:load />
 
-  <div class="relative z-10 text-center">
-    <h1 class="animate-fade-up text-4xl font-bold leading-tight md:text-6xl lg:text-7xl">
-      Nettsider som<br />
-      <RotatingText client:load />
-    </h1>
-    <p
-      class="animate-fade-up mx-auto mt-6 max-w-2xl text-lg text-text-muted md:text-xl"
-      style="animation-delay: 100ms"
-    >
-      Vi lager moderne, raske nettsider for norske bedrifter. Uten stress, til rett pris.
-    </p>
-    <div
-      class="animate-fade-up mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-      style="animation-delay: 200ms"
-    >
-      <Button href="/kontakt" size="lg">Ta kontakt</Button>
-      <Button href="/prosjekter" variant="secondary" size="lg">Se vårt arbeid</Button>
+  <!-- Main content container -->
+  <div class="container relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] items-center">
+    <div class="grid w-full gap-12 lg:grid-cols-2 lg:gap-8">
+
+      <!-- Left: Text content -->
+      <div class="flex flex-col justify-center text-center lg:text-left">
+        <!-- Staggered headline animation -->
+        <h1 class="text-4xl font-bold leading-tight md:text-5xl lg:text-6xl xl:text-7xl">
+          <span class="inline-block animate-fade-up opacity-0" style="animation-delay: 0ms">Nettsider</span>
+          <span class="inline-block animate-fade-up opacity-0" style="animation-delay: 80ms">som</span>
+          <br />
+          <span class="inline-block animate-fade-up opacity-0" style="animation-delay: 160ms">
+            <RotatingText client:load />
+          </span>
+        </h1>
+
+        <p
+          class="animate-fade-up mx-auto mt-6 max-w-xl text-lg text-text-muted opacity-0 md:text-xl lg:mx-0"
+          style="animation-delay: 300ms"
+        >
+          Vi lager moderne, raske nettsider for norske bedrifter. Uten stress, til rett pris.
+        </p>
+
+        <div
+          class="animate-fade-up mt-10 flex flex-col items-center justify-center gap-4 opacity-0 sm:flex-row lg:justify-start"
+          style="animation-delay: 450ms"
+        >
+          <Button href="/kontakt" size="lg">Ta kontakt</Button>
+          <Button href="/prosjekter" variant="secondary" size="lg">Se vårt arbeid</Button>
+        </div>
+      </div>
+
+      <!-- Right: Device mockup (hidden on mobile/tablet) -->
+      <div class="hidden items-center justify-center lg:flex lg:justify-end" aria-hidden="true">
+        <DeviceMockup client:load />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div
+    class="animate-fade-in absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0"
+    style="animation-delay: 1200ms"
+  >
+    <div class="flex flex-col items-center gap-2 text-text-muted/60">
+      <span class="text-xs uppercase tracking-widest">Scroll</span>
+      <svg
+        class="animate-bounce-subtle h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+        />
+      </svg>
     </div>
   </div>
 </section>

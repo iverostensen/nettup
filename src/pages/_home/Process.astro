@@ -31,16 +31,16 @@ const steps = [
   <div class="mx-auto max-w-4xl">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {steps.map((step, index) => (
-        <div class={`reveal-on-scroll reveal-delay-${index + 1} relative`}>
+        <div class={`group reveal-on-scroll reveal-delay-${index + 1} relative`}>
           <div class="flex flex-col items-center text-center md:items-start md:text-left">
-            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg font-bold text-surface">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg font-bold text-surface transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30">
               {step.number}
             </div>
-            <h3 class="text-lg font-semibold">{step.title}</h3>
+            <h3 class="text-lg font-semibold transition-colors duration-300 group-hover:text-brand">{step.title}</h3>
             <p class="mt-2 text-sm text-text-muted">{step.description}</p>
           </div>
           {index < steps.length - 1 && (
-            <div class="absolute right-0 top-6 hidden h-px w-8 bg-white/10 lg:block" style="transform: translateX(100%)"></div>
+            <div class="absolute right-0 top-6 hidden h-px w-8 bg-gradient-to-r from-brand/30 to-transparent lg:block" style="transform: translateX(100%)"></div>
           )}
         </div>
       ))}
