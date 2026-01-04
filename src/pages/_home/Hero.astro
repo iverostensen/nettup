@@ -41,9 +41,9 @@ import RotatingText from '@/components/islands/RotatingText';
         </div>
       </div>
 
-      <!-- Right: Device mockup (hidden on mobile/tablet) -->
+      <!-- Right: Device mockup (only loads on desktop - saves mobile performance) -->
       <div class="hidden items-center justify-center lg:flex lg:justify-end" aria-hidden="true">
-        <DeviceMockup client:load />
+        <DeviceMockup client:media="(min-width: 1024px)" />
       </div>
 
     </div>
