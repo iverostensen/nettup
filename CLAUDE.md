@@ -125,6 +125,7 @@ This is our showcase, so animations should be polished:
 
 - [x] Convert logo to SVG (currently 95KB PNG)
 - [x] Create `manifest.json` for PWA support
+- [x] Add Vercel Analytics
 - [ ] Add more projects to `/prosjekter`
 
 ## Build Info
