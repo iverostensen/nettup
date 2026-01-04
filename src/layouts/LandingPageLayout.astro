@@ -151,6 +151,91 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <MinimalFooter />
 
+    <!-- Cookie consent banner (only shown on landing pages) -->
+    <div
+      id="cookie-banner"
+      class="fixed bottom-0 left-0 right-0 z-50 hidden border-t border-white/10 bg-surface-raised/95 backdrop-blur-md"
+    >
+      <div class="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-4 sm:flex-row">
+        <p class="text-sm text-text-muted">
+          Vi bruker cookies for å måle annonseeffekt.
+        </p>
+        <div class="flex gap-3">
+          <button
+            id="cookie-decline"
+            class="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-text-muted transition-colors hover:border-white/20 hover:text-text"
+          >
+            Avslå
+          </button>
+          <button
+            id="cookie-accept"
+            class="rounded-full bg-brand px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-brand-light"
+          >
+            Godta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Ads gtag (loaded only after consent) -->
+    <script is:inline>
+      (function() {
+        const GTAG_ID = 'AW-17409050017';
+        const CONSENT_KEY = 'nettup_ads_consent';
+
+        // Check existing consent
+        const consent = localStorage.getItem(CONSENT_KEY);
+
+        if (consent === 'granted') {
+          loadGtag();
+        } else if (consent !== 'denied') {
+          // Show banner if no choice made yet
+          document.getElementById('cookie-banner')?.classList.remove('hidden');
+        }
+
+        // Handle accept
+        document.getElementById('cookie-accept')?.addEventListener('click', function() {
+          localStorage.setItem(CONSENT_KEY, 'granted');
+          loadGtag();
+          hideBanner();
+        });
+
+        // Handle decline
+        document.getElementById('cookie-decline')?.addEventListener('click', function() {
+          localStorage.setItem(CONSENT_KEY, 'denied');
+          hideBanner();
+        });
+
+        function hideBanner() {
+          const banner = document.getElementById('cookie-banner');
+          if (banner) {
+            banner.style.opacity = '0';
+            banner.style.transform = 'translateY(100%)';
+            banner.style.transition = 'opacity 0.3s, transform 0.3s';
+            setTimeout(() => banner.remove(), 300);
+          }
+        }
+
+        function loadGtag() {
+          // Load gtag.js script
+          const script = document.createElement('script');
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GTAG_ID;
+          script.async = true;
+          document.head.appendChild(script);
+
+          // Initialize gtag
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', GTAG_ID);
+
+          // Mark as loaded for conversion tracking
+          window.gtagLoaded = true;
+        }
+      })();
+    </script>
+
     <!-- Scroll reveal observer (Level 1 animations) -->
     <script>
       const observer = new IntersectionObserver(

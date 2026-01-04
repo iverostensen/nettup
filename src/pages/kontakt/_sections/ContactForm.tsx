@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Extend window type for gtag
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    gtagLoaded?: boolean;
+  }
+}
+
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 interface FormData {
@@ -105,6 +113,13 @@ export default function ContactForm() {
 
       if (response.ok) {
         setStatus('success');
+
+        // Fire Google Ads conversion event (only if gtag loaded with consent)
+        if (window.gtagLoaded && window.gtag) {
+          window.gtag('event', 'conversion', {
+            send_to: 'AW-17409050017/CONVERSION_LABEL',
+          });
+        }
       } else {
         setStatus('error');
       }
