@@ -62,7 +62,7 @@ export default function HeroMicroForm() {
         // Fire Google Ads conversion event (only if gtag loaded with consent)
         if (window.gtagLoaded && window.gtag) {
           window.gtag('event', 'conversion', {
-            send_to: 'AW-17409050017/CONVERSION_LABEL',
+            send_to: 'AW-17409050017/EvwaCNm05eFbEKGLpO1A',
           });
         }
       } else {
