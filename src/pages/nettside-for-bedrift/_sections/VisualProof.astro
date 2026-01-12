@@ -1,0 +1,84 @@
+---
+/**
+ * VisualProof - Screenshot with metrics overlay
+ *
+ * Shows actual iGive project with performance metrics
+ * Replaces generic Results section for better credibility
+ */
+---
+
+<section class="py-16 md:py-24 bg-surface">
+  <div class="container mx-auto px-4">
+    <!-- Section header -->
+    <div class="reveal-on-scroll mb-12 text-center max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold md:text-4xl">Resultater som teller</h2>
+      <p class="mt-4 text-text-muted">
+        Når vi sier at nettsidene våre er raske og profesjonelle, mener vi det. Se hvordan iGives salgsside presterer.
+      </p>
+    </div>
+
+    <!-- Visual proof with screenshot -->
+    <div class="reveal-on-scroll reveal-delay-1 mx-auto max-w-5xl">
+      <div class="relative rounded-2xl border border-white/10 bg-surface-raised p-4 md:p-8 overflow-hidden">
+        <!-- Metrics overlay - positioned top -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
+            <div class="text-3xl font-bold text-brand md:text-4xl">95</div>
+            <div class="mt-1 text-sm text-text-muted">Ytelse</div>
+            <div class="mt-1 text-xs text-text-muted/70">Lighthouse</div>
+          </div>
+          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
+            <div class="text-3xl font-bold text-brand md:text-4xl">&lt;1s</div>
+            <div class="mt-1 text-sm text-text-muted">Lastetid</div>
+            <div class="mt-1 text-xs text-text-muted/70">First Load</div>
+          </div>
+          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
+            <div class="text-3xl font-bold text-brand md:text-4xl">100</div>
+            <div class="mt-1 text-sm text-text-muted">SEO</div>
+            <div class="mt-1 text-xs text-text-muted/70">Google</div>
+          </div>
+        </div>
+
+        <!-- Screenshot -->
+        <div class="relative rounded-lg overflow-hidden border border-white/10">
+          <img
+            src="/images/salg.igive.no.png"
+            alt="iGive salgsside - profesjonell nettside laget av Nettup"
+            class="w-full h-auto"
+            loading="lazy"
+          />
+
+          <!-- Logo badge overlay on screenshot -->
+          <div class="absolute top-4 left-4 rounded-lg bg-white/95 backdrop-blur-sm border border-white/20 px-3 py-2 shadow-lg">
+            <div class="flex items-center gap-3">
+              <img
+                src="/images/igive-logo.svg"
+                alt="iGive"
+                class="h-6 w-auto"
+              />
+              <div class="h-4 w-px bg-gray-300"></div>
+              <div class="text-xs text-gray-600 font-medium">Kunde</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attribution -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-text-muted">
+            Faktisk prosjekt levert i januar 2026.{' '}
+            <a href="/prosjekter" class="text-brand hover:text-brand-light">
+              Les hele case-studien →
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust reinforcement -->
+    <div class="reveal-on-scroll reveal-delay-2 mt-12 text-center">
+      <p class="text-text-muted">
+        Alle våre nettsider leveres med samme kvalitetsstandarder
+      </p>
+    </div>
+  </div>
+</section>

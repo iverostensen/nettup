@@ -41,17 +41,20 @@ Konverteringsverdi og automatiserte strategier er bevisst **ikke brukt**.
 ## 4. Geografisk målretting
 
 - **Steder:**
-  - Oslo
-  - Nordre Follo
+  - ~~Oslo~~
+  - ~~Nordre Follo~~
+  - **Norge (hele landet)** ← Endret
 
 - **Stedsalternativ:**
   - Kun personer som befinner seg i området
 
-### Begrunnelse
-Smalt område gir:
-- Høyere relevans
-- Bedre kontroll
-- Lavere kostnad per klikk
+### Begrunnelse (oppdatert)
+Kampanjen startet med Oslo og Nordre Follo, men ga **ikke nok rekkevidde**. Utvidet til hele Norge for å:
+- Få tilstrekkelig søkevolum
+- Generer nok data til optimalisering
+- Nå flere potensielle kunder
+
+Smalt område ga i teorien høyere relevans, men i praksis for lite trafikk.
 
 ---
 
@@ -98,6 +101,13 @@ Kampanjen bruker kun **frase- og eksakt samsvar**.
 ### Bevisst utelatt
 - Brede søkeord (f.eks. "nettside", "webdesign")
 - Fleksibelt samsvar
+- **DIY/selvbetjenings-søkeord** (f.eks. "lag nettside selv", "gratis nettside", "nettside builder", "wix", "squarespace")
+
+### Begrunnelse for utelatelse
+DIY-søkeord er ekskludert fordi de indikerer at brukeren ønsker å lage nettsiden selv, ikke kjøpe tjenesten. Dette gir:
+- Høyere kvalitet på leads
+- Bedre konverteringsrate
+- Lavere sløsing av budsjett på ukvalifisert trafikk
 
 ---
 
@@ -158,7 +168,30 @@ https://www.nettup.no/nettside-for-bedrift
 
 ---
 
-## 12. Bevisste valg (viktig å huske)
+## 12. Negative søkeord
+
+Følgende negative søkeord er lagt til for å unngå DIY/selvbetjenings-trafikk:
+
+```
+- selv
+- gratis
+- builder
+- wix
+- squarespace
+- wordpress
+- shopify
+- webflow
+- diy
+- guide
+- tutorial
+```
+
+### Begrunnelse
+Disse ordene signaliserer at brukeren ønsker å bygge nettsiden selv eller bruke en plattform, ikke kjøpe webdesign-tjenester.
+
+---
+
+## 13. Bevisste valg (viktig å huske)
 
 Følgende er **bevisst ikke brukt**:
 - AI Max
@@ -170,7 +203,7 @@ Følgende er **bevisst ikke brukt**:
 
 ---
 
-## 13. Videre plan
+## 14. Videre plan
 
 - La kampanjen gå **5–7 dager uten endringer**
 - Deretter:
@@ -182,5 +215,15 @@ Budsjett kan vurderes økt først etter stabile leads.
 
 ---
 
-**Status:** Kampanje publisert og live
+## Endringslogg
+
+| Dato | Endring | Begrunnelse |
+|------|---------|-------------|
+| Initial | Oslo + Nordre Follo | Start med smalt område |
+| Etter test | **→ Norge (hele landet)** | For lav rekkevidde, behov for mer søkevolum |
+| Etter test | **+ Negative søkeord (DIY)** | Ekskludere selvbetjenings-trafikk, øke leadkvalitet |
+
+---
+
+**Status:** Kampanje publisert og live – justert med bredere geografi og negative søkeord
 

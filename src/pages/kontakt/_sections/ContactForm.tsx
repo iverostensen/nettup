@@ -20,15 +20,14 @@ interface FormData {
   kilde: string;
 }
 
-const PAKKE_OPTIONS = [
-  { value: '', label: 'Velg pakke' },
-  { value: 'enkel', label: 'Enkel (7 000 kr)' },
-  { value: 'standard', label: 'Standard (15 000 kr)' },
-  { value: 'premium', label: 'Premium (fra 25 000 kr)' },
-  { value: 'usikker', label: 'Usikker' },
-];
-
 const FORMSPREE_ID = 'xnjnzybj';
+
+// Package display names and pricing
+const PAKKE_INFO: Record<string, { name: string; price: string; monthly: string }> = {
+  enkel: { name: 'Enkel', price: '7 000 kr', monthly: '350 kr/mnd' },
+  standard: { name: 'Standard', price: '15 000 kr', monthly: '500 kr/mnd' },
+  premium: { name: 'Premium', price: 'fra 25 000 kr', monthly: '750 kr/mnd' },
+};
 
 export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
@@ -41,6 +40,7 @@ export default function ContactForm() {
     kilde: '',
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [showBadge, setShowBadge] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
 
   // Check for reduced motion preference
@@ -65,6 +65,20 @@ export default function ContactForm() {
     if (kildeParam) {
       setFormData((prev) => ({ ...prev, kilde: kildeParam }));
     }
+
+    // Listen for package selection events
+    const handlePakkeSelected = (e: CustomEvent) => {
+      const { pakke } = e.detail;
+      if (pakke && ['enkel', 'standard', 'premium'].includes(pakke)) {
+        setFormData((prev) => ({ ...prev, pakke }));
+        setShowBadge(true);
+      }
+    };
+
+    window.addEventListener('pakkeSelected', handlePakkeSelected as (e: Event) => void);
+    return () => {
+      window.removeEventListener('pakkeSelected', handlePakkeSelected as (e: Event) => void);
+    };
   }, []);
 
   const validateForm = (): boolean => {
@@ -80,9 +94,7 @@ export default function ContactForm() {
       newErrors.epost = 'Ugyldig e-postadresse';
     }
 
-    if (!formData.melding.trim()) {
-      newErrors.melding = 'Melding er påkrevd';
-    }
+    // Melding is now optional - no validation needed
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -157,8 +169,62 @@ export default function ContactForm() {
   const labelClasses = 'block text-sm font-medium text-text-muted mb-2';
   const errorClasses = 'mt-1 text-sm text-red-400';
 
+  // Get selected package info
+  const selectedPakke = formData.pakke && PAKKE_INFO[formData.pakke];
+
   return (
     <div className="mx-auto max-w-xl">
+      {/* Package confirmation badge */}
+      {selectedPakke && showBadge && (
+        <motion.div
+          initial={reducedMotion ? {} : { opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 rounded-xl border border-brand/20 bg-brand/5 p-4"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-4 w-4 text-brand"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-text">
+                  {selectedPakke.name}-pakken valgt
+                </p>
+                <p className="mt-1 text-sm text-text-muted">
+                  {selectedPakke.price} engangskostnad + {selectedPakke.monthly}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowBadge(false)}
+              className="shrink-0 rounded-lg p-1 text-text-muted/70 transition-colors hover:bg-white/5 hover:text-text"
+              aria-label="Lukk"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-5 w-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       <div className="rounded-2xl border border-white/10 bg-surface-raised p-6 md:p-8">
         <AnimatePresence mode="wait">
           {status === 'success' ? (
@@ -229,53 +295,31 @@ export default function ContactForm() {
               {errors.epost && <p className={errorClasses}>{errors.epost}</p>}
             </div>
 
-            <div>
-              <label htmlFor="telefon" className={labelClasses}>
-                Telefon <span className="text-text-muted/50">(valgfritt)</span>
-              </label>
-              <input
-                type="tel"
-                id="telefon"
-                name="telefon"
-                value={formData.telefon}
-                onChange={handleChange}
-                placeholder="Ditt telefonnummer"
-                className={inputClasses}
-                disabled={status === 'submitting'}
-              />
-            </div>
+            {/* Telefon field hidden to reduce form friction */}
+            <input
+              type="hidden"
+              name="telefon"
+              value={formData.telefon}
+            />
 
-            <div>
-              <label htmlFor="pakke" className={labelClasses}>
-                Interessert i <span className="text-text-muted/50">(valgfritt)</span>
-              </label>
-              <select
-                id="pakke"
-                name="pakke"
-                value={formData.pakke}
-                onChange={handleChange}
-                className={`${inputClasses} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2394A3B8%22%20stroke-width%3D%222%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22m19.5%208.25-7.5%207.5-7.5-7.5%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat pr-10`}
-                disabled={status === 'submitting'}
-              >
-                {PAKKE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Pakke field hidden - tracked via URL params only to reduce form friction */}
+            <input
+              type="hidden"
+              name="pakke"
+              value={formData.pakke}
+            />
 
             <div>
               <label htmlFor="melding" className={labelClasses}>
-                Melding <span className="text-brand">*</span>
+                Melding <span className="text-text-muted/50">(valgfritt)</span>
               </label>
               <textarea
                 id="melding"
                 name="melding"
                 value={formData.melding}
                 onChange={handleChange}
-                placeholder="Fortell oss om prosjektet ditt..."
-                rows={5}
+                placeholder="F.eks: Trenger nettside for håndverksbedrift med 5 sider og kontaktskjema"
+                rows={3}
                 className={`${inputClasses} resize-none`}
                 disabled={status === 'submitting'}
               />
