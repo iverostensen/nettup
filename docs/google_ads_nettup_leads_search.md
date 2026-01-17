@@ -128,13 +128,13 @@ https://www.nettup.no/nettside-for-bedrift
 
 - Nettside for Bedrifter
 - Lag Nettside for Bedrift
-- Fra 7 000 kr
+- Fra 2 500 kr (Lanseringstilbud)
+- Spar opptil 70%
 - Rask Levering
 - Gratis Konsultasjon
 - Profesjonell Bedriftsnettside
 - SEO-vennlig Nettside
 - For Små og Mellomstore Bedrifter
-- Lokalt i Oslo & Follo
 
 (Flere overskrifter er lagt til for testing – ikke pinnet.)
 
@@ -142,9 +142,9 @@ https://www.nettup.no/nettside-for-bedrift
 
 ## 10. Beskrivelser (maks 90 tegn)
 
-- Profesjonelle nettsider for bedrifter. Fast pris fra 7 000 kr.
+- Lanseringstilbud: Nettside fra 2 500 kr (ordinært 7 000 kr). Kun 10 plasser!
 - Moderne bedriftsnettside som skaper henvendelser. Rask levering.
-- Nettside for små og mellomstore bedrifter i Oslo og Nordre Follo.
+- Spar opptil 70% på profesjonell nettside. Begrenset tilbud.
 - Fokus på konvertering, struktur og synlighet i Google.
 
 ---
@@ -160,7 +160,8 @@ https://www.nettup.no/nettside-for-bedrift
 
 ### Meldinger (Callouts)
 
-- Fast pris
+- Lanseringstilbud
+- Spar opptil 70%
 - Rask levering
 - Gratis konsultasjon
 - Mobilvennlig
@@ -222,6 +223,7 @@ Budsjett kan vurderes økt først etter stabile leads.
 | Initial | Oslo + Nordre Follo | Start med smalt område |
 | Etter test | **→ Norge (hele landet)** | For lav rekkevidde, behov for mer søkevolum |
 | Etter test | **+ Negative søkeord (DIY)** | Ekskludere selvbetjenings-trafikk, øke leadkvalitet |
+| Jan 2025 | **Lanseringstilbud-priser** | Oppdatert overskrifter/beskrivelser til 2 500 kr |
 
 ---
 

@@ -7,6 +7,7 @@
  */
 import ScarcityCounter from '@/components/ui/ScarcityCounter.astro';
 import PriceDisplay from '@/components/ui/PriceDisplay.astro';
+import { launchOffer } from '@/config/launchOffer';
 
 const pakker = [
   {
@@ -132,7 +133,7 @@ const pakker = [
 
     <!-- Scarcity counter -->
     <div class="reveal-on-scroll mt-8 flex justify-center">
-      <ScarcityCounter total={10} taken={0} variant="inline" />
+      <ScarcityCounter total={launchOffer.total} taken={launchOffer.taken} variant="inline" />
     </div>
 
     <!-- Additional trust text -->

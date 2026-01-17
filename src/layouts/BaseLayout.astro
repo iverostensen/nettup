@@ -4,6 +4,7 @@ import FloatingNav from '../components/islands/FloatingNav';
 import Footer from '../components/layout/Footer.astro';
 import LaunchOfferBanner from '../components/ui/LaunchOfferBanner.astro';
 import Analytics from '@vercel/analytics/astro';
+import { remainingSlots } from '../config/launchOffer';
 
 interface Props {
   title: string;
@@ -113,6 +114,22 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       "sameAs": []
     })} />
 
+    <!-- Structured Data: Launch Offer -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      "name": "Lanseringstilbud - Nettside for Bedrift",
+      "description": "Profesjonell nettside til lanseringspris. Kun 10 plasser.",
+      "price": "2500",
+      "priceCurrency": "NOK",
+      "availability": "https://schema.org/LimitedAvailability",
+      "seller": {
+        "@type": "Organization",
+        "name": "Nettup",
+        "url": "https://nettup.no"
+      }
+    })} />
+
     <!-- Preload critical assets -->
     <link rel="preload" href="/images/nettup-logo.svg" as="image" type="image/svg+xml" />
 
@@ -142,7 +159,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body class="min-h-screen bg-surface text-text antialiased">
     <FloatingNav client:load />
-    <LaunchOfferBanner remainingSlots={10} />
+    <LaunchOfferBanner remainingSlots={remainingSlots} />
     <slot />
     <Footer />
 
