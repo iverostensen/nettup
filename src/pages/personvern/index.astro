@@ -1,0 +1,344 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+
+const lastUpdated = '17. januar 2025';
+---
+
+<BaseLayout
+  title="Personvernerklæring | Nettup"
+  description="Les om hvordan Nettup samler inn, bruker og beskytter dine personopplysninger i samsvar med GDPR."
+>
+  <main>
+    <Section>
+      <div class="mx-auto max-w-3xl">
+        <header class="mb-12 text-center">
+          <h1 class="mb-4 text-4xl font-bold tracking-tight text-text md:text-5xl">
+            Personvernerklæring
+          </h1>
+          <p class="text-text-muted">
+            Sist oppdatert: {lastUpdated}
+          </p>
+        </header>
+
+        <div class="prose prose-invert prose-slate max-w-none space-y-8">
+          <!-- Intro -->
+          <section>
+            <p class="text-lg leading-relaxed text-text-muted">
+              Hos Nettup tar vi personvernet ditt på alvor. Denne personvernerklæringen forklarer
+              hvordan vi samler inn, bruker, lagrer og beskytter dine personopplysninger når du
+              besøker nettsiden vår og bruker våre tjenester.
+            </p>
+          </section>
+
+          <!-- 1. Behandlingsansvarlig -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">1. Behandlingsansvarlig</h2>
+            <p class="mb-4 text-text-muted">
+              Nettup er behandlingsansvarlig for personopplysningene vi samler inn via nettup.no.
+            </p>
+            <div class="space-y-2 text-text-muted">
+              <p><strong class="text-text">Virksomhet:</strong> Nettup</p>
+              <p><strong class="text-text">Adresse:</strong> Trollåsveien 4, 1414 Trollåsen</p>
+              <p><strong class="text-text">E-post:</strong> <a href="mailto:post@nettup.no" class="text-brand hover:text-brand-light">post@nettup.no</a></p>
+              <p><strong class="text-text">Telefon:</strong> +47 473 31 298</p>
+            </div>
+            <p class="mt-4 text-text-muted">
+              For spørsmål om personvern kan du kontakte oss på e-post eller telefon.
+            </p>
+          </section>
+
+          <!-- 2. Hvilke opplysninger samler vi inn -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">2. Hvilke opplysninger samler vi inn</h2>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.1 Kontaktskjema</h3>
+            <p class="mb-3 text-text-muted">
+              Når du sender inn et kontaktskjema på nettsiden vår, samler vi inn:
+            </p>
+            <ul class="list-inside list-disc space-y-1 text-text-muted">
+              <li><strong class="text-text">Navn</strong> (påkrevd)</li>
+              <li><strong class="text-text">E-postadresse</strong> (påkrevd)</li>
+              <li><strong class="text-text">Telefonnummer</strong> (valgfritt)</li>
+              <li><strong class="text-text">Melding</strong> (valgfritt)</li>
+              <li><strong class="text-text">Valgt pakke</strong> (hvis forhåndsvalgt via URL)</li>
+              <li><strong class="text-text">Trafikkilde</strong> (automatisk fra URL-parameter)</li>
+            </ul>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.2 Analytiske data</h3>
+            <p class="mb-3 text-text-muted">
+              Vi bruker Vercel Analytics for å forstå hvordan besøkende bruker nettsiden vår.
+              Dette verktøyet er personvernvennlig og samler inn:
+            </p>
+            <ul class="list-inside list-disc space-y-1 text-text-muted">
+              <li>Sidevisninger (hvilke sider du besøker)</li>
+              <li>Ytelsesdata (lastetider)</li>
+              <li>Generell geografisk plassering (land/region, ikke presis lokasjon)</li>
+              <li>Enhetstype og nettleser</li>
+            </ul>
+            <p class="mt-3 text-text-muted">
+              <strong class="text-text">Viktig:</strong> Vercel Analytics setter ingen informasjonskapsler (cookies)
+              og sporer ikke enkeltbrukere på tvers av sider eller økter.
+            </p>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.3 Markedsføringscookies (kun landingssider)</h3>
+            <p class="mb-3 text-text-muted">
+              På våre landingssider (f.eks. /nettside-for-bedrift) bruker vi Google Ads
+              konverteringssporing for å måle effekten av våre annonser. Denne teknologien
+              aktiveres <strong class="text-text">kun etter at du har gitt samtykke</strong> via cookie-banneret.
+            </p>
+            <p class="text-text-muted">
+              Disse cookiene setter Google, og vi har ingen kontroll over dataene som samles inn
+              utover at vi mottar anonymiserte konverteringsrapporter.
+            </p>
+          </section>
+
+          <!-- 3. Formål og rettslig grunnlag -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">3. Formål og rettslig grunnlag</h2>
+
+            <div class="overflow-x-auto">
+              <table class="mt-4 w-full text-sm">
+                <thead>
+                  <tr class="border-b border-white/10">
+                    <th class="py-3 text-left font-semibold text-text">Formål</th>
+                    <th class="py-3 text-left font-semibold text-text">Rettslig grunnlag</th>
+                  </tr>
+                </thead>
+                <tbody class="text-text-muted">
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Besvare henvendelser via kontaktskjema</td>
+                    <td class="py-3">Berettiget interesse (GDPR art. 6(1)(f))</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Forbedre nettsiden basert på bruksdata</td>
+                    <td class="py-3">Berettiget interesse (GDPR art. 6(1)(f))</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Måle annonseeffekt (Google Ads)</td>
+                    <td class="py-3">Samtykke (GDPR art. 6(1)(a))</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 4. Hvem deler vi data med -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">4. Hvem deler vi data med</h2>
+            <p class="mb-4 text-text-muted">
+              Vi deler dine personopplysninger med følgende tredjeparter (databehandlere):
+            </p>
+
+            <div class="space-y-4">
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Formspree</h4>
+                <p class="text-sm text-text-muted">
+                  Håndterer våre kontaktskjemaer. Lagrer navn, e-post, telefon og meldinger du sender oss.
+                </p>
+                <p class="mt-1 text-xs text-text-muted">
+                  Lokasjon: USA (dekket av EU-US Data Privacy Framework)
+                </p>
+              </div>
+
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Vercel</h4>
+                <p class="text-sm text-text-muted">
+                  Hosting av nettsiden og personvernvennlig analyse. Ingen personidentifiserbare data lagres.
+                </p>
+                <p class="mt-1 text-xs text-text-muted">
+                  Lokasjon: USA (dekket av EU-US Data Privacy Framework)
+                </p>
+              </div>
+
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Google (kun ved samtykke)</h4>
+                <p class="text-sm text-text-muted">
+                  Google Ads konverteringssporing på landingssider. Aktiveres kun etter eksplisitt samtykke.
+                </p>
+                <p class="mt-1 text-xs text-text-muted">
+                  Lokasjon: USA (dekket av EU-US Data Privacy Framework)
+                </p>
+              </div>
+            </div>
+
+            <p class="mt-4 text-text-muted">
+              Vi selger aldri dine personopplysninger til tredjeparter.
+            </p>
+          </section>
+
+          <!-- 5. Informasjonskapsler (cookies) -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">5. Informasjonskapsler (cookies)</h2>
+
+            <h3 class="mb-3 mt-4 text-lg font-medium text-text">Hovedsiden (nettup.no)</h3>
+            <p class="text-text-muted">
+              Hovedsiden setter <strong class="text-text">ingen informasjonskapsler</strong>. Vi bruker kun
+              Vercel Analytics som er helt cookiefri.
+            </p>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">Landingssider</h3>
+            <p class="mb-3 text-text-muted">
+              På landingssider (f.eks. /nettside-for-bedrift) vises en cookie-banner. Hvis du godtar:
+            </p>
+            <ul class="list-inside list-disc space-y-1 text-text-muted">
+              <li><strong class="text-text">Google Ads cookies</strong> – brukes for konverteringssporing</li>
+            </ul>
+            <p class="mt-3 text-text-muted">
+              Ditt valg lagres i nettleserens lokale lagring (localStorage) under nøkkelen
+              <code class="rounded bg-surface px-1 text-xs">nettup_ads_consent</code>.
+            </p>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">Hvordan trekke tilbake samtykke</h3>
+            <p class="text-text-muted">
+              Du kan når som helst trekke tilbake samtykket ved å slette nettstedets data i
+              nettleseren din (fjern localStorage for nettup.no), eller ved å kontakte oss.
+            </p>
+          </section>
+
+          <!-- 6. Lagringstid -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">6. Lagringstid</h2>
+
+            <div class="overflow-x-auto">
+              <table class="mt-4 w-full text-sm">
+                <thead>
+                  <tr class="border-b border-white/10">
+                    <th class="py-3 text-left font-semibold text-text">Type data</th>
+                    <th class="py-3 text-left font-semibold text-text">Lagringstid</th>
+                  </tr>
+                </thead>
+                <tbody class="text-text-muted">
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Kontaktskjema (Formspree)</td>
+                    <td class="py-3">Inntil 2 år, eller til du ber om sletting</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Vercel Analytics</td>
+                    <td class="py-3">Aggregerte data, ingen persondata lagres</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Google Ads cookies</td>
+                    <td class="py-3">Opptil 90 dager (settes av Google)</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Samtykkevalg (localStorage)</td>
+                    <td class="py-3">Til du sletter nettleserdata</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 7. Dine rettigheter -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">7. Dine rettigheter</h2>
+            <p class="mb-4 text-text-muted">
+              Etter personvernforordningen (GDPR) har du følgende rettigheter:
+            </p>
+
+            <ul class="space-y-3 text-text-muted">
+              <li>
+                <strong class="text-text">Innsyn</strong> – Du kan be om å få vite hvilke opplysninger vi har om deg.
+              </li>
+              <li>
+                <strong class="text-text">Retting</strong> – Du kan be om at feilaktige opplysninger rettes.
+              </li>
+              <li>
+                <strong class="text-text">Sletting</strong> – Du kan be om at vi sletter dine opplysninger.
+              </li>
+              <li>
+                <strong class="text-text">Begrensning</strong> – Du kan be om at vi begrenser behandlingen.
+              </li>
+              <li>
+                <strong class="text-text">Dataportabilitet</strong> – Du kan be om å få utlevert dine data i et maskinlesbart format.
+              </li>
+              <li>
+                <strong class="text-text">Innsigelse</strong> – Du kan protestere mot behandling basert på berettiget interesse.
+              </li>
+              <li>
+                <strong class="text-text">Tilbaketrekking av samtykke</strong> – Du kan når som helst trekke tilbake samtykke.
+              </li>
+            </ul>
+
+            <p class="mt-4 text-text-muted">
+              For å utøve dine rettigheter, kontakt oss på{' '}
+              <a href="mailto:post@nettup.no" class="text-brand hover:text-brand-light">post@nettup.no</a>.
+              Vi svarer innen 30 dager.
+            </p>
+          </section>
+
+          <!-- 8. Klage til Datatilsynet -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">8. Klage til Datatilsynet</h2>
+            <p class="text-text-muted">
+              Hvis du mener at vi behandler personopplysninger i strid med regelverket, har du
+              rett til å klage til Datatilsynet:
+            </p>
+            <div class="mt-4 space-y-2 text-text-muted">
+              <p><strong class="text-text">Datatilsynet</strong></p>
+              <p>Postboks 458 Sentrum, 0105 Oslo</p>
+              <p>
+                Nettside:{' '}
+                <a
+                  href="https://www.datatilsynet.no"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-brand hover:text-brand-light"
+                >
+                  www.datatilsynet.no
+                </a>
+              </p>
+            </div>
+          </section>
+
+          <!-- 9. Sikkerhet -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">9. Sikkerhet</h2>
+            <p class="text-text-muted">
+              Vi tar datasikkerhet på alvor og har iverksatt følgende tiltak:
+            </p>
+            <ul class="mt-3 list-inside list-disc space-y-1 text-text-muted">
+              <li>All kommunikasjon skjer via HTTPS (kryptert forbindelse)</li>
+              <li>Kontaktskjemaer har spam-beskyttelse</li>
+              <li>Vi bruker kun anerkjente databehandlere med dokumentert sikkerhet</li>
+              <li>Vi minimerer datainnsamling til det som er nødvendig</li>
+            </ul>
+          </section>
+
+          <!-- 10. Endringer -->
+          <section class="rounded-xl border border-white/5 bg-surface-raised p-6">
+            <h2 class="mb-4 text-xl font-semibold text-text">10. Endringer i personvernerklæringen</h2>
+            <p class="text-text-muted">
+              Vi kan oppdatere denne personvernerklæringen ved behov. Ved vesentlige endringer
+              vil vi informere om dette på nettsiden. Siste oppdatering vises øverst på denne siden.
+            </p>
+          </section>
+
+          <!-- Contact CTA -->
+          <section class="mt-12 text-center">
+            <p class="mb-4 text-text-muted">
+              Har du spørsmål om hvordan vi behandler dine personopplysninger?
+            </p>
+            <a
+              href="/kontakt"
+              class="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-medium text-surface transition-colors hover:bg-brand-light"
+            >
+              Kontakt oss
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="h-4 w-4"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          </section>
+        </div>
+      </div>
+    </Section>
+  </main>
+</BaseLayout>
