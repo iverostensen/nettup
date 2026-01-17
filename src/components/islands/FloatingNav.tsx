@@ -20,10 +20,19 @@ export default function FloatingNav() {
   const [visible, setVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState('/');
+  const [bannerVisible, setBannerVisible] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     setCurrentPath(window.location.pathname);
+    // Check if launch banner is visible (not dismissed)
+    const bannerDismissed = localStorage.getItem('nettup_launch_banner_dismissed') === 'true';
+    setBannerVisible(!bannerDismissed);
+
+    // Listen for banner dismissal
+    const handleBannerDismiss = () => setBannerVisible(false);
+    window.addEventListener('launchBannerDismissed', handleBannerDismiss);
+    return () => window.removeEventListener('launchBannerDismissed', handleBannerDismiss);
   }, []);
 
   useMotionValueEvent(scrollYProgress, 'change', (current) => {
@@ -76,9 +85,10 @@ export default function FloatingNav() {
             ease: 'easeOut',
           }}
           className={cn(
-            'fixed inset-x-0 top-6 z-50 mx-auto flex max-w-fit items-center gap-1 rounded-full',
+            'fixed inset-x-0 z-50 mx-auto flex max-w-fit items-center gap-1 rounded-full',
             'border border-white/10 bg-surface-raised/80 px-2 py-2 pl-3 shadow-lg shadow-black/20 backdrop-blur-md',
-            'md:gap-2'
+            'md:gap-2',
+            bannerVisible ? 'top-16' : 'top-6'
           )}
           aria-label="Hovednavigasjon"
         >

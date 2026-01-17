@@ -76,6 +76,8 @@ const { remainingSlots = 10, href = '/tjenester#pakker' } = Astro.props;
     // Handle close
     closeBtn?.addEventListener('click', function () {
       localStorage.setItem(STORAGE_KEY, 'true');
+      // Notify other components (e.g., FloatingNav)
+      window.dispatchEvent(new CustomEvent('launchBannerDismissed'));
       if (banner) {
         banner.style.opacity = '0';
         banner.style.transform = 'translateY(-100%)';
