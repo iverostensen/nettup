@@ -10,6 +10,7 @@
  */
 import '../styles/global.css';
 import MinimalFooter from '../components/layout/MinimalFooter.astro';
+import LaunchOfferBanner from '../components/ui/LaunchOfferBanner.astro';
 import Analytics from '@vercel/analytics/astro';
 
 interface Props {
@@ -22,7 +23,7 @@ interface Props {
 
 const {
   title,
-  description = 'Profesjonell nettside for din bedrift. Fra 7 000 kr. Moderne, rask og SEO-optimalisert.',
+  description = 'Profesjonell nettside for din bedrift. Lanseringstilbud: Fra 2 500 kr (ordinært 7 000 kr). Moderne, rask og SEO-optimalisert.',
   image = '/images/og-image.jpg',
   noIndex = false,
   phone = '+47 473 31 298',
@@ -146,6 +147,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Add padding for fixed header -->
     <div class="pt-16">
+      <LaunchOfferBanner remainingSlots={10} href="#pakker" />
       <slot />
     </div>
 

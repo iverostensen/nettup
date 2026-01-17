@@ -22,11 +22,11 @@ interface FormData {
 
 const FORMSPREE_ID = 'xnjnzybj';
 
-// Package display names and pricing
-const PAKKE_INFO: Record<string, { name: string; price: string; monthly: string }> = {
-  enkel: { name: 'Enkel', price: '7 000 kr', monthly: '350 kr/mnd' },
-  standard: { name: 'Standard', price: '15 000 kr', monthly: '500 kr/mnd' },
-  premium: { name: 'Premium', price: 'fra 25 000 kr', monthly: '750 kr/mnd' },
+// Package display names and pricing (launch offer)
+const PAKKE_INFO: Record<string, { name: string; originalPrice: string; launchPrice: string; monthly: string }> = {
+  enkel: { name: 'Enkel', originalPrice: '7 000 kr', launchPrice: '2 500 kr', monthly: '350 kr/mnd' },
+  standard: { name: 'Standard', originalPrice: '15 000 kr', launchPrice: '4 500 kr', monthly: '500 kr/mnd' },
+  premium: { name: 'Premium', originalPrice: '25 000 kr', launchPrice: '10 000 kr', monthly: '750 kr/mnd' },
 };
 
 export default function ContactForm() {
@@ -198,9 +198,15 @@ export default function ContactForm() {
               <div className="flex-1">
                 <p className="font-medium text-text">
                   {selectedPakke.name}-pakken valgt
+                  <span className="ml-2 rounded bg-brand/20 px-2 py-0.5 text-xs font-medium text-brand">
+                    Lanseringstilbud
+                  </span>
                 </p>
                 <p className="mt-1 text-sm text-text-muted">
-                  {selectedPakke.price} engangskostnad + {selectedPakke.monthly}
+                  <span className="line-through">{selectedPakke.originalPrice}</span>
+                  {' '}
+                  <span className="font-semibold text-brand">{selectedPakke.launchPrice}</span>
+                  {' '}+ {selectedPakke.monthly}
                 </p>
               </div>
             </div>

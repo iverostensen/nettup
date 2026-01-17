@@ -5,12 +5,17 @@
  * Shows 3 tiers with essential info only.
  * CTAs link to the form section below (not to /kontakt/).
  */
+import ScarcityCounter from '@/components/ui/ScarcityCounter.astro';
+import PriceDisplay from '@/components/ui/PriceDisplay.astro';
 
 const pakker = [
   {
     name: 'Enkel',
     description: 'Profesjonell tilstedeværelse på nett',
-    price: '7 000',
+    originalPrice: '7 000',
+    launchPrice: '2 500',
+    savings: '4 500',
+    discountPercent: '64',
     monthly: '350',
     features: ['Inntil 5 sider', 'Responsivt design', 'Kontaktskjema', 'Grunnleggende SEO'],
     popular: false,
@@ -19,7 +24,10 @@ const pakker = [
   {
     name: 'Standard',
     description: 'For bedrifter som vil ha litt mer',
-    price: '15 000',
+    originalPrice: '15 000',
+    launchPrice: '4 500',
+    savings: '10 500',
+    discountPercent: '70',
     monthly: '500',
     features: ['Inntil 10 sider', 'Alt i Enkel', 'Animasjoner', 'Google Analytics', 'Utvidet SEO'],
     popular: true,
@@ -28,7 +36,10 @@ const pakker = [
   {
     name: 'Premium',
     description: 'Skreddersydd design og funksjoner',
-    price: 'fra 25 000',
+    originalPrice: '25 000',
+    launchPrice: '10 000',
+    savings: '15 000',
+    discountPercent: '60',
     monthly: '750',
     features: ['Ubegrenset sider', 'Alt i Standard', 'Skreddersydd design', 'Avanserte funksjoner'],
     popular: false,
@@ -53,23 +64,29 @@ const pakker = [
         <div
           class={`reveal-on-scroll reveal-delay-${index + 1} relative flex flex-col overflow-hidden rounded-2xl border bg-surface-raised ${pakke.popular ? 'border-brand ring-1 ring-brand' : 'border-white/10'}`}
         >
+          {/* Launch offer badge */}
+          <div class="absolute left-0 top-0 rounded-br-lg bg-brand px-3 py-1 text-sm font-medium text-surface">
+            Lanseringstilbud
+          </div>
           {pakke.popular && (
             <div class="absolute right-0 top-0 rounded-bl-lg bg-brand px-3 py-1 text-sm font-medium text-surface">
               Mest populær
             </div>
           )}
-          <div class="flex flex-1 flex-col p-6">
+          <div class="flex flex-1 flex-col p-6 pt-10">
             <div>
               <h3 class="text-xl font-bold">{pakke.name}</h3>
               <p class="mt-1 text-sm text-text-muted">{pakke.description}</p>
             </div>
             <div class="mt-4 space-y-2">
               <div>
-                <div class="text-xs text-text-muted uppercase tracking-wide">Engangskostnad</div>
-                <div>
-                  <span class="text-3xl font-bold">{pakke.price}</span>
-                  <span class="text-text-muted"> kr</span>
-                </div>
+                <div class="text-xs text-text-muted uppercase tracking-wide mb-1">Engangskostnad</div>
+                <PriceDisplay
+                  originalPrice={pakke.originalPrice}
+                  launchPrice={pakke.launchPrice}
+                  savings={pakke.savings}
+                  size="sm"
+                />
               </div>
               <div class="pt-2 border-t border-white/5">
                 <div class="text-xs text-text-muted uppercase tracking-wide">Per måned</div>
@@ -113,8 +130,13 @@ const pakker = [
       ))}
     </div>
 
+    <!-- Scarcity counter -->
+    <div class="reveal-on-scroll mt-8 flex justify-center">
+      <ScarcityCounter total={10} taken={0} variant="inline" />
+    </div>
+
     <!-- Additional trust text -->
-    <p class="reveal-on-scroll mt-8 text-center text-sm text-text-muted">
+    <p class="reveal-on-scroll mt-6 text-center text-sm text-text-muted">
       Usikker? <a href="#kontakt" class="text-brand hover:text-brand-light">Ta en uforpliktende prat</a> – vi hjelper deg å velge riktig.
     </p>
 

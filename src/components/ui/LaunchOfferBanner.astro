@@ -1,0 +1,87 @@
+---
+/**
+ * LaunchOfferBanner - Dismissible banner for launch offer promotion
+ *
+ * Place at top of pages (after header) to highlight the limited offer.
+ * Uses localStorage to remember dismissal.
+ */
+
+interface Props {
+  remainingSlots?: number;
+  href?: string;
+}
+
+const { remainingSlots = 10, href = '/tjenester#pakker' } = Astro.props;
+---
+
+<div
+  id="launch-banner"
+  class="border-b border-brand/20 bg-gradient-to-r from-brand/20 to-brand/10"
+>
+  <div class="container mx-auto px-4 py-3">
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span
+          class="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs font-bold text-surface"
+        >
+          {remainingSlots}
+        </span>
+        <p class="text-sm">
+          <strong class="text-brand">Lanseringstilbud:</strong>
+          {' '}Kun {remainingSlots} plasser igjen til opptil 70% rabatt
+          <a
+            href={href}
+            class="ml-2 text-brand underline hover:text-brand-light"
+          >
+            Se priser &rarr;
+          </a>
+        </p>
+      </div>
+      <button
+        type="button"
+        id="launch-banner-close"
+        class="shrink-0 rounded-lg p-1 text-text-muted transition-colors hover:bg-white/5 hover:text-text"
+        aria-label="Lukk"
+      >
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const STORAGE_KEY = 'nettup_launch_banner_dismissed';
+    const banner = document.getElementById('launch-banner');
+    const closeBtn = document.getElementById('launch-banner-close');
+
+    // Check if already dismissed
+    if (localStorage.getItem(STORAGE_KEY) === 'true') {
+      banner?.remove();
+      return;
+    }
+
+    // Handle close
+    closeBtn?.addEventListener('click', function () {
+      localStorage.setItem(STORAGE_KEY, 'true');
+      if (banner) {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-100%)';
+        banner.style.transition = 'opacity 0.3s, transform 0.3s';
+        setTimeout(() => banner.remove(), 300);
+      }
+    });
+  })();
+</script>

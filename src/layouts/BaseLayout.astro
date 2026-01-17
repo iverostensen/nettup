@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import FloatingNav from '../components/islands/FloatingNav';
 import Footer from '../components/layout/Footer.astro';
+import LaunchOfferBanner from '../components/ui/LaunchOfferBanner.astro';
 import Analytics from '@vercel/analytics/astro';
 
 interface Props {
@@ -71,7 +72,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       "@type": "LocalBusiness",
       "@id": "https://nettup.no/#business",
       "name": "Nettup",
-      "description": "Webdesign og webutvikling i Oslo-området. Moderne, raske nettsider fra 7 000 kr.",
+      "description": "Webdesign og webutvikling i Oslo-området. Lanseringstilbud: Nettsider fra 2 500 kr (ordinært 7 000 kr).",
       "url": "https://nettup.no",
       "logo": "https://nettup.no/images/nettup-logo.svg",
       "image": "https://nettup.no/images/og-image.jpg",
@@ -90,7 +91,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         "latitude": "59.7833",
         "longitude": "10.7833"
       },
-      "priceRange": "7000-25000 NOK",
+      "priceRange": "2500-10000 NOK",
       "paymentAccepted": ["Faktura", "Bankoverføring"],
       "currenciesAccepted": "NOK",
       "areaServed": [
@@ -141,6 +142,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body class="min-h-screen bg-surface text-text antialiased">
     <FloatingNav client:load />
+    <LaunchOfferBanner remainingSlots={10} />
     <slot />
     <Footer />
 

@@ -1,0 +1,65 @@
+---
+/**
+ * PriceDisplay - Reusable price display with strikethrough
+ *
+ * Shows original price (crossed out), launch price, optional savings, and monthly cost.
+ * Three sizes available: sm, md, lg.
+ */
+
+interface Props {
+  originalPrice: string;
+  launchPrice: string;
+  savings?: string;
+  monthly?: string;
+  size?: 'sm' | 'md' | 'lg';
+  showBadge?: boolean;
+}
+
+const {
+  originalPrice,
+  launchPrice,
+  savings,
+  monthly,
+  size = 'md',
+  showBadge = false,
+} = Astro.props;
+
+const sizeClasses = {
+  sm: { original: 'text-sm', launch: 'text-xl', savings: 'text-xs', monthly: 'text-xs' },
+  md: { original: 'text-lg', launch: 'text-3xl', savings: 'text-sm', monthly: 'text-sm' },
+  lg: { original: 'text-xl', launch: 'text-4xl', savings: 'text-base', monthly: 'text-sm' },
+};
+
+const classes = sizeClasses[size];
+---
+
+<div class="space-y-1">
+  {
+    showBadge && (
+      <span class="mb-2 inline-block rounded bg-brand/20 px-2 py-0.5 text-xs font-medium text-brand">
+        Lanseringstilbud
+      </span>
+    )
+  }
+  <div class="flex items-baseline gap-2">
+    <span class={`${classes.original} text-text-muted line-through`}>
+      {originalPrice} kr
+    </span>
+  </div>
+  <div class="flex items-baseline gap-2">
+    <span class={`${classes.launch} font-bold text-brand`}>
+      {launchPrice}
+    </span>
+    <span class="text-text-muted">kr</span>
+  </div>
+  {
+    savings && (
+      <p class={`${classes.savings} text-green-400`}>Spar {savings} kr</p>
+    )
+  }
+  {
+    monthly && (
+      <p class={`${classes.monthly} mt-2 text-text-muted`}>+ {monthly} kr/mnd</p>
+    )
+  }
+</div>
