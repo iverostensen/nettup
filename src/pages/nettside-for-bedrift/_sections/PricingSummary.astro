@@ -8,45 +8,7 @@
 import ScarcityCounter from '@/components/ui/ScarcityCounter.astro';
 import PriceDisplay from '@/components/ui/PriceDisplay.astro';
 import { launchOffer } from '@/config/launchOffer';
-
-const pakker = [
-  {
-    name: 'Enkel',
-    description: 'Profesjonell tilstedeværelse på nett',
-    originalPrice: '7 000',
-    launchPrice: '2 500',
-    savings: '4 500',
-    discountPercent: '64',
-    monthly: '350',
-    features: ['Inntil 5 sider', 'Responsivt design', 'Kontaktskjema', 'Grunnleggende SEO'],
-    popular: false,
-    pakkeValue: 'enkel',
-  },
-  {
-    name: 'Standard',
-    description: 'For bedrifter som vil ha litt mer',
-    originalPrice: '15 000',
-    launchPrice: '4 500',
-    savings: '10 500',
-    discountPercent: '70',
-    monthly: '500',
-    features: ['Inntil 10 sider', 'Alt i Enkel', 'Animasjoner', 'Google Analytics', 'Utvidet SEO'],
-    popular: true,
-    pakkeValue: 'standard',
-  },
-  {
-    name: 'Premium',
-    description: 'Skreddersydd design og funksjoner',
-    originalPrice: '25 000',
-    launchPrice: '10 000',
-    savings: '15 000',
-    discountPercent: '60',
-    monthly: '750',
-    features: ['Ubegrenset sider', 'Alt i Standard', 'Skreddersydd design', 'Avanserte funksjoner'],
-    popular: false,
-    pakkeValue: 'premium',
-  },
-];
+import { pakker } from '@/config/pricing';
 ---
 
 <section class="py-16 md:py-24">
@@ -116,7 +78,7 @@ const pakker = [
             <div class="mt-6">
               <button
                 type="button"
-                data-pakke={pakke.pakkeValue}
+                data-pakke={pakke.id}
                 class={`package-select-btn block w-full rounded-full px-6 py-3 text-center font-medium transition-all hover:scale-[1.02] active:scale-100 ${
                   pakke.popular
                     ? 'bg-brand text-surface hover:bg-brand-light hover:shadow-lg hover:shadow-brand/25'

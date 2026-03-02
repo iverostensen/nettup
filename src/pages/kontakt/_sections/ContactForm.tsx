@@ -20,14 +20,21 @@ interface FormData {
   kilde: string;
 }
 
+import { pakker } from '@/config/pricing';
+
 const FORMSPREE_ID = 'xnjnzybj';
 
-// Package display names and pricing (launch offer)
-const PAKKE_INFO: Record<string, { name: string; originalPrice: string; launchPrice: string; monthly: string }> = {
-  enkel: { name: 'Enkel', originalPrice: '7 000 kr', launchPrice: '2 500 kr', monthly: '350 kr/mnd' },
-  standard: { name: 'Standard', originalPrice: '15 000 kr', launchPrice: '4 500 kr', monthly: '500 kr/mnd' },
-  premium: { name: 'Premium', originalPrice: '25 000 kr', launchPrice: '10 000 kr', monthly: '750 kr/mnd' },
-};
+const PAKKE_INFO = Object.fromEntries(
+  pakker.map((p) => [
+    p.id,
+    {
+      name: p.name,
+      originalPrice: `${p.originalPrice} kr`,
+      launchPrice: `${p.launchPrice} kr`,
+      monthly: `${p.monthly} kr/mnd`,
+    },
+  ])
+);
 
 export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
