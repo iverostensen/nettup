@@ -14,7 +14,7 @@ interface Props {
 
 const { total = 10, taken = 0, variant = 'inline' } = Astro.props;
 const remaining = total - taken;
-const percentage = (taken / total) * 100;
+const percentage = (remaining / total) * 100;
 ---
 
 {
@@ -45,7 +45,7 @@ const percentage = (taken / total) * 100;
         />
       </div>
       <p class="mt-2 text-xs text-text-muted">
-        {taken} av {total} plasser tatt
+        {remaining} av {total} plasser igjen
       </p>
     </div>
   )
