@@ -308,12 +308,22 @@ export default function ContactForm() {
               {errors.epost && <p className={errorClasses}>{errors.epost}</p>}
             </div>
 
-            {/* Telefon field hidden to reduce form friction */}
-            <input
-              type="hidden"
-              name="telefon"
-              value={formData.telefon}
-            />
+            <div>
+              <label htmlFor="telefon" className={labelClasses}>
+                Telefonnummer <span className="text-text-muted/50 font-normal">(valgfritt)</span>
+              </label>
+              <input
+                type="tel"
+                id="telefon"
+                name="telefon"
+                autoComplete="tel"
+                value={formData.telefon}
+                onChange={handleChange}
+                placeholder="f.eks. 900 00 000"
+                className={inputClasses}
+                disabled={status === 'submitting'}
+              />
+            </div>
 
             {/* Pakke field hidden - tracked via URL params only to reduce form friction */}
             <input
