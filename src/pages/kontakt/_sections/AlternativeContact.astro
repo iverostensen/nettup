@@ -4,15 +4,23 @@ import Section from '@/components/ui/Section.astro';
 
 <Section padding="sm">
   <div class="mx-auto max-w-xl text-center">
-    <!-- Email alternative (visible on mobile only, hidden on lg since it's in the left panel) -->
+    <!-- Direct contact alternatives (visible on mobile only, hidden on lg since it's in the left panel) -->
     <div class="reveal-on-scroll lg:hidden">
-      <p class="text-text-muted">Foretrekker du e-post?</p>
-      <a
-        href="mailto:post@nettup.no"
-        class="mt-1 inline-block font-medium text-brand transition-colors hover:text-brand-light"
-      >
-        post@nettup.no
-      </a>
+      <p class="text-text-muted">Foretrekker du å ta kontakt direkte?</p>
+      <div class="mt-2 flex justify-center gap-6">
+        <a
+          href="tel:+4741327136"
+          class="font-medium text-brand transition-colors hover:text-brand-light"
+        >
+          +47 413 27 136
+        </a>
+        <a
+          href="mailto:post@nettup.no"
+          class="font-medium text-brand transition-colors hover:text-brand-light"
+        >
+          post@nettup.no
+        </a>
+      </div>
     </div>
 
     <p class="reveal-on-scroll reveal-delay-1 mt-6 text-text-muted lg:mt-0">
