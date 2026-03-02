@@ -6,7 +6,7 @@
  */
 export const launchOffer = {
   total: 10,
-  taken: 6, // Update this when customers sign up
+  taken: 7, // Update this when customers sign up
 };
 
 export const remainingSlots = launchOffer.total - launchOffer.taken;
