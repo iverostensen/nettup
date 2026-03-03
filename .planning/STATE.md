@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-03T19:23:00Z"
+last_updated: "2026-03-03T19:27:30.516Z"
 progress:
-  total_phases: 4
+  total_phases: 2
   completed_phases: 1
-  total_plans: 13
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
 ---
 
 # Project State
@@ -49,6 +49,7 @@ Progress: [██████████░░░░░░░░░░░░░
 *Updated after each plan completion*
 | Phase 01-brand-identity P04 | 1 | 3 tasks | 26 files |
 | Phase 02-animation-interaction P01 | 1 min | 2 tasks | 3 files |
+| Phase 02-animation-interaction P02 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 02-01]: duration.normal (0.3s) used in RotatingText instead of original 0.4 — nearest brand token
 - [Phase 02-01]: duration.fast (0.15s) used in FloatingNav instead of original 0.2 — nearest brand token for snappy nav animation
 - [Phase 02-01]: All Framer Motion timing must be imported from @/lib/animation — never hardcode numeric values in TSX
+- [Phase 02-animation-interaction]: Stats card row items use explicit per-index delay rather than nested stagger container — simpler for 4 items
+- [Phase 02-animation-interaction]: Reduced motion path renders plain HTML without motion.* wrappers for zero transition overhead
 
 ### Pending Todos
 
