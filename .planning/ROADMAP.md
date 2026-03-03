@@ -43,11 +43,12 @@ Plans:
   1. An animation preset library (lib/animation.ts) with consistent easing curves and duration tokens is used by all animated components -- no hardcoded animation values scattered across files
   2. The hero section features a visually impressive Framer Motion animation using advanced APIs (spring physics, scroll-driven, or orchestrated sequencing) that makes visitors think "these people know what they are doing"
   3. Navigating between pages triggers smooth View Transitions via Astro's native support -- page changes feel app-like, not like traditional full reloads
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Create src/lib/animation.ts preset library and migrate RotatingText + FloatingNav to use it
+- [ ] 02-02-PLAN.md — Build HeroIsland.tsx with orchestrated spring animation, replace Hero.astro
+- [ ] 02-03-PLAN.md — Add ClientRouter view transitions to BaseLayout.astro, fix FloatingNav path tracking
 
 ### Phase 3: SEO & Portfolio
 **Goal**: The site is discoverable by Norwegian SMBs searching for web help, and visitors see proof that Nettup delivers real projects
@@ -86,6 +87,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
-| 2. Animation & Interaction | 0/0 | Not started | - |
+| 2. Animation & Interaction | 0/3 | Not started | - |
 | 3. SEO & Portfolio | 0/0 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
