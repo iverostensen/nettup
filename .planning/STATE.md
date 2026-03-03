@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-03T22:12:59.204Z"
+last_updated: "2026-03-03T22:15:21.269Z"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 13
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -53,6 +53,7 @@ Progress: [█████████████░░░░░░░░░░
 | Phase 02-animation-interaction P03 | 2 | 2 tasks | 2 files |
 | Phase 02-animation-interaction P02 | 5 | 3 tasks | 2 files |
 | Phase 02.1-hero-animation-rework-delivery-story P01 | 2 | 2 tasks | 2 files |
+| Phase 02.1 P02 | 1 | 1 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,7 @@ Recent decisions affecting current work:
 - [Phase 02.1]: useAnimate imperative API chosen for delivery story loop — springs have no fixed duration and break await chains
 - [Phase 02.1]: HeroDeliveryAnimation handles its own reduced-motion path internally with StaticDeliveryDone — HeroIsland passes no props
 - [Phase 02.1]: Initial opacity-0 via Tailwind class (not Framer initial=) ensures DOM elements exist when useAnimate targets them
+- [Phase 02.1]: Human visual review is the only valid verification for animation quality — automated checks cannot confirm timing, narrative, or visual polish
 
 ### Roadmap Evolution
 

@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Brand Identity** - Define personality, implement design token system, upgrade typography (completed 2026-03-03)
 - [x] **Phase 2: Animation & Interaction** - Build animation preset system, hero showcase animation, page transitions (completed 2026-03-03)
-- [ ] **Phase 02.1: Hero animation rework — delivery story** - Replace static stats card with cinematic 14-day delivery story loop (INSERTED)
+- [x] **Phase 02.1: Hero animation rework — delivery story** - Replace static stats card with cinematic 14-day delivery story loop (INSERTED) (completed 2026-03-03)
 - [ ] **Phase 3: SEO & Portfolio** - Per-page metadata, structured data schemas, expand portfolio to 2-3 projects
 - [ ] **Phase 4: Conversion Optimization** - Contextual CTAs on every page, smart form pre-fill, testimonial treatment, mobile UX audit
 
@@ -56,7 +56,7 @@ Plans:
 **Goal:** The hero right column shows a cinematic looping animation that makes Nettup's 2-week delivery promise visceral — day counter ticks to 14, website sections snap into place, "✓ Lansert!" badge appears
 **Requirements**: none (inserted phase)
 **Depends on:** Phase 2
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 02.1-01-PLAN.md — Create HeroDeliveryAnimation.tsx and wire into HeroIsland.tsx right column
@@ -102,6 +102,6 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
-| 02.1. Hero animation rework | 1/2 | In Progress|  |
+| 02.1. Hero animation rework | 2/2 | Complete   | 2026-03-03 |
 | 3. SEO & Portfolio | 0/4 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
