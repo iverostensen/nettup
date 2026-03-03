@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 4 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Write .planning/BRAND.md brand personality document (mission, tone, contrast table, copy principles)
+- [x] 01-01-PLAN.md — Write .planning/BRAND.md brand personality document (mission, tone, contrast table, copy principles)
 - [ ] 01-02-PLAN.md — Create src/config/brand.ts and wire tokens into tailwind.config.ts
 - [ ] 01-03-PLAN.md — Load Space Grotesk, apply font-display to all H1s, add gradient text to RotatingText
 - [ ] 01-04-PLAN.md — Migrate UI components (Button, Card, SectionHeader) to token classes, remove CSS delay classes
@@ -85,7 +85,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Brand Identity | 0/4 | Planned | - |
+| 1. Brand Identity | 1/4 | In progress | - |
 | 2. Animation & Interaction | 0/0 | Not started | - |
 | 3. SEO & Portfolio | 0/0 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
