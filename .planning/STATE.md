@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-03T19:27:30.516Z"
+last_updated: "2026-03-03T19:30:30Z"
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 2 of 4 (Animation & Interaction) — IN PROGRESS
-Plan: 1 of 4 in current phase — COMPLETE
-Status: Plan 02-01 complete — animation.ts library created, RotatingText and FloatingNav migrated
-Last activity: 2026-03-03 -- Plan 02-01 complete (animation preset library + component migration)
+Plan: 3 of 4 in current phase — COMPLETE (awaiting human-verify checkpoint)
+Status: Plan 02-03 complete — ClientRouter View Transitions, transition:persist FloatingNav, astro:page-load IntersectionObserver
+Last activity: 2026-03-03 -- Plan 02-03 complete (page transitions via Astro ClientRouter)
 
-Progress: [██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 38% overall (5/13 plans)
+Progress: [████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 46% overall (6/13 plans)
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [██████████░░░░░░░░░░░░░
 | Phase 01-brand-identity P04 | 1 | 3 tasks | 26 files |
 | Phase 02-animation-interaction P01 | 1 min | 2 tasks | 3 files |
 | Phase 02-animation-interaction P02 | 2 | 2 tasks | 2 files |
+| Phase 02-animation-interaction P03 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,10 @@ Recent decisions affecting current work:
 - [Phase 02-01]: All Framer Motion timing must be imported from @/lib/animation — never hardcode numeric values in TSX
 - [Phase 02-animation-interaction]: Stats card row items use explicit per-index delay rather than nested stagger container — simpler for 4 items
 - [Phase 02-animation-interaction]: Reduced motion path renders plain HTML without motion.* wrappers for zero transition overhead
+- [Phase 02-03]: ClientRouter (Astro v5) used instead of deprecated ViewTransitions (Astro v4)
+- [Phase 02-03]: fade({ duration: '0.15s' }) on body matches brand duration.fast (0.15s) token from animation.ts
+- [Phase 02-03]: astro:page-load is the correct hook for re-initializing DOM-dependent scripts after View Transitions
+- [Phase 02-03]: transition:persist preserves React island state across navigations — island must self-update via events
 
 ### Pending Todos
 
@@ -88,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-03T19:23:00Z
-Stopped at: Completed 02-01-PLAN.md — animation.ts library created, RotatingText and FloatingNav migrated to animation.ts timing tokens
+Last session: 2026-03-03T19:30:30Z
+Stopped at: Checkpoint 02-03 — 2 auto tasks complete, awaiting human-verify of View Transitions in browser
 Resume file: None
