@@ -50,6 +50,16 @@ Plans:
 - [x] 02-02-PLAN.md — Build HeroIsland.tsx with orchestrated spring animation, replace Hero.astro
 - [x] 02-03-PLAN.md — Add ClientRouter view transitions to BaseLayout.astro, fix FloatingNav path tracking
 
+### Phase 02.1: Hero animation rework — delivery story (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 2
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 02.1 to break down)
+
 ### Phase 3: SEO & Portfolio
 **Goal**: The site is discoverable by Norwegian SMBs searching for web help, and visitors see proof that Nettup delivers real projects
 **Depends on**: Phase 1 (brand tone for metadata copy, visual treatment for portfolio)
@@ -59,11 +69,13 @@ Plans:
   2. Structured data schemas (Service for each offering, FAQ on /tjenester, BreadcrumbList site-wide) are present and validate without errors in Google's Rich Results Test
   3. The /prosjekter page showcases at least 2-3 projects with distinct visual treatment (not just iGive)
   4. Testimonials on the homepage have strong visual treatment and prominent placement that builds trust immediately
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Strengthen metadata for om-oss + prosjekter pages; add BreadcrumbList JSON-LD to BaseLayout
+- [ ] 03-02-PLAN.md — Add Service JSON-LD schemas to /tjenester (one per pricing package); add head slot to BaseLayout
+- [ ] 03-03-PLAN.md — Extract iGive to projects.ts config array; refactor ProjectShowcase.astro to render from data
+- [ ] 03-04-PLAN.md — Create testimonials.ts config; build Testimonials.astro section; wire to homepage between ProjectTeaser and CTA
 
 ### Phase 4: Conversion Optimization
 **Goal**: Every page guides visitors toward the contact form with contextually relevant calls to action, and mobile experience is flawless
@@ -88,5 +100,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
-| 3. SEO & Portfolio | 0/0 | Not started | - |
+| 3. SEO & Portfolio | 0/4 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
