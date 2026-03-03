@@ -1,16 +1,10 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { heroContainer, fadeUp, springPop, fadeIn, springs } from '@/lib/animation';
 import RotatingText from './RotatingText';
+import HeroDeliveryAnimation from './HeroDeliveryAnimation';
 
 export default function HeroIsland() {
   const shouldReduceMotion = useReducedMotion();
-
-  const stats = [
-    { icon: '⚡', value: '< 1s', label: 'lastetid' },
-    { icon: '💯', value: '100', label: 'Lighthouse score' },
-    { icon: '📅', value: '2 uker', label: 'levering' },
-    { icon: '✓', value: 'Fast', label: 'pris' },
-  ];
 
   if (shouldReduceMotion) {
     return (
@@ -47,23 +41,7 @@ export default function HeroIsland() {
             </div>
 
             <div className="hidden items-center justify-center lg:flex lg:justify-end" aria-hidden="true">
-              <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-raised p-8 shadow-2xl">
-                <div className="mb-6 flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-brand" />
-                  <span className="text-xs font-medium uppercase tracking-widest text-text-muted">Nettup ytelse</span>
-                </div>
-                <div className="space-y-5">
-                  {stats.map((stat) => (
-                    <div key={stat.label} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl" aria-hidden="true">{stat.icon}</span>
-                        <span className="text-sm text-text-muted">{stat.label}</span>
-                      </div>
-                      <span className="font-semibold text-text tabular-nums">{stat.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <HeroDeliveryAnimation />
             </div>
 
           </div>
@@ -132,7 +110,7 @@ export default function HeroIsland() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Stats card — desktop only */}
+          {/* Right: Delivery animation — desktop only */}
           <motion.div
             className="hidden items-center justify-center lg:flex lg:justify-end"
             variants={springPop}
@@ -141,29 +119,7 @@ export default function HeroIsland() {
             transition={{ ...springs.gentle, delay: 0.35 }}
             aria-hidden="true"
           >
-            <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-raised p-8 shadow-2xl">
-              <div className="mb-6 flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-brand" />
-                <span className="text-xs font-medium uppercase tracking-widest text-text-muted">Nettup ytelse</span>
-              </div>
-              <div className="space-y-5">
-                {stats.map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, x: 12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ ...springs.snappy, delay: 0.45 + i * 0.07 }}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl" aria-hidden="true">{stat.icon}</span>
-                      <span className="text-sm text-text-muted">{stat.label}</span>
-                    </div>
-                    <span className="font-semibold text-text tabular-nums">{stat.value}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <HeroDeliveryAnimation />
           </motion.div>
 
         </div>

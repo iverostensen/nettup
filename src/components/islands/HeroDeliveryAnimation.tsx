@@ -17,7 +17,7 @@ import { useState, useEffect } from 'react';
 import { useAnimate, stagger, useReducedMotion } from 'framer-motion';
 import { duration } from '@/lib/animation';
 
-function StaticDeliveryDone(): JSX.Element {
+function StaticDeliveryDone() {
   return (
     <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-raised p-6 shadow-2xl">
       <div className="mb-4 flex items-center gap-2">
@@ -58,7 +58,7 @@ function StaticDeliveryDone(): JSX.Element {
   );
 }
 
-export default function HeroDeliveryAnimation(): JSX.Element {
+export default function HeroDeliveryAnimation() {
   const shouldReduceMotion = useReducedMotion();
   const [scope, animate] = useAnimate();
   const [currentDay, setCurrentDay] = useState<number>(1);
