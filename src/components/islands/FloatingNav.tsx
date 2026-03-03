@@ -6,6 +6,7 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { duration } from '@/lib/animation';
 import MobileMenu from './MobileMenu';
 
 const navItems = [
@@ -81,7 +82,7 @@ export default function FloatingNav() {
             opacity: visible ? 1 : 0,
           }}
           transition={{
-            duration: shouldReduceMotion ? 0 : 0.2,
+            duration: shouldReduceMotion ? 0 : duration.fast,
             ease: 'easeOut',
           }}
           className={cn(

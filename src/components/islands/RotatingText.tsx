@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { duration } from '@/lib/animation';
 
 const words = [
   'bare funker.',
@@ -38,7 +39,7 @@ export default function RotatingText() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          transition={{ duration: duration.normal, ease: 'easeOut' }}
           className="inline-block bg-gradient-to-r from-brand to-text bg-clip-text text-transparent"
         >
           {words[index]}
