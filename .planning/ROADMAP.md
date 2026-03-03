@@ -27,11 +27,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. A brand document exists defining Nettup's personality, tone, and visual values -- and these are reflected in site copy and design choices
   2. A design token system in code (config/brand.ts -> Tailwind config) controls colors, typography scale, spacing, animation timing, and border radius conventions across the entire site
   3. Headings use a distinct, intentionally chosen font that differentiates from generic dark-theme sites -- the site no longer looks like a SaaS template
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Write .planning/BRAND.md brand personality document (mission, tone, contrast table, copy principles)
+- [ ] 01-02-PLAN.md — Create src/config/brand.ts and wire tokens into tailwind.config.ts
+- [ ] 01-03-PLAN.md — Load Space Grotesk, apply font-display to all H1s, add gradient text to RotatingText
+- [ ] 01-04-PLAN.md — Migrate UI components (Button, Card, SectionHeader) to token classes, remove CSS delay classes
 
 ### Phase 2: Animation & Interaction
 **Goal**: Animations across the site demonstrate technical capability and follow a consistent, intentional system -- not random motion
@@ -83,7 +85,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Brand Identity | 0/0 | Not started | - |
+| 1. Brand Identity | 0/4 | Planned | - |
 | 2. Animation & Interaction | 0/0 | Not started | - |
 | 3. SEO & Portfolio | 0/0 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
