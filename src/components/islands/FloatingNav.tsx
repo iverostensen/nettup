@@ -25,7 +25,10 @@ export default function FloatingNav() {
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    setCurrentPath(window.location.pathname);
+    const updatePath = () => setCurrentPath(window.location.pathname);
+    updatePath();
+    document.addEventListener('astro:page-load', updatePath);
+
     // Check if launch banner is visible (not dismissed)
     const bannerDismissed = localStorage.getItem('nettup_launch_banner_dismissed') === 'true';
     setBannerVisible(!bannerDismissed);
@@ -33,7 +36,11 @@ export default function FloatingNav() {
     // Listen for banner dismissal
     const handleBannerDismiss = () => setBannerVisible(false);
     window.addEventListener('launchBannerDismissed', handleBannerDismiss);
-    return () => window.removeEventListener('launchBannerDismissed', handleBannerDismiss);
+
+    return () => {
+      document.removeEventListener('astro:page-load', updatePath);
+      window.removeEventListener('launchBannerDismissed', handleBannerDismiss);
+    };
   }, []);
 
   useMotionValueEvent(scrollYProgress, 'change', (current) => {
