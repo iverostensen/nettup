@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { brand } from './src/config/brand';
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
@@ -21,7 +22,30 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: [brand.fonts.display],   // → font-display class (Space Grotesk)
+        sans: [brand.fonts.body],         // → font-sans (unchanged, Inter)
+      },
+      borderRadius: {
+        sm: brand.radius.sm,
+        md: brand.radius.md,
+        lg: brand.radius.lg,
+        full: brand.radius.full,
+      },
+      transitionDuration: {
+        fast: brand.duration.fast,
+        normal: brand.duration.normal,
+        slow: brand.duration.slow,
+      },
+      transitionTimingFunction: {
+        snappy: brand.easing.snappy,
+        gentle: brand.easing.gentle,
+      },
+      transitionDelay: {
+        1: brand.delay[1],
+        2: brand.delay[2],
+        3: brand.delay[3],
+        4: brand.delay[4],
+        5: brand.delay[5],
       },
     },
   },
