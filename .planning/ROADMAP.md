@@ -46,9 +46,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Create src/lib/animation.ts preset library and migrate RotatingText + FloatingNav to use it
-- [ ] 02-02-PLAN.md — Build HeroIsland.tsx with orchestrated spring animation, replace Hero.astro
-- [ ] 02-03-PLAN.md — Add ClientRouter view transitions to BaseLayout.astro, fix FloatingNav path tracking
+- [x] 02-01-PLAN.md — Create src/lib/animation.ts preset library and migrate RotatingText + FloatingNav to use it
+- [x] 02-02-PLAN.md — Build HeroIsland.tsx with orchestrated spring animation, replace Hero.astro
+- [x] 02-03-PLAN.md — Add ClientRouter view transitions to BaseLayout.astro, fix FloatingNav path tracking
 
 ### Phase 3: SEO & Portfolio
 **Goal**: The site is discoverable by Norwegian SMBs searching for web help, and visitors see proof that Nettup delivers real projects
