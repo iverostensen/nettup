@@ -31,7 +31,7 @@ const techStack = ['Astro', 'Tailwind CSS', 'TypeScript', 'Vercel'];
   <div class="grid gap-6 md:grid-cols-3">
     {
       metrics.map((metric, index) => (
-        <Card padding="lg" class={`reveal-on-scroll reveal-delay-${index + 1} text-center`}>
+        <Card padding="lg" class={`reveal-on-scroll delay-${index + 1} text-center`}>
           <div class="text-4xl font-bold text-brand md:text-5xl">{metric.value}</div>
           <div class="mt-2 text-lg font-medium">{metric.label}</div>
           <div class="mt-1 text-sm text-text-muted">{metric.description}</div>
@@ -41,7 +41,7 @@ const techStack = ['Astro', 'Tailwind CSS', 'TypeScript', 'Vercel'];
   </div>
 
   <!-- Tech Stack -->
-  <div class="reveal-on-scroll reveal-delay-4 mt-16 text-center">
+  <div class="reveal-on-scroll delay-4 mt-16 text-center">
     <h3 class="text-lg font-medium text-text-muted">Bygget med</h3>
     <div class="mt-4 flex flex-wrap justify-center gap-3">
       {

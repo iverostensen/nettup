@@ -25,7 +25,7 @@ import { pakker } from '@/config/pricing';
     <div class="grid gap-6 md:grid-cols-3 md:gap-8">
       {pakker.map((pakke, index) => (
         <div
-          class={`reveal-on-scroll reveal-delay-${index + 1} relative flex flex-col overflow-hidden rounded-2xl border bg-surface-raised ${pakke.popular ? 'border-brand ring-1 ring-brand' : 'border-white/10'}`}
+          class={`reveal-on-scroll delay-${index + 1} relative flex flex-col overflow-hidden rounded-2xl border bg-surface-raised ${pakke.popular ? 'border-brand ring-1 ring-brand' : 'border-white/10'}`}
         >
           {/* Launch offer badge */}
           <div class="absolute left-0 top-0 rounded-br-lg bg-brand px-3 py-1 text-sm font-medium text-surface">

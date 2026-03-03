@@ -72,7 +72,7 @@ const faqSchema = {
 
     <div class="mx-auto mt-10 max-w-2xl space-y-6">
       {faqs.map((faq, index) => (
-        <div class={`reveal-on-scroll reveal-delay-${(index % 3) + 1}`}>
+        <div class={`reveal-on-scroll delay-${(index % 3) + 1}`}>
           <h3 class="text-lg font-semibold">{faq.question}</h3>
           <p class="mt-2 text-text-muted">{faq.answer}</p>
         </div>

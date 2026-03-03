@@ -31,7 +31,7 @@ const steps = [
   <div class="mx-auto max-w-4xl">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {steps.map((step, index) => (
-        <div class={`group reveal-on-scroll reveal-delay-${index + 1} relative`}>
+        <div class={`group reveal-on-scroll delay-${index + 1} relative`}>
           <div class="flex flex-col items-center text-center md:items-start md:text-left">
             <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg font-bold text-surface transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30">
               {step.number}

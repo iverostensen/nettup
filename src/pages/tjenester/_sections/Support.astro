@@ -52,7 +52,7 @@ const supportPlans = [
     <div class="grid gap-6 md:grid-cols-3">
       {supportPlans.map((plan, index) => (
         <div
-          class={`reveal-on-scroll reveal-delay-${index + 1} rounded-xl border p-6 ${
+          class={`reveal-on-scroll delay-${index + 1} rounded-xl border p-6 ${
             plan.highlighted
               ? 'border-brand bg-surface-raised'
               : 'border-white/10 bg-surface-raised/50'

@@ -38,7 +38,7 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
       </h1>
 
       <!-- Value proposition with price -->
-      <p class="reveal-on-scroll reveal-delay-1 mt-6 text-xl text-text-muted md:text-2xl">
+      <p class="reveal-on-scroll delay-1 mt-6 text-xl text-text-muted md:text-2xl">
         <span class="line-through">7 000 kr</span>
         {' '}<span class="font-semibold text-brand">Fra 2 500 kr</span>
         <span class="ml-2 rounded bg-brand/20 px-2 py-1 text-sm font-medium text-brand">Lanseringstilbud</span>
@@ -46,7 +46,7 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
       </p>
 
       <!-- Trust badges (reduced to 2 core signals) -->
-      <div class="reveal-on-scroll reveal-delay-2 mt-8 flex flex-wrap items-center justify-center gap-4 md:gap-6 lg:justify-start">
+      <div class="reveal-on-scroll delay-2 mt-8 flex flex-wrap items-center justify-center gap-4 md:gap-6 lg:justify-start">
         <div class="flex items-center gap-2 rounded-full bg-surface-raised px-4 py-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -85,12 +85,12 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
       </div>
 
       <!-- Micro-form for immediate conversion -->
-      <div class="reveal-on-scroll reveal-delay-3 mt-10 max-w-lg mx-auto lg:mx-0">
+      <div class="reveal-on-scroll delay-3 mt-10 max-w-lg mx-auto lg:mx-0">
         <HeroMicroForm client:load />
       </div>
 
       <!-- Social proof with star rating (moved below form for better hierarchy) -->
-      <div class="reveal-on-scroll reveal-delay-4 mt-6 flex items-center justify-center gap-3 lg:justify-start">
+      <div class="reveal-on-scroll delay-4 mt-6 flex items-center justify-center gap-3 lg:justify-start">
         <div class="flex items-center gap-1">
           <svg class="h-5 w-5 fill-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -115,7 +115,7 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
       </div>
 
       <!-- Secondary CTA - link to full form -->
-      <div class="reveal-on-scroll reveal-delay-5 mt-4 text-center lg:text-left">
+      <div class="reveal-on-scroll delay-5 mt-4 text-center lg:text-left">
         <p class="text-sm text-text-muted">
           eller{' '}
           <a href="#kontakt" class="text-brand hover:text-brand-light underline">
@@ -127,7 +127,7 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
       </div>
 
       <!-- Animation -->
-      <div class="reveal-on-scroll reveal-delay-2 hidden lg:block">
+      <div class="reveal-on-scroll delay-2 hidden lg:block">
         <LandingHeroAnimation client:load />
       </div>
     </div>
