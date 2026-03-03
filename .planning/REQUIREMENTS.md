@@ -1,0 +1,92 @@
+# Requirements: Nettup.no
+
+**Defined:** 2026-03-03
+**Core Value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
+
+## v1 Requirements
+
+### Brand Identity
+
+- [ ] **BRAND-01**: Site reflects a defined brand personality — tone, values, and personality are documented and consistently expressed in copy and design
+- [ ] **BRAND-02**: Design token system implemented in code (`config/brand.ts` → Tailwind config) covering colors, typography scale, spacing, animation timing, and border radius conventions
+- [ ] **BRAND-03**: Typography upgraded with a distinct heading font that signals craft and differentiates from generic dark-theme sites
+
+### Animations
+
+- [ ] **ANIM-01**: Animation preset system established (`lib/animation.ts`) with consistent easing curves and duration tokens used across all animated components
+- [ ] **ANIM-02**: Hero section features a show-off Framer Motion animation that demonstrates technical capability (spring physics, scroll-driven, or orchestrated reveal)
+- [ ] **ANIM-03**: View Transitions API implemented for smooth page-to-page transitions using Astro's native support
+
+### SEO
+
+- [ ] **SEO-01**: Every page has unique, optimized metadata — title, description, and OG tags tailored per page
+- [ ] **SEO-02**: Structured data schemas added: Service (for each service offering), FAQ (on /tjenester), BreadcrumbList (site-wide)
+
+### Portfolio & Social Proof
+
+- [ ] **PORT-01**: Portfolio expanded to minimum 2-3 projects (currently 1 — iGive)
+- [ ] **PORT-02**: Testimonials are prominently placed on homepage with strong visual treatment
+
+### UX & Conversion
+
+- [ ] **CONV-01**: Every page has a contextually relevant CTA leading toward contact
+- [ ] **CONV-02**: CTAs from /tjenester pre-fill the contact form with the relevant service selected
+- [ ] **CONV-03**: Mobile UX audited and improved throughout — all pages tested at 375px, interaction targets adequate, no layout issues
+
+## v2 Requirements
+
+### Brand Identity
+
+- **BRAND-V2-01**: Custom visual motifs and graphic language beyond typography and color
+- **BRAND-V2-02**: New color palette if token system reveals current palette is limiting
+
+### Animations
+
+- **ANIM-V2-01**: Spring/magnetic hover interactions on buttons and key interactive elements
+
+### SEO
+
+- **SEO-V2-01**: Google Business Profile claimed, verified, and optimized
+- **SEO-V2-02**: Long-tail Norwegian keyword targeting in copy and metadata
+
+### Portfolio
+
+- **PORT-V2-01**: iGive case study deepened with measurable outcomes and metrics
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Blog/innholdsmarkedsføring | For mye vedlikehold, ikke kjerneprodukt |
+| E-handel eller booking | Ikke relevant for presentasjonsside |
+| Flerspråklig støtte | Norsk er primærmarked nå |
+| Ny fargepall i v1 | Token-system implementeres med eksisterende farger; palett kan evalueres i v2 |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| BRAND-01 | — | Pending |
+| BRAND-02 | — | Pending |
+| BRAND-03 | — | Pending |
+| ANIM-01 | — | Pending |
+| ANIM-02 | — | Pending |
+| ANIM-03 | — | Pending |
+| SEO-01 | — | Pending |
+| SEO-02 | — | Pending |
+| PORT-01 | — | Pending |
+| PORT-02 | — | Pending |
+| CONV-01 | — | Pending |
+| CONV-02 | — | Pending |
+| CONV-03 | — | Pending |
+
+**Coverage:**
+- v1 requirements: 13 total
+- Mapped to phases: 0
+- Unmapped: 13 ⚠️
+
+---
+*Requirements defined: 2026-03-03*
+*Last updated: 2026-03-03 after initial definition*
