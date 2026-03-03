@@ -9,7 +9,7 @@
 
 - [x] **BRAND-01**: Site reflects a defined brand personality — tone, values, and personality are documented and consistently expressed in copy and design
 - [x] **BRAND-02**: Design token system implemented in code (`config/brand.ts` → Tailwind config) covering colors, typography scale, spacing, animation timing, and border radius conventions
-- [ ] **BRAND-03**: Typography upgraded with a distinct heading font that signals craft and differentiates from generic dark-theme sites
+- [x] **BRAND-03**: Typography upgraded with a distinct heading font that signals craft and differentiates from generic dark-theme sites
 
 ### Animations
 
@@ -70,7 +70,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | BRAND-01 | Phase 1: Brand Identity | Complete (01-01) |
 | BRAND-02 | Phase 1: Brand Identity | Complete |
-| BRAND-03 | Phase 1: Brand Identity | Pending |
+| BRAND-03 | Phase 1: Brand Identity | Complete |
 | ANIM-01 | Phase 2: Animation & Interaction | Pending |
 | ANIM-02 | Phase 2: Animation & Interaction | Pending |
 | ANIM-03 | Phase 2: Animation & Interaction | Pending |
