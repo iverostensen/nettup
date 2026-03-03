@@ -13,7 +13,7 @@
 
 ### Animations
 
-- [ ] **ANIM-01**: Animation preset system established (`lib/animation.ts`) with consistent easing curves and duration tokens used across all animated components
+- [x] **ANIM-01**: Animation preset system established (`lib/animation.ts`) with consistent easing curves and duration tokens used across all animated components
 - [ ] **ANIM-02**: Hero section features a show-off Framer Motion animation that demonstrates technical capability (spring physics, scroll-driven, or orchestrated reveal)
 - [ ] **ANIM-03**: View Transitions API implemented for smooth page-to-page transitions using Astro's native support
 
@@ -71,7 +71,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRAND-01 | Phase 1: Brand Identity | Complete (01-01) |
 | BRAND-02 | Phase 1: Brand Identity | Complete |
 | BRAND-03 | Phase 1: Brand Identity | Complete |
-| ANIM-01 | Phase 2: Animation & Interaction | Pending |
+| ANIM-01 | Phase 2: Animation & Interaction | Complete |
 | ANIM-02 | Phase 2: Animation & Interaction | Pending |
 | ANIM-03 | Phase 2: Animation & Interaction | Pending |
 | SEO-01 | Phase 3: SEO & Portfolio | Pending |
