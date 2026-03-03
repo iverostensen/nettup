@@ -56,7 +56,7 @@ Plans:
 **Goal:** The hero right column shows a cinematic looping animation that makes Nettup's 2-week delivery promise visceral — day counter ticks to 14, website sections snap into place, "✓ Lansert!" badge appears
 **Requirements**: none (inserted phase)
 **Depends on:** Phase 2
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 02.1-01-PLAN.md — Create HeroDeliveryAnimation.tsx and wire into HeroIsland.tsx right column
@@ -102,6 +102,6 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
-| 02.1. Hero animation rework | 0/2 | In progress | - |
+| 02.1. Hero animation rework | 1/2 | In Progress|  |
 | 3. SEO & Portfolio | 0/4 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |

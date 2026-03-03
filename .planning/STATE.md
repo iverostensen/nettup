@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-03T21:38:48.920Z"
+last_updated: "2026-03-03T22:12:59.204Z"
 progress:
-  total_phases: 2
+  total_phases: 4
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 13
+  completed_plans: 8
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: 2 of 4 (Animation & Interaction) — IN PROGRESS
-Plan: 02-02 complete (human verification approved), 02-03 complete — 3 of 4 plans done
-Status: Plans 02-01, 02-02, 02-03 complete — animation.ts library, HeroIsland spring animation, page transitions all shipped
-Last activity: 2026-03-03 -- Plan 02-02 hero animation verified and approved
+Phase: 02.1 (Hero Animation Rework — Delivery Story) — IN PROGRESS
+Plan: 02.1-01 complete — HeroDeliveryAnimation created and wired
+Status: Plans 02-01, 02-02, 02-03 complete (Phase 2 done); 02.1-01 complete (Phase 02.1 plan 1 done)
+Last activity: 2026-03-03 -- Plan 02.1-01 HeroDeliveryAnimation created and wired into HeroIsland
 
-Progress: [████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 46% overall (6/13 plans)
+Progress: [█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 54% overall (7/13 plans)
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [████████████░░░░░░░░░░░
 | Phase 02-animation-interaction P02 | 2 | 2 tasks | 2 files |
 | Phase 02-animation-interaction P03 | 2 | 2 tasks | 2 files |
 | Phase 02-animation-interaction P02 | 5 | 3 tasks | 2 files |
+| Phase 02.1-hero-animation-rework-delivery-story P01 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,13 @@ Recent decisions affecting current work:
 - [Phase 02-03]: fade({ duration: '0.15s' }) on body matches brand duration.fast (0.15s) token from animation.ts
 - [Phase 02-03]: astro:page-load is the correct hook for re-initializing DOM-dependent scripts after View Transitions
 - [Phase 02-03]: transition:persist preserves React island state across navigations — island must self-update via events
+- [Phase 02.1]: useAnimate imperative API chosen for delivery story loop — springs have no fixed duration and break await chains
+- [Phase 02.1]: HeroDeliveryAnimation handles its own reduced-motion path internally with StaticDeliveryDone — HeroIsland passes no props
+- [Phase 02.1]: Initial opacity-0 via Tailwind class (not Framer initial=) ensures DOM elements exist when useAnimate targets them
+
+### Roadmap Evolution
+
+- Phase 02.1 inserted after Phase 2: Hero animation rework — delivery story (URGENT)
 
 ### Pending Todos
 
@@ -95,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-03T21:35:00Z
-Stopped at: Completed 02-03-PLAN.md — page transitions visually approved by user; Phase 2 complete
+Last session: 2026-03-03T22:12:00Z
+Stopped at: Completed 02.1-01-PLAN.md — HeroDeliveryAnimation component created and wired into HeroIsland
 Resume file: None
