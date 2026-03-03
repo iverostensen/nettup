@@ -68,25 +68,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BRAND-01 | — | Pending |
-| BRAND-02 | — | Pending |
-| BRAND-03 | — | Pending |
-| ANIM-01 | — | Pending |
-| ANIM-02 | — | Pending |
-| ANIM-03 | — | Pending |
-| SEO-01 | — | Pending |
-| SEO-02 | — | Pending |
-| PORT-01 | — | Pending |
-| PORT-02 | — | Pending |
-| CONV-01 | — | Pending |
-| CONV-02 | — | Pending |
-| CONV-03 | — | Pending |
+| BRAND-01 | Phase 1: Brand Identity | Pending |
+| BRAND-02 | Phase 1: Brand Identity | Pending |
+| BRAND-03 | Phase 1: Brand Identity | Pending |
+| ANIM-01 | Phase 2: Animation & Interaction | Pending |
+| ANIM-02 | Phase 2: Animation & Interaction | Pending |
+| ANIM-03 | Phase 2: Animation & Interaction | Pending |
+| SEO-01 | Phase 3: SEO & Portfolio | Pending |
+| SEO-02 | Phase 3: SEO & Portfolio | Pending |
+| PORT-01 | Phase 3: SEO & Portfolio | Pending |
+| PORT-02 | Phase 3: SEO & Portfolio | Pending |
+| CONV-01 | Phase 4: Conversion Optimization | Pending |
+| CONV-02 | Phase 4: Conversion Optimization | Pending |
+| CONV-03 | Phase 4: Conversion Optimization | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
-- Mapped to phases: 0
-- Unmapped: 13 ⚠️
+- Mapped to phases: 13
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-03*
-*Last updated: 2026-03-03 after initial definition*
+*Last updated: 2026-03-03 after roadmap creation*
