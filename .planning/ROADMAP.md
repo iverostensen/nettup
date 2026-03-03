@@ -14,6 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Brand Identity** - Define personality, implement design token system, upgrade typography (completed 2026-03-03)
 - [x] **Phase 2: Animation & Interaction** - Build animation preset system, hero showcase animation, page transitions (completed 2026-03-03)
+- [ ] **Phase 02.1: Hero animation rework — delivery story** - Replace static stats card with cinematic 14-day delivery story loop (INSERTED)
 - [ ] **Phase 3: SEO & Portfolio** - Per-page metadata, structured data schemas, expand portfolio to 2-3 projects
 - [ ] **Phase 4: Conversion Optimization** - Contextual CTAs on every page, smart form pre-fill, testimonial treatment, mobile UX audit
 
@@ -52,13 +53,14 @@ Plans:
 
 ### Phase 02.1: Hero animation rework — delivery story (INSERTED)
 
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
+**Goal:** The hero right column shows a cinematic looping animation that makes Nettup's 2-week delivery promise visceral — day counter ticks to 14, website sections snap into place, "✓ Lansert!" badge appears
+**Requirements**: none (inserted phase)
 **Depends on:** Phase 2
-**Plans:** 0 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 02.1 to break down)
+- [ ] 02.1-01-PLAN.md — Create HeroDeliveryAnimation.tsx and wire into HeroIsland.tsx right column
+- [ ] 02.1-02-PLAN.md — Human visual verification checkpoint
 
 ### Phase 3: SEO & Portfolio
 **Goal**: The site is discoverable by Norwegian SMBs searching for web help, and visitors see proof that Nettup delivers real projects
@@ -94,11 +96,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
+| 02.1. Hero animation rework | 0/2 | In progress | - |
 | 3. SEO & Portfolio | 0/4 | Not started | - |
 | 4. Conversion Optimization | 0/0 | Not started | - |
