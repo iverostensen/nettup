@@ -31,9 +31,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Write .planning/BRAND.md brand personality document (mission, tone, contrast table, copy principles)
-- [ ] 01-02-PLAN.md — Create src/config/brand.ts and wire tokens into tailwind.config.ts
-- [ ] 01-03-PLAN.md — Load Space Grotesk, apply font-display to all H1s, add gradient text to RotatingText
-- [ ] 01-04-PLAN.md — Migrate UI components (Button, Card, SectionHeader) to token classes, remove CSS delay classes
+- [x] 01-02-PLAN.md — Create src/config/brand.ts and wire tokens into tailwind.config.ts
+- [x] 01-03-PLAN.md — Load Space Grotesk, apply font-display to all H1s, add gradient text to RotatingText
+- [x] 01-04-PLAN.md — Migrate UI components (Button, Card, SectionHeader) to token classes, remove CSS delay classes
 
 ### Phase 2: Animation & Interaction
 **Goal**: Animations across the site demonstrate technical capability and follow a consistent, intentional system -- not random motion

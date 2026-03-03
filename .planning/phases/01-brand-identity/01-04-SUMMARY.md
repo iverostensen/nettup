@@ -83,7 +83,7 @@ completed: "2026-03-03"
 - **Duration:** 1 min
 - **Started:** 2026-03-03T15:27:20Z
 - **Completed:** 2026-03-03T15:28:47Z
-- **Tasks:** 2 (+ checkpoint awaiting human verify)
+- **Tasks:** 3 (2 auto + 1 checkpoint:human-verify)
 - **Files modified:** 26
 
 ## Accomplishments
@@ -101,6 +101,7 @@ Each task was committed atomically:
 
 1. **Task 1: Migrate Button and Card to brand token classes** - `060aa17` (feat)
 2. **Task 2: Migrate SectionHeader H2 and replace reveal-delay-* with delay-* tokens** - `d112de5` (feat)
+3. **Task 3: Human visual verification** - approved (checkpoint, no code commit)
 
 ## Files Created/Modified
 
@@ -123,15 +124,16 @@ None - plan executed exactly as written.
 
 None. All 22 files updated cleanly. Build passed first attempt.
 
-## Human Verification Pending
+## Human Verification
 
-Checkpoint task 3 (`checkpoint:human-verify`) reached after Task 2. Awaiting human visual verification:
+Checkpoint task 3 (`checkpoint:human-verify`) — **approved**. Human verified:
 
-- Run `npm run dev` and check http://localhost:4321/
-- Verify Space Grotesk appears on section H2 headings (slightly lighter weight)
-- Verify stagger scroll animations still work with delays
-- Verify card hover lifts (transition still smooth)
-- Verify card radius looks unchanged (rounded-md = same 0.75rem as rounded-xl)
+- Space Grotesk renders correctly on section H2 headings
+- Stagger scroll animations still work with delay-N tokens
+- Card hover transitions still smooth
+- Card radius visually unchanged (rounded-md = same 0.75rem as rounded-xl)
+
+No visual regressions reported.
 
 ## Next Phase Readiness
 
