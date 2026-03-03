@@ -27,7 +27,7 @@ export default function RotatingText() {
 
   // For reduced motion, just show static text
   if (shouldReduceMotion) {
-    return <span className="text-brand">{words[0]}</span>;
+    return <span className="bg-gradient-to-r from-brand to-text bg-clip-text text-transparent">{words[0]}</span>;
   }
 
   return (
@@ -39,7 +39,7 @@ export default function RotatingText() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="inline-block text-brand"
+          className="inline-block bg-gradient-to-r from-brand to-text bg-clip-text text-transparent"
         >
           {words[index]}
         </motion.span>
