@@ -10,7 +10,7 @@ import { testimonials } from '@/config/testimonials';
     title="Hva kundene sier"
     subtitle="Resultater som taler for seg selv."
   />
-  <div class="grid gap-6 md:grid-cols-2">
+  <div class="mx-auto max-w-2xl">
     {testimonials.map((t, i) => (
       <Card padding="lg" class={`reveal-on-scroll delay-${i + 1}`}>
         <!-- Decorative quote mark -->

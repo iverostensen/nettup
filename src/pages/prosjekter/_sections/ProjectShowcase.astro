@@ -2,6 +2,9 @@
 import Section from '@/components/ui/Section.astro';
 import Card from '@/components/ui/Card.astro';
 import { projects } from '@/config/projects';
+import { testimonials } from '@/config/testimonials';
+
+const iGiveTestimonial = testimonials.find((t) => t.company === 'iGive');
 
 const caseStudyProject = projects.find((p) => p.caseStudySection === true);
 const additionalProjects = projects.filter((p) => p.caseStudySection !== true);
@@ -97,6 +100,40 @@ const additionalProjects = projects.filter((p) => p.caseStudySection !== true);
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Client Quote */}
+          {iGiveTestimonial && (
+            <div class="reveal-on-scroll border-l-2 border-brand/40 pl-6">
+              <div class="text-3xl font-bold leading-none text-brand/30" aria-hidden="true">&ldquo;</div>
+              <blockquote class="mt-2">
+                <p class="text-lg leading-relaxed text-text">{iGiveTestimonial.quote}</p>
+                {iGiveTestimonial.result && (
+                  <p class="mt-3 font-semibold text-brand">{iGiveTestimonial.result}</p>
+                )}
+              </blockquote>
+              <footer class="mt-4 flex items-center gap-3">
+                {iGiveTestimonial.photoUrl ? (
+                  <img
+                    src={iGiveTestimonial.photoUrl}
+                    alt={iGiveTestimonial.name}
+                    class="h-10 w-10 rounded-full object-cover flex-shrink-0"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    class="h-10 w-10 flex-shrink-0 rounded-full bg-brand/20 flex items-center justify-center"
+                    aria-hidden="true"
+                  >
+                    <span class="text-sm font-semibold text-brand">{iGiveTestimonial.name.charAt(0)}</span>
+                  </div>
+                )}
+                <div>
+                  <cite class="not-italic font-semibold text-text">{iGiveTestimonial.name}</cite>
+                  <p class="text-sm text-text-muted">{iGiveTestimonial.title}, {iGiveTestimonial.company}</p>
+                </div>
+              </footer>
             </div>
           )}
         </>

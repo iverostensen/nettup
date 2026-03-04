@@ -1,5 +1,3 @@
-// TODO: Replace with real client testimonials before production
-
 export interface Testimonial {
   quote: string; // 1-2 sentence testimonial text
   result: string; // concrete outcome, e.g., "Vi fikk tre nye kundehenvendelser..."
@@ -11,17 +9,11 @@ export interface Testimonial {
 
 export const testimonials: Testimonial[] = [
   {
-    quote: "Nettup leverte en nettside vi er stolte av – rask, profesjonell og klar på to uker. Prosessen var enkel og de holdt det de lovet.",
-    result: "Vi fikk tre nye kundehenvendelser allerede i første uke etter lansering.",
-    name: "Kari Nordmann",
+    quote: "Vi hadde et godt produkt for bedrifter, men ingen god måte å presentere det på nett. Nå sender vi bare linken til bedrifter som er nysgjerrige, siden forklarer resten.",
+    result: "Bedriftskunder finner oss nå via Google, siden forklarer produktene våre tydelig og konverterer til salg",
+    name: "Stein Eriksen",
     title: "Daglig leder",
     company: "iGive",
-  },
-  {
-    quote: "Vi hadde prøvd å lage nettside selv, men det ble aldri bra. Nettup fikk det til å se profesjonelt ut på rekordtid.",
-    result: "Vi fikk endelig en nettside vi tør å vise til kunder.",
-    name: "Ola Hansen",
-    title: "Gründer",
-    company: "Eksempelbedrift AS",
+    photoUrl: "/images/stein_eriksen_profile_picture.jpg",
   },
 ];
