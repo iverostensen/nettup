@@ -16,11 +16,13 @@ interface FormData {
   epost: string;
   telefon: string;
   pakke: string;
+  tjeneste: string;
   melding: string;
   kilde: string;
 }
 
 import { pakker } from '@/config/pricing';
+import { services } from '@/config/services';
 
 const FORMSPREE_ID = 'xnjnzybj';
 
@@ -43,6 +45,7 @@ export default function ContactForm() {
     epost: '',
     telefon: '',
     pakke: '',
+    tjeneste: '',
     melding: '',
     kilde: '',
   });
@@ -71,6 +74,12 @@ export default function ContactForm() {
     }
     if (kildeParam) {
       setFormData((prev) => ({ ...prev, kilde: kildeParam }));
+    }
+
+    const tjeneste = params.get('tjeneste');
+    const validSlugs = services.map(s => s.slug);
+    if (tjeneste && validSlugs.includes(tjeneste)) {
+      setFormData((prev) => ({ ...prev, tjeneste }));
     }
 
     // Listen for package selection events
@@ -125,6 +134,7 @@ export default function ContactForm() {
           email: formData.epost,
           telefon: formData.telefon || 'Ikke oppgitt',
           pakke: formData.pakke || 'Ikke valgt',
+          tjeneste: formData.tjeneste || 'Ikke valgt',
           melding: formData.melding,
           kilde: formData.kilde || 'direkte',
         }),
@@ -179,8 +189,33 @@ export default function ContactForm() {
   // Get selected package info
   const selectedPakke = formData.pakke && PAKKE_INFO[formData.pakke];
 
+  const selectedTjeneste = formData.tjeneste
+    ? services.find(s => s.slug === formData.tjeneste) ?? null
+    : null;
+
   return (
     <div className="mx-auto max-w-xl">
+      {/* Service badge */}
+      {selectedTjeneste && (
+        <div className="mb-3 rounded-xl border border-brand/20 bg-brand/5 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/20">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-4 w-4 text-brand"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </div>
+            <p className="font-medium text-text">{selectedTjeneste.name} valgt</p>
+          </div>
+        </div>
+      )}
+
       {/* Package confirmation badge */}
       {selectedPakke && showBadge && (
         <motion.div
@@ -331,6 +366,7 @@ export default function ContactForm() {
               name="pakke"
               value={formData.pakke}
             />
+            <input type="hidden" name="tjeneste" value={formData.tjeneste} />
 
             <div>
               <label htmlFor="melding" className={labelClasses}>
