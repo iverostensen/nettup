@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: in_progress
-last_updated: "2026-03-04T17:21:29Z"
+last_updated: "2026-03-04T17:25:00Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 6 — Infrastructure (plan 2 of 3)
+**Current focus:** Phase 6 — Infrastructure (plan 3 of 3)
 
 ## Current Position
 
 Phase: 6 of 10 (Infrastructure)
-Plan: 2 of 3 (06-02 next)
+Plan: 3 of 3 (06-03 next)
 Status: In progress
-Last activity: 2026-03-04 — Completed 06-01: services.ts config created
+Last activity: 2026-03-04 — Completed 06-02: FloatingNav and MobileMenu active state fix
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
@@ -40,7 +40,7 @@ Progress: [█░░░░░░░░░] 10%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 06-infrastructure | 1/3 | 1 min | 1 min |
+| 06-infrastructure | 2/3 | 6 min | 3 min |
 
 *Updated after each plan completion*
 
@@ -56,6 +56,8 @@ Recent decisions affecting current work:
 - v1.1 start: `?tjeneste=` param replaces `?pakke=` for service sub-pages (ContactForm must be extended first)
 - 06-01: maxPrice: 0 for all services (open-ended pricing, no upper bound)
 - 06-01: ctaParam mirrors slug — simplest coupling for ?tjeneste= query param
+- 06-02: Dynamic label computed inline in FloatingNav (not useState) — derives from currentPath + services on each render
+- 06-02: displayNavItems passed to MobileMenu as prop — single source of label logic, no duplicate lookup
 
 ### Pending Todos
 
@@ -70,5 +72,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-04
-Stopped at: Completed 06-01-PLAN.md (services.ts config). Next: 06-02.
+Stopped at: Completed 06-02-PLAN.md (FloatingNav/MobileMenu active state). Next: 06-03.
 Resume file: None

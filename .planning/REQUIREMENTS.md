@@ -8,7 +8,7 @@
 ### Infrastructure
 
 - [ ] **INFRA-01**: ContactForm.tsx støtter `?tjeneste=` URL-param pre-fill ved siden av eksisterende `?pakke=`
-- [ ] **INFRA-02**: FloatingNav og MobileMenu bruker `startsWith` for aktiv-tilstand — fikser ødelagt nav-highlight på alle 7 undersider
+- [x] **INFRA-02**: FloatingNav og MobileMenu bruker `startsWith` for aktiv-tilstand — fikser ødelagt nav-highlight på alle 7 undersider
 - [ ] **INFRA-03**: BaseLayout `pageLabels`-map inkluderer alle 7 `/tjenester/[slug]`-ruter for korrekte norske brødsmule-etiketter
 
 ### Data Config
@@ -77,7 +77,7 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFRA-01 | Phase 6 | Pending |
-| INFRA-02 | Phase 6 | Pending |
+| INFRA-02 | Phase 6 | Complete |
 | INFRA-03 | Phase 6 | Pending |
 | CONFIG-01 | Phase 6 | Complete |
 | CONFIG-02 | Phase 6 | Complete |
