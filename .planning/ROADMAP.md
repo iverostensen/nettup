@@ -57,7 +57,11 @@ Plans:
   1. /tjenester shows 7 distinct service cards, each linking to its sub-page
   2. Each card displays: service name, one-sentence outcome, price range, and a link to the dedicated page
   3. The old Enkel/Standard/Premium pricing tier section is gone
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Create TjenesterOversikt.astro (grouped service card grid) and rewrite FAQ.astro
+- [ ] 07-02-PLAN.md — Rewrite index.astro (remove old sections, wire new ones, update JSON-LD) and update TjenesterCTA copy
 
 ### Phase 8: Core Service Pages
 **Goal**: The three highest-traffic service pages are live with complete, conversion-ready content
@@ -104,7 +108,7 @@ Plans:
 | 3. SEO & Portfolio | v1.0 | 4/4 | Complete | 2026-03-04 |
 | 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
 | 6. Infrastructure | 3/3 | Complete   | 2026-03-04 | - |
-| 7. Tjenesteoversikt | v1.1 | 0/TBD | Not started | - |
+| 7. Tjenesteoversikt | v1.1 | 0/2 | Not started | - |
 | 8. Core Service Pages | v1.1 | 0/TBD | Not started | - |
 | 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
 | 10. Cross-linking & Validation | v1.1 | 0/TBD | Not started | - |
