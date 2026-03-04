@@ -21,6 +21,40 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const pageLabels: Record<string, string> = {
+  '/': 'Hjem',
+  '/tjenester': 'Tjenester',
+  '/om-oss': 'Om oss',
+  '/prosjekter': 'Prosjekter',
+  '/kontakt': 'Kontakt',
+};
+
+const pathSegments = Astro.url.pathname.replace(/\/$/, '').split('/').filter(Boolean);
+const breadcrumbItems: Array<{ position: number; name: string; item?: string }> = [
+  { position: 1, name: 'Hjem', item: 'https://nettup.no/' },
+  ...pathSegments.map((seg, i) => {
+    const fullPath = '/' + pathSegments.slice(0, i + 1).join('/');
+    return {
+      position: i + 2,
+      name: pageLabels[fullPath] ?? seg,
+      item: `https://nettup.no${fullPath}`,
+    };
+  }),
+];
+// Omit `item` from the last entry per Google specification
+if (breadcrumbItems.length > 1) {
+  delete breadcrumbItems[breadcrumbItems.length - 1].item;
+}
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbItems.map(b => ({
+    "@type": "ListItem",
+    ...b,
+  })),
+};
 ---
 
 <!doctype html>
@@ -131,6 +165,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         "url": "https://nettup.no"
       }
     })} />
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
     <!-- Preload critical assets -->
     <link rel="preload" href="/images/nettup-logo.svg" as="image" type="image/svg+xml" />
