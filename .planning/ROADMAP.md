@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Launch** — Phases 1–4 (shipped 2026-03-04)
+- 🚧 **v1.1 Tjenesteutvidelse** — Phases 6–10 (in progress)
 
 ## Phases
 
@@ -19,6 +20,75 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
+### 🚧 v1.1 Tjenesteutvidelse (In Progress)
+
+**Milestone Goal:** Utvide /tjenester til fullverdig tjenestekatalog med dedikerte undersider per tjenestetype, prisintervaller og kundefokusert innhold.
+
+- [ ] **Phase 6: Infrastructure** - Infrastruktur og delt config på plass før første underside shipper
+- [ ] **Phase 7: Tjenesteoversikt** - /tjenester redesignet som 7-tjeneste katalog
+- [ ] **Phase 8: Core Service Pages** - De 3 kjernetjenestesidene ferdigstilt
+- [ ] **Phase 9: Specialist Service Pages** - De 4 spesialistsidene ferdigstilt
+- [ ] **Phase 10: Cross-linking & Validation** - Komplett, interkoblet tjenestekatalogg validert
+
+## Phase Details
+
+### Phase 6: Infrastructure
+**Goal**: All shared infrastructure is correct before any service sub-page ships
+**Depends on**: Phase 4 (v1.0 complete)
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, CONFIG-01, CONFIG-02, CTA-02
+**Success Criteria** (what must be TRUE):
+  1. Clicking a service page CTA (e.g. `/kontakt?tjeneste=nettside`) shows the correct service name badge in the contact form
+  2. ContactForm submits with `tjeneste` field populated in Formspree data
+  3. The /tjenester nav item is highlighted when visiting any `/tjenester/*` sub-page on both desktop and mobile
+  4. Breadcrumbs on `/tjenester/nettside` read "Hjem / Tjenester / Nettside" (not raw slug)
+  5. `src/config/services.ts` exists with complete metadata for all 7 services (slug, name, tagline, priceRange, ctaParam)
+**Plans**: TBD
+
+### Phase 7: Tjenesteoversikt
+**Goal**: /tjenester is a coherent service catalog that helps visitors identify which service fits them
+**Depends on**: Phase 6
+**Requirements**: OVERVIEW-01, OVERVIEW-02, OVERVIEW-03
+**Success Criteria** (what must be TRUE):
+  1. /tjenester shows 7 distinct service cards, each linking to its sub-page
+  2. Each card displays: service name, one-sentence outcome, price range, and a link to the dedicated page
+  3. The old Enkel/Standard/Premium pricing tier section is gone
+**Plans**: TBD
+
+### Phase 8: Core Service Pages
+**Goal**: The three highest-traffic service pages are live with complete, conversion-ready content
+**Depends on**: Phase 7
+**Requirements**: PAGES-01, PAGES-02, PAGES-03, CONTENT-01, CONTENT-02, CONTENT-03, CONTENT-04, SEO-02, CTA-01
+**Success Criteria** (what must be TRUE):
+  1. /tjenester/nettside, /tjenester/nettbutikk, and /tjenester/landingsside each exist and load
+  2. Each page leads with an outcome-focused headline and price signal above the fold
+  3. Each page has a "Hva er inkludert" section and a service-specific FAQ section
+  4. Nettbutikk page explicitly states Shopify platform fee with "faktureres separat" language
+  5. Each page's CTA button links to `/kontakt?tjeneste=[slug]` and the form correctly pre-fills
+  6. Each page has a unique meta title and meta description
+**Plans**: TBD
+
+### Phase 9: Specialist Service Pages
+**Goal**: The four specialist service pages are live with outcome-first, non-technical content
+**Depends on**: Phase 8
+**Requirements**: PAGES-04, PAGES-05, PAGES-06, PAGES-07
+**Success Criteria** (what must be TRUE):
+  1. /tjenester/webapp, /tjenester/seo, /tjenester/ai, and /tjenester/vedlikehold each exist and load
+  2. The webapp page describes the 4-step process in plain Norwegian without technical jargon in primary copy
+  3. The AI page includes a GDPR/personvern FAQ section
+  4. Each page meets the same content and conversion standards established in Phase 8 (500+ words, outcome-first, CTA with pre-fill, unique meta)
+**Plans**: TBD
+
+### Phase 10: Cross-linking & Validation
+**Goal**: The complete service catalog is interlinked, schema-valid, and every user journey is verified end to end
+**Depends on**: Phase 9
+**Requirements**: SEO-01, SEO-03
+**Success Criteria** (what must be TRUE):
+  1. Google Rich Results Test passes for all 7 sub-pages with no errors on Service JSON-LD schema
+  2. Google Rich Results Test passes for all 7 sub-pages with no errors on FAQPage JSON-LD schema
+  3. All 7 sub-pages appear in the generated sitemap
+  4. Each sub-page has at least 2 cross-links to related service pages
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -28,3 +98,8 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 | 2.1. Hero animation rework | v1.0 | 2/2 | Complete | 2026-03-03 |
 | 3. SEO & Portfolio | v1.0 | 4/4 | Complete | 2026-03-04 |
 | 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
+| 6. Infrastructure | v1.1 | 0/TBD | Not started | - |
+| 7. Tjenesteoversikt | v1.1 | 0/TBD | Not started | - |
+| 8. Core Service Pages | v1.1 | 0/TBD | Not started | - |
+| 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
+| 10. Cross-linking & Validation | v1.1 | 0/TBD | Not started | - |

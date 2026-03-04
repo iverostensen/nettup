@@ -81,31 +81,33 @@
 | INFRA-03 | Phase 6 | Pending |
 | CONFIG-01 | Phase 6 | Pending |
 | CONFIG-02 | Phase 6 | Pending |
+| CTA-02 | Phase 6 | Pending |
 | OVERVIEW-01 | Phase 7 | Pending |
 | OVERVIEW-02 | Phase 7 | Pending |
 | OVERVIEW-03 | Phase 7 | Pending |
 | PAGES-01 | Phase 8 | Pending |
 | PAGES-02 | Phase 8 | Pending |
 | PAGES-03 | Phase 8 | Pending |
+| CONTENT-01 | Phase 8 | Pending |
+| CONTENT-02 | Phase 8 | Pending |
+| CONTENT-03 | Phase 8 | Pending |
+| CONTENT-04 | Phase 8 | Pending |
+| SEO-02 | Phase 8 | Pending |
+| CTA-01 | Phase 8 | Pending |
 | PAGES-04 | Phase 9 | Pending |
 | PAGES-05 | Phase 9 | Pending |
 | PAGES-06 | Phase 9 | Pending |
 | PAGES-07 | Phase 9 | Pending |
-| CONTENT-01 | Phase 8–9 | Pending |
-| CONTENT-02 | Phase 8–9 | Pending |
-| CONTENT-03 | Phase 8–9 | Pending |
-| CONTENT-04 | Phase 8 | Pending |
 | SEO-01 | Phase 10 | Pending |
-| SEO-02 | Phase 8–9 | Pending |
 | SEO-03 | Phase 10 | Pending |
-| CTA-01 | Phase 8–9 | Pending |
-| CTA-02 | Phase 6 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 23 total
-- Mapped to phases: 23
+- v1.1 requirements: 24 total
+- Mapped to phases: 24
 - Unmapped: 0 ✓
+
+Note: CONTENT-01, CONTENT-02, CONTENT-03, CTA-01, and SEO-02 are assigned to Phase 8 (where they first become verifiable). Phase 9 pages must satisfy the same standards — compliance verified in Phase 10.
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 after initial v1.1 definition*
+*Last updated: 2026-03-04 — traceability finalized after roadmap creation*
