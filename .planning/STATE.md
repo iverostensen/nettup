@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-04T12:36:23.887Z"
+last_updated: "2026-03-04T12:39:08.724Z"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -56,6 +56,7 @@ Progress: [█████████████░░░░░░░░░░
 | Phase 02.1 P02 | 1 | 1 tasks | 0 files |
 | Phase 03-seo-portfolio P01 | 1 | 2 tasks | 3 files |
 | Phase 03-seo-portfolio P02 | 1 | 1 tasks | 2 files |
+| Phase 03-seo-portfolio P03 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 03-seo-portfolio]: BreadcrumbList computed at build time from Astro.url.pathname — no per-page config required
 - [Phase 03-seo-portfolio]: pageLabels lookup table handles Norwegian display names for all 5 routes in BaseLayout
 - [Phase 03-seo-portfolio]: BaseLayout head slot added just before </head> for per-page schema injection — Service schemas for /tjenester computed from pakker array at build time
+- [Phase 03-seo-portfolio]: caseStudySection boolean on Project interface determines full case study vs. card rendering — first project with flag=true gets the full layout
+- [Phase 03-seo-portfolio]: Config pattern: src/config/projects.ts holds typed data; Astro section imports and renders — same pattern as pricing.ts and launchOffer.ts
 
 ### Roadmap Evolution
 
