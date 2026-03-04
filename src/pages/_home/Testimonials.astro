@@ -1,0 +1,48 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Card from '@/components/ui/Card.astro';
+import { testimonials } from '@/config/testimonials';
+---
+
+<Section>
+  <SectionHeader
+    title="Hva kundene sier"
+    subtitle="Resultater som taler for seg selv."
+  />
+  <div class="grid gap-6 md:grid-cols-2">
+    {testimonials.map((t, i) => (
+      <Card padding="lg" class={`reveal-on-scroll delay-${i + 1}`}>
+        <!-- Decorative quote mark -->
+        <div class="mb-4 text-4xl font-bold leading-none text-brand/30" aria-hidden="true">&ldquo;</div>
+        <blockquote>
+          <p class="text-lg leading-relaxed text-text">{t.quote}</p>
+          {t.result && (
+            <p class="mt-3 font-semibold text-brand">{t.result}</p>
+          )}
+        </blockquote>
+        <footer class="mt-6 flex items-center gap-4">
+          {t.photoUrl ? (
+            <img
+              src={t.photoUrl}
+              alt={t.name}
+              class="h-10 w-10 rounded-full object-cover flex-shrink-0"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              class="h-10 w-10 flex-shrink-0 rounded-full bg-brand/20 flex items-center justify-center"
+              aria-hidden="true"
+            >
+              <span class="text-sm font-semibold text-brand">{t.name.charAt(0)}</span>
+            </div>
+          )}
+          <div>
+            <cite class="not-italic font-semibold text-text">{t.name}</cite>
+            <p class="text-sm text-text-muted">{t.title}, {t.company}</p>
+          </div>
+        </footer>
+      </Card>
+    ))}
+  </div>
+</Section>
