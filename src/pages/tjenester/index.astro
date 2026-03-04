@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { pakker } from '@/config/pricing';
 
 // Page-specific sections
 import Pakker from './_sections/Pakker.astro';
@@ -7,12 +8,38 @@ import Inkludert from './_sections/Inkludert.astro';
 import Support from './_sections/Support.astro';
 import FAQ from './_sections/FAQ.astro';
 import TjenesterCTA from './_sections/TjenesterCTA.astro';
+
+const serviceSchemas = pakker.map(pakke => ({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": `Nettup ${pakke.name}`,
+  "description": pakke.description,
+  "provider": {
+    "@type": "Organization",
+    "name": "Nettup",
+    "url": "https://nettup.no"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Norway"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": pakke.launchPrice.replace(/\s/g, ''),
+    "priceCurrency": "NOK"
+  }
+}));
 ---
 
 <BaseLayout
   title="Nettside Priser | Lanseringstilbud fra 2 500 kr | Nettup"
   description="Lanseringstilbud: Enkel 2 500 kr (spar 4 500 kr), Standard 4 500 kr (spar 10 500 kr), Premium 10 000 kr (spar 15 000 kr). Kun 10 plasser!"
 >
+  <Fragment slot="head">
+    {serviceSchemas.map(schema => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </Fragment>
   <main>
     <Pakker />
     <Inkludert />

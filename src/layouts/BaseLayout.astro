@@ -196,6 +196,8 @@ const breadcrumbSchema = {
     <!-- Analytics -->
     <Analytics />
     <ClientRouter />
+
+    <slot name="head" />
   </head>
   <body class="min-h-screen bg-surface text-text antialiased" transition:animate={fade({ duration: '0.15s' })}>
     <FloatingNav client:load transition:persist />
