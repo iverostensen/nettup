@@ -21,7 +21,6 @@ export default function FloatingNav() {
   const [visible, setVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState('/');
-  const [bannerVisible, setBannerVisible] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -29,17 +28,8 @@ export default function FloatingNav() {
     updatePath();
     document.addEventListener('astro:page-load', updatePath);
 
-    // Check if launch banner is visible (not dismissed)
-    const bannerDismissed = localStorage.getItem('nettup_launch_banner_dismissed') === 'true';
-    setBannerVisible(!bannerDismissed);
-
-    // Listen for banner dismissal
-    const handleBannerDismiss = () => setBannerVisible(false);
-    window.addEventListener('launchBannerDismissed', handleBannerDismiss);
-
     return () => {
       document.removeEventListener('astro:page-load', updatePath);
-      window.removeEventListener('launchBannerDismissed', handleBannerDismiss);
     };
   }, []);
 
@@ -96,7 +86,7 @@ export default function FloatingNav() {
             'fixed inset-x-0 z-50 mx-auto flex max-w-fit items-center gap-1 rounded-full',
             'border border-white/10 bg-surface-raised/80 px-2 py-2 pl-3 shadow-lg shadow-black/20 backdrop-blur-md',
             'md:gap-2',
-            bannerVisible ? 'top-16' : 'top-6'
+            'top-6'
           )}
           aria-label="Hovednavigasjon"
         >

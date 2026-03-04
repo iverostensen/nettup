@@ -10,9 +10,7 @@
  */
 import '../styles/global.css';
 import MinimalFooter from '../components/layout/MinimalFooter.astro';
-import LaunchOfferBanner from '../components/ui/LaunchOfferBanner.astro';
 import Analytics from '@vercel/analytics/astro';
-import { remainingSlots } from '../config/launchOffer';
 
 interface Props {
   title: string;
@@ -148,7 +146,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Add padding for fixed header -->
     <div class="pt-16">
-      <LaunchOfferBanner remainingSlots={remainingSlots} href="#pakker" />
       <slot />
     </div>
 

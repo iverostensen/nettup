@@ -4,9 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import { fade } from 'astro:transitions';
 import FloatingNav from '../components/islands/FloatingNav';
 import Footer from '../components/layout/Footer.astro';
-import LaunchOfferBanner from '../components/ui/LaunchOfferBanner.astro';
 import Analytics from '@vercel/analytics/astro';
-import { remainingSlots } from '../config/launchOffer';
 
 interface Props {
   title: string;
@@ -201,7 +199,6 @@ const breadcrumbSchema = {
   </head>
   <body class="min-h-screen bg-surface text-text antialiased" transition:animate={fade({ duration: '0.15s' })}>
     <FloatingNav client:load transition:persist />
-    <LaunchOfferBanner remainingSlots={remainingSlots} />
     <slot />
     <Footer />
 
