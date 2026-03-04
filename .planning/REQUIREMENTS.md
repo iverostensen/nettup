@@ -13,8 +13,8 @@
 
 ### Data Config
 
-- [ ] **CONFIG-01**: `src/config/services.ts` opprettet med alle 7 tjenesteobjekter (slug, name, tagline, priceRange, included, faq, ctaParam)
-- [ ] **CONFIG-02**: Prisintervaller bruker JSON-LD `PriceSpecification` med `minPrice`/`maxPrice` (ikke eksisterende enkelt `price`-felt)
+- [x] **CONFIG-01**: `src/config/services.ts` opprettet med alle 7 tjenesteobjekter (slug, name, tagline, priceRange, included, faq, ctaParam)
+- [x] **CONFIG-02**: Prisintervaller bruker JSON-LD `PriceSpecification` med `minPrice`/`maxPrice` (ikke eksisterende enkelt `price`-felt)
 
 ### Service Catalog Overview
 
@@ -79,8 +79,8 @@
 | INFRA-01 | Phase 6 | Pending |
 | INFRA-02 | Phase 6 | Pending |
 | INFRA-03 | Phase 6 | Pending |
-| CONFIG-01 | Phase 6 | Pending |
-| CONFIG-02 | Phase 6 | Pending |
+| CONFIG-01 | Phase 6 | Complete |
+| CONFIG-02 | Phase 6 | Complete |
 | CTA-02 | Phase 6 | Pending |
 | OVERVIEW-01 | Phase 7 | Pending |
 | OVERVIEW-02 | Phase 7 | Pending |
