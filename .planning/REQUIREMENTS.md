@@ -25,7 +25,7 @@
 ### Portfolio & Social Proof
 
 - [x] **PORT-01**: Portfolio expanded to minimum 2-3 projects (currently 1 — iGive)
-- [ ] **PORT-02**: Testimonials are prominently placed on homepage with strong visual treatment
+- [x] **PORT-02**: Testimonials are prominently placed on homepage with strong visual treatment
 
 ### UX & Conversion
 
@@ -77,7 +77,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-01 | Phase 3: SEO & Portfolio | Complete |
 | SEO-02 | Phase 3: SEO & Portfolio | Complete |
 | PORT-01 | Phase 3: SEO & Portfolio | Complete |
-| PORT-02 | Phase 3: SEO & Portfolio | Pending |
+| PORT-02 | Phase 3: SEO & Portfolio | Complete |
 | CONV-01 | Phase 4: Conversion Optimization | Pending |
 | CONV-02 | Phase 4: Conversion Optimization | Pending |
 | CONV-03 | Phase 4: Conversion Optimization | Pending |
