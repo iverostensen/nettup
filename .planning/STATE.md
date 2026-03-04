@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-04T12:54:15.765Z"
+last_updated: "2026-03-04T13:26:37.785Z"
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 15
+  completed_plans: 14
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: 03-seo-portfolio — COMPLETE
-Plan: 03-04 complete — Testimonials section created and wired into homepage
-Status: All Phase 03 plans complete (03-01 through 03-04)
-Last activity: 2026-03-04 -- Plan 03-04 Testimonials section created and wired into homepage
+Phase: 04-conversion-optimization — IN PROGRESS
+Plan: 04-01 complete — Contextual CTAs and pricing pre-fill wiring
+Status: Phase 04 plan 01 of 2 complete
+Last activity: 2026-03-04 -- Plan 04-01 contextual CTAs on /om-oss and /prosjekter, pricing package pre-fill via ?pakke= URL params
 
-Progress: [█████████████████████████████████████████] 100% overall (13/13 plans)
+Progress: [█████████████████████████████████████████] 93% overall (14/15 plans)
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [███████████████████████
 | Phase 03-seo-portfolio P02 | 1 | 1 tasks | 2 files |
 | Phase 03-seo-portfolio P03 | 2 | 2 tasks | 2 files |
 | Phase 03-seo-portfolio P04 | 1 | 2 tasks | 3 files |
+| Phase 04-conversion-optimization P01 | 1 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Recent decisions affecting current work:
 - [Phase 03-seo-portfolio]: caseStudySection boolean on Project interface determines full case study vs. card rendering — first project with flag=true gets the full layout
 - [Phase 03-seo-portfolio]: Config pattern: src/config/projects.ts holds typed data; Astro section imports and renders — same pattern as pricing.ts and launchOffer.ts
 - [Phase 03-seo-portfolio]: Testimonials use placeholder copy with TODO comment — must be replaced before production
+- [Phase 04-conversion-optimization]: Template literal JSX expression syntax for Pakker.astro hrefs required for Astro to evaluate pakke.id — not string interpolation
+- [Phase 04-conversion-optimization]: ContactForm.tsx already supported ?pakke= param — zero form changes needed for pre-fill wiring
+- [Phase 04-conversion-optimization]: Homepage keeps generic CTA.astro — contextual CTAs only for /om-oss and /prosjekter
 
 ### Roadmap Evolution
 
@@ -115,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T12:41:00Z
-Stopped at: Completed 03-04-PLAN.md — Testimonials section created and wired into homepage
+Last session: 2026-03-04T14:25:30Z
+Stopped at: Completed 04-01-PLAN.md — contextual CTAs and pricing pre-fill wiring
 Resume file: None

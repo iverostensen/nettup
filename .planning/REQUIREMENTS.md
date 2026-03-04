@@ -29,8 +29,8 @@
 
 ### UX & Conversion
 
-- [ ] **CONV-01**: Every page has a contextually relevant CTA leading toward contact
-- [ ] **CONV-02**: CTAs from /tjenester pre-fill the contact form with the relevant service selected
+- [x] **CONV-01**: Every page has a contextually relevant CTA leading toward contact
+- [x] **CONV-02**: CTAs from /tjenester pre-fill the contact form with the relevant service selected
 - [ ] **CONV-03**: Mobile UX audited and improved throughout — all pages tested at 375px, interaction targets adequate, no layout issues
 
 ## v2 Requirements
@@ -78,8 +78,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-02 | Phase 3: SEO & Portfolio | Complete |
 | PORT-01 | Phase 3: SEO & Portfolio | Complete |
 | PORT-02 | Phase 3: SEO & Portfolio | Complete |
-| CONV-01 | Phase 4: Conversion Optimization | Pending |
-| CONV-02 | Phase 4: Conversion Optimization | Pending |
+| CONV-01 | Phase 4: Conversion Optimization | Complete |
+| CONV-02 | Phase 4: Conversion Optimization | Complete |
 | CONV-03 | Phase 4: Conversion Optimization | Pending |
 
 **Coverage:**
