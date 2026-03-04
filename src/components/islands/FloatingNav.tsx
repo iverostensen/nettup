@@ -103,7 +103,7 @@ export default function FloatingNav() {
           {/* Logo */}
           <a
             href="/"
-            className="mr-2 flex shrink-0 items-center transition-opacity hover:opacity-80"
+            className="mr-2 flex min-h-11 shrink-0 items-center transition-opacity hover:opacity-80"
           >
             <img
               src="/images/nettup-logo.svg"
@@ -147,7 +147,7 @@ export default function FloatingNav() {
           {/* Hamburger Button - Mobile */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/10 hover:text-text md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/10 hover:text-text md:hidden"
             aria-label="Åpne meny"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"

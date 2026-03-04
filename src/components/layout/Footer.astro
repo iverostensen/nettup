@@ -35,11 +35,11 @@ const navLinks = [
         <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">
           Sider
         </h3>
-        <nav class="flex flex-col gap-3">
+        <nav class="flex flex-col">
           {navLinks.map((link) => (
             <a
               href={link.href}
-              class="link-underline w-fit text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+              class="link-underline flex min-h-11 w-fit items-center text-sm text-text-muted transition-colors duration-200 hover:text-brand"
             >
               {link.name}
             </a>
@@ -55,7 +55,7 @@ const navLinks = [
         <div class="space-y-3">
           <a
             href="tel:+4741327136"
-            class="flex items-center gap-2 text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+            class="flex min-h-11 items-center gap-2 text-sm text-text-muted transition-colors duration-200 hover:text-brand"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ const navLinks = [
           </a>
           <a
             href="mailto:post@nettup.no"
-            class="flex items-center gap-2 text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+            class="flex min-h-11 items-center gap-2 text-sm text-text-muted transition-colors duration-200 hover:text-brand"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@ const navLinks = [
         &copy; {currentYear} Nettup. Alle rettigheter reservert.
       </p>
       <div class="flex items-center gap-4 text-xs text-text-muted">
-        <a href="/personvern" class="transition-colors hover:text-brand">
+        <a href="/personvern" class="flex min-h-11 items-center transition-colors hover:text-brand">
           Personvern
         </a>
         <span class="text-text-muted/50">|</span>

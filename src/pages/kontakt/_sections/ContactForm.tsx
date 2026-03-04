@@ -220,7 +220,7 @@ export default function ContactForm() {
             <button
               type="button"
               onClick={() => setShowBadge(false)}
-              className="shrink-0 rounded-lg p-1 text-text-muted/70 transition-colors hover:bg-white/5 hover:text-text"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-text-muted/70 transition-colors hover:bg-white/5 hover:text-text"
               aria-label="Lukk"
             >
               <svg
