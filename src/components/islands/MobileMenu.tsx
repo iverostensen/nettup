@@ -21,6 +21,11 @@ export default function MobileMenu({
   currentPath,
 }: MobileMenuProps) {
   const shouldReduceMotion = useReducedMotion();
+
+  function isItemActive(item: NavItem): boolean {
+    if (item.href === '/tjenester') return currentPath.startsWith('/tjenester');
+    return currentPath === item.href;
+  }
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -142,10 +147,10 @@ export default function MobileMenu({
                 href={item.href}
                 variants={itemVariants}
                 onClick={onClose}
-                aria-current={currentPath === item.href ? 'page' : undefined}
+                aria-current={isItemActive(item) ? 'page' : undefined}
                 className={cn(
                   'text-3xl font-semibold transition-colors duration-200',
-                  currentPath === item.href
+                  isItemActive(item)
                     ? 'text-brand'
                     : 'text-text hover:text-brand'
                 )}
