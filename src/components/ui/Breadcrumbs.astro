@@ -1,0 +1,24 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string; // Omit for the current page (last item — non-interactive)
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Brødsmulesti" class="text-sm text-text-muted">
+  {items.map((item, i) => (
+    <>
+      {i > 0 && <span class="mx-1 select-none" aria-hidden="true">/</span>}
+      {item.href
+        ? <a href={item.href} class="hover:text-text transition-colors">{item.label}</a>
+        : <span class="text-text" aria-current="page">{item.label}</span>
+      }
+    </>
+  ))}
+</nav>
