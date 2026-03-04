@@ -1,30 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: Launch
-status: shipped
-last_updated: "2026-03-04T15:05:14.127Z"
+milestone: v1.1
+milestone_name: Tjenesteutvidelse
+status: defining_requirements
+last_updated: "2026-03-04T00:00:00.000Z"
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-04 after v1.0 milestone)
+See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
-**Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Planning next milestone (v1.1)
+**Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
+**Current focus:** Defining requirements for v1.1
 
 ## Current Position
 
-Milestone v1.0 Launch — SHIPPED 2026-03-04
-All 5 phases complete (15/15 plans).
-Next: `/gsd:new-milestone` to plan v1.1.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-04 — Milestone v1.1 Tjenesteutvidelse started
 
 ## Accumulated Context
 
