@@ -19,8 +19,8 @@
 
 ### SEO
 
-- [ ] **SEO-01**: Every page has unique, optimized metadata — title, description, and OG tags tailored per page
-- [ ] **SEO-02**: Structured data schemas added: Service (for each service offering), FAQ (on /tjenester), BreadcrumbList (site-wide)
+- [x] **SEO-01**: Every page has unique, optimized metadata — title, description, and OG tags tailored per page
+- [x] **SEO-02**: Structured data schemas added: Service (for each service offering), FAQ (on /tjenester), BreadcrumbList (site-wide)
 
 ### Portfolio & Social Proof
 
@@ -74,8 +74,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANIM-01 | Phase 2: Animation & Interaction | Complete |
 | ANIM-02 | Phase 2: Animation & Interaction | Complete |
 | ANIM-03 | Phase 2: Animation & Interaction | Complete |
-| SEO-01 | Phase 3: SEO & Portfolio | Pending |
-| SEO-02 | Phase 3: SEO & Portfolio | Pending |
+| SEO-01 | Phase 3: SEO & Portfolio | Complete |
+| SEO-02 | Phase 3: SEO & Portfolio | Complete |
 | PORT-01 | Phase 3: SEO & Portfolio | Pending |
 | PORT-02 | Phase 3: SEO & Portfolio | Pending |
 | CONV-01 | Phase 4: Conversion Optimization | Pending |
