@@ -7,9 +7,9 @@
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: ContactForm.tsx støtter `?tjeneste=` URL-param pre-fill ved siden av eksisterende `?pakke=`
+- [x] **INFRA-01**: ContactForm.tsx støtter `?tjeneste=` URL-param pre-fill ved siden av eksisterende `?pakke=`
 - [x] **INFRA-02**: FloatingNav og MobileMenu bruker `startsWith` for aktiv-tilstand — fikser ødelagt nav-highlight på alle 7 undersider
-- [ ] **INFRA-03**: BaseLayout `pageLabels`-map inkluderer alle 7 `/tjenester/[slug]`-ruter for korrekte norske brødsmule-etiketter
+- [x] **INFRA-03**: BaseLayout `pageLabels`-map inkluderer alle 7 `/tjenester/[slug]`-ruter for korrekte norske brødsmule-etiketter
 
 ### Data Config
 
@@ -48,7 +48,7 @@
 ### Conversion
 
 - [ ] **CTA-01**: Hver tjenesteside CTA lenker til `/kontakt?tjeneste=[slug]`
-- [ ] **CTA-02**: Kontaktskjema-innsending inkluderer valgt tjeneste i Formspree-data
+- [x] **CTA-02**: Kontaktskjema-innsending inkluderer valgt tjeneste i Formspree-data
 
 ## v2 Requirements
 
@@ -76,12 +76,12 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 6 | Pending |
+| INFRA-01 | Phase 6 | Complete |
 | INFRA-02 | Phase 6 | Complete |
-| INFRA-03 | Phase 6 | Pending |
+| INFRA-03 | Phase 6 | Complete |
 | CONFIG-01 | Phase 6 | Complete |
 | CONFIG-02 | Phase 6 | Complete |
-| CTA-02 | Phase 6 | Pending |
+| CTA-02 | Phase 6 | Complete |
 | OVERVIEW-01 | Phase 7 | Pending |
 | OVERVIEW-02 | Phase 7 | Pending |
 | OVERVIEW-03 | Phase 7 | Pending |
