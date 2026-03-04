@@ -61,7 +61,7 @@ import { pakker } from '@/config/pricing';
             </ul>
             <div class="mt-8">
               <Button
-                href="/kontakt"
+                href={`/kontakt?pakke=${pakke.id}&kilde=tjenester`}
                 variant={pakke.popular ? 'primary' : 'secondary'}
                 class="w-full"
               >
