@@ -42,7 +42,12 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
   3. The /tjenester nav item is highlighted when visiting any `/tjenester/*` sub-page on both desktop and mobile
   4. Breadcrumbs on `/tjenester/nettside` read "Hjem / Tjenester / Nettside" (not raw slug)
   5. `src/config/services.ts` exists with complete metadata for all 7 services (slug, name, tagline, priceRange, ctaParam)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Create src/config/services.ts with all 7 service objects
+- [ ] 06-02-PLAN.md — Update FloatingNav and MobileMenu with startsWith active state and dynamic label
+- [ ] 06-03-PLAN.md — Extend ContactForm with ?tjeneste= support, create Breadcrumbs.astro, update BaseLayout pageLabels
 
 ### Phase 7: Tjenesteoversikt
 **Goal**: /tjenester is a coherent service catalog that helps visitors identify which service fits them
@@ -98,7 +103,7 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 | 2.1. Hero animation rework | v1.0 | 2/2 | Complete | 2026-03-03 |
 | 3. SEO & Portfolio | v1.0 | 4/4 | Complete | 2026-03-04 |
 | 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
-| 6. Infrastructure | v1.1 | 0/TBD | Not started | - |
+| 6. Infrastructure | v1.1 | 0/3 | Not started | - |
 | 7. Tjenesteoversikt | v1.1 | 0/TBD | Not started | - |
 | 8. Core Service Pages | v1.1 | 0/TBD | Not started | - |
 | 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
