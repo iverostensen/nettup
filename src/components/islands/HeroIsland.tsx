@@ -9,6 +9,16 @@ export default function HeroIsland() {
   if (shouldReduceMotion) {
     return (
       <section className="grain-overlay relative flex min-h-screen items-center overflow-hidden pt-20 bg-surface">
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        >
+          <source src="/videos/neural-network-dark-blue-compressed.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-surface/80" aria-hidden="true" />
         <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-surface to-transparent" aria-hidden="true" />
 
         <div className="container relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] items-center px-4">
@@ -61,6 +71,17 @@ export default function HeroIsland() {
 
   return (
     <section className="grain-overlay relative flex min-h-screen items-center overflow-hidden pt-20 bg-surface">
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+      >
+        <source src="/videos/neural-network-dark-blue-compressed.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-surface/80" aria-hidden="true" />
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-surface to-transparent" aria-hidden="true" />
 
       <div className="container relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] items-center px-4">
