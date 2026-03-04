@@ -87,11 +87,11 @@ Plans:
   1. Every page has at least one CTA that leads toward the contact form, with copy that is contextually relevant to what the visitor just read on that page
   2. Clicking a service-specific CTA on /tjenester opens the contact form with the relevant service already selected -- reducing friction from interest to inquiry
   3. All pages pass a manual mobile UX audit at 375px: no layout overflow, all tap targets are at least 44px, forms are usable with thumb, no horizontal scrolling
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Contextual CTAs for /om-oss and /prosjekter; wire Pakker.astro button hrefs with ?pakke= pre-fill
+- [ ] 04-02-PLAN.md — Mobile UX audit at 375px across all 5 pages; human verification checkpoint
 
 ## Progress
 
@@ -104,4 +104,4 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
 | 02.1. Hero animation rework | 2/2 | Complete   | 2026-03-03 |
 | 3. SEO & Portfolio | 3/4 | In Progress|  |
-| 4. Conversion Optimization | 0/0 | Not started | - |
+| 4. Conversion Optimization | 0/2 | Not started | - |
