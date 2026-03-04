@@ -15,8 +15,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Brand Identity** - Define personality, implement design token system, upgrade typography (completed 2026-03-03)
 - [x] **Phase 2: Animation & Interaction** - Build animation preset system, hero showcase animation, page transitions (completed 2026-03-03)
 - [x] **Phase 02.1: Hero animation rework — delivery story** - Replace static stats card with cinematic 14-day delivery story loop (INSERTED) (completed 2026-03-03)
-- [ ] **Phase 3: SEO & Portfolio** - Per-page metadata, structured data schemas, expand portfolio to 2-3 projects
-- [ ] **Phase 4: Conversion Optimization** - Contextual CTAs on every page, smart form pre-fill, testimonial treatment, mobile UX audit
+- [x] **Phase 3: SEO & Portfolio** - Per-page metadata, structured data schemas, expand portfolio to 2-3 projects (completed 2026-03-04)
+- [x] **Phase 4: Conversion Optimization** - Contextual CTAs on every page, smart form pre-fill, testimonial treatment, mobile UX audit (completed 2026-03-04)
 
 ## Phase Details
 
@@ -74,10 +74,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Strengthen metadata for om-oss + prosjekter pages; add BreadcrumbList JSON-LD to BaseLayout
-- [ ] 03-02-PLAN.md — Add Service JSON-LD schemas to /tjenester (one per pricing package); add head slot to BaseLayout
-- [ ] 03-03-PLAN.md — Extract iGive to projects.ts config array; refactor ProjectShowcase.astro to render from data
-- [ ] 03-04-PLAN.md — Create testimonials.ts config; build Testimonials.astro section; wire to homepage between ProjectTeaser and CTA
+- [x] 03-01-PLAN.md — Strengthen metadata for om-oss + prosjekter pages; add BreadcrumbList JSON-LD to BaseLayout
+- [x] 03-02-PLAN.md — Add Service JSON-LD schemas to /tjenester (one per pricing package); add head slot to BaseLayout
+- [x] 03-03-PLAN.md — Extract iGive to projects.ts config array; refactor ProjectShowcase.astro to render from data
+- [x] 03-04-PLAN.md — Create testimonials.ts config; build Testimonials.astro section; wire to homepage between ProjectTeaser and CTA
 
 ### Phase 4: Conversion Optimization
 **Goal**: Every page guides visitors toward the contact form with contextually relevant calls to action, and mobile experience is flawless
@@ -90,8 +90,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Contextual CTAs for /om-oss and /prosjekter; wire Pakker.astro button hrefs with ?pakke= pre-fill
-- [ ] 04-02-PLAN.md — Mobile UX audit at 375px across all 5 pages; human verification checkpoint
+- [x] 04-01-PLAN.md — Contextual CTAs for /om-oss and /prosjekter; wire Pakker.astro button hrefs with ?pakke= pre-fill
+- [x] 04-02-PLAN.md — Mobile UX audit at 375px across all 5 pages; human verification checkpoint
 
 ## Progress
 
@@ -103,5 +103,5 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 | 1. Brand Identity | 4/4 | Complete   | 2026-03-03 |
 | 2. Animation & Interaction | 3/3 | Complete   | 2026-03-03 |
 | 02.1. Hero animation rework | 2/2 | Complete   | 2026-03-03 |
-| 3. SEO & Portfolio | 3/4 | In Progress|  |
-| 4. Conversion Optimization | 0/2 | Not started | - |
+| 3. SEO & Portfolio | 4/4 | Complete   | 2026-03-04 |
+| 4. Conversion Optimization | 2/2 | Complete   | 2026-03-04 |
