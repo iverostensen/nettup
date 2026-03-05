@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-04T17:32:08.611Z"
+last_updated: "2026-03-05T08:19:36Z"
 progress:
   total_phases: 1
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -22,18 +22,18 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 ## Current Position
 
-Phase: 6 of 10 (Infrastructure) — COMPLETE
-Plan: 3 of 3 (all done)
-Status: Phase 06 complete, ready for Phase 07
-Last activity: 2026-03-04 — Completed 06-03: ContactForm tjeneste param, Breadcrumbs.astro, BaseLayout pageLabels
+Phase: 7 of 10 (Tjenesteoversikt) — IN PROGRESS
+Plan: 1 of 3 (done: 07-01)
+Status: Phase 07 in progress, 07-01 complete
+Last activity: 2026-03-05 — Completed 07-01: TjenesterOversikt.astro grouped service cards + FAQ.astro rewrite
 
-Progress: [███░░░░░░░] 30%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0 (v1.1)
-- Average duration: — (no v1.1 data yet)
+- Total plans completed: 1 (v1.1)
+- Average duration: 2 min
 - v1.0 reference: 15 plans, ~2 days
 
 **By Phase:**
@@ -41,9 +41,11 @@ Progress: [███░░░░░░░] 30%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 06-infrastructure | 3/3 | 13 min | 4 min |
+| 07-tjenesteoversikt | 1/3 | 2 min | 2 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
+| Phase 07-tjenesteoversikt P01 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -62,6 +64,9 @@ Recent decisions affecting current work:
 - [Phase 06-infrastructure]: Service badge simpler than pakke badge: no price info, no dismiss — displays name + checkmark only
 - [Phase 06-infrastructure]: Breadcrumbs.astro pure Astro no client JS — correct for utility nav component
 - [Phase 06-infrastructure]: pageLabels uses AI-løsning matching services.ts name field exactly
+- 07-01: !border-brand (Tailwind important modifier) used to override Card base border for featured service cards
+- 07-01: Les mer rendered as styled <span> (not Button or <a>) to avoid nested anchor elements inside Card <a>
+- 07-01: Heroicon SVG paths stored as inline Record<string, string> — no external icon library dependency
 
 ### Pending Todos
 
@@ -75,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-04
-Stopped at: Completed 06-03-PLAN.md (ContactForm tjeneste param, Breadcrumbs, pageLabels). Phase 06 complete. Next: Phase 07.
+Last session: 2026-03-05
+Stopped at: Completed 07-01-PLAN.md (TjenesterOversikt.astro grouped service cards + FAQ.astro catalog rewrite). Phase 07 in progress. Next: 07-02.
 Resume file: None
