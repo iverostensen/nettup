@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 8 — Core Service Pages
+**Current focus:** Phase 9 — Specialist Service Pages
 
 ## Current Position
 
-Phase: 8 of 10 (Core Service Pages) — COMPLETE
-Plan: 3 of 3 (done: 08-01, 08-02, 08-03)
-Status: Phase 08 complete — all three core service pages built
-Last activity: 2026-03-05 — Completed 08-03: Built /tjenester/landingsside page with conversion-focused copy, 8 features, 5 FAQ items, Service JSON-LD + FAQPage JSON-LD
+Phase: 9 of 10 (Specialist Service Pages) — IN PROGRESS
+Plan: 1 of 5 (done: 09-01)
+Status: 09-01 complete — Service interface extended with monthlyPrice/monthlyPriceLabel for Phase 9 services
+Last activity: 2026-03-05 — Completed 09-01: Extended services.ts with optional monthlyPrice and monthlyPriceLabel fields; webapp (2500), seo (3000), ai (1000), vedlikehold (1500) populated
 
-Progress: [██████░░░░] 65%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Progress: [██████░░░░] 65%
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
 | 08-core-service-pages | 3/3 | 7 min | 2.3 min |
+| 09-specialist-service-pages | 1/5 | 3 min | 3 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
@@ -51,6 +52,7 @@ Progress: [██████░░░░] 65%
 | Phase 08-core-service-pages P01 | 2 | 2 tasks | 5 files |
 | Phase 08-core-service-pages P02 | 3 | 2 tasks | 5 files |
 | Phase 08-core-service-pages P03 | 2 | 2 tasks | 5 files |
+| Phase 09-specialist-service-pages P01 | 3 | 1 task | 1 file |
 
 ## Accumulated Context
 
@@ -82,6 +84,7 @@ Recent decisions affecting current work:
 - 08-02: FAQPage JSON-LD co-located in FAQ.astro, consistent with 08-01 pattern
 - [Phase 08-core-service-pages]: 08-03: FAQPage JSON-LD co-located in FAQ.astro (consistent with 08-01/08-02 pattern)
 - [Phase 08-core-service-pages]: 08-03: Hero uses animate-fade-up (not reveal-on-scroll) for above-fold content
+- [Phase 09-specialist-service-pages]: 09-01: monthlyPrice/monthlyPriceLabel optional fields — nettside, nettbutikk, landingsside deferred to Phase 10
 
 ### Pending Todos
 
@@ -96,5 +99,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 08-03-PLAN.md (/tjenester/landingsside built with conversion-focused copy, 8 landingsside-specific features, 5 ads-focused FAQ items, Service JSON-LD + FAQPage JSON-LD). Phase 08 complete.
+Stopped at: Completed 09-01-PLAN.md (services.ts extended with monthlyPrice/monthlyPriceLabel; webapp 2500, seo 3000, ai 1000, vedlikehold 1500 kr/mnd populated as prereq for Phase 9 Hero sections)
 Resume file: None

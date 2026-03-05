@@ -27,10 +27,10 @@
 - [x] **PAGES-01**: `/tjenester/nettside` — dedikert tjenesteside
 - [x] **PAGES-02**: `/tjenester/landingsside` — dedikert tjenesteside
 - [x] **PAGES-03**: `/tjenester/nettbutikk` — dedikert tjenesteside (Shopify)
-- [ ] **PAGES-04**: `/tjenester/webapp` — dedikert tjenesteside
-- [ ] **PAGES-05**: `/tjenester/seo` — dedikert tjenesteside
-- [ ] **PAGES-06**: `/tjenester/ai` — dedikert tjenesteside
-- [ ] **PAGES-07**: `/tjenester/vedlikehold` — dedikert tjenesteside
+- [x] **PAGES-04**: `/tjenester/webapp` — dedikert tjenesteside
+- [x] **PAGES-05**: `/tjenester/seo` — dedikert tjenesteside
+- [x] **PAGES-06**: `/tjenester/ai` — dedikert tjenesteside
+- [x] **PAGES-07**: `/tjenester/vedlikehold` — dedikert tjenesteside
 
 ### Content
 
@@ -94,10 +94,10 @@
 | CONTENT-04 | Phase 8 | Complete |
 | SEO-02 | Phase 8 | Complete |
 | CTA-01 | Phase 8 | Complete |
-| PAGES-04 | Phase 9 | Pending |
-| PAGES-05 | Phase 9 | Pending |
-| PAGES-06 | Phase 9 | Pending |
-| PAGES-07 | Phase 9 | Pending |
+| PAGES-04 | Phase 9 | Complete |
+| PAGES-05 | Phase 9 | Complete |
+| PAGES-06 | Phase 9 | Complete |
+| PAGES-07 | Phase 9 | Complete |
 | SEO-01 | Phase 10 | Pending |
 | SEO-03 | Phase 10 | Pending |
 

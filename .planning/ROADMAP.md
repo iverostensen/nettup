@@ -110,5 +110,5 @@ Plans:
 | 6. Infrastructure | 3/3 | Complete   | 2026-03-04 | - |
 | 7. Tjenesteoversikt | 2/2 | Complete   | 2026-03-05 | - |
 | 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
-| 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
+| 9. Specialist Service Pages | 1/5 | In Progress|  | - |
 | 10. Cross-linking & Validation | v1.1 | 0/TBD | Not started | - |
