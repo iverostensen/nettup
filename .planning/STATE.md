@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T12:18:39.032Z"
+last_updated: "2026-03-05T12:22:11.321Z"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 13
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 ## Current Position
 
 Phase: 9 of 10 (Specialist Service Pages) — IN PROGRESS
-Plan: 2 of 5 (done: 09-01, 09-02)
-Status: 09-02 complete — /tjenester/webapp page with 5 sections including unique Prosess section built and passing build
-Last activity: 2026-03-05 — Completed 09-02: Built /tjenester/webapp (Hero, Prosess, Inkludert, FAQ, CTA, index.astro); ROI-focused Hero with dual price signals; Service + FAQPage JSON-LD
+Plan: 3 of 5 (done: 09-01, 09-02, 09-03)
+Status: 09-03 complete — /tjenester/seo page with GEO differentiation (ChatGPT/Perplexity), monthly deliverables, FAQPage + Service JSON-LD built and passing build
+Last activity: 2026-03-05 — Completed 09-03: Built /tjenester/seo (Hero, Inkludert, FAQ, CTA, index.astro); GEO differentiator in Hero; monthly deliverables in Inkludert; FAQPage + Service JSON-LD
 
-Progress: [███████░░░] 70%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [███████░░░] 70%
 | Phase 08-core-service-pages P03 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P01 | 3 | 1 task | 1 file |
 | Phase 09-specialist-service-pages P02 | 5 | 2 tasks | 6 files |
+| Phase 09-specialist-service-pages P03 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,8 @@ Recent decisions affecting current work:
 - [Phase 09-specialist-service-pages]: 09-01: monthlyPrice/monthlyPriceLabel optional fields — nettside, nettbutikk, landingsside deferred to Phase 10
 - [Phase 09-specialist-service-pages]: 09-02: Webapp gets unique Prosess section (5 sections total vs 4 for other specialist pages)
 - [Phase 09-specialist-service-pages]: 09-02: Monthly price displayed in Hero alongside one-time price for maximum above-fold transparency
+- [Phase 09-specialist-service-pages]: 09-03: GEO positioned as key differentiator in SEO page Hero with ChatGPT and Perplexity named explicitly
+- [Phase 09-specialist-service-pages]: 09-03: Monthly price (fra 3 000 kr/mnd) is the sole price signal on SEO page — no one-time project price
 
 ### Pending Todos
 
