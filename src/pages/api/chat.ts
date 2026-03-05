@@ -46,7 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
     const systemPrompt = buildSystemPrompt(currentPage);
 
     const stream = client.messages.stream({
-      model: 'claude-haiku-4-5-20241022',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
       system: systemPrompt,
       messages,
@@ -56,32 +56,43 @@ export const POST: APIRoute = async ({ request }) => {
 
     const readable = new ReadableStream({
       async start(controller) {
+        let closed = false;
+        const close = () => {
+          if (!closed) {
+            closed = true;
+            controller.close();
+          }
+        };
+        const enqueue = (chunk: Uint8Array) => {
+          if (!closed) {
+            controller.enqueue(chunk);
+          }
+        };
+
         try {
           stream.on('text', (text) => {
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
-            );
+            enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
           });
 
           stream.on('end', () => {
-            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-            controller.close();
+            enqueue(encoder.encode('data: [DONE]\n\n'));
+            close();
           });
 
           stream.on('error', (error: Error) => {
-            controller.enqueue(
+            enqueue(
               encoder.encode(
                 `data: ${JSON.stringify({ error: error.message })}\n\n`
               )
             );
-            controller.close();
+            close();
           });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Stream error';
-          controller.enqueue(
+          enqueue(
             encoder.encode(`data: ${JSON.stringify({ error: message })}\n\n`)
           );
-          controller.close();
+          close();
         }
       },
     });

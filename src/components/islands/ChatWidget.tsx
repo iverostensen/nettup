@@ -86,6 +86,74 @@ function SendIcon({ className }: { className?: string }) {
   );
 }
 
+function renderMarkdown(text: string): React.ReactNode[] {
+  const lines = text.split('\n');
+  const result: React.ReactNode[] = [];
+
+  const formatInline = (line: string, keyPrefix: string): React.ReactNode[] => {
+    const parts: React.ReactNode[] = [];
+    const regex = /\*\*(.+?)\*\*/g;
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(line)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(line.slice(lastIndex, match.index));
+      }
+      parts.push(
+        <strong key={`${keyPrefix}-b-${match.index}`} className="font-semibold">
+          {match[1]}
+        </strong>
+      );
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < line.length) {
+      parts.push(line.slice(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : [line];
+  };
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const bulletMatch = line.match(/^[\-\*]\s+(.+)/);
+
+    if (bulletMatch) {
+      // Collect consecutive bullet items
+      const items: string[] = [];
+      while (i < lines.length) {
+        const m = lines[i].match(/^[\-\*]\s+(.+)/);
+        if (!m) break;
+        items.push(m[1]);
+        i++;
+      }
+      result.push(
+        <ul key={`ul-${i}`} className="my-1 ml-3 list-disc space-y-0.5">
+          {items.map((item, j) => (
+            <li key={j}>{formatInline(item, `li-${i}-${j}`)}</li>
+          ))}
+        </ul>
+      );
+    } else {
+      if (line.trim() === '') {
+        result.push(<br key={`br-${i}`} />);
+      } else {
+        result.push(
+          <span key={`p-${i}`}>
+            {i > 0 && lines[i - 1]?.trim() !== '' && !lines[i - 1]?.match(/^[\-\*]\s+/) && <br />}
+            {formatInline(line, `l-${i}`)}
+          </span>
+        );
+      }
+      i++;
+    }
+  }
+
+  return result;
+}
+
 function TypingIndicator() {
   return (
     <div className="flex items-center gap-1 px-1 py-0.5">
@@ -421,12 +489,9 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                     )}
                   >
                     {message.content ? (
-                      message.content.split('\n').map((line, lineIndex) => (
-                        <span key={lineIndex}>
-                          {lineIndex > 0 && <br />}
-                          {line}
-                        </span>
-                      ))
+                      message.role === 'assistant'
+                        ? renderMarkdown(message.content)
+                        : message.content
                     ) : (
                       isStreaming && index === messages.length - 1 && (
                         <TypingIndicator />
