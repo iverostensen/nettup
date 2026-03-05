@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Hva er GEO, og hvorfor er det viktig?',
+    answer: 'GEO — Generative Engine Optimization — er optimalisering for AI-baserte søkemotorer som ChatGPT, Perplexity og Google AI Overviews. Når folk stiller spørsmål til AI-assistenter, trekker disse fra nettsider de anser som autoritative og relevante. Bedrifter som optimaliserer for GEO nå, vil ha et forsprang når AI-søk fortsetter å vokse. Få norske byråer tilbyr dette i dag — vi gjør det til en standarddel av SEO-arbeidet.',
+  },
+  {
+    question: 'Hvor lang tid tar det å se resultater?',
+    answer: 'SEO tar tid. Du kan forvente de første synlige forbedringene etter 3–6 måneder, og full effekt bygges opp over 6–12 måneder med konsistent arbeid. Vi gir deg en ærlig tidsforventning basert på konkurransen i din bransje — ikke løfter vi ikke kan holde.',
+  },
+  {
+    question: 'Inkluderer dere innholdsproduksjon?',
+    answer: 'Vi optimaliserer eksisterende innhold som en del av avtalen. Produksjon av nye artikler og landingssider kan legges til som tilleggsarbeid. I gjennomgangen identifiserer vi hvilke innholdsgap som gir størst SEO-effekt, slik at du kan prioritere.',
+  },
+  {
+    question: 'Hva skjer med SEO-arbeidet om vi sier opp avtalen?',
+    answer: 'Rangeringer og innholdsforbedringer du har opparbeidet deg beholder du. Vi leverer en avsluttende rapport og overleverer all dokumentasjon. SEO er en investering i nettstedet ditt — ikke noe vi "leier" til deg.',
+  },
+  {
+    question: 'Jobber dere med bedrifter i alle bransjer?',
+    answer: 'Ja. Vi har jobbet med alt fra lokale håndverksbedrifter til nettbutikker og tjenestebedrifter. Søkeordsanalysen og strategien tilpasses din bransje og dine konkurrenter. I gjennomgangen forteller vi deg hvordan konkurransen ser ut og hva som skal til for å hevde seg.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
