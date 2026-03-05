@@ -1,0 +1,36 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const features = [
+  { title: 'Konverteringsfokusert layout', description: 'Hvert element på siden er plassert for å lede besøkende mot ett mål: å ta kontakt, melde seg på eller kjøpe.' },
+  { title: 'A/B-klar struktur', description: 'Siden bygges slik at du enkelt kan teste ulike overskrifter, bilder eller CTA-tekster for å finne hva som konverterer best.' },
+  { title: 'Hurtig lasting', description: 'Under 1 sekund lastetid. Raskere side = lavere fluktrate og bedre annonseresultater i Google Ads og Meta.' },
+  { title: 'Integrasjon med annonsekampanjer', description: 'Riktig oppsett av UTM-parametere, Google Tag Manager og konverteringssporing slik at du vet nøyaktig hva som virker.' },
+  { title: 'Kontaktskjema eller lead-capture', description: 'Et tydelig og lavterskel skjema som samler inn nettopp den informasjonen du trenger fra potensielle kunder.' },
+  { title: 'Responsivt design', description: 'Fungerer like godt på mobil som desktop — kritisk når mesteparten av annonsetrafikken kommer fra telefon.' },
+  { title: 'HTTPS/SSL', description: 'Sikker tilkobling inkludert. Nødvendig for tillit og for at annonseplattformene godkjenner landingssiden.' },
+  { title: '30 dagers support', description: 'Vi er tilgjengelige for justeringer og spørsmål i 30 dager etter lansering.' },
+];
+---
+
+<Section background="raised">
+  <SectionHeader title="Hva er inkludert" subtitle="Alt som trengs for en landingsside som faktisk konverterer." />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <div class={`reveal-on-scroll delay-${(index % 3) + 1}`}>
+          <div class="flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-brand" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <div>
+              <h3 class="font-semibold">{feature.title}</h3>
+              <p class="mt-1 text-sm text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
