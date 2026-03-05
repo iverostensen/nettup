@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 Phase: 10 of 10 (Cross-linking and Validation) — COMPLETE
 Plan: 2 of 2 complete (done: 10-01, 10-02)
 Status: 10-02 complete — Verified sitemap (all 7 sub-pages present) + validated Service and FAQPage JSON-LD schemas on all 7 service pages (no errors)
-Last activity: 2026-03-05 — Completed 10-02: Sitemap includes all 7 /tjenester/* URLs; all 7 pages pass Google Rich Results Test for Service and FAQPage JSON-LD
+Last activity: 2026-03-05 - Completed quick task 1: Analyse and implement refined microanimations and hover effects on /tjenester
 
 Progress: [██████████] 100%
 
@@ -109,6 +109,12 @@ Recent decisions affecting current work:
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Analyse and implement refined microanimations and hover effects on /tjenester | 2026-03-05 | 9875bc9 | [1-analyse-the-tjenester-page-and-the-micro](.planning/quick/1-analyse-the-tjenester-page-and-the-micro/) |
 
 ## Session Continuity
 
