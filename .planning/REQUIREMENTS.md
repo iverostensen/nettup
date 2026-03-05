@@ -50,6 +50,14 @@
 - [x] **CTA-01**: Hver tjenesteside CTA lenker til `/kontakt?tjeneste=[slug]`
 - [x] **CTA-02**: Kontaktskjema-innsending inkluderer valgt tjeneste i Formspree-data
 
+### Price Calculator
+
+- [ ] **CALC-01**: Priskalkulator starter med mål-først spørsmål ("Hva er målet ditt?") med 3 mål-alternativer som ruter til nettside, nettbutikk, landingsside
+- [ ] **CALC-02**: Etter mål-valg vises anbefalingssteg ("Vi anbefaler: [Tjeneste]") med tjenestenavn og tagline før innsnevringsspørsmål
+- [ ] **CALC-03**: 2 innsnevringsspørsmål per tjeneste med stegindikator ("Spørsmål 1 av 2")
+- [ ] **CALC-04**: Resultatskjerm viser 3-4 "hva er inkludert" punkter med sjekkmerke-ikoner per tjeneste
+- [ ] **CALC-05**: Resultatskjerm har "Les mer om [tjeneste]"-lenke til /tjenester/[slug] ved siden av CTA
+
 ## v2 Requirements
 
 ### Content & Trust
@@ -100,14 +108,19 @@
 | PAGES-07 | Phase 9 | Complete |
 | SEO-01 | Phase 10 | Complete |
 | SEO-03 | Phase 10 | Complete |
+| CALC-01 | Phase 11 | Planned |
+| CALC-02 | Phase 11 | Planned |
+| CALC-03 | Phase 11 | Planned |
+| CALC-04 | Phase 11 | Planned |
+| CALC-05 | Phase 11 | Planned |
 
 **Coverage:**
-- v1.1 requirements: 24 total
-- Mapped to phases: 24
-- Unmapped: 0 ✓
+- v1.1 requirements: 29 total
+- Mapped to phases: 29
+- Unmapped: 0
 
 Note: CONTENT-01, CONTENT-02, CONTENT-03, CTA-01, and SEO-02 are assigned to Phase 8 (where they first become verifiable). Phase 9 pages must satisfy the same standards — compliance verified in Phase 10.
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 — traceability finalized after roadmap creation*
+*Last updated: 2026-03-05 — Phase 11 CALC requirements added*

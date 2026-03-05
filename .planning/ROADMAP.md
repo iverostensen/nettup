@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Launch** — Phases 1–4 (shipped 2026-03-04)
-- 🚧 **v1.1 Tjenesteutvidelse** — Phases 6–10 (in progress)
+- 🚧 **v1.1 Tjenesteutvidelse** — Phases 6–11 (in progress)
 
 ## Phases
 
@@ -29,6 +29,7 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 8: Core Service Pages** - De 3 kjernetjenestesidene ferdigstilt (completed 2026-03-05)
 - [x] **Phase 9: Specialist Service Pages** - De 4 spesialistsidene ferdigstilt (completed 2026-03-05)
 - [x] **Phase 10: Cross-linking & Validation** - Komplett, interkoblet tjenestekatalogg validert
+- [ ] **Phase 11: Enhanced Price Calculator** - Mål-først priskalkulator med flerstegsvurdering
 
 ## Phase Details
 
@@ -98,6 +99,21 @@ Plans:
   4. Each sub-page has at least 2 cross-links to related service pages
 **Plans**: TBD
 
+### Phase 11: Enhanced Price Calculator
+**Goal**: PrisKalkulator rewritten as goal-first multi-step wizard that routes visitors to the right service and gives a tighter price estimate through 2 narrowing questions per service
+**Depends on**: Phase 10
+**Requirements**: CALC-01, CALC-02, CALC-03, CALC-04, CALC-05
+**Success Criteria** (what must be TRUE):
+  1. Wizard starts with "Hva er malet ditt?" goal question with 3 options (not a service picker)
+  2. After goal selection, a "Vi anbefaler" recommendation step shows the matched service before narrowing
+  3. Each service path has 2 narrowing questions with step counter
+  4. Result screen includes "hva er inkludert" bullet points and "Les mer" link to service page
+  5. All animations transition smoothly between 4 phases with reduced-motion support
+**Plans**: 1 plan
+
+Plans:
+- [ ] 11-01-PLAN.md — Rewrite PrisKalkulatorIsland with goal-first 4-phase wizard
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -112,3 +128,4 @@ Plans:
 | 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
+| 11. Enhanced Price Calculator | v1.1 | 0/1 | Planned | - |
