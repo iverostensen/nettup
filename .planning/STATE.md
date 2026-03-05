@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T11:11:52.095Z"
+last_updated: "2026-03-05T12:18:39.032Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 13
+  completed_plans: 10
 ---
 
 # Project State
@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 ## Current Position
 
 Phase: 9 of 10 (Specialist Service Pages) — IN PROGRESS
-Plan: 1 of 5 (done: 09-01)
-Status: 09-01 complete — Service interface extended with monthlyPrice/monthlyPriceLabel for Phase 9 services
-Last activity: 2026-03-05 — Completed 09-01: Extended services.ts with optional monthlyPrice and monthlyPriceLabel fields; webapp (2500), seo (3000), ai (1000), vedlikehold (1500) populated
+Plan: 2 of 5 (done: 09-01, 09-02)
+Status: 09-02 complete — /tjenester/webapp page with 5 sections including unique Prosess section built and passing build
+Last activity: 2026-03-05 — Completed 09-02: Built /tjenester/webapp (Hero, Prosess, Inkludert, FAQ, CTA, index.astro); ROI-focused Hero with dual price signals; Service + FAQPage JSON-LD
 
 Progress: [███████░░░] 70%
 
@@ -43,7 +43,7 @@ Progress: [███████░░░] 70%
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
 | 08-core-service-pages | 3/3 | 7 min | 2.3 min |
-| 09-specialist-service-pages | 1/5 | 3 min | 3 min |
+| 09-specialist-service-pages | 2/5 | 8 min | 4 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
@@ -53,6 +53,7 @@ Progress: [███████░░░] 70%
 | Phase 08-core-service-pages P02 | 3 | 2 tasks | 5 files |
 | Phase 08-core-service-pages P03 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P01 | 3 | 1 task | 1 file |
+| Phase 09-specialist-service-pages P02 | 5 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 08-core-service-pages]: 08-03: FAQPage JSON-LD co-located in FAQ.astro (consistent with 08-01/08-02 pattern)
 - [Phase 08-core-service-pages]: 08-03: Hero uses animate-fade-up (not reveal-on-scroll) for above-fold content
 - [Phase 09-specialist-service-pages]: 09-01: monthlyPrice/monthlyPriceLabel optional fields — nettside, nettbutikk, landingsside deferred to Phase 10
+- [Phase 09-specialist-service-pages]: 09-02: Webapp gets unique Prosess section (5 sections total vs 4 for other specialist pages)
+- [Phase 09-specialist-service-pages]: 09-02: Monthly price displayed in Hero alongside one-time price for maximum above-fold transparency
 
 ### Pending Todos
 
@@ -99,5 +102,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 09-01-PLAN.md (services.ts extended with monthlyPrice/monthlyPriceLabel; webapp 2500, seo 3000, ai 1000, vedlikehold 1500 kr/mnd populated as prereq for Phase 9 Hero sections)
+Stopped at: Completed 09-02-PLAN.md (/tjenester/webapp page with 5 sections including unique Prosess; Hero ROI-focused with dual price signals; Service + FAQPage JSON-LD)
 Resume file: None
