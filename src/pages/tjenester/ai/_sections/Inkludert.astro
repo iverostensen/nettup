@@ -1,0 +1,39 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const features = [
+  { title: 'Chatbot og kundestøtte-automatisering', description: 'Vi bygger AI-assistenter som håndterer vanlige kundehenvendelser døgnet rundt — slik at teamet ditt bruker tid på de sakene som faktisk krever menneskelig vurdering.' },
+  { title: 'Dokumentbehandling og oppsummering', description: 'Rapporter, søknader, kontrakter og e-poster behandles og oppsummeres automatisk. Du får det viktigste ut — uten å lese alt selv.' },
+  { title: 'Systemintegrasjoner via AI', description: 'Vi kobler systemene dine sammen med AI-lag i mellom — slik at data flyter riktig sted uten manuelle eksporter og imports.' },
+  { title: 'Behovskartlegging og AI-analyse', description: 'Vi starter med å kartlegge hvilke prosesser som er best egnet for AI-automatisering og hva som faktisk gir størst effekt i din bedrift.' },
+  { title: 'Valg av GDPR-vennlige AI-verktøy', description: 'Vi velger verktøy og leverandører som er egnet for norske og europeiske virksomheter, og hjelper deg med databehandleravtale (DPA) der det er nødvendig.' },
+  { title: 'Testing og kvalitetssikring', description: 'Løsningen testes grundig med virkelige data og scenarier før den settes i produksjon. Vi avdekker feil og kanttilfeller tidlig.' },
+  { title: 'Dokumentasjon og opplæring', description: 'Teamet ditt får opplæring i å bruke løsningen, og vi leverer dokumentasjon slik at dere ikke er avhengige av oss for daglig drift.' },
+  { title: 'Løpende justeringer', description: 'AI-løsninger forbedres over tid. Gjennom vedlikeholdsavtalen justerer vi modeller, prompts og integrasjoner etter hvert som behovene endrer seg.' },
+];
+---
+
+<Section background="raised">
+  <SectionHeader
+    title="Hva er inkludert"
+    subtitle="Fra behovskartlegging til fungerende løsning i produksjon."
+  />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <div class={`reveal-on-scroll delay-${(index % 3) + 1}`}>
+          <div class="flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-brand" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <div>
+              <h3 class="font-semibold">{feature.title}</h3>
+              <p class="mt-1 text-sm text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
