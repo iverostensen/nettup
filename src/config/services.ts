@@ -3,6 +3,7 @@ export interface Service {
   name: string;
   tagline: string;
   priceRange: string;
+  launchPriceRange: string;     // Discounted price, e.g. 'fra 4 800 kr'
   minPrice: number;
   maxPrice: number;
   ctaParam: string;
@@ -10,92 +11,54 @@ export interface Service {
   monthlyPrice?: number;        // Monthly maintenance/service price in NOK
   monthlyPriceLabel?: string;   // Display string, e.g. 'fra 2 500 kr/mnd'
   related?: string[];           // Slugs of related services for cross-linking
+  featured?: boolean;           // Show with brand border/glow on overview
 }
+
+/** 40% launch discount on one-time project fees (monthly fees unchanged) */
+export const LAUNCH_DISCOUNT = 0.4;
 
 export const services: Service[] = [
   {
     slug: 'nettside',
     name: 'Nettside',
     tagline: 'En nettside som faktisk konverterer besøkende',
-    priceRange: 'fra 15 000 kr',
-    minPrice: 15000,
+    priceRange: 'fra 8 000 kr',
+    launchPriceRange: 'fra 4 800 kr',
+    minPrice: 8000,
     maxPrice: 0,
     ctaParam: 'nettside',
     description: 'Vi bygger en skreddersydd nettside som presenterer bedriften din profesjonelt og gjør det enkelt for besøkende å ta kontakt.',
-    related: ['seo', 'vedlikehold'],
+    monthlyPrice: 350,
+    monthlyPriceLabel: 'fra 350 kr/mnd',
+    related: ['nettbutikk', 'landingsside'],
+    featured: true,
   },
   {
     slug: 'nettbutikk',
     name: 'Nettbutikk',
     tagline: 'Selg produktene dine på nett — uten kompromisser',
-    priceRange: 'fra 25 000 kr',
-    minPrice: 25000,
+    priceRange: 'fra 15 000 kr',
+    launchPriceRange: 'fra 9 000 kr',
+    minPrice: 15000,
     maxPrice: 0,
     ctaParam: 'nettbutikk',
     description: 'Vi setter opp en komplett nettbutikk som gjør det enkelt for kundene dine å finne, velge og kjøpe produktene dine.',
-    related: ['nettside', 'vedlikehold'],
+    monthlyPrice: 500,
+    monthlyPriceLabel: 'fra 500 kr/mnd',
+    related: ['nettside', 'landingsside'],
   },
   {
     slug: 'landingsside',
     name: 'Landingsside',
     tagline: 'Én side som overbeviser og konverterer',
-    priceRange: 'fra 8 000 kr',
-    minPrice: 8000,
+    priceRange: 'fra 4 000 kr',
+    launchPriceRange: 'fra 2 400 kr',
+    minPrice: 4000,
     maxPrice: 0,
     ctaParam: 'landingsside',
     description: 'En fokusert landingsside bygget for å konvertere trafikk fra annonser eller kampanjer til faktiske kunder.',
-    related: ['seo', 'nettside'],
-  },
-  {
-    slug: 'webapp',
-    name: 'Webapp',
-    tagline: 'Skreddersydd nettapplikasjon for din bedrift',
-    priceRange: 'fra 40 000 kr',
-    minPrice: 40000,
-    maxPrice: 0,
-    ctaParam: 'webapp',
-    description: 'Vi utvikler webapplikasjoner som løser konkrete problemer i virksomheten din og gir teamet ditt bedre verktøy.',
-    monthlyPrice: 2500,
-    monthlyPriceLabel: 'fra 2 500 kr/mnd',
-    related: ['ai', 'nettside'],
-  },
-  {
-    slug: 'seo',
-    name: 'SEO',
-    tagline: 'Bli funnet av de som leter etter deg',
-    priceRange: 'fra 3 000 kr/mnd',
-    minPrice: 3000,
-    maxPrice: 0,
-    ctaParam: 'seo',
-    description: 'Vi optimaliserer nettsiden din for søkemotorer slik at potensielle kunder finner deg når de søker etter det du tilbyr.',
-    monthlyPrice: 3000,
-    monthlyPriceLabel: 'fra 3 000 kr/mnd',
-    related: ['nettside', 'landingsside'],
-  },
-  {
-    slug: 'ai',
-    name: 'AI-løsning',
-    tagline: 'Automatiser det som stjeler tid i hverdagen',
-    priceRange: 'fra 20 000 kr',
-    minPrice: 20000,
-    maxPrice: 0,
-    ctaParam: 'ai',
-    description: 'Vi integrerer AI-løsninger i din arbeidsflyt som reduserer manuelt arbeid og lar teamet fokusere på det som faktisk skaper verdi.',
-    monthlyPrice: 1000,
-    monthlyPriceLabel: 'fra 1 000 kr/mnd',
-    related: ['webapp', 'seo'],
-  },
-  {
-    slug: 'vedlikehold',
-    name: 'Vedlikehold',
-    tagline: 'Hold nettsiden oppdatert og sikker',
-    priceRange: 'fra 1 500 kr/mnd',
-    minPrice: 1500,
-    maxPrice: 0,
-    ctaParam: 'vedlikehold',
-    description: 'Vi tar ansvar for løpende oppdateringer, sikkerhet og tekniske forbedringer så du kan fokusere på å drive bedriften.',
-    monthlyPrice: 1500,
-    monthlyPriceLabel: 'fra 1 500 kr/mnd',
+    monthlyPrice: 250,
+    monthlyPriceLabel: 'fra 250 kr/mnd',
     related: ['nettside', 'nettbutikk'],
   },
 ];

@@ -9,12 +9,6 @@ const icons: Record<string, string> = {
     'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.962-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z',
   landingsside:
     'M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z',
-  webapp:
-    'M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z',
-  seo: 'M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z',
-  ai: 'M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25Zm.75-12h9v9h-9v-9Z',
-  vedlikehold:
-    'M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z',
 };
 
 interface ServiceCardProps {
@@ -62,7 +56,16 @@ function ServiceCard({ service, featured = false, shouldReduceMotion }: ServiceC
       <h3 className="mb-1 text-lg font-semibold">{service.name}</h3>
       <p className="mb-3 text-sm text-brand">{service.tagline}</p>
       <p className="mb-4 flex-1 text-sm text-text-muted">{service.description}</p>
-      <p className="mb-4 text-sm font-semibold text-text">{service.priceRange}</p>
+      <div className="mb-4">
+        <span className="mb-1 inline-block rounded bg-brand/20 px-1.5 py-0.5 text-xs font-medium text-brand">
+          Spar 40 %
+        </span>
+        <p className="mt-1.5 text-xs text-text-muted line-through">{service.priceRange}</p>
+        <p className="text-sm font-semibold text-text">{service.launchPriceRange}</p>
+        {service.monthlyPriceLabel && (
+          <p className="mt-1 text-xs text-text-muted">+ {service.monthlyPriceLabel} hosting og support</p>
+        )}
+      </div>
 
       {/* Animated underline "Les mer" */}
       <span
@@ -76,55 +79,31 @@ function ServiceCard({ service, featured = false, shouldReduceMotion }: ServiceC
 }
 
 interface Props {
-  group1: Service[];
-  group2: Service[];
+  services: Service[];
   featured: string[];
 }
 
-export default function TjenesterOversiktIsland({ group1, group2, featured }: Props) {
+export default function TjenesterOversiktIsland({ services, featured }: Props) {
   const shouldReduceMotion = useReducedMotion() ?? false;
 
   const container = shouldReduceMotion ? { hidden: {}, visible: {} } : staggerContainer;
 
   return (
-    <>
-      <motion.div
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        variants={container}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-      >
-        {group1.map((service) => (
-          <ServiceCard
-            key={service.slug}
-            service={service}
-            featured={featured.includes(service.slug)}
-            shouldReduceMotion={shouldReduceMotion}
-          />
-        ))}
-      </motion.div>
-
-      <h2 className="mb-6 mt-16 font-display text-xl font-semibold text-text-muted">
-        Løpende tjenester
-      </h2>
-
-      <motion.div
-        className="grid grid-cols-1 gap-6 sm:grid-cols-3"
-        variants={container}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-60px' }}
-      >
-        {group2.map((service) => (
-          <ServiceCard
-            key={service.slug}
-            service={service}
-            featured={false}
-            shouldReduceMotion={shouldReduceMotion}
-          />
-        ))}
-      </motion.div>
-    </>
+    <motion.div
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-60px' }}
+    >
+      {services.map((service) => (
+        <ServiceCard
+          key={service.slug}
+          service={service}
+          featured={featured.includes(service.slug)}
+          shouldReduceMotion={shouldReduceMotion}
+        />
+      ))}
+    </motion.div>
   );
 }

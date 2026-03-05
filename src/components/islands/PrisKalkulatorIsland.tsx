@@ -54,8 +54,8 @@ const narrowingQuestions: Record<ServiceSlug, NarrowingQuestion[]> = {
     {
       question: 'Trenger du å kunne oppdatere innholdet selv?',
       options: [
-        { label: 'Nei, jeg bytter sjelden innhold', priceEstimate: 'fra 8 000 kr' },
-        { label: 'Ja, med et enkelt CMS-panel', priceEstimate: 'fra 12 000 kr' },
+        { label: 'Nei, jeg bytter sjelden innhold', priceEstimate: 'fra 4 800 kr' },
+        { label: 'Ja, med et enkelt CMS-panel', priceEstimate: 'fra 7 200 kr' },
       ],
     },
   ],
@@ -71,8 +71,8 @@ const narrowingQuestions: Record<ServiceSlug, NarrowingQuestion[]> = {
     {
       question: 'Trenger du integrasjon med eksisterende systemer?',
       options: [
-        { label: 'Nei, jeg starter fra scratch', priceEstimate: 'fra 15 000 kr' },
-        { label: 'Ja, koble til regnskapsprogram eller ERP', priceEstimate: 'fra 28 000 kr' },
+        { label: 'Nei, jeg starter fra scratch', priceEstimate: 'fra 9 000 kr' },
+        { label: 'Ja, koble til regnskapsprogram eller ERP', priceEstimate: 'fra 16 800 kr' },
       ],
     },
   ],
@@ -87,8 +87,8 @@ const narrowingQuestions: Record<ServiceSlug, NarrowingQuestion[]> = {
     {
       question: 'Hva er formålet med siden?',
       options: [
-        { label: 'Kampanjeside (for annonser, kortvarig)', priceEstimate: 'fra 4 500 kr' },
-        { label: 'Permanent side med SEO-fokus', priceEstimate: 'fra 7 500 kr' },
+        { label: 'Kampanjeside (for annonser, kortvarig)', priceEstimate: 'fra 2 700 kr' },
+        { label: 'Permanent side med SEO-fokus', priceEstimate: 'fra 4 500 kr' },
       ],
     },
   ],
@@ -314,15 +314,19 @@ export default function PrisKalkulatorIsland() {
             transition={springs.gentle}
             className="rounded-md border border-white/10 bg-surface-raised p-8"
           >
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand">
-              Prisestimat for deg
+            <span className="mb-2 inline-block rounded bg-brand/20 px-2 py-0.5 text-xs font-medium text-brand">
+              Spar 40 %
+            </span>
+            <p className="mb-1 text-xs text-text-muted">
+              Vi er nye og bygger porteføljen vår — våre første 10 kunder får 40 % rabatt på oppstart.
             </p>
             <h3 className="mb-1 text-2xl font-bold text-text">
               {selectedServiceData.name}
             </h3>
             <p className="mb-6 text-text-muted">{selectedServiceData.tagline}</p>
             <div className="mb-6">
-              <span className="text-3xl font-bold text-text">{state.priceEstimate}</span>
+              <p className="text-sm text-text-muted line-through">{selectedServiceData.priceRange}</p>
+              <span className="text-3xl font-bold text-brand">{state.priceEstimate}</span>
               {selectedServiceData.monthlyPriceLabel && (
                 <p className="mt-1 text-sm text-text-muted">
                   + {selectedServiceData.monthlyPriceLabel} hosting og support

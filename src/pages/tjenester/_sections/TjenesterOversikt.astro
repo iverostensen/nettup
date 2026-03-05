@@ -4,26 +4,19 @@ import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import TjenesterOversiktIsland from '@/components/islands/TjenesterOversiktIsland';
 
-const group1Slugs = ['nettside', 'nettbutikk', 'landingsside', 'webapp'];
-const group2Slugs = ['seo', 'ai', 'vedlikehold'];
-
-const group1 = group1Slugs.map((slug) => services.find((s) => s.slug === slug)!);
-const group2 = group2Slugs.map((slug) => services.find((s) => s.slug === slug)!);
-
-const featured = ['nettside', 'nettbutikk'];
+const featured = services.filter((s) => s.featured).map((s) => s.slug);
 ---
 
-<Section>
-  <SectionHeader title="Tjenester" subtitle="Vi tilbyr et komplett spekter av webtjenester — fra enkel nettside til skreddersydd webapp." />
+<Section class="pt-32 md:pt-40">
+  <SectionHeader title="Hva trenger du?" subtitle="Vi bygger tre typer nettsteder — alle skreddersydd, alle eiet av deg. Velg det som passer din situasjon." />
 
-  <h2 class="reveal-on-scroll mb-6 font-display text-xl font-semibold text-text-muted">
-    Nettsteder &amp; Applikasjoner
-  </h2>
+  <p class="reveal-on-scroll -mt-4 mb-10 text-sm text-text-muted">
+    Usikker på hva som passer? <a href="/kontakt" class="text-brand underline-offset-2 hover:underline">Ta en uforpliktende prat</a> — vi hjelper deg å velge riktig.
+  </p>
 
   <TjenesterOversiktIsland
     client:visible
-    group1={group1}
-    group2={group2}
+    services={services}
     featured={featured}
   />
 </Section>
