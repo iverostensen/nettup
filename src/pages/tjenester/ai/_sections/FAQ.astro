@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Er AI-løsningen GDPR-compliant?',
+    answer: 'Vi velger GDPR-vennlige verktøy og hjelper med databehandleravtale (DPA) der det er nødvendig — kunden gjør sine egne vurderinger. I praksis betyr det at vi vurderer og anbefaler verktøy som har databehandling innen EU/EØS eller som har tilstrekkelige garantier etter GDPR. Du som virksomhetseier har ansvar for dine egne personopplysninger, og vi støtter deg med den tekniske tilretteleggingen.',
+  },
+  {
+    question: 'Hva kan AI faktisk automatisere i vår bedrift?',
+    answer: 'De vanligste områdene vi jobber med er kundestøtte og chatbot-automatisering, dokumentbehandling og oppsummering, og systemintegrasjoner der data skal flyte mellom verktøy uten manuell innsats. I kartleggingssamtalen går vi gjennom prosessene dine og identifiserer hvilke oppgaver som er best egnet — og hvilke som fremdeles bør håndteres av mennesker.',
+  },
+  {
+    question: 'Hva er forskjellen mellom Nettup og Zapier eller Make?',
+    answer: 'Verktøy som Zapier og Make er ypperlige for enkle automatiseringer med ferdige koblinger mellom populære systemer. Nettup passer best når du trenger skreddersydd logikk som disse verktøyene ikke håndterer — uten caps på antall operasjoner, uten begrensninger i skala, og med mulighet for kompleks forretningslogikk. Vi bygger løsninger du eier fullt ut.',
+  },
+  {
+    question: 'Kan AI-løsningen kobles til systemene vi allerede bruker?',
+    answer: 'Ja. Vi integrerer mot de fleste moderne forretningssystemer via API — CRM, regnskapssystem, e-postplattformer, lagerstyring og interne databaser. I kartleggingsfasen kartlegger vi hvilke systemer du har og hva som gir størst verdi å koble sammen.',
+  },
+  {
+    question: 'Hva skjer om AI-modellen endrer seg eller slutter å fungere?',
+    answer: 'AI-modeller og -tjenester utvikler seg raskt. Gjennom vedlikeholdsavtalen overvåker vi løsningens ytelse og gjør nødvendige justeringer om en modell endrer oppførsel eller en tjeneste oppdateres. Vi bygger også løsninger med utskiftbare AI-lag, slik at du ikke er låst til én leverandør.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
