@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T11:00:30Z"
+last_updated: "2026-03-05T11:08:27.116Z"
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 8
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 ## Current Position
 
-Phase: 8 of 10 (Core Service Pages) — IN PROGRESS
-Plan: 2 of 3 (done: 08-01, 08-02)
-Status: Phase 08 in progress, 08-01 and 08-02 complete
-Last activity: 2026-03-05 — Completed 08-02: Built /tjenester/nettbutikk page with Shopify fee disclosure, 3-step process, Service JSON-LD, FAQPage JSON-LD
+Phase: 8 of 10 (Core Service Pages) — COMPLETE
+Plan: 3 of 3 (done: 08-01, 08-02, 08-03)
+Status: Phase 08 complete — all three core service pages built
+Last activity: 2026-03-05 — Completed 08-03: Built /tjenester/landingsside page with conversion-focused copy, 8 features, 5 FAQ items, Service JSON-LD + FAQPage JSON-LD
 
-Progress: [█████░░░░░] 55%
+Progress: [██████░░░░] 65%
 
 ## Performance Metrics
 
@@ -42,7 +42,7 @@ Progress: [█████░░░░░] 55%
 |-------|-------|-------|----------|
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
-| 08-core-service-pages | 2/3 | 5 min | 2.5 min |
+| 08-core-service-pages | 3/3 | 7 min | 2.3 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
@@ -50,6 +50,7 @@ Progress: [█████░░░░░] 55%
 | Phase 07-tjenesteoversikt P02 | 5 | 3 tasks | 2 files |
 | Phase 08-core-service-pages P01 | 2 | 2 tasks | 5 files |
 | Phase 08-core-service-pages P02 | 3 | 2 tasks | 5 files |
+| Phase 08-core-service-pages P03 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - 08-02: Shopify fee disclosure placed as visible footnote below features grid — not in footer fine print, not headlined
 - 08-02: 3-step process sequence embedded in Inkludert.astro (not a separate component) — simpler for 3 steps
 - 08-02: FAQPage JSON-LD co-located in FAQ.astro, consistent with 08-01 pattern
+- [Phase 08-core-service-pages]: 08-03: FAQPage JSON-LD co-located in FAQ.astro (consistent with 08-01/08-02 pattern)
+- [Phase 08-core-service-pages]: 08-03: Hero uses animate-fade-up (not reveal-on-scroll) for above-fold content
 
 ### Pending Todos
 
@@ -93,5 +96,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 08-02-PLAN.md (/tjenester/nettbutikk built with Shopify fee disclosure, 3-step process, Service JSON-LD + FAQPage JSON-LD + 4 sections). Phase 08 in progress. Next: 08-03.
+Stopped at: Completed 08-03-PLAN.md (/tjenester/landingsside built with conversion-focused copy, 8 landingsside-specific features, 5 ads-focused FAQ items, Service JSON-LD + FAQPage JSON-LD). Phase 08 complete.
 Resume file: None

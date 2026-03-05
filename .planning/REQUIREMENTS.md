@@ -25,7 +25,7 @@
 ### Service Sub-Pages
 
 - [x] **PAGES-01**: `/tjenester/nettside` — dedikert tjenesteside
-- [ ] **PAGES-02**: `/tjenester/landingsside` — dedikert tjenesteside
+- [x] **PAGES-02**: `/tjenester/landingsside` — dedikert tjenesteside
 - [x] **PAGES-03**: `/tjenester/nettbutikk` — dedikert tjenesteside (Shopify)
 - [ ] **PAGES-04**: `/tjenester/webapp` — dedikert tjenesteside
 - [ ] **PAGES-05**: `/tjenester/seo` — dedikert tjenesteside
@@ -86,7 +86,7 @@
 | OVERVIEW-02 | Phase 7 | Complete |
 | OVERVIEW-03 | Phase 7 | Complete |
 | PAGES-01 | Phase 8 | Complete |
-| PAGES-02 | Phase 8 | Pending |
+| PAGES-02 | Phase 8 | Complete |
 | PAGES-03 | Phase 8 | Complete |
 | CONTENT-01 | Phase 8 | Complete |
 | CONTENT-02 | Phase 8 | Complete |

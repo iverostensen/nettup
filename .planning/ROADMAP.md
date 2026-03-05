@@ -26,7 +26,7 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 6: Infrastructure** - Infrastruktur og delt config på plass før første underside shipper (completed 2026-03-04)
 - [x] **Phase 7: Tjenesteoversikt** - /tjenester redesignet som 7-tjeneste katalog (completed 2026-03-05)
-- [ ] **Phase 8: Core Service Pages** - De 3 kjernetjenestesidene ferdigstilt
+- [x] **Phase 8: Core Service Pages** - De 3 kjernetjenestesidene ferdigstilt (completed 2026-03-05)
 - [ ] **Phase 9: Specialist Service Pages** - De 4 spesialistsidene ferdigstilt
 - [ ] **Phase 10: Cross-linking & Validation** - Komplett, interkoblet tjenestekatalogg validert
 
@@ -109,6 +109,6 @@ Plans:
 | 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
 | 6. Infrastructure | 3/3 | Complete   | 2026-03-04 | - |
 | 7. Tjenesteoversikt | 2/2 | Complete   | 2026-03-05 | - |
-| 8. Core Service Pages | 2/3 | In Progress|  | - |
+| 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
 | 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
 | 10. Cross-linking & Validation | v1.1 | 0/TBD | Not started | - |
