@@ -41,9 +41,9 @@
 
 ### SEO & Schema
 
-- [ ] **SEO-01**: Hver underside har `@type: Service` JSON-LD med `PriceSpecification`
+- [x] **SEO-01**: Hver underside har `@type: Service` JSON-LD med `PriceSpecification`
 - [x] **SEO-02**: Hver underside har unik meta-tittel og beskrivelse
-- [ ] **SEO-03**: FAQPage JSON-LD-schema på hver underside
+- [x] **SEO-03**: FAQPage JSON-LD-schema på hver underside
 
 ### Conversion
 
@@ -98,8 +98,8 @@
 | PAGES-05 | Phase 9 | Complete |
 | PAGES-06 | Phase 9 | Complete |
 | PAGES-07 | Phase 9 | Complete |
-| SEO-01 | Phase 10 | Pending |
-| SEO-03 | Phase 10 | Pending |
+| SEO-01 | Phase 10 | Complete |
+| SEO-03 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 24 total

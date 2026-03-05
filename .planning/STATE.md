@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T12:32:47.138Z"
+last_updated: "2026-03-05T12:55:39.520Z"
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 15
+  completed_plans: 14
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 9 — Specialist Service Pages
+**Current focus:** Phase 10 — Cross-linking and Validation
 
 ## Current Position
 
-Phase: 9 of 10 (Specialist Service Pages) — COMPLETE
-Plan: 5 of 5 (done: 09-01, 09-02, 09-03, 09-04, 09-05)
-Status: 09-05 complete — /tjenester/vedlikehold page with reassurance-focused Hero, 7-item Inkludert grid, FAQ (5 questions), CTA; FAQPage + Service JSON-LD built and passing build
-Last activity: 2026-03-05 — Completed 09-05: Built /tjenester/vedlikehold (Hero, Inkludert, FAQ, CTA, index.astro); monthly-only price signal (fra 1 500 kr/mnd); reassurance tone; FAQPage + Service JSON-LD
+Phase: 10 of 10 (Cross-linking and Validation) — IN PROGRESS
+Plan: 1 of 2 complete (done: 10-01)
+Status: 10-01 complete — RelaterteTjenester.astro component + related pairings in services.ts + wired to all 7 service pages
+Last activity: 2026-03-05 — Completed 10-01: Added related?: string[] to Service interface; created RelaterteTjenester.astro; inserted between FAQ and CTA on all 7 service pages; build passes
 
-Progress: [████████░░] 75%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [████████░░] 75%
 | Phase 09-specialist-service-pages P03 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P04 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P05 | 2 | 2 tasks | 5 files |
+| Phase 10-cross-linking-validation P01 | 3 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,8 @@ Recent decisions affecting current work:
 - [Phase 09-specialist-service-pages]: 09-04: GDPR integrated as first FAQ question with locked framing including databehandleravtale (DPA)
 - [Phase 09-specialist-service-pages]: 09-04: FAQPage JSON-LD co-located in FAQ.astro (consistent with 08-01/08-02/08-03/09-02/09-03 pattern)
 - [Phase 09-specialist-service-pages]: 09-05: Monthly price (fra 1 500 kr/mnd) is sole price signal on vedlikehold page — reassurance tone, no upsell language
+- [Phase 10-cross-linking-validation]: 10-01: related?: string[] optional on Service interface — safe for future services without pairings
+- [Phase 10-cross-linking-validation]: 10-01: Cross-link pairings stored in services.ts as single source of truth
 
 ### Pending Todos
 
@@ -110,5 +113,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 09-05-PLAN.md (/tjenester/vedlikehold page with Hero, Inkludert, FAQ, CTA; monthly-only pricing; reassurance tone; Service + FAQPage JSON-LD)
+Stopped at: Completed 10-01-PLAN.md (RelaterteTjenester component + cross-link pairings on all 7 service pages)
 Resume file: None
