@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Kan jeg oppdatere innholdet selv etter levering?',
+    answer: 'Ja, vi kan sette opp et enkelt innholdssystem (CMS) slik at du kan oppdatere tekster, bilder og sider uten teknisk kunnskap. Alternativt kan vi håndtere oppdateringer for deg gjennom vår vedlikeholdstjeneste.',
+  },
+  {
+    question: 'Hva om jeg allerede har et domene og hosting?',
+    answer: 'Ingen problem. Vi kan koble nettsiden til ditt eksisterende domene og bruke din hosting-løsning. Dersom du ønsker det, inkluderer vi hosting i prosjektprisen — da slipper du å administrere det selv.',
+  },
+  {
+    question: 'Inkluderer dere bilder og tekster?',
+    answer: 'Du leverer innholdet — tekster og bilder som beskriver bedriften din. Vi hjelper med struktur og gir råd om hva som fungerer best. Trenger du hjelp med fotografering eller tekstforfatning, kan vi anbefale samarbeidspartnere.',
+  },
+  {
+    question: 'Hva skjer etter 30 dagers support?',
+    answer: 'Etter de første 30 dagene kan du bestille endringer og support løpende til timespris, eller tegne en månedlig vedlikeholdsavtale fra 1 500 kr/mnd som inkluderer oppdateringer, sikkerhetspatcher og teknisk support.',
+  },
+  {
+    question: 'Kan jeg legge til nye sider eller funksjoner senere?',
+    answer: 'Absolutt. Nettsiden bygges med tanke på utvidbarhet. Du kan legge til nye sider, en blogg, bookingfunksjon eller andre elementer når behovet oppstår. Vi gir deg et estimat før vi starter.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
