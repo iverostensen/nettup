@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Hva dekker vedlikeholdsavtalen?',
+    answer: 'Vedlikeholdsavtalen dekker løpende oppdateringer av rammeverk og pakker, sikkerhetsovervåking og patching, månedlig sikkerhetssjekk, teknisk support med svar innen 24 timer, ytelsesovervåking, domene- og sertifikathåndtering og backup-rutiner. Det er det tekniske ansvaret for nettsiden din — slik at du slipper å tenke på det.',
+  },
+  {
+    question: 'Inkluderer vedlikehold nye sider eller funksjoner?',
+    answer: 'Nei. Vedlikeholdsavtalen dekker drift og teknisk vedlikehold av eksisterende nettsted. Nye sider, ny funksjonalitet eller redesign prises separat basert på omfang. Ønsker du å legge til noe, gir vi deg et estimat — uten forpliktelser.',
+  },
+  {
+    question: 'Hva er responstiden om noe går galt?',
+    answer: 'Vi svarer på supporthenvendelser innen 24 timer på hverdager. Kritiske feil som gjør nettsiden utilgjengelig prioriteres og håndteres så raskt som mulig. Du kontakter oss på e-post og får en bekreftelse på at vi har sett det.',
+  },
+  {
+    question: 'Kan jeg si opp vedlikeholdsavtalen?',
+    answer: 'Ja, du kan si opp avtalen med én måneds varsel. Nettsiden er din — koden og alt innhold overleveres til deg. Vi anbefaler å ha en plan for hvem som håndterer oppdateringer og sikkerhet etter oppsigelse, da utdaterte systemer raskt kan bli et sikkerhetsrisiko.',
+  },
+  {
+    question: 'Hva skjer med nettsiden uten vedlikehold?',
+    answer: 'Nettsider bygget på moderne rammeverk trenger jevnlige oppdateringer for å forbli sikre og funksjonelle. Uten vedlikehold vil pakker utdateres, sikkerhetssårbarheter akkumuleres og til slutt kan nettsiden slutte å fungere eller bli kompromittert. Det er ikke skummelt — men det krever aktivt ansvar fra noen.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
