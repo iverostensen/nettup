@@ -1,0 +1,51 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { services } from '@/config/services';
+
+import Hero from './_sections/Hero.astro';
+import Inkludert from './_sections/Inkludert.astro';
+import FAQ from './_sections/FAQ.astro';
+import CTA from './_sections/CTA.astro';
+
+const service = services.find(s => s.slug === 'landingsside')!;
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": `Nettup ${service.name}`,
+  "description": service.description,
+  "provider": {
+    "@type": "Organization",
+    "name": "Nettup",
+    "url": "https://nettup.no"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Norway"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceSpecification": {
+      "@type": "PriceSpecification",
+      "minPrice": service.minPrice,
+      ...(service.maxPrice > 0 ? { "maxPrice": service.maxPrice } : {}),
+      "priceCurrency": "NOK"
+    }
+  }
+};
+---
+
+<BaseLayout
+  title="Landingsside for annonser og kampanjer | Fra 8 000 kr | Nettup"
+  description="Vi bygger fokuserte landingssider som konverterer trafikk fra Google Ads og Meta til leads. Konverteringssporing og A/B-klar struktur inkludert."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  </Fragment>
+  <main>
+    <Hero />
+    <Inkludert />
+    <FAQ />
+    <CTA />
+  </main>
+</BaseLayout>

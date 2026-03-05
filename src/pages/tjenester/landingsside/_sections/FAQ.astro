@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Hva skiller en landingsside fra en vanlig nettside?',
+    answer: 'En vanlig nettside har mange sider, menyer og lenker som tar besøkende i ulike retninger. En landingsside har ett formål og ett mål — for eksempel å få besøkende til å fylle ut et skjema eller ringe. Denne fokusen er det som gjør landingssider så effektive i kombinasjon med annonsering.',
+  },
+  {
+    question: 'Kan jeg bruke landingssiden til Google Ads-kampanjer?',
+    answer: 'Ja, det er nettopp der landingssider gir størst verdi. Vi setter opp siden med riktig konverteringssporing (Google Tag Manager og Google Ads-piksel) slik at du ser nøyaktig hvilke annonser og søkeord som gir leads. Siden bygges også etter Googles retningslinjer for kvalitet, noe som senker CPC-en din.',
+  },
+  {
+    question: 'Kan jeg teste ulike versjoner av siden (A/B-testing)?',
+    answer: 'Ja. Vi bygger siden slik at det er enkelt å bytte ut overskrifter, bilder og CTA-tekst for testing. Vil du kjøre formell A/B-testing med verktøy som Google Optimize eller VWO, kan vi sette opp integrasjonen.',
+  },
+  {
+    question: 'Inkluderer dere integrasjon med e-postlister eller CRM?',
+    answer: 'Ja. Om du ønsker at leads automatisk havner i et CRM (HubSpot, Pipedrive) eller e-postverktøy (Mailchimp, Klaviyo), setter vi opp integrasjonen som en del av prosjektet. Fortell oss hvilke verktøy du bruker så inkluderer vi det i tilbudet.',
+  },
+  {
+    question: 'Kan jeg spore konverteringer og se hva som fungerer?',
+    answer: 'Absolutt. Vi setter opp konverteringssporing i Google Analytics 4 og eventuelt Meta Pixel slik at du ser antall leads, konverteringsrate og hvilke kanaler som gir best resultater. Du får full innsikt i hva annonsebudsjettet ditt faktisk leverer.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
