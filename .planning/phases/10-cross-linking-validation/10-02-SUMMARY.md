@@ -65,7 +65,7 @@ Each task was committed atomically:
 1. **Task 1: Verify sitemap includes all 7 service sub-pages** - `e3a014c` (chore)
 2. **Task 2: Validate JSON-LD schemas via Google Rich Results Test** - human-verify checkpoint (approved by user, no code changes)
 
-**Plan metadata:** [to be updated after final commit]
+**Plan metadata:** `40a7187` (docs: complete plan)
 
 ## Files Created/Modified
 
