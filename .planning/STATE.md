@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T12:25:20.398Z"
+last_updated: "2026-03-05T12:28:46.808Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 ## Current Position
 
-Phase: 9 of 10 (Specialist Service Pages) — IN PROGRESS
-Plan: 4 of 5 (done: 09-01, 09-02, 09-03, 09-04)
-Status: 09-04 complete — /tjenester/ai page with GDPR-integrated FAQ, three use cases (chatbot, dokumentbehandling, systemintegrasjoner), FAQPage + Service JSON-LD built and passing build
-Last activity: 2026-03-05 — Completed 09-04: Built /tjenester/ai (Hero, Inkludert, FAQ, CTA, index.astro); GDPR in FAQ with locked framing; USP vs Zapier/Make; FAQPage + Service JSON-LD
+Phase: 9 of 10 (Specialist Service Pages) — COMPLETE
+Plan: 5 of 5 (done: 09-01, 09-02, 09-03, 09-04, 09-05)
+Status: 09-05 complete — /tjenester/vedlikehold page with reassurance-focused Hero, 7-item Inkludert grid, FAQ (5 questions), CTA; FAQPage + Service JSON-LD built and passing build
+Last activity: 2026-03-05 — Completed 09-05: Built /tjenester/vedlikehold (Hero, Inkludert, FAQ, CTA, index.astro); monthly-only price signal (fra 1 500 kr/mnd); reassurance tone; FAQPage + Service JSON-LD
 
 Progress: [████████░░] 75%
 
@@ -43,7 +43,7 @@ Progress: [████████░░] 75%
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
 | 08-core-service-pages | 3/3 | 7 min | 2.3 min |
-| 09-specialist-service-pages | 4/5 | 12 min | 3 min |
+| 09-specialist-service-pages | 5/5 | 14 min | 2.8 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
@@ -56,6 +56,7 @@ Progress: [████████░░] 75%
 | Phase 09-specialist-service-pages P02 | 5 | 2 tasks | 6 files |
 | Phase 09-specialist-service-pages P03 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P04 | 2 | 2 tasks | 5 files |
+| Phase 09-specialist-service-pages P05 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,7 @@ Recent decisions affecting current work:
 - [Phase 09-specialist-service-pages]: 09-03: Monthly price (fra 3 000 kr/mnd) is the sole price signal on SEO page — no one-time project price
 - [Phase 09-specialist-service-pages]: 09-04: GDPR integrated as first FAQ question with locked framing including databehandleravtale (DPA)
 - [Phase 09-specialist-service-pages]: 09-04: FAQPage JSON-LD co-located in FAQ.astro (consistent with 08-01/08-02/08-03/09-02/09-03 pattern)
+- [Phase 09-specialist-service-pages]: 09-05: Monthly price (fra 1 500 kr/mnd) is sole price signal on vedlikehold page — reassurance tone, no upsell language
 
 ### Pending Todos
 
@@ -108,5 +110,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 09-04-PLAN.md (/tjenester/ai page with Hero, Inkludert, FAQ, CTA; GDPR in FAQ; Service + FAQPage JSON-LD)
+Stopped at: Completed 09-05-PLAN.md (/tjenester/vedlikehold page with Hero, Inkludert, FAQ, CTA; monthly-only pricing; reassurance tone; Service + FAQPage JSON-LD)
 Resume file: None
