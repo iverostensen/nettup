@@ -20,7 +20,7 @@
 
 - [x] **OVERVIEW-01**: `/tjenester` redesignet som tjenestekatalog med 7 servicekort
 - [x] **OVERVIEW-02**: Hvert kort viser: tjenestenavn, én setnings outcome, prisintervall og lenke til underside
-- [ ] **OVERVIEW-03**: Gammelt 3-nivå-prisavsnitt (Enkel/Standard/Premium) fjernet fra oversiktsside
+- [x] **OVERVIEW-03**: Gammelt 3-nivå-prisavsnitt (Enkel/Standard/Premium) fjernet fra oversiktsside
 
 ### Service Sub-Pages
 
@@ -84,7 +84,7 @@
 | CTA-02 | Phase 6 | Complete |
 | OVERVIEW-01 | Phase 7 | Complete |
 | OVERVIEW-02 | Phase 7 | Complete |
-| OVERVIEW-03 | Phase 7 | Pending |
+| OVERVIEW-03 | Phase 7 | Complete |
 | PAGES-01 | Phase 8 | Pending |
 | PAGES-02 | Phase 8 | Pending |
 | PAGES-03 | Phase 8 | Pending |

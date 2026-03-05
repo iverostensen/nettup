@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T08:19:36Z"
+last_updated: "2026-03-05T10:27:18.198Z"
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 ## Current Position
 
 Phase: 7 of 10 (Tjenesteoversikt) — IN PROGRESS
-Plan: 1 of 3 (done: 07-01)
-Status: Phase 07 in progress, 07-01 complete
-Last activity: 2026-03-05 — Completed 07-01: TjenesterOversikt.astro grouped service cards + FAQ.astro rewrite
+Plan: 2 of 3 (done: 07-01, 07-02)
+Status: Phase 07 in progress, 07-02 complete
+Last activity: 2026-03-05 — Completed 07-02: Rewired /tjenester page with TjenesterOversikt, PriceSpecification JSON-LD, updated CTA copy
 
-Progress: [████░░░░░░] 40%
+Progress: [████░░░░░░] 45%
 
 ## Performance Metrics
 
@@ -41,11 +41,12 @@ Progress: [████░░░░░░] 40%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 06-infrastructure | 3/3 | 13 min | 4 min |
-| 07-tjenesteoversikt | 1/3 | 2 min | 2 min |
+| 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
 | Phase 07-tjenesteoversikt P01 | 2 | 2 tasks | 2 files |
+| Phase 07-tjenesteoversikt P02 | 5 | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - 07-01: !border-brand (Tailwind important modifier) used to override Card base border for featured service cards
 - 07-01: Les mer rendered as styled <span> (not Button or <a>) to avoid nested anchor elements inside Card <a>
 - 07-01: Heroicon SVG paths stored as inline Record<string, string> — no external icon library dependency
+- 07-02: PriceSpecification conditional spread pattern — maxPrice omitted from JSON-LD when value is 0 (open-ended)
+- 07-02: Old Pakker/Inkludert/Support sections removed from /tjenester — no migration needed (internal components only)
 
 ### Pending Todos
 
@@ -81,5 +84,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 07-01-PLAN.md (TjenesterOversikt.astro grouped service cards + FAQ.astro catalog rewrite). Phase 07 in progress. Next: 07-02.
+Stopped at: Completed 07-02-PLAN.md (/tjenester page rewired with TjenesterOversikt + PriceSpecification JSON-LD + updated TjenesterCTA). Phase 07 in progress. Next: 07-03.
 Resume file: None
