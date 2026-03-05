@@ -5,6 +5,7 @@ import { services } from '@/config/services';
 import Hero from './_sections/Hero.astro';
 import Inkludert from './_sections/Inkludert.astro';
 import FAQ from './_sections/FAQ.astro';
+import RelaterteTjenester from '@/components/sections/RelaterteTjenester.astro';
 import CTA from './_sections/CTA.astro';
 
 const service = services.find(s => s.slug === 'nettbutikk')!;
@@ -46,6 +47,7 @@ const serviceSchema = {
     <Hero />
     <Inkludert />
     <FAQ />
+    <RelaterteTjenester related={service.related ?? []} />
     <CTA />
   </main>
 </BaseLayout>
