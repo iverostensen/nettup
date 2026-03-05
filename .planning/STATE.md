@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T10:33:29.255Z"
+last_updated: "2026-03-05T11:00:30Z"
 progress:
-  total_phases: 2
+  total_phases: 3
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 7 — Service Pages (next phase)
+**Current focus:** Phase 8 — Core Service Pages
 
 ## Current Position
 
-Phase: 7 of 10 (Tjenesteoversikt) — IN PROGRESS
-Plan: 2 of 3 (done: 07-01, 07-02)
-Status: Phase 07 in progress, 07-02 complete
-Last activity: 2026-03-05 — Completed 07-02: Rewired /tjenester page with TjenesterOversikt, PriceSpecification JSON-LD, updated CTA copy
+Phase: 8 of 10 (Core Service Pages) — IN PROGRESS
+Plan: 1 of 3 (done: 08-01)
+Status: Phase 08 in progress, 08-01 complete
+Last activity: 2026-03-05 — Completed 08-01: Built /tjenester/nettside page with Service JSON-LD, FAQPage JSON-LD, Hero, Inkludert, FAQ, CTA sections
 
-Progress: [████░░░░░░] 45%
+Progress: [█████░░░░░] 55%
 
 ## Performance Metrics
 
@@ -42,11 +42,13 @@ Progress: [████░░░░░░] 45%
 |-------|-------|-------|----------|
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
+| 08-core-service-pages | 1/3 | 2 min | 2 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
 | Phase 07-tjenesteoversikt P01 | 2 | 2 tasks | 2 files |
 | Phase 07-tjenesteoversikt P02 | 5 | 3 tasks | 2 files |
+| Phase 08-core-service-pages P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -70,6 +72,9 @@ Recent decisions affecting current work:
 - 07-01: Heroicon SVG paths stored as inline Record<string, string> — no external icon library dependency
 - 07-02: PriceSpecification conditional spread pattern — maxPrice omitted from JSON-LD when value is 0 (open-ended)
 - 07-02: Old Pakker/Inkludert/Support sections removed from /tjenester — no migration needed (internal components only)
+- 08-01: FAQPage JSON-LD co-located in FAQ.astro (not index.astro) — structured data near the content it describes
+- 08-01: Hero uses animate-fade-up (not reveal-on-scroll) for above-fold content — reveal-on-scroll invisible until scroll trigger
+- 08-01: 4-section pattern (Hero + Inkludert + FAQ + CTA) established as template for all service sub-pages
 
 ### Pending Todos
 
@@ -84,5 +89,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 07-02-PLAN.md (/tjenester page rewired with TjenesterOversikt + PriceSpecification JSON-LD + updated TjenesterCTA). Phase 07 in progress. Next: 07-03.
+Stopped at: Completed 08-01-PLAN.md (/tjenester/nettside built with Service JSON-LD + FAQPage JSON-LD + 4 sections). Phase 08 in progress. Next: 08-02.
 Resume file: None

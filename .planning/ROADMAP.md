@@ -109,6 +109,6 @@ Plans:
 | 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
 | 6. Infrastructure | 3/3 | Complete   | 2026-03-04 | - |
 | 7. Tjenesteoversikt | 2/2 | Complete   | 2026-03-05 | - |
-| 8. Core Service Pages | v1.1 | 0/TBD | Not started | - |
+| 8. Core Service Pages | 1/3 | In Progress|  | - |
 | 9. Specialist Service Pages | v1.1 | 0/TBD | Not started | - |
 | 10. Cross-linking & Validation | v1.1 | 0/TBD | Not started | - |

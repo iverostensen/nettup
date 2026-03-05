@@ -24,7 +24,7 @@
 
 ### Service Sub-Pages
 
-- [ ] **PAGES-01**: `/tjenester/nettside` — dedikert tjenesteside
+- [x] **PAGES-01**: `/tjenester/nettside` — dedikert tjenesteside
 - [ ] **PAGES-02**: `/tjenester/landingsside` — dedikert tjenesteside
 - [ ] **PAGES-03**: `/tjenester/nettbutikk` — dedikert tjenesteside (Shopify)
 - [ ] **PAGES-04**: `/tjenester/webapp` — dedikert tjenesteside
@@ -34,20 +34,20 @@
 
 ### Content
 
-- [ ] **CONTENT-01**: Hver side har struktur: hero (outcome + prissignal) → hva som er inkludert → FAQ → CTA-seksjon
-- [ ] **CONTENT-02**: All copy bruker outcome-first språk — ikke teknisk sjargong i primærsekvenser
-- [ ] **CONTENT-03**: Hver side har minimum 500 ord med substansielt innhold (ingen tynne sider)
+- [x] **CONTENT-01**: Hver side har struktur: hero (outcome + prissignal) → hva som er inkludert → FAQ → CTA-seksjon
+- [x] **CONTENT-02**: All copy bruker outcome-first språk — ikke teknisk sjargong i primærsekvenser
+- [x] **CONTENT-03**: Hver side har minimum 500 ord med substansielt innhold (ingen tynne sider)
 - [ ] **CONTENT-04**: Nettbutikk-siden adresserer Shopify-plattformavgifter transparent
 
 ### SEO & Schema
 
 - [ ] **SEO-01**: Hver underside har `@type: Service` JSON-LD med `PriceSpecification`
-- [ ] **SEO-02**: Hver underside har unik meta-tittel og beskrivelse
+- [x] **SEO-02**: Hver underside har unik meta-tittel og beskrivelse
 - [ ] **SEO-03**: FAQPage JSON-LD-schema på hver underside
 
 ### Conversion
 
-- [ ] **CTA-01**: Hver tjenesteside CTA lenker til `/kontakt?tjeneste=[slug]`
+- [x] **CTA-01**: Hver tjenesteside CTA lenker til `/kontakt?tjeneste=[slug]`
 - [x] **CTA-02**: Kontaktskjema-innsending inkluderer valgt tjeneste i Formspree-data
 
 ## v2 Requirements
@@ -85,15 +85,15 @@
 | OVERVIEW-01 | Phase 7 | Complete |
 | OVERVIEW-02 | Phase 7 | Complete |
 | OVERVIEW-03 | Phase 7 | Complete |
-| PAGES-01 | Phase 8 | Pending |
+| PAGES-01 | Phase 8 | Complete |
 | PAGES-02 | Phase 8 | Pending |
 | PAGES-03 | Phase 8 | Pending |
-| CONTENT-01 | Phase 8 | Pending |
-| CONTENT-02 | Phase 8 | Pending |
-| CONTENT-03 | Phase 8 | Pending |
+| CONTENT-01 | Phase 8 | Complete |
+| CONTENT-02 | Phase 8 | Complete |
+| CONTENT-03 | Phase 8 | Complete |
 | CONTENT-04 | Phase 8 | Pending |
-| SEO-02 | Phase 8 | Pending |
-| CTA-01 | Phase 8 | Pending |
+| SEO-02 | Phase 8 | Complete |
+| CTA-01 | Phase 8 | Complete |
 | PAGES-04 | Phase 9 | Pending |
 | PAGES-05 | Phase 9 | Pending |
 | PAGES-06 | Phase 9 | Pending |
