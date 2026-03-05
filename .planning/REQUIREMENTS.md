@@ -52,11 +52,11 @@
 
 ### Price Calculator
 
-- [ ] **CALC-01**: Priskalkulator starter med mål-først spørsmål ("Hva er målet ditt?") med 3 mål-alternativer som ruter til nettside, nettbutikk, landingsside
-- [ ] **CALC-02**: Etter mål-valg vises anbefalingssteg ("Vi anbefaler: [Tjeneste]") med tjenestenavn og tagline før innsnevringsspørsmål
-- [ ] **CALC-03**: 2 innsnevringsspørsmål per tjeneste med stegindikator ("Spørsmål 1 av 2")
-- [ ] **CALC-04**: Resultatskjerm viser 3-4 "hva er inkludert" punkter med sjekkmerke-ikoner per tjeneste
-- [ ] **CALC-05**: Resultatskjerm har "Les mer om [tjeneste]"-lenke til /tjenester/[slug] ved siden av CTA
+- [x] **CALC-01**: Priskalkulator starter med mål-først spørsmål ("Hva er målet ditt?") med 3 mål-alternativer som ruter til nettside, nettbutikk, landingsside
+- [x] **CALC-02**: Etter mål-valg vises anbefalingssteg ("Vi anbefaler: [Tjeneste]") med tjenestenavn og tagline før innsnevringsspørsmål
+- [x] **CALC-03**: 2 innsnevringsspørsmål per tjeneste med stegindikator ("Spørsmål 1 av 2")
+- [x] **CALC-04**: Resultatskjerm viser 3-4 "hva er inkludert" punkter med sjekkmerke-ikoner per tjeneste
+- [x] **CALC-05**: Resultatskjerm har "Les mer om [tjeneste]"-lenke til /tjenester/[slug] ved siden av CTA
 
 ## v2 Requirements
 

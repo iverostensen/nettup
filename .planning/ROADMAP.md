@@ -29,7 +29,7 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 8: Core Service Pages** - De 3 kjernetjenestesidene ferdigstilt (completed 2026-03-05)
 - [x] **Phase 9: Specialist Service Pages** - De 4 spesialistsidene ferdigstilt (completed 2026-03-05)
 - [x] **Phase 10: Cross-linking & Validation** - Komplett, interkoblet tjenestekatalogg validert
-- [ ] **Phase 11: Enhanced Price Calculator** - Mål-først priskalkulator med flerstegsvurdering
+- [x] **Phase 11: Enhanced Price Calculator** - Mål-først priskalkulator med flerstegsvurdering (completed 2026-03-05)
 
 ## Phase Details
 
@@ -128,4 +128,4 @@ Plans:
 | 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
-| 11. Enhanced Price Calculator | v1.1 | 0/1 | Planned | - |
+| 11. Enhanced Price Calculator | 1/1 | Complete   | 2026-03-05 | - |

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T13:13:53.067Z"
+last_updated: "2026-03-05T22:16:10.614Z"
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 16
+  completed_plans: 16
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 10 — Cross-linking and Validation
+**Current focus:** Phase 11 — Enhanced Price Calculator (COMPLETE)
 
 ## Current Position
 
-Phase: 10 of 10 (Cross-linking and Validation) — COMPLETE
-Plan: 2 of 2 complete (done: 10-01, 10-02)
-Status: 10-02 complete — Verified sitemap (all 7 sub-pages present) + validated Service and FAQPage JSON-LD schemas on all 7 service pages (no errors)
-Last activity: 2026-03-05 - Completed quick task 3: Enhance PrisKalkulator with narrowing questions
+Phase: 11 of 11 (Enhanced Price Calculator) — COMPLETE
+Plan: 1 of 1 complete (done: 11-01)
+Status: 11-01 complete — Goal-first 4-phase price wizard with recommendation step, 2 narrowing questions, included items, and "Les mer" cross-links
+Last activity: 2026-03-05 - Completed 11-01: Enhanced price calculator wizard
 
 Progress: [██████████] 100%
 
@@ -58,8 +58,13 @@ Progress: [██████████] 100%
 | Phase 09-specialist-service-pages P04 | 2 | 2 tasks | 5 files |
 | Phase 09-specialist-service-pages P05 | 2 | 2 tasks | 5 files |
 | Phase 10-cross-linking-validation P01 | 3 | 3 tasks | 8 files |
+| Phase 11 P01 | 3 | 2 tasks | 1 files |
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 11 added: Enhanced price calculator with multi-step needs assessment
 
 ### Decisions
 
@@ -99,6 +104,9 @@ Recent decisions affecting current work:
 - [Phase 09-specialist-service-pages]: 09-05: Monthly price (fra 1 500 kr/mnd) is sole price signal on vedlikehold page — reassurance tone, no upsell language
 - [Phase 10-cross-linking-validation]: 10-01: related?: string[] optional on Service interface — safe for future services without pairings
 - [Phase 10-cross-linking-validation]: 10-01: Cross-link pairings stored in services.ts as single source of truth
+- [Phase 11]: Q1 captures scope context only (priceEstimate: ''), Q2 carries final price — no multiplicative pricing
+- [Phase 11]: Goal options route directly to services: kunder->nettside, produkter->nettbutikk, kampanje->landingsside
+- [Phase 11]: Included items hardcoded in component, not sourced from services.ts
 
 ### Pending Todos
 
@@ -121,5 +129,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed quick task 3 — PrisKalkulator rewritten with service picker and price narrowing
+Stopped at: Completed 11-01-PLAN.md — Goal-first price calculator wizard
 Resume file: None
