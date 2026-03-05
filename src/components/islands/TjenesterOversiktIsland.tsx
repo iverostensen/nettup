@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { springs } from '@/lib/animation';
+import { springs, staggerContainer } from '@/lib/animation';
+import type { Service } from '@/config/services';
 
 const icons: Record<string, string> = {
   nettside:
@@ -16,22 +17,13 @@ const icons: Record<string, string> = {
     'M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z',
 };
 
-interface Service {
-  slug: string;
-  name: string;
-  tagline: string;
-  description: string;
-  priceRange: string;
-}
-
 interface ServiceCardProps {
   service: Service;
-  index: number;
   featured?: boolean;
   shouldReduceMotion: boolean;
 }
 
-function ServiceCard({ service, index, featured = false, shouldReduceMotion }: ServiceCardProps) {
+function ServiceCard({ service, featured = false, shouldReduceMotion }: ServiceCardProps) {
   const cardVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 24 },
     visible: { opacity: 1, y: 0 },
@@ -41,7 +33,7 @@ function ServiceCard({ service, index, featured = false, shouldReduceMotion }: S
     <motion.a
       href={`/tjenester/${service.slug}`}
       variants={cardVariants}
-      transition={{ ...springs.gentle, delay: shouldReduceMotion ? 0 : index * 0.08 }}
+      transition={springs.gentle}
       aria-label={`Les mer om ${service.name}`}
       className={[
         'group flex flex-col rounded-md border bg-surface-raised p-8',
@@ -92,30 +84,21 @@ interface Props {
 export default function TjenesterOversiktIsland({ group1, group2, featured }: Props) {
   const shouldReduceMotion = useReducedMotion() ?? false;
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.08,
-        delayChildren: shouldReduceMotion ? 0 : 0.05,
-      },
-    },
-  };
+  const container = shouldReduceMotion ? { hidden: {}, visible: {} } : staggerContainer;
 
   return (
     <>
       <motion.div
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        variants={containerVariants}
+        variants={container}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        {group1.map((service, i) => (
+        {group1.map((service) => (
           <ServiceCard
             key={service.slug}
             service={service}
-            index={i}
             featured={featured.includes(service.slug)}
             shouldReduceMotion={shouldReduceMotion}
           />
@@ -128,16 +111,15 @@ export default function TjenesterOversiktIsland({ group1, group2, featured }: Pr
 
       <motion.div
         className="grid grid-cols-1 gap-6 sm:grid-cols-3"
-        variants={containerVariants}
+        variants={container}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        {group2.map((service, i) => (
+        {group2.map((service) => (
           <ServiceCard
             key={service.slug}
             service={service}
-            index={i}
             featured={false}
             shouldReduceMotion={shouldReduceMotion}
           />
