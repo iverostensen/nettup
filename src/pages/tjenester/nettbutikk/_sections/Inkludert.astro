@@ -1,0 +1,65 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const features = [
+  { title: 'Shopify-oppsett', description: 'Vi setter opp og konfigurerer hele Shopify-kontoen din, inkludert domenetilkobling og grunnleggende innstillinger.' },
+  { title: 'Produktkatalog', description: 'Vi legger inn produktene dine med bilder, beskrivelser, priser og varianter (størrelse, farge osv.).' },
+  { title: 'Handlekurv og checkout', description: 'En smidig kjøpsopplevelse fra produktside til betalt ordre — optimalisert for konvertering.' },
+  { title: 'Vipps og kortbetaling', description: 'Norske kunder betaler slik de vil. Vi konfigurerer Vipps og kortbetaling (Visa/Mastercard) for deg.' },
+  { title: 'Lagerstyring', description: 'Hold oversikt over lagerstatus automatisk. Shopify varsler deg når produkter er i ferd med å gå tomme.' },
+  { title: 'Ordrehåndtering', description: 'Alle ordrer samlet på ett sted. Enkel oversikt, enkel behandling og automatiske bekreftelser til kundene.' },
+  { title: 'Responsivt design', description: 'Butikken ser bra ut og er enkel å bruke på mobil, tablet og desktop.' },
+  { title: '30 dagers support', description: 'Vi er tilgjengelige for spørsmål og justeringer i 30 dager etter lansering — uten ekstra kostnad.' },
+];
+
+const steps = [
+  { number: 1, title: 'Vi setter opp butikken', description: 'Shopify-konto, design og produktstruktur på plass.' },
+  { number: 2, title: 'Produkter og betaling', description: 'Vi legger inn produktkatalog og konfigurerer Vipps og kortbetaling.' },
+  { number: 3, title: 'Test og lansering', description: 'Vi tester hele kjøpsløpet grundig og lanserer når alt er klart.' },
+];
+---
+
+<Section background="raised">
+  <SectionHeader title="Hva er inkludert" subtitle="Alt du trenger for å starte salget — ingen skjulte kostnader fra vår side." />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <div class={`reveal-on-scroll delay-${(index % 3) + 1}`}>
+          <div class="flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-brand" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <div>
+              <h3 class="font-semibold">{feature.title}</h3>
+              <p class="mt-1 text-sm text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Slik fungerer det — 3-step process -->
+    <div class="reveal-on-scroll mt-12">
+      <h3 class="mb-6 font-display text-xl font-semibold">Slik fungerer det</h3>
+      <ol class="space-y-4">
+        {steps.map((step) => (
+          <li class="flex items-start gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-surface">
+              {step.number}
+            </span>
+            <div>
+              <p class="font-semibold">{step.title}</p>
+              <p class="mt-1 text-sm text-text-muted">{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <!-- Shopify fee disclosure — visible but not alarming -->
+    <p class="mt-6 text-sm text-text-muted">
+      * Shopify lisens (fra 299 kr/mnd) faktureres separat av Shopify.
+    </p>
+  </div>
+</Section>
