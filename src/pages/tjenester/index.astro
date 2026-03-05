@@ -1,19 +1,16 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { pakker } from '@/config/pricing';
+import { services } from '@/config/services';
 
-// Page-specific sections
-import Pakker from './_sections/Pakker.astro';
-import Inkludert from './_sections/Inkludert.astro';
-import Support from './_sections/Support.astro';
+import TjenesterOversikt from './_sections/TjenesterOversikt.astro';
 import FAQ from './_sections/FAQ.astro';
 import TjenesterCTA from './_sections/TjenesterCTA.astro';
 
-const serviceSchemas = pakker.map(pakke => ({
+const serviceSchemas = services.map(service => ({
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": `Nettup ${pakke.name}`,
-  "description": pakke.description,
+  "name": `Nettup ${service.name}`,
+  "description": service.description,
   "provider": {
     "@type": "Organization",
     "name": "Nettup",
@@ -25,15 +22,19 @@ const serviceSchemas = pakker.map(pakke => ({
   },
   "offers": {
     "@type": "Offer",
-    "price": pakke.launchPrice.replace(/\s/g, ''),
-    "priceCurrency": "NOK"
+    "priceSpecification": {
+      "@type": "PriceSpecification",
+      "minPrice": service.minPrice,
+      ...(service.maxPrice > 0 ? { "maxPrice": service.maxPrice } : {}),
+      "priceCurrency": "NOK"
+    }
   }
 }));
 ---
 
 <BaseLayout
-  title="Nettside Priser | Lanseringstilbud fra 2 500 kr | Nettup"
-  description="Lanseringstilbud: Enkel 2 500 kr (spar 4 500 kr), Standard 4 500 kr (spar 10 500 kr), Premium 10 000 kr (spar 15 000 kr). Kun 10 plasser!"
+  title="Tjenester | Nettside, Nettbutikk, SEO og mer | Nettup"
+  description="Se alle tjenestene vi tilbyr: nettside, nettbutikk, landingsside, webapp, SEO, AI-løsninger og vedlikehold."
 >
   <Fragment slot="head">
     {serviceSchemas.map(schema => (
@@ -41,9 +42,7 @@ const serviceSchemas = pakker.map(pakke => ({
     ))}
   </Fragment>
   <main>
-    <Pakker />
-    <Inkludert />
-    <Support />
+    <TjenesterOversikt />
     <FAQ />
     <TjenesterCTA />
   </main>
