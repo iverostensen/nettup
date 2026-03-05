@@ -111,4 +111,4 @@ Plans:
 | 7. Tjenesteoversikt | 2/2 | Complete   | 2026-03-05 | - |
 | 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
-| 10. Cross-linking & Validation | 2/2 | Complete   | 2026-03-05 | - |
+| 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
