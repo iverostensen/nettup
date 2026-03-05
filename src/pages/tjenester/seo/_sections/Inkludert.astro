@@ -1,0 +1,38 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const features = [
+  { title: 'Månedlig søkeordsanalyse', description: 'Vi analyserer hvilke søkeord som gir trafikk til konkurrentene dine og identifiserer muligheter du ikke utnytter ennå.' },
+  { title: 'Teknisk SEO-gjennomgang', description: 'Vi sjekker hastighet, indeksering, crawl-feil og strukturerte data. Tekniske problemer rapporteres og rettes fortløpende.' },
+  { title: 'Innholdsoptimalisering', description: 'Vi forbedrer eksisterende sider basert på søkeordsanalysen — metabeskrivelser, overskrifter og innholdsstruktur oppdateres.' },
+  { title: 'GEO-optimalisering', description: 'Vi optimaliserer innholdet ditt for å bli referert av AI-søk som ChatGPT og Perplexity — et felt få norske byråer behersker.' },
+  { title: 'Lenkebygging', description: 'Vi arbeider med å få norske nettsteder til å lenke til deg. Kvalitetslenker fra relevante norske aktører styrker tilliten hos Google.' },
+  { title: 'Månedlig rapport', description: 'Du mottar en oversiktlig rapport med rangeringsutvikling, trafikktall og en klar prioriteringsliste for neste måned.' },
+  { title: 'Strategirådgivning', description: 'Vi er tilgjengelige for spørsmål og gjennomgår strategien regelmessig. SEO endrer seg — vi holder oss oppdatert så du slipper.' },
+];
+---
+
+<Section background="raised">
+  <SectionHeader
+    title="Hva du får hver måned"
+    subtitle="Konkrete leveranser — ikke vage løfter om fremtidige resultater."
+  />
+  <div class="mx-auto max-w-4xl">
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+      {features.map((feature, index) => (
+        <div class={`reveal-on-scroll delay-${(index % 3) + 1}`}>
+          <div class="flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-brand" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <div>
+              <h3 class="font-semibold">{feature.title}</h3>
+              <p class="mt-1 text-sm text-text-muted">{feature.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
