@@ -7,6 +7,8 @@ export interface Service {
   maxPrice: number;
   ctaParam: string;
   description: string;
+  monthlyPrice?: number;        // Monthly maintenance/service price in NOK
+  monthlyPriceLabel?: string;   // Display string, e.g. 'fra 2 500 kr/mnd'
 }
 
 export const services: Service[] = [
@@ -49,6 +51,8 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'webapp',
     description: 'Vi utvikler webapplikasjoner som løser konkrete problemer i virksomheten din og gir teamet ditt bedre verktøy.',
+    monthlyPrice: 2500,
+    monthlyPriceLabel: 'fra 2 500 kr/mnd',
   },
   {
     slug: 'seo',
@@ -59,6 +63,8 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'seo',
     description: 'Vi optimaliserer nettsiden din for søkemotorer slik at potensielle kunder finner deg når de søker etter det du tilbyr.',
+    monthlyPrice: 3000,
+    monthlyPriceLabel: 'fra 3 000 kr/mnd',
   },
   {
     slug: 'ai',
@@ -69,6 +75,8 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'ai',
     description: 'Vi integrerer AI-løsninger i din arbeidsflyt som reduserer manuelt arbeid og lar teamet fokusere på det som faktisk skaper verdi.',
+    monthlyPrice: 1000,
+    monthlyPriceLabel: 'fra 1 000 kr/mnd',
   },
   {
     slug: 'vedlikehold',
@@ -79,5 +87,7 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'vedlikehold',
     description: 'Vi tar ansvar for løpende oppdateringer, sikkerhet og tekniske forbedringer så du kan fokusere på å drive bedriften.',
+    monthlyPrice: 1500,
+    monthlyPriceLabel: 'fra 1 500 kr/mnd',
   },
 ];
