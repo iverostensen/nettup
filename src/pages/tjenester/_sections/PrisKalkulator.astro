@@ -1,0 +1,13 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import PrisKalkulatorIsland from '@/components/islands/PrisKalkulatorIsland';
+---
+
+<Section>
+  <SectionHeader
+    title="Hva passer for deg?"
+    subtitle="Svar på fire enkle spørsmål, så finner vi riktig løsning — og viser deg hva det koster."
+  />
+  <PrisKalkulatorIsland client:visible />
+</Section>

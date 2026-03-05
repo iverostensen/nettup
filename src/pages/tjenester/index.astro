@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { services } from '@/config/services';
 
 import TjenesterOversikt from './_sections/TjenesterOversikt.astro';
+import PrisKalkulator from './_sections/PrisKalkulator.astro';
 import FAQ from './_sections/FAQ.astro';
 import TjenesterCTA from './_sections/TjenesterCTA.astro';
 
@@ -33,16 +34,17 @@ const serviceSchemas = services.map(service => ({
 ---
 
 <BaseLayout
-  title="Tjenester | Nettside, Nettbutikk, SEO og mer | Nettup"
-  description="Se alle tjenestene vi tilbyr: nettside, nettbutikk, landingsside, webapp, SEO, AI-løsninger og vedlikehold."
+  title="Tjenester | Nettside, Nettbutikk og Landingsside | Nettup"
+  description="Se tjenestene vi tilbyr: profesjonell nettside, nettbutikk og landingsside for norske bedrifter."
 >
   <Fragment slot="head">
     {serviceSchemas.map(schema => (
-      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
   </Fragment>
   <main>
     <TjenesterOversikt />
+    <PrisKalkulator />
     <FAQ />
     <TjenesterCTA />
   </main>
