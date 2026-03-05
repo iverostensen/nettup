@@ -115,9 +115,10 @@ None.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | Analyse and implement refined microanimations and hover effects on /tjenester | 2026-03-05 | 9875bc9 | [1-analyse-the-tjenester-page-and-the-micro](.planning/quick/1-analyse-the-tjenester-page-and-the-micro/) |
+| 2 | Add PrisKalkulator island to tjenester page | 2026-03-05 | ff8dd70 | [2-add-priskalkulator-island-to-tjenester-p](.planning/quick/2-add-priskalkulator-island-to-tjenester-p/) |
 
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 10-02-PLAN.md (sitemap verification + JSON-LD schema validation — all 7 service pages pass) — v1.1 milestone COMPLETE
+Stopped at: Completed quick task 2 — PrisKalkulator wizard island on /tjenester
 Resume file: None
