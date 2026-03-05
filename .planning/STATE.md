@@ -65,6 +65,7 @@ Progress: [██████████] 100%
 ### Roadmap Evolution
 
 - Phase 11 added: Enhanced price calculator with multi-step needs assessment
+- Phase 12 added: AI chatbot widget
 
 ### Decisions
 
