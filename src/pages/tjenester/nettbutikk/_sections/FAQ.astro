@@ -1,0 +1,54 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    question: 'Hva er Shopify, og hvorfor bruker dere det?',
+    answer: 'Shopify er verdens ledende e-handelsplattform med over to millioner aktive nettbutikker. Vi bruker Shopify fordi det gir deg en stabil, sikker og skalerbar butikk med innebygd support for norske betalingsløsninger som Vipps. Du trenger ikke vedlikeholde servere eller oppdatere programvare — det tar Shopify seg av.',
+  },
+  {
+    question: 'Hva koster Shopify-lisensen?',
+    answer: 'Shopify faktureres separat av Shopify og koster fra 299 kr/mnd for Basic-planen. Dette er en løpende kostnad uavhengig av det du betaler oss for å sette opp butikken. Vi hjelper deg å velge riktig plan basert på forventet salgsvolum.',
+  },
+  {
+    question: 'Kan jeg ta imot Vipps og kortbetaling?',
+    answer: 'Ja. Vi konfigurerer Vipps og kortbetaling (Visa og Mastercard) som en del av oppsettet. Norske kunder forventer å kunne betale med Vipps, og det er enkelt å aktivere gjennom Shopify Payments eller en norsk betalingsleverandør.',
+  },
+  {
+    question: 'Hjelper dere med å legge inn produktene?',
+    answer: 'Ja, produktopplasting er inkludert i prosjektprisen. Du sender oss en liste over produkter med bilder, beskrivelser og priser, og vi legger det inn i butikken. Har du mange hundre produkter, avtaler vi detaljer rundt mengde tidlig i prosessen.',
+  },
+  {
+    question: 'Kan jeg administrere butikken selv etter levering?',
+    answer: 'Absolutt. Shopify har et brukervennlig administrasjonspanel der du kan legge til produkter, håndtere ordrer, se statistikk og oppdatere innhold selv — uten teknisk kunnskap. Vi gir deg en gjennomgang av panelet ved lansering.',
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+  }))
+};
+---
+
+<!-- FAQPage schema for rich snippets -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<Section>
+  <SectionHeader title="Ofte stilte spørsmål" />
+  <div class="mx-auto max-w-3xl">
+    <div class="divide-y divide-white/10">
+      {faqs.map((faq) => (
+        <div class="reveal-on-scroll py-6 first:pt-0 last:pb-0">
+          <h3 class="font-semibold">{faq.question}</h3>
+          <p class="mt-2 text-text-muted">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</Section>
