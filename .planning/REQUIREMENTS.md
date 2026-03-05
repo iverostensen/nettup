@@ -60,9 +60,9 @@
 
 ### AI Chatbot Widget
 
-- [ ] **CHAT-01**: Vercel-adapter konfigurert for hybrid rendering (statisk site + serverless API-endepunkt)
-- [ ] **CHAT-02**: `/api/chat` POST-endepunkt streamer Claude-svar via SSE med API-nokkel kun pa serversiden
-- [ ] **CHAT-03**: Systemprompt bygget fra services.ts-data med prisintervaller og sidebevissthet (currentPage)
+- [x] **CHAT-01**: Vercel-adapter konfigurert for hybrid rendering (statisk site + serverless API-endepunkt)
+- [x] **CHAT-02**: `/api/chat` POST-endepunkt streamer Claude-svar via SSE med API-nokkel kun pa serversiden
+- [x] **CHAT-03**: Systemprompt bygget fra services.ts-data med prisintervaller og sidebevissthet (currentPage)
 - [ ] **CHAT-04**: Flytende chat-boble pa alle sider (nedre hoyre hjorne) med teaser-tooltip pa norsk
 - [ ] **CHAT-05**: Chat-vindu med streaming meldingsvisning, skriveindikator og Framer Motion-animasjoner
 - [ ] **CHAT-06**: AI svarer pa norsk, oppgir prisintervaller, fungerer som tjenersteradgiver med fallback til /kontakt

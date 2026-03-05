@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
-status: unknown
-last_updated: "2026-03-05T22:21:22.366Z"
+status: in-progress
+last_updated: "2026-03-05T23:39:42Z"
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 18
+  completed_plans: 17
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 11 — Enhanced Price Calculator (COMPLETE)
+**Current focus:** Phase 12 — AI Chatbot Widget (IN PROGRESS)
 
 ## Current Position
 
-Phase: 11 of 11 (Enhanced Price Calculator) — COMPLETE
-Plan: 1 of 1 complete (done: 11-01)
-Status: 11-01 complete — Goal-first 4-phase price wizard with recommendation step, 2 narrowing questions, included items, and "Les mer" cross-links
-Last activity: 2026-03-05 - Completed 11-01: Enhanced price calculator wizard
+Phase: 12 of 12 (AI Chatbot Widget) — IN PROGRESS
+Plan: 1 of 2 complete (done: 12-01)
+Status: 12-01 complete — Streaming Claude Haiku chat endpoint with page-aware system prompt
+Last activity: 2026-03-06 - Completed 12-01: API endpoint and system prompt
 
-Progress: [██████████] 100%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 09-specialist-service-pages P05 | 2 | 2 tasks | 5 files |
 | Phase 10-cross-linking-validation P01 | 3 | 3 tasks | 8 files |
 | Phase 11 P01 | 3 | 2 tasks | 1 files |
+| Phase 12-ai-chatbot-widget P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 - [Phase 11]: Q1 captures scope context only (priceEstimate: ''), Q2 carries final price — no multiplicative pricing
 - [Phase 11]: Goal options route directly to services: kunder->nettside, produkter->nettbutikk, kampanje->landingsside
 - [Phase 11]: Included items hardcoded in component, not sourced from services.ts
+- [Phase 12]: Vercel adapter with static output preserved — per-route prerender=false for serverless
+- [Phase 12]: System prompt uses launchPriceRange (launch discount active) not priceRange
+- [Phase 12]: Max 20 messages rate-limit guard trimming oldest messages first
 
 ### Pending Todos
 
@@ -129,6 +133,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05
-Stopped at: Completed 11-01-PLAN.md — Goal-first price calculator wizard
+Last session: 2026-03-06
+Stopped at: Completed 12-01-PLAN.md — Streaming chat API endpoint with system prompt
 Resume file: None

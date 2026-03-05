@@ -148,4 +148,4 @@ Plans:
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
 | 11. Enhanced Price Calculator | 1/1 | Complete    | 2026-03-05 | - |
-| 12. AI Chatbot Widget | 0/2 | In Progress | - | - |
+| 12. AI Chatbot Widget | 1/2 | In Progress|  | - |
