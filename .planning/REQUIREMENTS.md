@@ -58,6 +58,17 @@
 - [x] **CALC-04**: Resultatskjerm viser 3-4 "hva er inkludert" punkter med sjekkmerke-ikoner per tjeneste
 - [x] **CALC-05**: Resultatskjerm har "Les mer om [tjeneste]"-lenke til /tjenester/[slug] ved siden av CTA
 
+### AI Chatbot Widget
+
+- [ ] **CHAT-01**: Vercel-adapter konfigurert for hybrid rendering (statisk site + serverless API-endepunkt)
+- [ ] **CHAT-02**: `/api/chat` POST-endepunkt streamer Claude-svar via SSE med API-nokkel kun pa serversiden
+- [ ] **CHAT-03**: Systemprompt bygget fra services.ts-data med prisintervaller og sidebevissthet (currentPage)
+- [ ] **CHAT-04**: Flytende chat-boble pa alle sider (nedre hoyre hjorne) med teaser-tooltip pa norsk
+- [ ] **CHAT-05**: Chat-vindu med streaming meldingsvisning, skriveindikator og Framer Motion-animasjoner
+- [ ] **CHAT-06**: AI svarer pa norsk, oppgir prisintervaller, fungerer som tjenersteradgiver med fallback til /kontakt
+- [ ] **CHAT-07**: In-chat kontaktskjema sender til Formspree (xnjnzybj) med `kilde: chatbot` OG lenke til /kontakt
+- [ ] **CHAT-08**: Mobilresponsiv (fullbredde pa sma skjermer, fast panel pa desktop) med reduced-motion-stotte
+
 ## v2 Requirements
 
 ### Content & Trust
@@ -113,14 +124,23 @@
 | CALC-03 | Phase 11 | Planned |
 | CALC-04 | Phase 11 | Planned |
 | CALC-05 | Phase 11 | Planned |
+| CHAT-01 | Phase 12 | Planned |
+| CHAT-02 | Phase 12 | Planned |
+| CHAT-03 | Phase 12 | Planned |
+| CHAT-04 | Phase 12 | Planned |
+| CHAT-05 | Phase 12 | Planned |
+| CHAT-06 | Phase 12 | Planned |
+| CHAT-07 | Phase 12 | Planned |
+| CHAT-08 | Phase 12 | Planned |
 
 **Coverage:**
 - v1.1 requirements: 29 total
-- Mapped to phases: 29
+- Phase 12 requirements: 8 total
+- Mapped to phases: 37
 - Unmapped: 0
 
 Note: CONTENT-01, CONTENT-02, CONTENT-03, CTA-01, and SEO-02 are assigned to Phase 8 (where they first become verifiable). Phase 9 pages must satisfy the same standards — compliance verified in Phase 10.
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-05 — Phase 11 CALC requirements added*
+*Last updated: 2026-03-06 — Phase 12 CHAT requirements added*

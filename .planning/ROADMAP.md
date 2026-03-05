@@ -114,6 +114,25 @@ Plans:
 Plans:
 - [ ] 11-01-PLAN.md — Rewrite PrisKalkulatorIsland with goal-first 4-phase wizard
 
+### Phase 12: AI Chatbot Widget
+**Goal**: AI-drevet chat-widget som fungerer som tjenersteradgiver — hjelper besokende a forsta hvilken tjeneste som passer, svarer pa pris/prosess/tidslinje-sporsmal, og leder kvalifiserte leads til kontaktskjemaet
+**Depends on:** Phase 11
+**Requirements**: CHAT-01, CHAT-02, CHAT-03, CHAT-04, CHAT-05, CHAT-06, CHAT-07, CHAT-08
+**Success Criteria** (what must be TRUE):
+  1. Floating chat bubble appears bottom-right on all pages
+  2. Teaser tooltip auto-shows after delay with Norwegian text ("Lurer du pa noe?")
+  3. User can have multi-turn conversations with streaming AI responses in Norwegian
+  4. AI quotes price ranges from services.ts, acts as service advisor
+  5. Widget is page-aware — responses adapt to current page context
+  6. In-chat lead capture sends to Formspree with kilde: chatbot
+  7. Mobile responsive (full-width on small screens, fixed panel on desktop)
+  8. API key stays server-side, no client exposure
+**Plans**: 2 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Backend: Vercel adapter, streaming API endpoint, system prompt builder
+- [ ] 12-02-PLAN.md — Frontend: ChatWidget React island, BaseLayout wiring, visual verification
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -129,3 +148,4 @@ Plans:
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
 | 11. Enhanced Price Calculator | 1/1 | Complete    | 2026-03-05 | - |
+| 12. AI Chatbot Widget | 0/2 | In Progress | - | - |
