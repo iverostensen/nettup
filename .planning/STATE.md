@@ -8,7 +8,7 @@ progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 ## Current Position
 
-Phase: 10 of 10 (Cross-linking and Validation) — IN PROGRESS
-Plan: 1 of 2 complete (done: 10-01)
-Status: 10-01 complete — RelaterteTjenester.astro component + related pairings in services.ts + wired to all 7 service pages
-Last activity: 2026-03-05 — Completed 10-01: Added related?: string[] to Service interface; created RelaterteTjenester.astro; inserted between FAQ and CTA on all 7 service pages; build passes
+Phase: 10 of 10 (Cross-linking and Validation) — COMPLETE
+Plan: 2 of 2 complete (done: 10-01, 10-02)
+Status: 10-02 complete — Verified sitemap (all 7 sub-pages present) + validated Service and FAQPage JSON-LD schemas on all 7 service pages (no errors)
+Last activity: 2026-03-05 — Completed 10-02: Sitemap includes all 7 /tjenester/* URLs; all 7 pages pass Google Rich Results Test for Service and FAQPage JSON-LD
 
-Progress: [█████████░] 93%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -113,5 +113,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 10-01-PLAN.md (RelaterteTjenester component + cross-link pairings on all 7 service pages)
+Stopped at: Completed 10-02-PLAN.md (sitemap verification + JSON-LD schema validation — all 7 service pages pass) — v1.1 milestone COMPLETE
 Resume file: None
