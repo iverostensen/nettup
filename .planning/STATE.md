@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
 status: unknown
-last_updated: "2026-03-05T10:27:18.198Z"
+last_updated: "2026-03-05T10:33:29.255Z"
 progress:
   total_phases: 2
   completed_phases: 2
