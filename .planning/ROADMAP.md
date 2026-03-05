@@ -128,4 +128,4 @@ Plans:
 | 8. Core Service Pages | 3/3 | Complete   | 2026-03-05 | - |
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
-| 11. Enhanced Price Calculator | 1/1 | Complete   | 2026-03-05 | - |
+| 11. Enhanced Price Calculator | 1/1 | Complete    | 2026-03-05 | - |
