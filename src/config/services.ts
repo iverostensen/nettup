@@ -9,6 +9,7 @@ export interface Service {
   description: string;
   monthlyPrice?: number;        // Monthly maintenance/service price in NOK
   monthlyPriceLabel?: string;   // Display string, e.g. 'fra 2 500 kr/mnd'
+  related?: string[];           // Slugs of related services for cross-linking
 }
 
 export const services: Service[] = [
@@ -21,6 +22,7 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'nettside',
     description: 'Vi bygger en skreddersydd nettside som presenterer bedriften din profesjonelt og gjør det enkelt for besøkende å ta kontakt.',
+    related: ['seo', 'vedlikehold'],
   },
   {
     slug: 'nettbutikk',
@@ -31,6 +33,7 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'nettbutikk',
     description: 'Vi setter opp en komplett nettbutikk som gjør det enkelt for kundene dine å finne, velge og kjøpe produktene dine.',
+    related: ['nettside', 'vedlikehold'],
   },
   {
     slug: 'landingsside',
@@ -41,6 +44,7 @@ export const services: Service[] = [
     maxPrice: 0,
     ctaParam: 'landingsside',
     description: 'En fokusert landingsside bygget for å konvertere trafikk fra annonser eller kampanjer til faktiske kunder.',
+    related: ['seo', 'nettside'],
   },
   {
     slug: 'webapp',
@@ -53,6 +57,7 @@ export const services: Service[] = [
     description: 'Vi utvikler webapplikasjoner som løser konkrete problemer i virksomheten din og gir teamet ditt bedre verktøy.',
     monthlyPrice: 2500,
     monthlyPriceLabel: 'fra 2 500 kr/mnd',
+    related: ['ai', 'nettside'],
   },
   {
     slug: 'seo',
@@ -65,6 +70,7 @@ export const services: Service[] = [
     description: 'Vi optimaliserer nettsiden din for søkemotorer slik at potensielle kunder finner deg når de søker etter det du tilbyr.',
     monthlyPrice: 3000,
     monthlyPriceLabel: 'fra 3 000 kr/mnd',
+    related: ['nettside', 'landingsside'],
   },
   {
     slug: 'ai',
@@ -77,6 +83,7 @@ export const services: Service[] = [
     description: 'Vi integrerer AI-løsninger i din arbeidsflyt som reduserer manuelt arbeid og lar teamet fokusere på det som faktisk skaper verdi.',
     monthlyPrice: 1000,
     monthlyPriceLabel: 'fra 1 000 kr/mnd',
+    related: ['webapp', 'seo'],
   },
   {
     slug: 'vedlikehold',
@@ -89,5 +96,6 @@ export const services: Service[] = [
     description: 'Vi tar ansvar for løpende oppdateringer, sikkerhet og tekniske forbedringer så du kan fokusere på å drive bedriften.',
     monthlyPrice: 1500,
     monthlyPriceLabel: 'fra 1 500 kr/mnd',
+    related: ['nettside', 'nettbutikk'],
   },
 ];
