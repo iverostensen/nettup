@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 ## Current Position
 
 Phase: 8 of 10 (Core Service Pages) — IN PROGRESS
-Plan: 1 of 3 (done: 08-01)
-Status: Phase 08 in progress, 08-01 complete
-Last activity: 2026-03-05 — Completed 08-01: Built /tjenester/nettside page with Service JSON-LD, FAQPage JSON-LD, Hero, Inkludert, FAQ, CTA sections
+Plan: 2 of 3 (done: 08-01, 08-02)
+Status: Phase 08 in progress, 08-01 and 08-02 complete
+Last activity: 2026-03-05 — Completed 08-02: Built /tjenester/nettbutikk page with Shopify fee disclosure, 3-step process, Service JSON-LD, FAQPage JSON-LD
 
 Progress: [█████░░░░░] 55%
 
@@ -42,13 +42,14 @@ Progress: [█████░░░░░] 55%
 |-------|-------|-------|----------|
 | 06-infrastructure | 3/3 | 13 min | 4 min |
 | 07-tjenesteoversikt | 2/3 | 7 min | 3.5 min |
-| 08-core-service-pages | 1/3 | 2 min | 2 min |
+| 08-core-service-pages | 2/3 | 5 min | 2.5 min |
 
 *Updated after each plan completion*
 | Phase 06-infrastructure P03 | 7 | 2 tasks | 3 files |
 | Phase 07-tjenesteoversikt P01 | 2 | 2 tasks | 2 files |
 | Phase 07-tjenesteoversikt P02 | 5 | 3 tasks | 2 files |
 | Phase 08-core-service-pages P01 | 2 | 2 tasks | 5 files |
+| Phase 08-core-service-pages P02 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,9 @@ Recent decisions affecting current work:
 - 08-01: FAQPage JSON-LD co-located in FAQ.astro (not index.astro) — structured data near the content it describes
 - 08-01: Hero uses animate-fade-up (not reveal-on-scroll) for above-fold content — reveal-on-scroll invisible until scroll trigger
 - 08-01: 4-section pattern (Hero + Inkludert + FAQ + CTA) established as template for all service sub-pages
+- 08-02: Shopify fee disclosure placed as visible footnote below features grid — not in footer fine print, not headlined
+- 08-02: 3-step process sequence embedded in Inkludert.astro (not a separate component) — simpler for 3 steps
+- 08-02: FAQPage JSON-LD co-located in FAQ.astro, consistent with 08-01 pattern
 
 ### Pending Todos
 
@@ -89,5 +93,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 08-01-PLAN.md (/tjenester/nettside built with Service JSON-LD + FAQPage JSON-LD + 4 sections). Phase 08 in progress. Next: 08-02.
+Stopped at: Completed 08-02-PLAN.md (/tjenester/nettbutikk built with Shopify fee disclosure, 3-step process, Service JSON-LD + FAQPage JSON-LD + 4 sections). Phase 08 in progress. Next: 08-03.
 Resume file: None

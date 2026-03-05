@@ -26,7 +26,7 @@
 
 - [x] **PAGES-01**: `/tjenester/nettside` — dedikert tjenesteside
 - [ ] **PAGES-02**: `/tjenester/landingsside` — dedikert tjenesteside
-- [ ] **PAGES-03**: `/tjenester/nettbutikk` — dedikert tjenesteside (Shopify)
+- [x] **PAGES-03**: `/tjenester/nettbutikk` — dedikert tjenesteside (Shopify)
 - [ ] **PAGES-04**: `/tjenester/webapp` — dedikert tjenesteside
 - [ ] **PAGES-05**: `/tjenester/seo` — dedikert tjenesteside
 - [ ] **PAGES-06**: `/tjenester/ai` — dedikert tjenesteside
@@ -37,7 +37,7 @@
 - [x] **CONTENT-01**: Hver side har struktur: hero (outcome + prissignal) → hva som er inkludert → FAQ → CTA-seksjon
 - [x] **CONTENT-02**: All copy bruker outcome-first språk — ikke teknisk sjargong i primærsekvenser
 - [x] **CONTENT-03**: Hver side har minimum 500 ord med substansielt innhold (ingen tynne sider)
-- [ ] **CONTENT-04**: Nettbutikk-siden adresserer Shopify-plattformavgifter transparent
+- [x] **CONTENT-04**: Nettbutikk-siden adresserer Shopify-plattformavgifter transparent
 
 ### SEO & Schema
 
@@ -87,11 +87,11 @@
 | OVERVIEW-03 | Phase 7 | Complete |
 | PAGES-01 | Phase 8 | Complete |
 | PAGES-02 | Phase 8 | Pending |
-| PAGES-03 | Phase 8 | Pending |
+| PAGES-03 | Phase 8 | Complete |
 | CONTENT-01 | Phase 8 | Complete |
 | CONTENT-02 | Phase 8 | Complete |
 | CONTENT-03 | Phase 8 | Complete |
-| CONTENT-04 | Phase 8 | Pending |
+| CONTENT-04 | Phase 8 | Complete |
 | SEO-02 | Phase 8 | Complete |
 | CTA-01 | Phase 8 | Complete |
 | PAGES-04 | Phase 9 | Pending |
