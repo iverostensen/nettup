@@ -46,15 +46,66 @@
 
 ---
 
+## Milestone: v1.1 — Tjenesteutvidelse
+
+**Shipped:** 2026-03-06
+**Phases:** 7 | **Plans:** 18 | **Timeline:** 3 days (2026-03-04 → 2026-03-06)
+
+### What Was Built
+- Tjenestekatalog: 7 dedikerte undersider under /tjenester med outcome-first innhold, prisintervaller, og JSON-LD (Service + FAQPage)
+- services.ts: Single source of truth for tjenestemetadata — slug, priser, included, FAQ, cross-links
+- /tjenester oversikt redesignet fra 3-nivaa pristabell til grupperte servicekort
+- Mal-forst priskalkulator: 4-fase wizard (mal → anbefaling → innsnevring → resultat) med Framer Motion
+- AI chatbot-widget: Claude Haiku-drevet radgiver med SSE streaming, sidebevissthet, og in-chat lead capture via Formspree
+- Infrastruktur: ?tjeneste= pre-fill, breadcrumbs, aktiv nav-state, Vercel hybrid adapter
+
+### What Worked
+- **services.ts som single source of truth:** Config-drevet moenster fra v1.0 (projects.ts, testimonials.ts) skalerte perfekt — overview cards, JSON-LD, CTA-lenker og cross-links drives alle fra samme config
+- **4-seksjons sidemal:** Hero + Inkludert + FAQ + CTA-moensteret ble etablert i Phase 8 og gjenbrukt konsistent gjennom Phase 9 — specialist-sidene gikk pa skinner
+- **Parallel phase execution:** Phases 8–9 (tjenestesider) hadde klar avhengighetsstruktur som tillot rask sekvensering
+- **Inkrementell infrastruktur:** Phase 6 la grunnlaget (nav, breadcrumbs, contactform) slik at Phase 7+ aldri trengte a endre infrastruktur
+- **Goal-first wizard UX:** Brukere tenker i mal ("jeg trenger kunder"), ikke tjenester — wizard-UX konverterer dette naturlig
+
+### What Was Inefficient
+- Phase 10 (cross-linking) var planlagt med TBD planer — scope ble klart forst etter Phase 9. Tidligere definisjon ville spart planleggingstid
+- Quick tasks (1-4) overlappet delvis med Phase 11 scope — priskalkulator ble bygget inkrementelt via quick tasks for formal fase-planlegging. Fungerte, men dobbelt planlegging
+- RelaterteTjenester ble bygget i Phase 10 og fjernet i quick-4 — wasted work. Bedre a evaluere behovet grundigere for building
+
+### Patterns Established
+- `services.ts` config-drevet tjenestekatalog — alt fra overview til JSON-LD til chatbot-prompt leser herfra
+- 4-seksjons sidemal (Hero + Inkludert + FAQ + CTA) for alle tjenestesider
+- FAQPage JSON-LD co-located i FAQ.astro (nyer index.astro) — data naer innholdet det beskriver
+- Vercel hybrid rendering: statisk site + per-rute serverless (prerender = false)
+- SSE streaming med TextDecoder buffer parsing for chat
+- transition:persist for React island state pa tvers av sidenavigasjon
+
+### Key Lessons
+1. **Config-drevet arkitektur skalerer.** v1.0 etablerte moensteret, v1.1 beviste det — 7 sider, 1 config-fil. Nye tjenester krever kun et objekt i services.ts + en index.astro.
+2. **TBD-planer forsinker.** Phases med "Plans: TBD" krever en ekstra planleggingsrunde nar de starter. Bedre a definere plan-scope under requirements selv om detaljer endres.
+3. **Quick tasks og formelle faser bor ikke overlappe.** Enten gjor det som quick task eller som fase — ikke begge. Quick-task #2/#3 bygget priskalkulator som Phase 11 forst formaliserte.
+4. **Evaluer "nice to have" features grundig.** RelaterteTjenester ble bygget og fjernet — spar tid ved a sp "trenger brukeren dette?" for implementering.
+5. **AI-integrasjon krever hybrid hosting.** Vercel adapter-migrering var smertefri, men ma planlegges fra start om serverless er nodvendig.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6 for execution, quality profile
+- 18 plans completed in ~3 days
+- Notable: Phase 12 (chatbot) var mest kompleks — SSE streaming + React island + lead capture. Phase 8-9 (7 tjenestesider) var mest repetitivt men raskest per plan
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
 
-| Milestone | Phases | Plans | Key Change |
-|-----------|--------|-------|------------|
-| v1.0 | 5 | 15 | First milestone — established brand-first sequencing and token system pattern |
+| Milestone | Phases | Plans | Timeline | Key Change |
+|-----------|--------|-------|----------|------------|
+| v1.0 | 5 | 15 | 2 days | Established brand-first sequencing and token system pattern |
+| v1.1 | 7 | 18 | 3 days | Config-driven service catalog, AI integration, hybrid hosting |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. Brand identity first — all visual/copy decisions become easier with concrete anchors
-2. Content operations are feature work — don't ship placeholder content without a plan to replace it
+1. **Config-driven data is architecture** — brand.ts (v1.0), services.ts (v1.1). Every content domain benefits from a typed config file as single source of truth
+2. **Brand identity first** — all visual/copy decisions become easier with concrete anchors (v1.0, reused in v1.1)
+3. **Content operations are feature work** — don't ship placeholder content without a plan to replace it (testimonials still unresolved)
+4. **Define scope before "TBD"** — phases with undefined plan counts cause planning overhead at execution time (v1.1 Phases 8-10)
+5. **Don't build features you'll remove** — evaluate user need before implementing (RelaterteTjenester built then removed)

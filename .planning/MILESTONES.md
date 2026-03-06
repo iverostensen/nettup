@@ -1,5 +1,24 @@
 # Milestones
 
+## v1.1 Tjenesteutvidelse (Shipped: 2026-03-06)
+
+**Phases completed:** 7 phases (6–12), 18 plans
+**Timeline:** 2026-03-04 → 2026-03-06 (3 days)
+**LOC:** ~8,112 TypeScript/TSX/Astro
+**Git range:** 134 commits
+
+**Delivered:** /tjenester utvidet fra generisk 3-nivå pristabell til fullverdig tjenestekatalog med 7 dedikerte undersider, mål-først priskalkulator, og AI chatbot-widget — komplett konverteringsløp fra oppdagelse til kontakt.
+
+**Key accomplishments:**
+1. Tjenestekatalog med 7 dedikerte undersider — outcome-first innhold med prisintervaller og JSON-LD Service + FAQPage schema
+2. services.ts som single source of truth for all tjenestemetadata, cross-linking og prisdata
+3. Mål-først priskalkulator — 4-fase wizard (mål → anbefaling → innsnevring → resultat) med Framer Motion
+4. AI chatbot-widget — Claude-drevet tjenersterådgiver med SSE streaming, sidebevissthet og in-chat lead capture
+5. Infrastruktur — ?tjeneste= pre-fill, breadcrumbs, aktiv nav-state på undersider
+6. Cross-linking med relaterte tjenester og validert strukturert data på alle sider
+
+---
+
 ## v1.0 Launch (Shipped: 2026-03-04)
 
 **Phases completed:** 5 phases (1, 2, 2.1, 3, 4), 15 plans
