@@ -130,6 +130,6 @@ Plans:
 | 15. Result Display | v1.2 | 1/1 | Complete | 2026-03-06 |
 | 16. Page Integration and Swap | v1.2 | 1/1 | Complete | 2026-03-06 |
 | 16.1. Remove per-item pricing from wizard | v1.2 | 1/1 | Complete | 2026-03-06 |
-| 17. Astro Blog Infrastructure | v1.3 | 2/2 | Complete | 2026-03-06 |
+| 17. Astro Blog Infrastructure | v1.3 | Complete    | 2026-03-06 | 2026-03-06 |
 | 18. Generation Pipeline Scripts | v1.3 | 0/2 | Not started | - |
 | 19. GitHub Actions + Repo Config | v1.3 | 0/1 | Not started | - |
