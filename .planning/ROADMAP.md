@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Launch** — Phases 1–4 (shipped 2026-03-04)
-- 🚧 **v1.1 Tjenesteutvidelse** — Phases 6–11 (in progress)
+- ✅ **v1.1 Tjenesteutvidelse** — Phases 6–12 (shipped 2026-03-06)
 
 ## Phases
 
@@ -20,7 +20,7 @@ See archive: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v1.1 Tjenesteutvidelse (In Progress)
+### ✅ v1.1 Tjenesteutvidelse (Shipped 2026-03-06)
 
 **Milestone Goal:** Utvide /tjenester til fullverdig tjenestekatalog med dedikerte undersider per tjenestetype, prisintervaller og kundefokusert innhold.
 
@@ -148,4 +148,4 @@ Plans:
 | 9. Specialist Service Pages | 5/5 | Complete   | 2026-03-05 | - |
 | 10. Cross-linking & Validation | 2/2 | Complete    | 2026-03-05 | - |
 | 11. Enhanced Price Calculator | 1/1 | Complete    | 2026-03-05 | - |
-| 12. AI Chatbot Widget | 1/2 | In Progress|  | - |
+| 12. AI Chatbot Widget | 2/2 | Complete | 2026-03-06 | - |

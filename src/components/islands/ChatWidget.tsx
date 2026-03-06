@@ -118,13 +118,13 @@ function renderMarkdown(text: string): React.ReactNode[] {
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
-    const bulletMatch = line.match(/^[\-\*]\s+(.+)/);
+    const bulletMatch = line.match(/^[-*]\s+(.+)/);
 
     if (bulletMatch) {
       // Collect consecutive bullet items
       const items: string[] = [];
       while (i < lines.length) {
-        const m = lines[i].match(/^[\-\*]\s+(.+)/);
+        const m = lines[i].match(/^[-*]\s+(.+)/);
         if (!m) break;
         items.push(m[1]);
         i++;
@@ -142,7 +142,7 @@ function renderMarkdown(text: string): React.ReactNode[] {
       } else {
         result.push(
           <span key={`p-${i}`}>
-            {i > 0 && lines[i - 1]?.trim() !== '' && !lines[i - 1]?.match(/^[\-\*]\s+/) && <br />}
+            {i > 0 && lines[i - 1]?.trim() !== '' && !lines[i - 1]?.match(/^[-*]\s+/) && <br />}
             {formatInline(line, `l-${i}`)}
           </span>
         );

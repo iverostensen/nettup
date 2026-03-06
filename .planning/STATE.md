@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Tjenesteutvidelse
-status: in-progress
-last_updated: "2026-03-05T23:39:42Z"
+status: complete
+last_updated: "2026-03-06T09:42:00Z"
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 18
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -18,22 +18,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 
 **Core value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Phase 12 — AI Chatbot Widget (IN PROGRESS)
+**Current focus:** v1.1 Tjenesteutvidelse — COMPLETE
 
 ## Current Position
 
-Phase: 12 of 12 (AI Chatbot Widget) — IN PROGRESS
-Plan: 1 of 2 complete (done: 12-01)
-Status: 12-01 complete — Streaming Claude Haiku chat endpoint with page-aware system prompt
-Last activity: 2026-03-06 - Completed quick task 4: Update /tjenester/[slug] pages
+Phase: 12 of 12 (AI Chatbot Widget) — COMPLETE
+Plan: 2 of 2 complete (done: 12-01, 12-02)
+Status: v1.1 milestone complete — all 18 plans across 7 phases delivered
+Last activity: 2026-03-06 - Completed 12-02: Chat widget UI with streaming and lead capture
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1 (v1.1)
-- Average duration: 2 min
+- Total plans completed: 2 (v1.1 Phase 12)
+- Average duration: 3 min
 - v1.0 reference: 15 plans, ~2 days
 
 **By Phase:**
@@ -60,6 +60,7 @@ Progress: [█████████░] 94%
 | Phase 10-cross-linking-validation P01 | 3 | 3 tasks | 8 files |
 | Phase 11 P01 | 3 | 2 tasks | 1 files |
 | Phase 12-ai-chatbot-widget P01 | 2 | 2 tasks | 5 files |
+| Phase 12-ai-chatbot-widget P02 | 4 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,10 @@ Recent decisions affecting current work:
 - [Phase 12]: Vercel adapter with static output preserved — per-route prerender=false for serverless
 - [Phase 12]: System prompt uses launchPriceRange (launch discount active) not priceRange
 - [Phase 12]: Max 20 messages rate-limit guard trimming oldest messages first
+- [Phase 12]: z-40 bubble / z-[60] open chat window — bubble below FloatingNav, open window above all
+- [Phase 12]: transition:persist on ChatWidget for cross-page conversation persistence
+- [Phase 12]: Lead capture prompt after 3rd assistant response — balances engagement vs interruption
+- [Phase 12]: Inline SVG icons (no icon library) consistent with FloatingNav/ContactForm patterns
 
 ### Pending Todos
 
@@ -135,5 +140,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 12-01-PLAN.md — Streaming chat API endpoint with system prompt
+Stopped at: Completed 12-02-PLAN.md — v1.1 milestone complete
 Resume file: None

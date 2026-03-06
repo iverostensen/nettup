@@ -63,11 +63,11 @@
 - [x] **CHAT-01**: Vercel-adapter konfigurert for hybrid rendering (statisk site + serverless API-endepunkt)
 - [x] **CHAT-02**: `/api/chat` POST-endepunkt streamer Claude-svar via SSE med API-nokkel kun pa serversiden
 - [x] **CHAT-03**: Systemprompt bygget fra services.ts-data med prisintervaller og sidebevissthet (currentPage)
-- [ ] **CHAT-04**: Flytende chat-boble pa alle sider (nedre hoyre hjorne) med teaser-tooltip pa norsk
-- [ ] **CHAT-05**: Chat-vindu med streaming meldingsvisning, skriveindikator og Framer Motion-animasjoner
-- [ ] **CHAT-06**: AI svarer pa norsk, oppgir prisintervaller, fungerer som tjenersteradgiver med fallback til /kontakt
-- [ ] **CHAT-07**: In-chat kontaktskjema sender til Formspree (xnjnzybj) med `kilde: chatbot` OG lenke til /kontakt
-- [ ] **CHAT-08**: Mobilresponsiv (fullbredde pa sma skjermer, fast panel pa desktop) med reduced-motion-stotte
+- [x] **CHAT-04**: Flytende chat-boble pa alle sider (nedre hoyre hjorne) med teaser-tooltip pa norsk
+- [x] **CHAT-05**: Chat-vindu med streaming meldingsvisning, skriveindikator og Framer Motion-animasjoner
+- [x] **CHAT-06**: AI svarer pa norsk, oppgir prisintervaller, fungerer som tjenersteradgiver med fallback til /kontakt
+- [x] **CHAT-07**: In-chat kontaktskjema sender til Formspree (xnjnzybj) med `kilde: chatbot` OG lenke til /kontakt
+- [x] **CHAT-08**: Mobilresponsiv (fullbredde pa sma skjermer, fast panel pa desktop) med reduced-motion-stotte
 
 ## v2 Requirements
 
@@ -124,14 +124,14 @@
 | CALC-03 | Phase 11 | Planned |
 | CALC-04 | Phase 11 | Planned |
 | CALC-05 | Phase 11 | Planned |
-| CHAT-01 | Phase 12 | Planned |
-| CHAT-02 | Phase 12 | Planned |
-| CHAT-03 | Phase 12 | Planned |
-| CHAT-04 | Phase 12 | Planned |
-| CHAT-05 | Phase 12 | Planned |
-| CHAT-06 | Phase 12 | Planned |
-| CHAT-07 | Phase 12 | Planned |
-| CHAT-08 | Phase 12 | Planned |
+| CHAT-01 | Phase 12 | Complete |
+| CHAT-02 | Phase 12 | Complete |
+| CHAT-03 | Phase 12 | Complete |
+| CHAT-04 | Phase 12 | Complete |
+| CHAT-05 | Phase 12 | Complete |
+| CHAT-06 | Phase 12 | Complete |
+| CHAT-07 | Phase 12 | Complete |
+| CHAT-08 | Phase 12 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 29 total
