@@ -42,6 +42,9 @@ Intern lenking:
   Format: [artikkeltittel](/blogg/slug)
 - Ikke tving lenkene inn — bare bruk dem der de passer organisk.
 
+Språk:
+- Bruk ALDRI tankestrek (—). Bruk bindestrek (-) eller skriv om setningen.
+
 Output-format: Kun Markdown (ingen JSON, ingen forklaring). Start direkte med innholdet.`;
 
 const METADATA_SYSTEM_PROMPT = `Du er et presist JSON-ekstraksjonssystem. Returner BARE gyldig JSON, ingen forklaring.
