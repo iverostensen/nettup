@@ -26,6 +26,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.6",
     "@eslint/js": "^9.0.0",
     "@tailwindcss/vite": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
@@ -37,7 +38,7 @@
     "prettier-plugin-astro": "^0.14.0",
     "puppeteer": "^24.34.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.0.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   }
 }
