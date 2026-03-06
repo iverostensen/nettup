@@ -40,7 +40,7 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
 
 **Milestone Goal:** Erstatte den enkle priskalkulator-wizarden med en dyp, additiv prisestimator drevet av en konfigurerbar prisfil -- med detaljerte sporsmaal, linjeoversikt og prisintervall.
 
-- [ ] **Phase 13: Pricing Config and Calculation Engine** - Typed pricing data model and pure additive calculation logic
+- [x] **Phase 13: Pricing Config and Calculation Engine** - Typed pricing data model and pure additive calculation logic (completed 2026-03-06)
 - [ ] **Phase 14: Wizard Steps and State** - Multi-step wizard UI with back navigation and selection modes
 - [ ] **Phase 15: Result Display** - Line-item breakdown, discount presentation, and contact CTA
 - [ ] **Phase 16: Page Integration and Swap** - Dedicated /priskalkulator page, /tjenester embed, old wizard replaced
@@ -56,7 +56,7 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
   2. A pure calculation function accepts a service type and set of selections, returning a min-max estimate with individual line items
   3. Launch discount (40%) is applied correctly to one-time prices in the calculation output
   4. Adding or changing a price requires editing only the config file -- zero UI code changes needed
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 13-01-PLAN.md — Typed pricing config with service data for all 3 services
@@ -123,7 +123,7 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 10. Cross-linking & Validation | v1.1 | 2/2 | Complete | 2026-03-05 |
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
-| 13. Pricing Config and Calculation Engine | 1/2 | In Progress|  | - |
+| 13. Pricing Config and Calculation Engine | 2/2 | Complete   | 2026-03-06 | - |
 | 14. Wizard Steps and State | v1.2 | 0/2 | Not started | - |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |

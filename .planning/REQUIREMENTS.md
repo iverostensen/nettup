@@ -10,9 +10,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 ### Prismotor
 
 - [x] **PRIS-01**: Pricing config file (TS) defines base prices, add-ons, and monthly costs per service
-- [ ] **PRIS-02**: Additive calculation engine computes total from base + selected add-ons
+- [x] **PRIS-02**: Additive calculation engine computes total from base + selected add-ons
 - [ ] **PRIS-03**: Result displays a min-max range estimate with "estimat" disclaimer
-- [ ] **PRIS-04**: Launch discount (40%) applied to calculated one-time prices
+- [x] **PRIS-04**: Launch discount (40%) applied to calculated one-time prices
 
 ### Wizard
 
@@ -61,9 +61,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | PRIS-01 | Phase 13 | Complete |
-| PRIS-02 | Phase 13 | Pending |
+| PRIS-02 | Phase 13 | Complete |
 | PRIS-03 | Phase 15 | Pending |
-| PRIS-04 | Phase 13 | Pending |
+| PRIS-04 | Phase 13 | Complete |
 | WIZARD-01 | Phase 14 | Pending |
 | WIZARD-02 | Phase 14 | Pending |
 | WIZARD-03 | Phase 14 | Pending |
