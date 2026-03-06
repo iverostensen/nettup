@@ -42,7 +42,7 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
 
 - [x] **Phase 13: Pricing Config and Calculation Engine** - Typed pricing data model and pure additive calculation logic (completed 2026-03-06)
 - [x] **Phase 14: Wizard Steps and State** - Multi-step wizard UI with back navigation and selection modes (completed 2026-03-06)
-- [ ] **Phase 15: Result Display** - Line-item breakdown, discount presentation, and contact CTA
+- [x] **Phase 15: Result Display** - Line-item breakdown, discount presentation, and contact CTA (completed 2026-03-06)
 - [ ] **Phase 16: Page Integration and Swap** - Dedicated /priskalkulator page, /tjenester embed, old wizard replaced
 
 ## Phase Details
@@ -86,7 +86,7 @@ Plans:
   2. Each selected add-on appears as a line item showing its individual price contribution
   3. Launch discount is displayed as crossed-out original price next to the discounted price
   4. A CTA button links to /kontakt with the selected service type pre-filled via query parameter
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 15-01-PLAN.md — ResultStep component with line-item breakdown, discount, CTA, and clipboard copy
@@ -125,5 +125,5 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 14. Wizard Steps and State | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 15. Result Display | v1.2 | 0/1 | Not started | - |
+| 15. Result Display | 1/1 | Complete   | 2026-03-06 | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |

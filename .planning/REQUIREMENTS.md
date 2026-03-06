@@ -11,7 +11,7 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 
 - [x] **PRIS-01**: Pricing config file (TS) defines base prices, add-ons, and monthly costs per service
 - [x] **PRIS-02**: Additive calculation engine computes total from base + selected add-ons
-- [ ] **PRIS-03**: Result displays a min-max range estimate with "estimat" disclaimer
+- [x] **PRIS-03**: Result displays a min-max range estimate with "estimat" disclaimer
 - [x] **PRIS-04**: Launch discount (40%) applied to calculated one-time prices
 
 ### Wizard
@@ -23,9 +23,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 
 ### Resultat
 
-- [ ] **RES-01**: Line-item breakdown showing each selected add-on with price contribution
-- [ ] **RES-02**: CTA links to /kontakt with service type pre-filled
-- [ ] **RES-03**: Launch discount shown as crossed-out original + discounted price
+- [x] **RES-01**: Line-item breakdown showing each selected add-on with price contribution
+- [x] **RES-02**: CTA links to /kontakt with service type pre-filled
+- [x] **RES-03**: Launch discount shown as crossed-out original + discounted price
 
 ### Plassering
 
@@ -62,15 +62,15 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 |-------------|-------|--------|
 | PRIS-01 | Phase 13 | Complete |
 | PRIS-02 | Phase 13 | Complete |
-| PRIS-03 | Phase 15 | Pending |
+| PRIS-03 | Phase 15 | Complete |
 | PRIS-04 | Phase 13 | Complete |
 | WIZARD-01 | Phase 14 | Complete |
 | WIZARD-02 | Phase 14 | Complete |
 | WIZARD-03 | Phase 14 | Complete |
 | WIZARD-04 | Phase 14 | Complete |
-| RES-01 | Phase 15 | Pending |
-| RES-02 | Phase 15 | Pending |
-| RES-03 | Phase 15 | Pending |
+| RES-01 | Phase 15 | Complete |
+| RES-02 | Phase 15 | Complete |
+| RES-03 | Phase 15 | Complete |
 | PAGE-01 | Phase 16 | Pending |
 | PAGE-02 | Phase 16 | Pending |
 | PAGE-03 | Phase 16 | Pending |
