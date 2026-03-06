@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-04 after v1.1 milestone start)
 Phase: 12 of 12 (AI Chatbot Widget) — IN PROGRESS
 Plan: 1 of 2 complete (done: 12-01)
 Status: 12-01 complete — Streaming Claude Haiku chat endpoint with page-aware system prompt
-Last activity: 2026-03-06 - Completed 12-01: API endpoint and system prompt
+Last activity: 2026-03-06 - Completed quick task 4: Update /tjenester/[slug] pages
 
 Progress: [█████████░] 94%
 
