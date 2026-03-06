@@ -43,7 +43,7 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] **Phase 13: Pricing Config and Calculation Engine** - Typed pricing data model and pure additive calculation logic (completed 2026-03-06)
 - [x] **Phase 14: Wizard Steps and State** - Multi-step wizard UI with back navigation and selection modes (completed 2026-03-06)
 - [x] **Phase 15: Result Display** - Line-item breakdown, discount presentation, and contact CTA (completed 2026-03-06)
-- [ ] **Phase 16: Page Integration and Swap** - Dedicated /priskalkulator page, /tjenester embed, old wizard replaced
+- [x] **Phase 16: Page Integration and Swap** - Dedicated /priskalkulator page, /tjenester embed, old wizard replaced (completed 2026-03-06)
 
 ## Phase Details
 
@@ -99,7 +99,7 @@ Plans:
   1. /priskalkulator exists as a dedicated page with the full calculator, page metadata, and navigation
   2. The same calculator component is embedded as a section on /tjenester with identical behavior
   3. The old PrisKalkulatorIsland is replaced -- no remnants of the old wizard code remain in production
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 16-01-PLAN.md — /priskalkulator dedicated page, BaseLayout pageLabels, wizard directory audit
@@ -126,4 +126,4 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 14. Wizard Steps and State | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 15. Result Display | 1/1 | Complete    | 2026-03-06 | - |
-| 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
+| 16. Page Integration and Swap | 1/1 | Complete   | 2026-03-06 | - |

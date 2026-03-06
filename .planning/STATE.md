@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Smart Priskalkulator
 status: unknown
-last_updated: "2026-03-06T14:09:35.626Z"
+last_updated: "2026-03-06T14:32:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
   total_plans: 5
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: 15 of 16 (Result Display) -- COMPLETE
-Plan: 1 of 1 in current phase
-Status: Phase 15 complete, ready for Phase 16
-Last activity: 2026-03-06 -- Completed 15-01 result display with price breakdown and actions
+Phase: 16 of 16 (Page Integration and Swap) -- COMPLETE
+Plan: 1 of 1 in current phase -- COMPLETE
+Status: Phase 16 complete -- v1.2 milestone fully delivered
+Last activity: 2026-03-06 -- Completed 16-01 /priskalkulator page and wizard dead code audit
 
 Progress: [██████████] 100%
 
@@ -43,6 +43,7 @@ Progress: [██████████] 100%
 | 13 | 2 | 3min | 1.5min |
 | 14 | 2 | 5min | 2.5min |
 | 15 | 1 | 2min | 2min |
+| 16 | 1 | 2min | 2min |
 
 ## Accumulated Context
 
@@ -58,6 +59,7 @@ Recent decisions affecting current work:
 - [14-01]: STEP_LABELS as Record<WizardStep, string> for type-safe lookup; GO_TO_STEP only allows backward navigation
 - [14-02]: Direction-aware slide animations (40px offset); single-select auto-advance, multi-select with Neste button
 - [15-01]: Inline SVG icons for clipboard/check; URLSearchParams for contact link query encoding
+- [16-01]: /priskalkulator not added to FloatingNav — tool page, not top-level nav section; inline page structure for tool pages (no _sections/ directory)
 
 ### Pending Todos
 
@@ -81,5 +83,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 15-01-PLAN.md (Phase 15 complete)
+Stopped at: Completed 16-01-PLAN.md (Phase 16 complete — v1.2 milestone fully delivered)
 Resume file: None

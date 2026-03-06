@@ -29,9 +29,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 
 ### Plassering
 
-- [ ] **PAGE-01**: Dedicated /priskalkulator page with full calculator
-- [ ] **PAGE-02**: Calculator also embedded as section on /tjenester
-- [ ] **PAGE-03**: Old PrisKalkulatorIsland replaced by new calculator component
+- [x] **PAGE-01**: Dedicated /priskalkulator page with full calculator
+- [x] **PAGE-02**: Calculator also embedded as section on /tjenester
+- [x] **PAGE-03**: Old PrisKalkulatorIsland replaced by new calculator component
 
 ## Future Requirements
 
@@ -71,9 +71,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 | RES-01 | Phase 15 | Complete |
 | RES-02 | Phase 15 | Complete |
 | RES-03 | Phase 15 | Complete |
-| PAGE-01 | Phase 16 | Pending |
-| PAGE-02 | Phase 16 | Pending |
-| PAGE-03 | Phase 16 | Pending |
+| PAGE-01 | Phase 16 | Complete |
+| PAGE-02 | Phase 16 | Complete |
+| PAGE-03 | Phase 16 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 14 total
