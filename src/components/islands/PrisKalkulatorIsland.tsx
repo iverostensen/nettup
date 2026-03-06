@@ -61,6 +61,14 @@ const narrowingQuestions: Record<ServiceSlug, NarrowingQuestion[]> = {
   ],
   nettbutikk: [
     {
+      question: 'Hvilken plattform passer best?',
+      options: [
+        { label: 'Shopify (enklest å drifte selv)', priceEstimate: '' },
+        { label: 'WooCommerce (WordPress-basert)', priceEstimate: '' },
+        { label: 'Skreddersydd løsning', priceEstimate: '' },
+      ],
+    },
+    {
       question: 'Hvor mange produkter skal du selge?',
       options: [
         { label: 'Under 50 produkter', priceEstimate: '' },
@@ -99,13 +107,13 @@ const includedItems: Record<ServiceSlug, string[]> = {
     'Responsivt design — mobil, tablet og desktop',
     'Skreddersydd design — ingen maler',
     'Grunnleggende SEO og kontaktskjema',
-    '30 dagers support etter lansering',
+    'Løpende support via månedlig abonnement',
   ],
   nettbutikk: [
-    'Shopify-oppsett med Vipps og kortbetaling',
+    'Plattformoppsett med Vipps og kortbetaling',
     'Produktkatalog og handlekurv',
     'Lagerstyring og ordrehåndtering',
-    '30 dagers support etter lansering',
+    'Løpende support via månedlig abonnement',
   ],
   landingsside: [
     'Konverteringsfokusert layout',
