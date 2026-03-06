@@ -13,9 +13,9 @@ Requirements for milestone v1.3 — Automatisk Blogg.
 - [ ] **INFRA-02**: Visitor can read a full article at `/blogg/[slug]` with formatted markdown content
 - [ ] **INFRA-03**: Article pages include Article JSON-LD and FAQPage JSON-LD structured data
 - [ ] **INFRA-04**: Article pages include BreadcrumbList JSON-LD
-- [ ] **INFRA-05**: Article pages display 2–3 related articles based on frontmatter `relatedSlugs`
+- [x] **INFRA-05**: Article pages display 2–3 related articles based on frontmatter `relatedSlugs`
 - [ ] **INFRA-06**: Blog is reachable from the main site footer and via homepage section (once articles exist)
-- [ ] **INFRA-07**: Article `<title>` uses keyword-first `seoTitle` field; article `<h1>` uses conversational `title` field
+- [x] **INFRA-07**: Article `<title>` uses keyword-first `seoTitle` field; article `<h1>` uses conversational `title` field
 
 ### Generation Pipeline (PIPE)
 
@@ -65,9 +65,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-02 | Phase 17 | Pending |
 | INFRA-03 | Phase 17 | Pending |
 | INFRA-04 | Phase 17 | Pending |
-| INFRA-05 | Phase 17 | Pending |
+| INFRA-05 | Phase 17 | Complete |
 | INFRA-06 | Phase 17 | Pending |
-| INFRA-07 | Phase 17 | Pending |
+| INFRA-07 | Phase 17 | Complete |
 | PIPE-01 | Phase 18 | Pending |
 | PIPE-02 | Phase 18 | Pending |
 | PIPE-03 | Phase 18 | Pending |

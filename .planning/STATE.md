@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Automatisk Blogg
-status: roadmap_complete
-last_updated: "2026-03-06T00:00:00.000Z"
+status: in_progress
+last_updated: "2026-03-06T19:07:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 5
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,24 +23,24 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 ## Current Position
 
 Phase: 17 of 19 (Astro Blog Infrastructure)
-Plan: — of 2
-Status: Ready to plan
-Last activity: 2026-03-06 — Roadmap created for v1.3
+Plan: 1 of 2 — Complete
+Status: In progress
+Last activity: 2026-03-06 — Completed 17-01 (content schema + blog components)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0 (v1.3)
-- Average duration: — min
-- Total execution time: —
+- Total plans completed: 1 (v1.3)
+- Average duration: 2 min
+- Total execution time: 2 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 17. Blog Infrastructure | 0/2 | - | - |
+| 17. Blog Infrastructure | 1/2 | 2 min | 2 min |
 | 18. Pipeline Scripts | 0/2 | - | - |
 | 19. GitHub Actions | 0/1 | - | - |
 
@@ -50,6 +50,8 @@ Progress: [░░░░░░░░░░] 0%
 
 Key decisions from research to carry into planning:
 
+- [17-01]: title vs seoTitle are distinct schema fields — title for H1 (conversational), seoTitle for <title> tag (keyword-first)
+- [17-01]: RelatedArticles renders nothing (not even heading) when related array is empty — prevents orphaned headings
 - [v1.3]: Content collection config at `src/content/config.ts` (legacy path, intentional for v1.3)
 - [v1.3]: Run `astro sync` immediately after creating content config — before any page components
 - [v1.3]: LIX threshold ≤ 55 (not 45) — Norwegian technical content needs the wider margin
@@ -81,5 +83,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Roadmap created — ready to plan Phase 17
+Stopped at: Completed 17-01-PLAN.md (blog infrastructure foundations)
 Resume file: None
