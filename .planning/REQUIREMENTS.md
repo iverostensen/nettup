@@ -119,11 +119,11 @@
 | PAGES-07 | Phase 9 | Complete |
 | SEO-01 | Phase 10 | Complete |
 | SEO-03 | Phase 10 | Complete |
-| CALC-01 | Phase 11 | Planned |
-| CALC-02 | Phase 11 | Planned |
-| CALC-03 | Phase 11 | Planned |
-| CALC-04 | Phase 11 | Planned |
-| CALC-05 | Phase 11 | Planned |
+| CALC-01 | Phase 11 | Complete |
+| CALC-02 | Phase 11 | Complete |
+| CALC-03 | Phase 11 | Complete |
+| CALC-04 | Phase 11 | Complete |
+| CALC-05 | Phase 11 | Complete |
 | CHAT-01 | Phase 12 | Complete |
 | CHAT-02 | Phase 12 | Complete |
 | CHAT-03 | Phase 12 | Complete |
