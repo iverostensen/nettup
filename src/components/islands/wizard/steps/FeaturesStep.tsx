@@ -8,10 +8,6 @@ interface FeaturesStepProps {
   onNext: () => void;
 }
 
-function formatAddonPrice(price: number): string {
-  return `+ ${price.toLocaleString('nb-NO')} kr`;
-}
-
 export function FeaturesStep({
   serviceType,
   selectedIds,
@@ -30,7 +26,6 @@ export function FeaturesStep({
           <SelectableCard
             key={feature.id}
             label={feature.label}
-            price={formatAddonPrice(feature.price)}
             selected={selectedIds.includes(feature.id)}
             onToggle={() => onToggle(feature.id)}
           />

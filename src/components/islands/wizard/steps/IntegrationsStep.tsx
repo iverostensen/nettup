@@ -8,10 +8,6 @@ interface IntegrationsStepProps {
   onNext: () => void;
 }
 
-function formatAddonPrice(price: number): string {
-  return `+ ${price.toLocaleString('nb-NO')} kr`;
-}
-
 export function IntegrationsStep({
   serviceType,
   selectedIds,
@@ -30,7 +26,6 @@ export function IntegrationsStep({
           <SelectableCard
             key={integration.id}
             label={integration.label}
-            price={formatAddonPrice(integration.price)}
             selected={selectedIds.includes(integration.id)}
             onToggle={() => onToggle(integration.id)}
           />

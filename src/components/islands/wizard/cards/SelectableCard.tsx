@@ -2,14 +2,12 @@ import clsx from 'clsx';
 
 interface SelectableCardProps {
   label: string;
-  price: string;
   selected: boolean;
   onToggle: () => void;
 }
 
 export function SelectableCard({
   label,
-  price,
   selected,
   onToggle,
 }: SelectableCardProps) {
@@ -26,7 +24,6 @@ export function SelectableCard({
     >
       <span className="font-medium text-text">{label}</span>
       <span className="flex items-center gap-2">
-        <span className="text-sm text-brand">{price}</span>
         {selected && (
           <svg
             className="h-5 w-5 text-brand"

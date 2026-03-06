@@ -6,11 +6,6 @@ interface DesignStepProps {
   onSelectDesign: (designId: string) => void;
 }
 
-function formatDesignPrice(price: number): string {
-  if (price === 0) return 'Inkludert';
-  return `+ ${price.toLocaleString('nb-NO')} kr`;
-}
-
 export function DesignStep({ serviceType, onSelectDesign }: DesignStepProps) {
   const designs = pricingConfig.services[serviceType].designs;
 
@@ -24,7 +19,6 @@ export function DesignStep({ serviceType, onSelectDesign }: DesignStepProps) {
           <SelectableCard
             key={design.id}
             label={design.label}
-            price={formatDesignPrice(design.price)}
             selected={false}
             onToggle={() => onSelectDesign(design.id)}
           />

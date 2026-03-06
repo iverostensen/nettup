@@ -12,10 +12,6 @@ const headings: Record<ServiceType, string> = {
   landingsside: 'Hvor stor er landingssiden?',
 };
 
-function formatPriceRange(min: number, max: number): string {
-  return `${min.toLocaleString('nb-NO')} \u2013 ${max.toLocaleString('nb-NO')} kr`;
-}
-
 export function SizeStep({ serviceType, onSelectSize }: SizeStepProps) {
   const sizes = pricingConfig.services[serviceType].sizes;
 
@@ -29,7 +25,6 @@ export function SizeStep({ serviceType, onSelectSize }: SizeStepProps) {
           <SelectableCard
             key={size.id}
             label={size.label}
-            price={formatPriceRange(size.minPrice, size.maxPrice)}
             selected={false}
             onToggle={() => onSelectSize(size.id)}
           />
