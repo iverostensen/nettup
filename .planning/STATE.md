@@ -1,31 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Tjenesteutvidelse
-status: archived
-last_updated: "2026-03-06T11:00:00Z"
+milestone: v1.2
+milestone_name: Smart Priskalkulator
+status: defining_requirements
+last_updated: "2026-03-06T12:00:00Z"
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 18
-  completed_plans: 18
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-06 after v1.1 milestone)
+See: .planning/PROJECT.md (updated 2026-03-06 after v1.2 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Planning next milestone
+**Current focus:** Defining requirements for v1.2 Smart Priskalkulator
 
 ## Current Position
 
-Milestone v1.1 Tjenesteutvidelse: ARCHIVED
-All 7 phases (6-12), 18 plans delivered and archived to .planning/milestones/
-
-Next step: `/gsd:new-milestone` to define v1.2 or v2.0
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-06 — Milestone v1.2 started
 
 ## Accumulated Context
 
@@ -51,5 +51,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: v1.1 milestone archived
+Stopped at: Defining v1.2 requirements
 Resume file: None

@@ -36,7 +36,18 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ### Active
 
-(No active milestone — use /gsd:new-milestone to define next)
+## Current Milestone: v1.2 Smart Priskalkulator
+
+**Goal:** Erstatte den enkle priskalkulator-wizarden med en dyp, additiv prisestimator som dekker alle 3 tjenester med detaljerte sporsmaal om storrelse, funksjonalitet, integrasjoner og designniva — drevet av en konfigurerbar prisfil.
+
+**Target features:**
+- Additiv prismodell: grunnpris + tillegg per feature/integrasjon/storrelse/design
+- Dype sporsmaal pa tvers av 4 kategorier (storrelse, features, integrasjoner, designniva)
+- Konfigurerbar prisfil (TS/JSON) for enkel oppdatering av priser
+- Resultat som prisintervall (min–maks) med linjeoversikt
+- Maanedlige kostnader ogsa additive basert pa valg
+- Dedikert /priskalkulator-side + seksjon pa /tjenester
+- Brukes internt av Nettup for kundeprising
 
 ### Deferred
 
@@ -93,4 +104,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | transition:persist on ChatWidget | Cross-page conversation persistence | ✓ Good — conversations survive navigation |
 
 ---
-*Last updated: 2026-03-06 after v1.1 milestone*
+*Last updated: 2026-03-06 after v1.2 milestone start*
