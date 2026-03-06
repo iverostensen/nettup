@@ -67,6 +67,10 @@ Recent decisions affecting current work:
 - Verify Shopify platform fee figure before publishing on nettbutikk page (research flag)
 - Verify Nettup's Shopify Partner status before writing nettbutikk credibility copy (research flag)
 
+### Roadmap Evolution
+
+- Phase 16.1 inserted after Phase 16: Remove per-item pricing from wizard, show only total estimate (URGENT)
+
 ### Blockers/Concerns
 
 None.
