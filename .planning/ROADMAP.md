@@ -109,7 +109,7 @@ Plans:
 **Goal:** ResultStep shows selected items as a name-only summary list with the total estimate as the clear focal point — no per-item prices, prominent total display
 **Requirements**: UI-SIMPLIFY-01
 **Depends on:** Phase 16
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 16.1-01-PLAN.md — Simplify ResultStep: name-only item rows, prominent total, updated clipboard text
@@ -137,4 +137,4 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16 -> 16.1
 | 14. Wizard Steps and State | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 15. Result Display | 1/1 | Complete    | 2026-03-06 | - |
 | 16. Page Integration and Swap | 1/1 | Complete    | 2026-03-06 | - |
-| 16.1. Remove per-item pricing from wizard | v1.2 | 0/1 | In Progress | - |
+| 16.1. Remove per-item pricing from wizard | 1/1 | Complete   | 2026-03-06 | - |

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Smart Priskalkulator
 status: unknown
-last_updated: "2026-03-06T14:35:05.447Z"
+last_updated: "2026-03-06T15:06:08.185Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 6
-  completed_plans: 6
+  total_phases: 5
+  completed_phases: 5
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: 16 of 16 (Page Integration and Swap) -- COMPLETE
+Phase: 16.1 of 16.1 (Remove Per-Item Pricing from Wizard) -- COMPLETE
 Plan: 1 of 1 in current phase -- COMPLETE
-Status: Phase 16 complete -- v1.2 milestone fully delivered
-Last activity: 2026-03-06 -- Completed 16-01 /priskalkulator page and wizard dead code audit
+Status: Phase 16.1 complete -- per-item pricing removed, total is now visual focal point
+Last activity: 2026-03-06 -- Completed 16.1-01 ResultStep simplified, total upgraded to text-2xl
 
 Progress: [██████████] 100%
 
@@ -44,6 +44,7 @@ Progress: [██████████] 100%
 | 14 | 2 | 5min | 2.5min |
 | 15 | 1 | 2min | 2min |
 | 16 | 1 | 2min | 2min |
+| 16.1 | 1 | 3min | 3min |
 
 ## Accumulated Context
 
@@ -60,6 +61,7 @@ Recent decisions affecting current work:
 - [14-02]: Direction-aware slide animations (40px offset); single-select auto-advance, multi-select with Neste button
 - [15-01]: Inline SVG icons for clipboard/check; URLSearchParams for contact link query encoding
 - [16-01]: /priskalkulator not added to FloatingNav — tool page, not top-level nav section; inline page structure for tool pages (no _sections/ directory)
+- [Phase 16.1]: Item rows show label only (text-text-muted) — removes per-item prices to simplify decision path and focus attention on total estimate
 
 ### Pending Todos
 
@@ -87,5 +89,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 16-01-PLAN.md (Phase 16 complete — v1.2 milestone fully delivered)
+Stopped at: Completed 16.1-01-PLAN.md (Phase 16.1 complete — per-item pricing removed from wizard)
 Resume file: None
