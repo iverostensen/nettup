@@ -1,0 +1,241 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { pricingConfig, type LineItem } from '@/config/pricing-config';
+import { calculateEstimate } from '@/lib/calculate-estimate';
+import { fadeUp, staggerContainer, springs } from '@/lib/animation';
+import type { WizardState } from '../wizard-types';
+
+interface ResultStepProps {
+  state: WizardState;
+  onReset: () => void;
+}
+
+const CATEGORY_ORDER: LineItem['category'][] = ['size', 'feature', 'integration', 'design'];
+
+const CATEGORY_LABELS: Record<LineItem['category'], string> = {
+  size: 'Storrelse',
+  feature: 'Funksjoner',
+  integration: 'Integrasjoner',
+  design: 'Design',
+};
+
+const SERVICE_LABELS: Record<string, string> = {
+  nettside: 'Nettside',
+  nettbutikk: 'Nettbutikk',
+  landingsside: 'Landingsside',
+};
+
+function formatPrice(price: number): string {
+  return price.toLocaleString('nb-NO');
+}
+
+function ClipboardIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z" />
+      <path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+export function ResultStep({ state, onReset }: ResultStepProps) {
+  const [copied, setCopied] = useState(false);
+
+  const estimate = calculateEstimate({
+    serviceType: state.serviceType!,
+    sizeId: state.sizeId!,
+    featureIds: state.featureIds,
+    integrationIds: state.integrationIds,
+    designId: state.designId!,
+  });
+
+  const grouped = CATEGORY_ORDER
+    .map((cat) => ({
+      category: cat,
+      label: CATEGORY_LABELS[cat],
+      items: estimate.lineItems.filter((item) => item.category === cat),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  const service = pricingConfig.services[estimate.serviceType];
+
+  function getSizeRange(item: LineItem): { min: number; max: number } | null {
+    if (item.category !== 'size') return null;
+    const tier = service.sizes.find((s) => s.id === item.id);
+    return tier ? { min: tier.minPrice, max: tier.maxPrice } : null;
+  }
+
+  function formatItemPrice(item: LineItem): string {
+    const range = getSizeRange(item);
+    if (range) {
+      return `${formatPrice(range.min)} \u2013 ${formatPrice(range.max)} kr`;
+    }
+    return `${formatPrice(item.price)} kr`;
+  }
+
+  const contactParams = new URLSearchParams({
+    tjeneste: estimate.serviceType,
+    estimat: `${estimate.discounted.min}-${estimate.discounted.max}`,
+  });
+  const contactHref = `/kontakt?${contactParams.toString()}`;
+
+  function buildClipboardText(): string {
+    const lines: string[] = [
+      'Prisestimat fra Nettup',
+      `Tjeneste: ${SERVICE_LABELS[estimate.serviceType] ?? estimate.serviceType}`,
+      '',
+    ];
+
+    for (const group of grouped) {
+      lines.push(`${group.label}:`);
+      for (const item of group.items) {
+        lines.push(`- ${item.label}: ${formatItemPrice(item)}`);
+      }
+      lines.push('');
+    }
+
+    lines.push(`Totalt: ${formatPrice(estimate.discounted.min)} \u2013 ${formatPrice(estimate.discounted.max)} kr`);
+    if (estimate.discountActive) {
+      lines.push(`Lanseringstilbud: ${estimate.discountPercent}% rabatt`);
+    }
+    if (estimate.monthly > 0) {
+      lines.push(`Drift og hosting: ${formatPrice(estimate.monthly)} kr/mnd`);
+    }
+    lines.push('');
+    lines.push('Kontakt oss: https://nettup.no/kontakt');
+
+    return lines.join('\n');
+  }
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(buildClipboardText());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API not available
+    }
+  }
+
+  return (
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col gap-6"
+    >
+      {/* Header with optional discount badge */}
+      <motion.div variants={fadeUp} transition={springs.gentle} className="flex items-center gap-3">
+        <h2 className="text-xl font-semibold text-text">Ditt prisestimat</h2>
+        {estimate.discountActive && (
+          <span className="rounded-full bg-brand/10 px-3 py-0.5 text-xs font-medium text-brand">
+            Lanseringstilbud
+          </span>
+        )}
+      </motion.div>
+
+      {/* Line items grouped by category */}
+      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-4">
+        {grouped.map((group) => (
+          <div key={group.category}>
+            <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-text-muted">
+              {group.label}
+            </h3>
+            <div className="flex flex-col gap-1.5">
+              {group.items.map((item) => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span className="text-text">{item.label}</span>
+                  <span className="text-text-muted">{formatItemPrice(item)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* One-time total */}
+      <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-baseline justify-between">
+            <span className="text-sm font-medium text-text-muted">Engangspris</span>
+            {estimate.discountActive ? (
+              <div className="flex flex-col items-end gap-0.5">
+                <span className="text-sm text-text-muted line-through">
+                  {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
+                </span>
+                <span className="text-lg font-bold text-brand">
+                  {formatPrice(estimate.discounted.min)} &ndash; {formatPrice(estimate.discounted.max)} kr
+                </span>
+              </div>
+            ) : (
+              <span className="text-lg font-bold text-text">
+                {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
+              </span>
+            )}
+          </div>
+          {estimate.discountActive && (
+            <p className="text-right text-sm text-emerald-400">
+              Spar {formatPrice(estimate.oneTime.min - estimate.discounted.min)} &ndash; {formatPrice(estimate.oneTime.max - estimate.discounted.max)} kr
+            </p>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Monthly cost */}
+      {estimate.monthly > 0 && (
+        <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
+          <div className="flex items-baseline justify-between">
+            <span className="text-sm font-medium text-text-muted">Drift og hosting</span>
+            <span className="text-text">{formatPrice(estimate.monthly)} kr/mnd</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Disclaimer */}
+      <motion.p variants={fadeUp} transition={springs.gentle} className="text-xs text-text-muted">
+        Dette er et estimat &ndash; endelig pris avhenger av prosjektets omfang.
+      </motion.p>
+
+      {/* Action buttons */}
+      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col items-center gap-3 sm:flex-row">
+        <a
+          href={contactHref}
+          className="w-full rounded-md bg-brand px-6 py-3 text-center font-semibold text-surface transition-colors hover:bg-brand-light sm:w-auto"
+        >
+          Kontakt oss for tilbud
+        </a>
+        <button
+          type="button"
+          onClick={onReset}
+          className="w-full rounded-md border border-white/20 px-6 py-3 text-text transition-colors hover:border-white/40 sm:w-auto"
+        >
+          Beregn pa nytt
+        </button>
+      </motion.div>
+
+      {/* Clipboard copy */}
+      <motion.div variants={fadeUp} transition={springs.gentle} className="flex justify-center">
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-text"
+        >
+          {copied ? (
+            <CheckIcon className="h-4 w-4 text-emerald-400" />
+          ) : (
+            <ClipboardIcon className="h-4 w-4" />
+          )}
+          {copied ? 'Kopiert!' : 'Kopier estimat'}
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
