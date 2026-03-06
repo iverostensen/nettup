@@ -10,6 +10,7 @@ import { SizeStep } from './wizard/steps/SizeStep';
 import { FeaturesStep } from './wizard/steps/FeaturesStep';
 import { IntegrationsStep } from './wizard/steps/IntegrationsStep';
 import { DesignStep } from './wizard/steps/DesignStep';
+import { ResultStep } from './wizard/steps/ResultStep';
 
 function createSlideVariants(prefersReducedMotion: boolean | null): Variants {
   const offset = prefersReducedMotion ? 0 : 40;
@@ -32,7 +33,7 @@ export default function SmartPrisKalkulator() {
 
   const currentStepIndex = STEP_ORDER.indexOf(state.currentStep);
   const slideVariants = createSlideVariants(prefersReducedMotion);
-  const showBack = state.currentStep !== 'goal';
+  const showBack = state.currentStep !== 'goal' && state.currentStep !== 'result';
 
   function handleStepClick(index: number) {
     dispatch({ type: 'GO_TO_STEP', step: STEP_ORDER[index] });
@@ -105,12 +106,12 @@ export default function SmartPrisKalkulator() {
         );
 
       case 'result':
+        if (!state.serviceType || !state.sizeId || !state.designId) return null;
         return (
-          <div className="py-12 text-center">
-            <p className="text-lg text-text-muted">
-              Resultat kommer i fase 15
-            </p>
-          </div>
+          <ResultStep
+            state={state}
+            onReset={() => dispatch({ type: 'RESET' })}
+          />
         );
 
       default:
