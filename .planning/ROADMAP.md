@@ -98,16 +98,16 @@ Plans:
 **Goal**: A blog article is generated and published automatically every Monday at 08:00 UTC — no manual action required after setup
 **Depends on**: Phase 18
 **Requirements**: CI-01, CI-02, CI-03, CI-04
-**Notes**: GITHUB_TOKEN cannot trigger CI on its own PRs (GitHub loop-prevention). A PAT with `contents: write` + `pull-requests: write` scope must be stored as `secrets.GH_PAT` and used for both checkout and `gh pr create`. Auto-merge requires a branch protection rule on `main` requiring the `build` check — enabling the settings toggle alone is insufficient. Verify the exact job name in `.github/workflows/ci.yml` before configuring the branch protection rule.
+**Notes**: GITHUB_TOKEN cannot trigger CI on its own PRs (GitHub loop-prevention). A PAT with `contents: write` + `pull-requests: write` scope must be stored as `secrets.GH_PAT` and used for both checkout and `gh pr create`. Auto-merge requires a branch protection rule on `main` requiring the `Lint & Build` check (exact job name from ci.yml) — enabling the settings toggle alone is insufficient.
 **Success Criteria** (what must be TRUE):
   1. Every Monday at 08:00 UTC, the workflow runs automatically without any manual trigger and produces either a new PR or a job summary explaining why generation was skipped
   2. Workflow can also be triggered manually via `workflow_dispatch` from the GitHub Actions UI
   3. When the quality gate rejects an article, the workflow exits with code 0, writes a job summary with the rejection reason, and does not send a CI failure notification
   4. When CI passes on a pipeline PR, the PR auto-merges and Vercel deploys the new article live
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 19-01: blog-generate.yml workflow, repo secrets (ANTHROPIC_API_KEY, GH_PAT), branch protection rule, auto-merge settings
+- [ ] 19-01-PLAN.md — blog-generate.yml workflow, repo secrets (ANTHROPIC_API_KEY, GH_PAT), branch protection rule, auto-merge settings
 
 ## Progress
 
