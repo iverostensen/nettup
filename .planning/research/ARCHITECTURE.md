@@ -1,399 +1,467 @@
-# Architecture Research
+# Architecture: Smart Additive Price Calculator (v1.2)
 
-**Domain:** Service sub-pages integration into existing Astro 5 marketing site
-**Researched:** 2026-03-04
-**Confidence:** HIGH (based on direct codebase analysis of all relevant files; no inference required)
+**Domain:** Multi-step additive pricing wizard for web agency services
+**Researched:** 2026-03-06
+**Confidence:** HIGH (based on direct analysis of existing codebase -- all decisions grounded in current patterns)
 
-## Standard Architecture
+## Current State Analysis
+
+The existing `PrisKalkulatorIsland.tsx` is a **single 379-line React component** with:
+- Hardcoded questions and prices inline (not config-driven)
+- Simple linear flow: goal -> recommend -> narrow (2-3 questions) -> result
+- Pricing logic embedded in the last narrowing option's `priceEstimate` string
+- State managed via single `useState<State>` with phase/step tracking
+- No calculation engine -- the price is a static string on the final option
+
+**What works well and must be preserved:**
+- AnimatePresence slide transitions with `springs.gentle` from `lib/animation.ts`
+- `useReducedMotion` accessibility support
+- Integration pattern: Astro Section wraps `<PrisKalkulatorIsland client:visible />`
+- Connection to `services.ts` for service metadata (name, tagline, CTA param)
+- CTA flow linking to `/kontakt?tjeneste=`
+- Card-style UI with `bg-surface-raised`, `border-white/10`, hover states
+
+**What must change:**
+- Questions and options must come from config, not hardcoded arrays
+- Pricing must be computed additively (base + sum of adjustments), not stored as a string on the final option
+- Result must show a line-item breakdown with min-max range
+- Monthly costs must also be additive
+- More question categories (4 vs current 2-3)
+- Back navigation needed (users currently can only go forward or reset)
+- Component must work both embedded on /tjenester and standalone on /priskalkulator
+
+**Existing config files that change:**
+- `src/config/pricing.ts` -- currently defines old `Pakke` interface (Enkel/Standard/Premium tiers). Will be **replaced** with additive pricing config. The Pakke model is no longer used anywhere meaningful.
+
+## Recommended Architecture
 
 ### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Config Layer                             │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │ pricing.ts  │  │ services.ts  │  │    brand.ts      │   │
-│  │ (existing)  │  │   (NEW)      │  │   (existing)     │   │
-│  └──────┬──────┘  └──────┬───────┘  └──────────────────┘   │
-│         │                │                                   │
-├─────────┴────────────────┴───────────────────────────────── ┤
-│                     Page Layer                               │
-│  ┌────────────────┐    ┌────────────────────────────────┐   │
-│  │ tjenester/     │    │ tjenester/[slug].astro         │   │
-│  │ index.astro    │    │ (NEW — getStaticPaths)         │   │
-│  │ (modify)       │    │                                │   │
-│  └────────────────┘    └────────────────────────────────┘   │
-│                                                              │
-├──────────────────────────────────────────────────────────────┤
-│                  Section Components                          │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ tjenester/_sections/ (existing, to be restructured)  │   │
-│  │ tjenester/[slug]/_sections/ (NOT needed — see below) │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-├──────────────────────────────────────────────────────────────┤
-│                   UI Primitives (unchanged)                  │
-│  ┌──────────┐  ┌──────────┐  ┌─────────┐  ┌────────────┐  │
-│  │ Button   │  │   Card   │  │ Section │  │SectionHeader│  │
-│  └──────────┘  └──────────┘  └─────────┘  └────────────┘  │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    Config Layer                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │ pricing.ts   │  │ services.ts  │  │launchOffer.ts│  │
+│  │ (REPLACE)    │  │ (unchanged)  │  │ (unchanged)  │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
+│         │                 │                  │           │
+├─────────┴─────────────────┴──────────────────┴──────────┤
+│                  Calculation Layer                        │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │ lib/pricing-engine.ts (NEW)                      │   │
+│  │ Pure functions: selections + config → estimate   │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │                                │
+├─────────────────────────┴───────────────────────────────┤
+│                    State Layer                            │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │ priskalkulator/useWizardState.ts (NEW)           │   │
+│  │ useReducer: actions → state transitions          │   │
+│  │ Derives estimate on every selection change       │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │                                │
+├─────────────────────────┴───────────────────────────────┤
+│                    UI Layer                               │
+│  ┌─────────────────────────────────────────────────────┐│
+│  │ PrisKalkulatorIsland.tsx (REWRITE — thin shell)    ││
+│  │   ├── WizardShell.tsx (progress + AnimatePresence) ││
+│  │   ├── GoalStep.tsx (service selection)             ││
+│  │   ├── QuestionStep.tsx (generic category renderer) ││
+│  │   └── ResultView.tsx (line-item breakdown + CTA)   ││
+│  └─────────────────────────────────────────────────────┘│
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│                   Mount Points                            │
+│  ┌────────────────────┐  ┌─────────────────────────┐    │
+│  │/tjenester (section)│  │/priskalkulator (page)   │    │
+│  │ client:visible     │  │ client:visible          │    │
+│  └────────────────────┘  └─────────────────────────┘    │
+└──────────────────────────────────────────────────────────┘
 ```
 
-### Component Responsibilities
-
-| Component | Responsibility | Typical Implementation |
-|-----------|----------------|------------------------|
-| `src/config/services.ts` | All service data (slug, name, description, price range, features, FAQ, JSON-LD) | TypeScript array of `Service` objects |
-| `src/pages/tjenester/index.astro` | Overview page — links to each sub-page via service cards | Modified to import from `services.ts` |
-| `src/pages/tjenester/[slug].astro` | Single template renders all 7 service pages | `getStaticPaths()` reads `services.ts` |
-| `src/layouts/BaseLayout.astro` | SEO, analytics, breadcrumbs, scroll reveal | Unchanged — consumes `<slot name="head">` for per-page schemas |
-
-## Recommended Project Structure
+### Component Decomposition
 
 ```
 src/
 ├── config/
-│   ├── services.ts         # NEW — canonical data source for all 7 services
-│   ├── pricing.ts          # KEEP unchanged (or deprecate once overview is rewritten)
-│   ├── brand.ts            # Unchanged
-│   ├── testimonials.ts     # Unchanged
-│   └── projects.ts         # Unchanged
+│   └── pricing.ts              ← REPLACE: Additive pricing config
+│                                  (replaces old Pakke tier model)
+├── lib/
+│   └── pricing-engine.ts       ← NEW: Pure calculation functions
+│                                  No React, no UI — just math
+├── components/
+│   ├── islands/
+│   │   └── PrisKalkulatorIsland.tsx  ← REWRITE: Thin orchestrator
+│   │
+│   └── priskalkulator/         ← NEW: Sub-components (not islands)
+│       ├── types.ts             ← Shared TypeScript types
+│       ├── useWizardState.ts    ← Custom hook with useReducer
+│       ├── WizardShell.tsx      ← AnimatePresence + progress bar
+│       ├── GoalStep.tsx         ← Service selection (3 cards)
+│       ├── QuestionStep.tsx     ← Renders any question category
+│       └── ResultView.tsx       ← Line-item breakdown + CTAs
 │
-├── pages/
-│   └── tjenester/
-│       ├── index.astro          # MODIFY — rewire to use services.ts, add service cards
-│       ├── [slug].astro         # NEW — dynamic template for all 7 sub-pages
-│       └── _sections/
-│           ├── Pakker.astro     # MAY ARCHIVE (pricing tier approach being replaced)
-│           ├── TjenesteCatalog.astro   # NEW — overview page service card grid
-│           ├── Inkludert.astro  # KEEP or archive
-│           ├── Support.astro    # KEEP or archive
-│           ├── FAQ.astro        # KEEP for overview page
-│           └── TjenesterCTA.astro     # KEEP or update copy
-│
-└── components/
-    └── ui/                 # Unchanged — Button, Card, Section, SectionHeader
+└── pages/
+    ├── priskalkulator/
+    │   └── index.astro          ← NEW: Dedicated calculator page
+    └── tjenester/
+        └── _sections/
+            └── PrisKalkulator.astro  ← MINOR UPDATE: subtitle text
 ```
 
-### Structure Rationale
+**Why this decomposition:**
+- The current 379-line monolith will grow to 800+ with 4 question categories, multi-select, back navigation, and a line-item result. Splitting is necessary.
+- Sub-components go in `components/priskalkulator/` (not `islands/`) because they are not independently hydrated -- only the top-level island is the hydration boundary.
+- `pricing-engine.ts` as a pure module enables: (a) unit testing without React, (b) internal use by Nettup for quoting, (c) potential server-side reuse.
+- `useWizardState` hook separates state logic from rendering.
 
-- **`src/config/services.ts` (new):** Single source of truth for all 7 services. Every piece of data that appears on both the overview page AND the sub-pages lives here — slug, name, shortDescription, fullDescription, priceRange, deliveryTime, features, faqs, etc. No duplication between files.
-- **`[slug].astro` single template:** 7 service pages, 1 template. Data drives content, not separate files. Adding an 8th service in the future means adding one object to `services.ts` — nothing else.
-- **No `_sections/` subdirectory per service:** Service sub-pages have identical structure (hero, what-you-get, price range, FAQ, CTA). A single `[slug].astro` template handles all of them. Section directories are for page-specific layouts that genuinely differ (like `_home/` with Problem, Solution, WhyNettup, etc.).
+### Component Responsibilities
 
-## Architectural Patterns
+| Component | Responsibility | Communicates With |
+|-----------|---------------|-------------------|
+| `pricing.ts` (config) | All prices, questions, options, adjustments | Read by useWizardState |
+| `pricing-engine.ts` (lib) | Pure calculation: config + selections -> estimate | Called by useWizardState |
+| `useWizardState.ts` (hook) | State machine via useReducer, derives estimate | Drives all sub-components |
+| `PrisKalkulatorIsland.tsx` | Top-level island, hydration boundary, mode prop | Mounts WizardShell with hook |
+| `WizardShell.tsx` | AnimatePresence wrapper, progress indicator | Renders current step component |
+| `GoalStep.tsx` | Service selection UI (3 goal cards) | Dispatches SELECT_SERVICE |
+| `QuestionStep.tsx` | Renders any question category (single or multi) | Dispatches SELECT/DESELECT_OPTION |
+| `ResultView.tsx` | Line-item breakdown, price range, CTAs | Reads estimate from hook |
+| `services.ts` (existing) | Service metadata (name, tagline, slug) | Read by GoalStep + ResultView |
+| `launchOffer.ts` (existing) | Remaining launch slots | Read by ResultView for urgency |
 
-### Pattern 1: Dynamic Route with getStaticPaths
+## Pricing Config Structure
 
-**What:** Single `[slug].astro` file generates all 7 service pages at build time by reading `services.ts`.
-**When to use:** When multiple pages share identical structure and differ only in data. Exactly this case.
-**Trade-offs:** Pro: one file to maintain, data-driven, consistent across all 7 pages. Con: cannot easily give one service page a radically different layout. For this milestone, identical layout per sub-page is the correct call.
+Replace the current `pricing.ts` (Pakke interface) with a service-centric additive model:
 
-**Example:**
 ```typescript
-// src/pages/tjenester/[slug].astro
----
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { services } from '@/config/services';
-import type { Service } from '@/config/services';
+// src/config/pricing.ts
 
-export function getStaticPaths() {
-  return services.map((service) => ({
-    params: { slug: service.slug },
-    props: { service },
-  }));
+type ServiceSlug = 'nettside' | 'nettbutikk' | 'landingsside';
+
+interface PricingConfig {
+  services: Record<ServiceSlug, ServicePricing>;
+  launchDiscount: number; // 0.4 = 40%
 }
 
-interface Props { service: Service; }
-const { service } = Astro.props;
+interface ServicePricing {
+  basePriceRange: { min: number; max: number };
+  baseMonthly: number;
+  categories: QuestionCategory[];
+}
 
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": service.jsonLd.name,
-  "description": service.jsonLd.description,
-  "provider": { "@type": "Organization", "name": "Nettup", "url": "https://nettup.no" },
-  "areaServed": { "@type": "Country", "name": "Norway" },
-  "offers": {
-    "@type": "Offer",
-    "priceSpecification": {
-      "@type": "PriceSpecification",
-      "minPrice": service.priceRange.min,
-      "maxPrice": service.priceRange.max,
-      "priceCurrency": "NOK"
-    }
-  }
-};
----
-<BaseLayout title={service.meta.title} description={service.meta.description}>
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
-  </Fragment>
+interface QuestionCategory {
+  id: string;              // 'size' | 'features' | 'integrations' | 'design'
+  label: string;           // Norwegian display name for progress bar
+  question: string;        // The question text shown to user
+  type: 'single' | 'multi'; // Single-select (radio) or multi-select (checkbox)
+  options: PricingOption[];
+}
+
+interface PricingOption {
+  id: string;
+  label: string;
+  description?: string;     // Optional sub-label
+  priceAdjustment: { min: number; max: number }; // Added to running total
+  monthlyAdjustment?: number;                     // Added to base monthly
+}
+```
+
+**Why this structure:**
+- `basePriceRange` with min/max produces range estimates from the start
+- Each option's `priceAdjustment` is also a range -- these naturally sum to a final min-max
+- `monthlyAdjustment` is optional because not all choices affect monthly cost
+- `type: 'multi'` allows features/integrations to be multi-select (checkboxes) while size/design remain single-select
+- Categories are ordered in the array -- the wizard renders them in sequence
+- Plain TypeScript object -- update prices by editing one file, no component changes
+
+**Why NOT multipliers:** For 3 services with 4 categories, additive adjustments are simpler, more transparent to users ("CMS adds 3000-5000 kr"), and easier to maintain. A multiplier system adds complexity without benefit when prices are already min-max ranges. If a future service needs multiplicative pricing, add an optional `multiplier` field to PricingOption later -- the engine can handle it then.
+
+## Calculation Engine
+
+```typescript
+// src/lib/pricing-engine.ts
+
+interface PriceEstimate {
+  oneTime: { min: number; max: number };
+  monthly: number;
+  lineItems: LineItem[];
+  discountedOneTime: { min: number; max: number };
+}
+
+interface LineItem {
+  category: string;       // Category label (Norwegian)
+  selection: string;      // Selected option label(s)
+  priceRange: { min: number; max: number };
+  monthlyAdd: number;
+}
+
+function calculateEstimate(
+  serviceConfig: ServicePricing,
+  selections: Map<string, string[]>,  // categoryId -> selected optionId(s)
+  discount: number
+): PriceEstimate {
+  // 1. Start with base price range
+  // 2. For each category with selections, sum adjustments
+  // 3. Multi-select: sum all selected options' adjustments
+  // 4. Single-select: use the one selected option's adjustment
+  // 5. Apply discount to one-time total
+  // 6. Return estimate with line items for breakdown display
+}
+```
+
+**Design decisions:**
+- Pure function, no side effects -- takes config + selections, returns estimate
+- Returns `lineItems` so ResultView can show exactly what the user chose and what each costs
+- Handles both single-select and multi-select (multi = sum all selected adjustments)
+- Discount applied as a separate step, keeping pre-discount visible for price anchoring
+
+## State Management
+
+Use `useReducer` instead of the current `useState`:
+
+```typescript
+// src/components/priskalkulator/useWizardState.ts
+
+type WizardPhase = 'goal' | 'questions' | 'result';
+
+interface WizardState {
+  phase: WizardPhase;
+  selectedService: ServiceSlug | null;
+  currentCategoryIndex: number;
+  selections: Map<string, string[]>;  // categoryId -> optionId(s)
+  estimate: PriceEstimate | null;
+  direction: 1 | -1;                  // For animation direction
+}
+
+type WizardAction =
+  | { type: 'SELECT_SERVICE'; service: ServiceSlug }
+  | { type: 'SELECT_OPTION'; categoryId: string; optionId: string; multi: boolean }
+  | { type: 'DESELECT_OPTION'; categoryId: string; optionId: string }
+  | { type: 'NEXT_CATEGORY' }
+  | { type: 'PREV_CATEGORY' }
+  | { type: 'GO_BACK' }              // Navigate to previous step
+  | { type: 'RESET' };
+
+function useWizardState(config: PricingConfig) {
+  // Reducer recalculates estimate on every selection change
+  // Derives current question from config + currentCategoryIndex
+  // Exposes: state, dispatch, currentCategory, totalCategories, canGoBack
+}
+```
+
+**Why useReducer over useState:**
+- Current code already has implicit state machine logic spread across 4 handler functions
+- With 4 categories, multi-select, and back navigation, state transitions get complex enough that a reducer prevents stale-state bugs
+- Actions are dispatchable from any sub-component without prop drilling multiple callbacks
+- The `GO_BACK` action is trivial in a reducer (decrement index, set direction = -1) but messy with useState
+
+**Why NOT external state management (Zustand, Context, etc.):**
+- The calculator is a single React island. No state crosses the island boundary.
+- React Context would be overkill for one component tree of 5 components.
+- Adding a state library dependency violates the "no new deps without good reason" constraint.
+
+## Sharing Between Pages
+
+The component is already sharable via the existing React island pattern. Same component, two mount points:
+
+**On /tjenester (embedded section) -- existing pattern, minimal change:**
+```astro
+<!-- src/pages/tjenester/_sections/PrisKalkulator.astro -->
+<Section>
+  <SectionHeader
+    title="Hva koster det?"
+    subtitle="Velg tjeneste og svar paa noen sporsmal — sa far du et prisestimat."
+  />
+  <PrisKalkulatorIsland client:visible />
+</Section>
+```
+
+**On /priskalkulator (dedicated page) -- NEW:**
+```astro
+<!-- src/pages/priskalkulator/index.astro -->
+<BaseLayout
+  title="Priskalkulator | Nettup"
+  description="Fa et prisestimat for nettside, nettbutikk eller landingsside."
+>
   <main>
-    <!-- inline sections using service.* data -->
+    <Section>
+      <SectionHeader
+        title="Priskalkulator"
+        subtitle="Svar paa noen sporsmal og fa et detaljert prisestimat — tar under to minutter."
+      />
+      <PrisKalkulatorIsland client:visible mode="full" />
+    </Section>
   </main>
 </BaseLayout>
 ```
 
-### Pattern 2: Config-Driven Service Data Shape
+**Differences between contexts via `mode` prop:**
+- `mode="compact"` (default, /tjenester): `max-w-2xl`, streamlined layout
+- `mode="full"` (/priskalkulator): `max-w-3xl`, wider result breakdown, optional sticky progress sidebar on large screens
+- One component, one codebase -- the `mode` prop controls minor layout variations
+- No need for separate components or complex conditional rendering
 
-**What:** `services.ts` exports a typed `Service` interface that carries everything a service page and the overview card need.
-**When to use:** Always. The interface is the contract between data and template.
-**Trade-offs:** Pro: TypeScript catches missing fields at build time; adding fields to one service forces you to add them everywhere. Con: slightly more upfront design of the interface.
+## Progress Indicator
 
-**Example:**
-```typescript
-// src/config/services.ts
-export interface PriceRange {
-  min: number;
-  max: number;
-  note: string;  // "Avhengig av omfang" etc.
-}
+The current wizard shows "Sporsmaal X av Y" as plain text. The new version needs a visual progress bar because 4+ categories need orientation:
 
-export interface Service {
-  slug: string;                     // 'nettside', 'landingsside', 'nettbutikk', etc.
-  name: string;                     // "Nettside"
-  tagline: string;                  // Short card description for overview page
-  description: string;             // Full paragraph for sub-page hero
-  icon: string;                    // SVG path or emoji for card icon
-  priceRange: PriceRange;
-  deliveryTime: string;            // "2–3 uker"
-  features: string[];              // What's included (bullet list)
-  outcomes: string[];              // What the customer gets (benefit language)
-  faqs: Array<{ question: string; answer: string }>;
-  ctaLabel: string;                // "Bestill nettside"
-  ctaHref: string;                 // "/kontakt?tjeneste=nettside&kilde=tjenesteside"
-  meta: {
-    title: string;                 // <title> tag
-    description: string;           // meta description
-  };
-  jsonLd: {
-    name: string;                  // Schema.org Service name
-    description: string;           // Schema.org description (different from meta)
-  };
-}
-
-export const services: Service[] = [
-  {
-    slug: 'nettside',
-    name: 'Nettside',
-    // ...
-  },
-  // 6 more services
-];
+```
+[Mal] --- [Storrelse] --- [Funksjoner] --- [Integrasjoner] --- [Design] --- [Resultat]
+  ●          ●               ●                  ○                ○             ○
 ```
 
-### Pattern 3: Per-Page JSON-LD via head Slot
-
-**What:** Service JSON-LD is injected via `<Fragment slot="head">` in the page file, not via a BaseLayout prop. BaseLayout already supports this pattern — `tjenester/index.astro` already uses it.
-**When to use:** Any page-specific schema. Do not add schema support to BaseLayout props — that would force BaseLayout to know about every possible schema type.
-**Trade-offs:** Pro: BaseLayout stays generic; pages own their own schemas. Con: none — this is already the established pattern in this codebase.
-
-**Evidence:** `src/pages/tjenester/index.astro` lines 12-31 and 38-42 show this exact pattern working in production.
+Implementation in `WizardShell.tsx`:
+- Completed steps: `text-brand` dot
+- Current step: `bg-brand` filled dot with label
+- Upcoming steps: `border-white/10` empty dot
+- Connecting lines: `bg-white/10` (completed: `bg-brand/40`)
+- On mobile (< 640px): show only "Steg X av Y" text (dots too cramped)
 
 ## Data Flow
 
-### Build-Time Flow for Service Sub-Pages
-
 ```
-src/config/services.ts
-    |
-    | (getStaticPaths reads services array)
-    v
-src/pages/tjenester/[slug].astro
-    |
-    +-- Generates 7 static HTML files at build time:
-    |     /tjenester/nettside/index.html
-    |     /tjenester/landingsside/index.html
-    |     /tjenester/nettbutikk/index.html
-    |     /tjenester/webapp/index.html
-    |     /tjenester/seo/index.html
-    |     /tjenester/ai/index.html
-    |     /tjenester/vedlikehold/index.html
-    |
-    +-- Each page injects service-specific Service JSON-LD via <slot name="head">
-    |
-    +-- BaseLayout handles: BreadcrumbList (auto, via Astro.url.pathname),
-          Organization schema, LocalBusiness schema, OG tags, title, description
-```
-
-### BreadcrumbList Handling
-
-BaseLayout already auto-generates BreadcrumbList from `Astro.url.pathname`. For `/tjenester/nettside` this will produce:
-
-```
-Hjem > Tjenester > [current page label]
-```
-
-The `pageLabels` map in BaseLayout only covers top-level routes. For service slugs, the fallback `name: pageLabels[fullPath] ?? seg` will use the raw slug (e.g., "nettside"). This is acceptable for breadcrumbs. If display names need to differ from slugs, extend `pageLabels` with service sub-paths.
-
-**Recommended extension to BaseLayout.astro:**
-```typescript
-const pageLabels: Record<string, string> = {
-  '/': 'Hjem',
-  '/tjenester': 'Tjenester',
-  '/tjenester/nettside': 'Nettside',
-  '/tjenester/landingsside': 'Landingsside',
-  '/tjenester/nettbutikk': 'Nettbutikk',
-  '/tjenester/webapp': 'Webapplikasjon',
-  '/tjenester/seo': 'SEO',
-  '/tjenester/ai': 'AI-integrasjoner',
-  '/tjenester/vedlikehold': 'Vedlikehold',
-  // ... existing labels
-};
-```
-
-### CTA Pre-Fill Flow
-
-```
-Service sub-page CTA button
-  href="/kontakt?tjeneste=nettside&kilde=tjenesteside"
+pricing.ts (config)
     |
     v
-/kontakt page
-  ContactForm reads URL params
-  Pre-fills "Hvilken tjeneste?" field with decoded service name
+useWizardState (hook)
+    |  - Reads config to get categories for selected service
+    |  - Tracks selections per category via useReducer
+    |  - Calls pricing-engine.calculateEstimate on each change
+    |  - Exposes: state, dispatch, derived values
+    |
+    |--- GoalStep
+    |       User selects service -> dispatch SELECT_SERVICE
+    |       -> phase becomes 'questions', categoryIndex = 0
+    |
+    |--- QuestionStep (rendered for each category in sequence)
+    |       User selects option(s) -> dispatch SELECT_OPTION
+    |       User clicks "Neste" -> dispatch NEXT_CATEGORY
+    |       User clicks "Tilbake" -> dispatch PREV_CATEGORY / GO_BACK
+    |       -> categoryIndex increments/decrements
+    |       -> estimate recalculated after each selection
+    |
+    |--- ResultView
+    |       Reads estimate.lineItems for breakdown table
+    |       Reads estimate.discountedOneTime for headline price
+    |       Reads estimate.monthly for monthly cost
+    |       Shows "Kom i gang" -> /kontakt?tjeneste=[slug]
+    |       Shows "Start pa nytt" -> dispatch RESET
+    |
+    v
+WizardShell wraps everything in AnimatePresence
+    - key = phase + categoryIndex
+    - direction from state drives slide animation direction
+    - Progress bar reads currentCategoryIndex + totalCategories
 ```
 
-The existing `?pakke=` pre-fill pattern (used in `Pakker.astro`) proves this works. Switch param name from `pakke` to `tjeneste` to reflect the new model. If ContactForm reads `pakke`, verify before assuming `tjeneste` works — may need a one-line update to ContactForm.
+## Anti-Patterns to Avoid
 
-## Scaling Considerations
+### Anti-Pattern 1: Monolith Component
+**What:** Putting all 4 question categories, calculation logic, and result display in one file.
+**Why bad:** Current 379-line component is at the maintainability edge. Adding 4 categories with multi-select, back navigation, progress bar, and line-item results would push it to 1000+ lines.
+**Instead:** Decompose into hook + shell + step components as described.
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 7 services (v1.1) | Single `[slug].astro` template — zero overhead |
-| 15+ services | Still fine — `getStaticPaths` handles any array size |
-| Service-specific layouts | Add `layoutVariant` field to Service interface; switch in template |
-| Content-heavy sub-pages | Consider Astro Content Collections (`.md` frontmatter) — but overkill for 7 pages with Norwegian copy managed by developer |
+### Anti-Pattern 2: Config Inside Components
+**What:** Defining pricing data, question text, or option lists inside React component files.
+**Why bad:** When Nettup updates prices (will happen regularly), they should edit one config file, not hunt through component code.
+**Instead:** All pricing data in `src/config/pricing.ts`. Components are pure renderers of config data.
 
-### Scaling Priorities
+### Anti-Pattern 3: Derived State Stored as State
+**What:** Storing the calculated estimate in reducer state and manually recalculating it in specific actions.
+**Why bad:** Easy to forget recalculation in one action handler, leading to stale estimates.
+**Instead:** Calculate estimate as a derived value from selections -- either in the reducer (recalculate on every action that touches selections) or as a `useMemo` in the hook that depends on selections.
 
-1. **First concern:** Content maintenance — keeping 7 service descriptions accurate. Solved by centralizing all text in `services.ts`. Changes require one file edit.
-2. **Second concern:** SEO differentiation — each page must have unique title, description, and content to avoid thin-content penalties. The `Service` interface enforces this by requiring `meta.title` and `meta.description` per service.
+### Anti-Pattern 4: Separate Components Per Service
+**What:** Creating `NettsideQuestions.tsx`, `NettbutikkQuestions.tsx`, `LandingssideQuestions.tsx`.
+**Why bad:** Duplicates rendering logic. Questions differ in data (from config), not in UI structure.
+**Instead:** One generic `QuestionStep.tsx` that renders any `QuestionCategory` from config.
 
-## Anti-Patterns
+### Anti-Pattern 5: Separate Islands for Steps
+**What:** Making GoalStep, QuestionStep, ResultView each their own `client:visible` islands.
+**Why bad:** They share state (selections, estimate). Separate islands cannot share React state. Would require external state management or URL params for communication.
+**Instead:** One island (`PrisKalkulatorIsland`) is the hydration boundary. Sub-components are regular React components inside it.
 
-### Anti-Pattern 1: Individual Page Files Per Service
+## Integration Points Summary
 
-**What people do:** Create `tjenester/nettside/index.astro`, `tjenester/landingsside/index.astro`, etc. as 7 separate files.
-**Why it's wrong:** Identical structure copied 7 times. A layout change requires editing 7 files. A section rename means 7 find-replace operations. Common in Astro projects where developers don't recognize the dynamic routing use case.
-**Do this instead:** `tjenester/[slug].astro` with `getStaticPaths()`. One template, 7 outputs, identical build output.
+### New Files (9)
 
-### Anti-Pattern 2: Service Data Scattered Across Page Files
+| File | Purpose |
+|------|---------|
+| `src/config/pricing.ts` | Additive pricing config (replaces Pakke model) |
+| `src/lib/pricing-engine.ts` | Pure calculation: selections -> estimate |
+| `src/components/priskalkulator/types.ts` | Shared TypeScript types for wizard |
+| `src/components/priskalkulator/useWizardState.ts` | State management hook (useReducer) |
+| `src/components/priskalkulator/WizardShell.tsx` | AnimatePresence + progress indicator |
+| `src/components/priskalkulator/GoalStep.tsx` | Service selection step |
+| `src/components/priskalkulator/QuestionStep.tsx` | Generic question category renderer |
+| `src/components/priskalkulator/ResultView.tsx` | Line-item breakdown + CTAs |
+| `src/pages/priskalkulator/index.astro` | Dedicated calculator page |
 
-**What people do:** Hard-code service name, price, features inside each page's frontmatter or inline in the template.
-**Why it's wrong:** Overview page cards and sub-pages then have separate copies of the same data. Price changes require editing in two places. Name inconsistencies between overview and sub-page create UX confusion.
-**Do this instead:** `services.ts` is the only place service data lives. Both overview page and `[slug].astro` import from it.
+### Modified Files (2)
 
-### Anti-Pattern 3: Adding serviceSchema Prop to BaseLayout
-
-**What people do:** Add `serviceSchema?: object` prop to BaseLayout, then conditionally render it.
-**Why it's wrong:** BaseLayout becomes aware of every schema type. As more page types are added (FAQ schema, HowTo schema), BaseLayout grows into a monolith that every page must configure.
-**Do this instead:** Page files inject schemas via `<Fragment slot="head">` — already the established pattern in this codebase. BaseLayout stays generic. This is confirmed by how `tjenester/index.astro` handles it today.
-
-### Anti-Pattern 4: Extending pricing.ts for Service Sub-Pages
-
-**What people do:** Add service sub-page data (slug, description, outcomes, FAQs) to the existing `pricing.ts` because it already has service-like data.
-**Why it's wrong:** `pricing.ts` models the 3-tier pricing model (Enkel/Standard/Premium). The new service model is fundamentally different — 7 distinct services with price ranges, not 3 generic tiers. Merging them creates a confusing interface and makes it impossible to cleanly deprecate the old model.
-**Do this instead:** Create `services.ts` as a clean new file. Keep `pricing.ts` unchanged until the overview page is confirmed not to need it.
-
-### Anti-Pattern 5: _sections/ Subdirectory Per Service
-
-**What people do:** Create `tjenester/nettside/_sections/Hero.astro`, `tjenester/nettside/_sections/FAQ.astro`, etc. following the top-level page pattern.
-**Why it's wrong:** If 7 services each get `_sections/` directories, that's 7+ directories with nearly identical files. The `_sections/` pattern is for pages with **unique section compositions** (like `/prosjekter` with its showcase + results sections). Service sub-pages share the same section composition — only the data differs.
-**Do this instead:** Inline section content in `[slug].astro` driven by `service.*` data props. For shared section components used by sub-pages, put them in `tjenester/_sections/` (shared within the tjenester route group).
-
-## Integration Points
-
-### Files to Create
-
-| File | Type | Why |
-|------|------|-----|
-| `src/config/services.ts` | New | Canonical data for all 7 services |
-| `src/pages/tjenester/[slug].astro` | New | Dynamic template for sub-pages |
-
-### Files to Modify
-
-| File | Change | Why |
-|------|--------|-----|
-| `src/pages/tjenester/index.astro` | Rewrite to service catalog | Replace pricing tier model with 7 service cards linking to sub-pages |
-| `src/pages/tjenester/_sections/Pakker.astro` | Archive or replace | Pricing tiers being replaced by service catalog |
-| `src/layouts/BaseLayout.astro` | Add service slug labels to `pageLabels` | Correct breadcrumb display names for sub-pages |
-| `src/components/islands/ContactForm.tsx` | Check `?pakke=` vs `?tjeneste=` param | Ensure pre-fill works with new query param name |
-
-### Files Unchanged
-
-| File | Reason |
+| File | Change |
 |------|--------|
-| `src/components/ui/*` | All primitives (Button, Card, Section, SectionHeader) usable as-is |
-| `src/layouts/BaseLayout.astro` (core) | JSON-LD slot pattern already works; only `pageLabels` needs extending |
-| `src/config/pricing.ts` | May eventually be deprecated but don't touch during v1.1 |
-| `src/config/brand.ts`, `testimonials.ts`, `projects.ts` | Unrelated |
+| `src/components/islands/PrisKalkulatorIsland.tsx` | REWRITE -- becomes thin orchestrator importing hook + sub-components |
+| `src/pages/tjenester/_sections/PrisKalkulator.astro` | MINOR -- update title/subtitle text |
 
-### Internal Boundaries
+### Untouched Files
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| `services.ts` -> `[slug].astro` | Direct import via `getStaticPaths` | Type-safe via `Service` interface |
-| `services.ts` -> `tjenester/index.astro` | Direct import | Same data, different rendering (cards vs full page) |
-| `[slug].astro` -> `BaseLayout` | Props: title, description + slot: head (JSON-LD) | Established pattern, no changes needed to BaseLayout |
-| Service sub-page CTA -> ContactForm | URL query param `?tjeneste=[slug]` | Verify ContactForm reads this param correctly |
+- `src/config/services.ts` -- still used for service metadata in GoalStep + ResultView
+- `src/config/launchOffer.ts` -- still used for remaining slots urgency in ResultView
+- `src/lib/animation.ts` -- still used for springs, fadeUp, fadeIn variants
+- `src/layouts/BaseLayout.astro` -- no changes needed (new /priskalkulator page uses it as-is)
+- All other pages and components
+
+### No New Dependencies
+
+- `useReducer` -- standard React hook
+- `Intl.NumberFormat('nb-NO')` -- built-in browser API for Norwegian number formatting (e.g., "12 000 kr")
+- All animation via existing Framer Motion
+- All styling via existing Tailwind classes
 
 ## Build Order
 
-Dependencies must be respected. The correct sequence:
+Dependency chain determines the correct sequence. Each step is independently testable:
 
-```
-Step 1: Design Service interface in services.ts (no code yet, just the type)
-  |
-  +-- Clarifies exactly what data each service page needs
-  +-- Makes content writing systematic (fill in all 7 services)
-  +-- Unblocks both Step 2 and Step 3 in parallel
+| Order | What to Build | Depends On | How to Test |
+|-------|--------------|------------|-------------|
+| 1 | `types.ts` -- shared interfaces | Nothing | TypeScript compiles |
+| 2 | `pricing.ts` -- config with real data | types.ts | Type-check, import in REPL |
+| 3 | `pricing-engine.ts` -- calculation functions | types.ts, pricing.ts shape | Unit test: mock selections -> verify estimate |
+| 4 | `useWizardState.ts` -- reducer + hook | pricing.ts, pricing-engine.ts | Test reducer transitions, verify estimate derivation |
+| 5 | `GoalStep.tsx` + `QuestionStep.tsx` | types.ts | Render with mock data, visual review |
+| 6 | `ResultView.tsx` | types.ts (PriceEstimate) | Render with mock estimate, visual review |
+| 7 | `WizardShell.tsx` -- progress + animation | GoalStep, QuestionStep, ResultView | Full visual integration |
+| 8 | `PrisKalkulatorIsland.tsx` rewrite | All above | Works on /tjenester (replace existing) |
+| 9 | `/priskalkulator/index.astro` | PrisKalkulatorIsland | New route builds and works |
 
-Step 2: Populate services.ts with all 7 service objects
-  |
-  +-- Write Norwegian copy for all 7 services
-  +-- Define price ranges, features, outcomes, FAQs per service
-  +-- MUST complete before any page work
+**Critical path:** Steps 1-3 are pure logic (no UI). Steps 5-6 are pure UI (no business logic). Step 4 bridges them. Steps 7-8 wire everything together. Step 9 is a thin page wrapper.
 
-Step 3: Create [slug].astro template (depends on Step 2 data shape)
-  |
-  +-- Wire getStaticPaths to services array
-  +-- Build page sections inline using service.* props
-  +-- Inject Service JSON-LD via head slot
-  +-- Verify 7 routes build correctly (npm run build)
+**Parallelizable:** Steps 5+6 can run in parallel once types exist. Step 9 can start as soon as step 8 works.
 
-Step 4: Rewrite tjenester/index.astro overview (depends on Step 2)
-  |
-  +-- Import services array
-  +-- Render service catalog cards with links to /tjenester/[slug]
-  +-- Can run in parallel with Step 3 once services.ts is populated
+## Scalability Considerations
 
-Step 5: Update BaseLayout.astro pageLabels (depends on knowing final slugs)
-  |
-  +-- Add service sub-path labels for breadcrumbs
-  +-- One-time, low-risk change
-
-Step 6: Verify ContactForm pre-fill (depends on Step 3 CTA hrefs)
-  |
-  +-- Test ?tjeneste= param is read and applied
-  +-- Adjust param name in ContactForm if needed
-```
-
-**Critical path:** `services.ts` data → `[slug].astro` template → test 7 routes build → then overview page.
-
-The overview page restructure can start as soon as `services.ts` exists (Step 2), making Steps 3 and 4 parallelizable.
+| Concern | Now (3 services, 4 categories) | Future (7+ services) |
+|---------|-------------------------------|---------------------|
+| Config size | ~150 lines | ~400 lines -- still one file |
+| Question categories | 4 per service | Same 4, different options per service |
+| Component code | Unchanged | Data-driven -- no code changes for new services |
+| Adding a service | Add entry to pricing.ts config | Same pattern, same components |
+| Conditional categories | Not needed yet | Add optional `condition` field to QuestionCategory if a category only applies to some services |
 
 ## Sources
 
-- Direct codebase analysis: `src/pages/tjenester/index.astro` (existing JSON-LD slot pattern)
-- Direct codebase analysis: `src/layouts/BaseLayout.astro` (breadcrumb auto-generation, slot="head" support)
-- Direct codebase analysis: `src/config/pricing.ts`, `src/config/projects.ts` (established config file patterns)
-- Direct codebase analysis: `src/pages/tjenester/_sections/` (current section structure)
-- Astro 5 static output mode confirmed: `astro.config.mjs` (`output: 'static'`)
-- `getStaticPaths` is the standard Astro mechanism for dynamic routes in static output mode (HIGH confidence — core Astro API, stable across Astro 2-5)
+- Direct codebase analysis: `src/components/islands/PrisKalkulatorIsland.tsx` (current implementation, 379 lines)
+- Direct codebase analysis: `src/config/pricing.ts` (current Pakke model to be replaced)
+- Direct codebase analysis: `src/config/services.ts` (Service interface, used by GoalStep/ResultView)
+- Direct codebase analysis: `src/config/launchOffer.ts` (launch discount slots)
+- Direct codebase analysis: `src/lib/animation.ts` (springs, fadeUp, fadeIn -- reused in new components)
+- Direct codebase analysis: `src/pages/tjenester/_sections/PrisKalkulator.astro` (current mount pattern)
+- Direct codebase analysis: `src/pages/tjenester/index.astro` (page structure, Section/SectionHeader usage)
+- React useReducer: standard React API for complex state management (HIGH confidence)
+- Framer Motion AnimatePresence: already used successfully in current component (HIGH confidence)
 
 ---
-*Architecture research for: v1.1 Tjenesteutvidelse — Service sub-pages integration*
-*Researched: 2026-03-04*
+*Architecture research for: v1.2 Smart Priskalkulator -- Additive pricing calculator integration*
+*Researched: 2026-03-06*

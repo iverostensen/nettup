@@ -1,338 +1,288 @@
-# Stack Research
+# Technology Stack
 
-**Domain:** Astro 5 static site — 7 dedicated service sub-pages
-**Milestone:** v1.1 Tjenesteutvidelse
-**Researched:** 2026-03-04
-**Confidence:** HIGH (based on codebase analysis + Astro 5 training data)
+**Project:** v1.2 Smart Priskalkulator (additive pricing engine)
+**Researched:** 2026-03-06
+**Confidence:** HIGH
 
-> Scope is narrow: this milestone adds 7 pages and a restructured /tjenester overview to an existing, working Astro 5 site. The existing stack handles everything. No new dependencies are needed.
-
----
-
-## Current Stack (Unchanged)
-
-| Technology | Installed Version | Role |
-|------------|------------------|------|
-| Astro | ^5.0.0 | Static site framework, routing |
-| React + @astrojs/react | ^19.2.3 / ^4.4.2 | Interactive islands |
-| Tailwind CSS | ^4.0.0 | Styling |
-| Framer Motion | ^12.23.26 | Animations |
-| @astrojs/sitemap | ^3.6.0 | Auto-generates sitemap (picks up new pages automatically) |
-| clsx + tailwind-merge | ^2.1.1 / ^3.4.0 | Class utilities |
-| @vercel/analytics | ^1.6.1 | Analytics |
+> Scope: additive pricing engine, config-driven pricing file, multi-step question wizard, range estimate calculation. The existing stack handles everything. Zero new dependencies needed.
 
 ---
 
-## Routing Decision: Individual Files vs [slug].astro
+## Recommendation: Zero New Dependencies
 
-**Recommendation: Individual files (`/tjenester/nettside/index.astro`, etc.)**
-
-### Why not `[slug].astro` with `getStaticPaths()`
-
-Dynamic routing is designed for content where all pages share the same template — blog posts, product listings, etc. Service sub-pages for a web agency are NOT uniform content: each service has a distinct value proposition, distinct FAQ items, distinct process steps, distinct pricing narrative, and (eventually) distinct case studies. Forcing them into one template produces lowest-common-denominator pages that serve SEO poorly and read as generic.
-
-Concrete problems with `[slug].astro`:
-
-1. **All content lives in one config file.** A 7-service data object in `src/config/services.ts` becomes a maintenance liability. Each service would need fields for hero, process steps, FAQ, differentiators, pricing narrative, CTA copy — the object grows unwieldy and still can't express structural page differences.
-2. **Layout variations are awkward.** Nettbutikk (Shopify) may want a "Shopify partner" trust badge section that Vedlikehold doesn't need. Webapp may need a tech stack section. AI may need a disclaimer section. Conditional rendering in a shared template is messier than separate section files.
-3. **TypeScript type safety is harder.** Each service page can have its own typed props when structured as individual files.
-4. **The sitemap already works.** `@astrojs/sitemap` crawls all `.astro` pages automatically — no `getStaticPaths()` configuration needed for individual files.
-
-### When `[slug].astro` IS appropriate
-
-If you later add a blog, changelog, or any content type where 10+ pages truly share the same structure. Not applicable here.
-
-### File Structure to Use
-
-```
-src/pages/tjenester/
-├── index.astro                 ← Redesigned tjenestekatalog (7 service cards)
-├── nettside/
-│   ├── index.astro
-│   └── _sections/
-│       ├── Hero.astro
-│       ├── HvaSomInngaar.astro
-│       ├── Prosess.astro
-│       ├── Priser.astro
-│       ├── FAQ.astro
-│       └── CTA.astro
-├── nettbutikk/
-│   ├── index.astro
-│   └── _sections/
-│       └── [same section pattern]
-├── webapp/
-│   └── ...
-├── seo/
-│   └── ...
-├── ai/
-│   └── ...
-├── landingsside/
-│   └── ...
-└── vedlikehold/
-    └── ...
-```
-
-This mirrors the existing pattern already used in `/nettside-for-bedrift/`, `/prosjekter/`, and `/kontakt/`. Consistent with the codebase.
+| Requirement | Solution | Already Installed |
+|-------------|----------|-------------------|
+| Multi-step wizard UI | React 19 + Framer Motion AnimatePresence | Yes |
+| Complex step state | React `useReducer` (upgrade from `useState`) | Yes (React built-in) |
+| Additive calculation | Pure TypeScript functions | Yes |
+| Config-driven pricing | TypeScript file (`.ts`) with typed constants | Yes (pattern from `services.ts`) |
+| Step animations | Framer Motion slide variants | Yes (pattern from current `PrisKalkulatorIsland`) |
+| Range estimates (min-max) | TypeScript arithmetic | Yes |
+| Line-item breakdown | Derived from state + config, rendered as list | Yes |
+| Monthly cost accumulation | Same additive pattern as setup cost | Yes |
 
 ---
 
-## Service JSON-LD Schema Structure
+## Key Decision: TypeScript Config Over JSON
 
-The existing `BaseLayout.astro` already renders `BreadcrumbList` automatically from `Astro.url.pathname`. The `pageLabels` map will need entries added for the sub-page labels — this is the only BaseLayout change needed for breadcrumbs.
+**Use `src/config/pricing.ts`, not `pricing.json`.**
 
-### Service Schema Per Page
+| Criterion | TypeScript (.ts) | JSON (.json) |
+|-----------|------------------|--------------|
+| Type safety | Full — interfaces enforce structure at build time | None — needs runtime validation |
+| Computed values | Yes — `Math.round(base * (1 - LAUNCH_DISCOUNT))` | No — must duplicate values |
+| Shared constants | Yes — import `LAUNCH_DISCOUNT` from `services.ts` | No — stringly typed |
+| IDE support | Full autocomplete and refactor | Partial |
+| Import pattern | Matches existing `services.ts` | Different pattern |
+| Non-dev editing | Requires TS knowledge | Slightly more accessible |
 
-Each sub-page renders its own `Service` schema in the `<slot name="head">`. Pattern already established in the current `/tjenester/index.astro` (generates one Service schema per pricing package). V1.1 moves to one dedicated Service schema per page — more specific, better for rich results.
+Non-dev editing is irrelevant: PROJECT.md states this is "brukes internt av Nettup for kundeprising" — the team is technical. TypeScript wins on every criterion that matters.
+
+### Recommended Config Structure
 
 ```typescript
-// Schema structure for each service page
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "Nettside for bedrift",          // Service name (Norwegian)
-  "description": "Vi designer og bygger...", // 1-2 sentences, customer-outcome focused
-  "url": "https://nettup.no/tjenester/nettside",
-  "provider": {
-    "@type": "Organization",
-    "name": "Nettup",
-    "url": "https://nettup.no"
+// src/config/pricing.ts
+
+export interface PricingOption {
+  id: string;
+  label: string;
+  subLabel?: string;
+  setupPrice: number;      // One-time cost addition in NOK (can be 0)
+  monthlyPrice: number;    // Monthly cost addition in NOK (can be 0)
+}
+
+export interface PricingQuestion {
+  id: string;
+  question: string;
+  helpText?: string;       // Optional explainer shown below question
+  options: PricingOption[];
+}
+
+export interface ServicePricing {
+  serviceSlug: string;
+  baseSetupPrice: number;    // Starting point before additions
+  baseMonthlyPrice: number;  // Starting monthly before additions
+  questions: PricingQuestion[];
+}
+
+export const pricing: Record<string, ServicePricing> = {
+  nettside: {
+    serviceSlug: 'nettside',
+    baseSetupPrice: 8000,
+    baseMonthlyPrice: 350,
+    questions: [
+      {
+        id: 'size',
+        question: 'Hvor mange sider trenger du?',
+        options: [
+          { id: 'small', label: '1-5 sider', subLabel: 'Enkel presentasjon', setupPrice: 0, monthlyPrice: 0 },
+          { id: 'medium', label: '6-15 sider', subLabel: 'Komplett nettsted', setupPrice: 4000, monthlyPrice: 100 },
+          { id: 'large', label: '16+ sider', subLabel: 'Stort nettsted', setupPrice: 10000, monthlyPrice: 200 },
+        ],
+      },
+      {
+        id: 'cms',
+        question: 'Trenger du a kunne oppdatere innholdet selv?',
+        options: [
+          { id: 'no', label: 'Nei, dere oppdaterer for meg', setupPrice: 0, monthlyPrice: 0 },
+          { id: 'yes', label: 'Ja, med et enkelt CMS-panel', setupPrice: 3000, monthlyPrice: 100 },
+        ],
+      },
+      // ... design level, integrations, etc.
+    ],
   },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Norway"
-  },
-  "serviceType": "Webdesign",              // Matches Google's service type taxonomy
-  "offers": {
-    "@type": "Offer",
-    "price": "7000",                       // Low end of range (fra-pris)
-    "priceCurrency": "NOK",
-    "description": "Fra 7 000 kr. Prisen varierer med scope.",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@type": "Organization",
-      "name": "Nettup"
+  // nettbutikk, landingsside...
+};
+```
+
+**Why this shape works for additive pricing:**
+
+```typescript
+// Calculation is trivial:
+const totalSetup = pricing.baseSetupPrice
+  + selections.reduce((sum, sel) => sum + sel.setupPrice, 0);
+
+const totalMonthly = pricing.baseMonthlyPrice
+  + selections.reduce((sum, sel) => sum + sel.monthlyPrice, 0);
+
+// Range estimate: apply variance
+const estimate = {
+  min: Math.round(totalSetup * 0.9),
+  max: Math.round(totalSetup * 1.15),
+};
+```
+
+No engine library needed. This is integer arithmetic on NOK values.
+
+---
+
+## Key Decision: useReducer Over useState
+
+The current `PrisKalkulatorIsland` uses `useState` with a flat state object. This will not scale to 8-12 questions with back-navigation and accumulated selections.
+
+**Use `useReducer` because:**
+1. State transitions are explicit and predictable (dispatch actions, not setState mutations)
+2. Back-navigation requires undoing the last selection — reducer makes this clean
+3. All selections must be tracked for the line-item breakdown — reducer accumulates naturally
+4. Price is derived (computed from state + config), never stored in state, preventing desync
+
+### Recommended State Shape
+
+```typescript
+interface CalcState {
+  service: string | null;       // Selected service slug
+  currentStep: number;          // Index into questions array
+  selections: Map<string, PricingOption>;  // questionId -> selected option
+  phase: 'service' | 'questions' | 'result';
+}
+
+type CalcAction =
+  | { type: 'SELECT_SERVICE'; service: string }
+  | { type: 'SELECT_OPTION'; questionId: string; option: PricingOption }
+  | { type: 'GO_BACK' }
+  | { type: 'RESET' };
+
+function calcReducer(state: CalcState, action: CalcAction): CalcState {
+  switch (action.type) {
+    case 'SELECT_SERVICE':
+      return { ...state, service: action.service, phase: 'questions', currentStep: 0, selections: new Map() };
+    case 'SELECT_OPTION': {
+      const newSelections = new Map(state.selections);
+      newSelections.set(action.questionId, action.option);
+      const questions = pricing[state.service!].questions;
+      const nextStep = state.currentStep + 1;
+      return nextStep >= questions.length
+        ? { ...state, selections: newSelections, phase: 'result' }
+        : { ...state, selections: newSelections, currentStep: nextStep };
     }
+    case 'GO_BACK': {
+      if (state.phase === 'result') {
+        // Go back to last question
+        const questions = pricing[state.service!].questions;
+        const lastQ = questions[questions.length - 1];
+        const newSelections = new Map(state.selections);
+        newSelections.delete(lastQ.id);
+        return { ...state, phase: 'questions', currentStep: questions.length - 1, selections: newSelections };
+      }
+      if (state.currentStep > 0) {
+        const questions = pricing[state.service!].questions;
+        const prevQ = questions[state.currentStep - 1];
+        const newSelections = new Map(state.selections);
+        newSelections.delete(prevQ.id);
+        return { ...state, currentStep: state.currentStep - 1, selections: newSelections };
+      }
+      return { ...state, phase: 'service', service: null, selections: new Map() };
+    }
+    case 'RESET':
+      return initialState;
   }
-};
-```
-
-**Key decisions in this schema:**
-
-- Use `"price"` as the fra-pris (low end). Google interprets this as the minimum price. Pair with a `"description"` on the Offer that explains it's a range.
-- `"serviceType"` should use plain-language strings matching your service category. Google does not enforce a controlled vocabulary here — use Norwegian terms or English where standard.
-- Do NOT duplicate the Organization or LocalBusiness schema (already in BaseLayout for every page). The Service schema on sub-pages supplements the global schema, not replaces it.
-
-### FAQPage Schema Per Service
-
-Each service page will have service-specific FAQs. Reuse the same pattern already used in `/tjenester/_sections/FAQ.astro` — generate `FAQPage` JSON-LD inline in the `_sections/FAQ.astro` component for that service.
-
-```typescript
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqs.map(faq => ({
-    "@type": "Question",
-    "name": faq.question,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": faq.answer
-    }
-  }))
-};
-```
-
-This pattern is already in the codebase. Copy it to each service's `FAQ.astro`.
-
----
-
-## BreadcrumbList: Required BaseLayout Update
-
-The existing `pageLabels` map in `BaseLayout.astro` only covers top-level routes:
-
-```typescript
-const pageLabels: Record<string, string> = {
-  '/': 'Hjem',
-  '/tjenester': 'Tjenester',
-  '/om-oss': 'Om oss',
-  '/prosjekter': 'Prosjekter',
-  '/kontakt': 'Kontakt',
-};
-```
-
-Sub-pages like `/tjenester/nettside` will fall back to the raw slug (`nettside`) in the breadcrumb because the path is not in the map. Add the 7 service paths:
-
-```typescript
-const pageLabels: Record<string, string> = {
-  '/': 'Hjem',
-  '/tjenester': 'Tjenester',
-  '/tjenester/nettside': 'Nettside',
-  '/tjenester/nettbutikk': 'Nettbutikk',
-  '/tjenester/webapp': 'Webapplikasjon',
-  '/tjenester/seo': 'SEO',
-  '/tjenester/ai': 'AI-integrering',
-  '/tjenester/landingsside': 'Landingsside',
-  '/tjenester/vedlikehold': 'Vedlikehold',
-  '/om-oss': 'Om oss',
-  '/prosjekter': 'Prosjekter',
-  '/kontakt': 'Kontakt',
-};
-```
-
-This is the only BaseLayout change required. Breadcrumbs for `/tjenester/nettside` will automatically render as: Hjem > Tjenester > Nettside — correct Google format.
-
----
-
-## CTA Pre-fill: ContactForm Update Required
-
-The current ContactForm reads `?pakke=` and validates against `['enkel', 'standard', 'premium', 'usikker']`. The PROJECT.md spec for v1.1 uses `?tjeneste=` with service slug values. The ContactForm needs a new URL param branch:
-
-```typescript
-// ContactForm.tsx — add alongside existing ?pakke= handling
-const tjeneste = params.get('tjeneste');
-const validTjenester = ['nettside', 'nettbutikk', 'webapp', 'seo', 'ai', 'landingsside', 'vedlikehold'];
-if (tjeneste && validTjenester.includes(tjeneste)) {
-  setFormData(prev => ({ ...prev, tjeneste: tjeneste }));
 }
 ```
 
-The FormData interface and the Formspree form will need a `tjeneste` field added (separate from `pakke`). This is a small, contained change. The existing `?pakke=` flow from `/tjenester/` overview remains unchanged.
+**Price is a derived value, not state:**
 
----
-
-## FAQ Accordion: No New Library Needed
-
-The existing FAQ pattern in `/tjenester/_sections/FAQ.astro` uses a static expand-all layout (all answers visible). This is intentional — it means all FAQ text is present in the HTML for search engines without JavaScript.
-
-For v1.1, the same static pattern is the correct choice. Reasons:
-- FAQPage schema requires answers to be in the DOM (not hidden behind JS toggle)
-- The FAQ section is shorter per-service than the global FAQ (fewer questions, more specific)
-- Accordion interaction adds complexity for marginal UX gain on focused service pages
-
-If an interactive accordion is desired for user experience on long FAQ lists, implement it with native HTML `<details>` / `<summary>` elements. These are natively accessible, work without JavaScript, and require zero dependencies. The existing `.reveal-on-scroll` class still applies.
-
-```html
-<details class="reveal-on-scroll border-b border-white/10 py-6">
-  <summary class="cursor-pointer font-semibold list-none">
-    {faq.question}
-  </summary>
-  <p class="mt-3 text-text-muted">{faq.answer}</p>
-</details>
-```
-
-Do NOT use: `@headlessui/react` Disclosure, Radix UI Accordion, or any React accordion library. Adding a React island for a pure-content accordion violates the "Astro sections first" rule and inflates the client bundle unnecessarily.
-
----
-
-## Comparison Tables: Pure Astro HTML
-
-Service pages may include feature/pricing comparison tables. These are static content — render them as plain HTML in `.astro` files. No library needed.
-
-Pattern to use:
-
-```astro
----
-const rows = [
-  { feature: 'Antall sider', enkel: 'Inntil 5', standard: 'Inntil 10', premium: 'Ubegrenset' },
-  // ...
-];
----
-
-<div class="overflow-x-auto">
-  <table class="w-full text-left">
-    <thead>
-      <tr class="border-b border-white/10">
-        <th class="py-4 pr-6 font-semibold">Funksjon</th>
-        <th class="py-4 px-4 font-semibold text-brand">Enkel</th>
-        <!-- ... -->
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-white/10">
-      {rows.map(row => (
-        <tr>
-          <td class="py-4 pr-6 text-text-muted">{row.feature}</td>
-          <td class="py-4 px-4">{row.enkel}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+```typescript
+function calculatePrice(service: string, selections: Map<string, PricingOption>): {
+  setupTotal: number;
+  monthlyTotal: number;
+  lineItems: Array<{ label: string; setup: number; monthly: number }>;
+} {
+  const config = pricing[service];
+  const lineItems = Array.from(selections.values()).map(opt => ({
+    label: opt.label,
+    setup: opt.setupPrice,
+    monthly: opt.monthlyPrice,
+  }));
+  return {
+    setupTotal: config.baseSetupPrice + lineItems.reduce((s, i) => s + i.setup, 0),
+    monthlyTotal: config.baseMonthlyPrice + lineItems.reduce((s, i) => s + i.monthly, 0),
+    lineItems,
+  };
+}
 ```
 
 ---
 
-## Sitemap: No Changes Needed
+## Integration Points
 
-`@astrojs/sitemap` is configured in `astro.config.mjs` with `integrations: [sitemap()]`. It automatically discovers all `.astro` pages at build time. Adding 7 new pages under `/tjenester/` requires zero sitemap configuration changes — they are included automatically.
+### With existing `services.ts`
+`pricing.ts` references service slugs from `services.ts` but does NOT duplicate service metadata (name, tagline, description). Import `services` to look up display names. `LAUNCH_DISCOUNT` should be defined once (keep in `services.ts`, import into `pricing.ts` and the calculator component).
 
-**Verify:** The sitemap currently generates `https://nettup.no/nettside-for-bedrift` (the ads landing page). Confirm it is excluded if it should not be indexed in the service catalog. May need `exclude: ['/nettside-for-bedrift']` in `defineConfig` if that page is ads-only.
+### With existing `PrisKalkulatorIsland.tsx`
+**Rewrite, not extend.** The current architecture (hardcoded narrowing questions, price stored on the last option only) cannot support additive pricing. Preserve the animation patterns (slideVariants, AnimatePresence `mode="wait"`, `useReducedMotion`) but replace state management and data source entirely.
+
+### With `/priskalkulator` page (new)
+New Astro page at `src/pages/priskalkulator/index.astro`. Imports the React island with `client:load`. Fully static page — calculator runs client-side.
+
+### With `/tjenester` section (existing)
+The same island component can be embedded on `/tjenester` too. The island is self-contained and works wherever mounted.
+
+### With chat endpoint
+The pricing config is importable server-side. The chat endpoint could reference `pricing.ts` to give accurate price quotes in conversation. This is a future opportunity, not a v1.2 requirement.
 
 ---
 
 ## Alternatives Considered
 
-| Decision | Recommended | Alternative | Why Not |
+| Category | Recommended | Alternative | Why Not |
 |----------|-------------|-------------|---------|
-| Routing | Individual files | `[slug].astro` + `getStaticPaths()` | Services have structurally different sections. Shared template enforces lowest common denominator. |
-| FAQ interaction | `<details>/<summary>` or static | React accordion library | Adds JS island for static content. FAQ schema requires answers in DOM. |
-| Service config | Content inline per page | Central `services.ts` data object | Central config forces uniform structure. Each service needs unique section composition. |
-| JSON-LD | Manual per page in `<slot name="head">` | `astro-seo` library | Already have working pattern. Adding a library for static meta tags adds unnecessary abstraction. |
-| Comparison tables | Plain HTML in `.astro` | React table library | Static data. Zero interactivity needed. Tables render at build time. |
+| State management | `useReducer` | Zustand | Overkill for single-island state. No cross-component sharing needed. Adds a dependency for zero benefit. |
+| State management | `useReducer` | XState | State machine formalism is elegant but heavy for a linear wizard. The "machine" here is just step index + selections map. |
+| Pricing config | TypeScript file | JSON file | No type safety, no computed values, different import pattern from `services.ts`. |
+| Pricing config | TypeScript file | Database / CMS | Massive overkill. Prices change quarterly at most. File deploy is fine. |
+| Calculation | Pure functions | dinero.js / currency.js | Integer NOK arithmetic. No currency conversion, no floating point, no locale formatting beyond `toLocaleString('nb-NO')`. `a + b` is sufficient. |
+| Form handling | Direct React | React Hook Form | Not a form. Single-choice button selections per step. No text inputs, no validation rules, no submission. RHF adds complexity for zero value. |
+| Validation | TypeScript interfaces | Zod | Config is authored by developers, not user input. TypeScript catches structural errors at build time. Zod would validate at runtime — unnecessary. |
+| Animation | Framer Motion (existing) | View Transitions API | Already using FM with established patterns. Switching adds inconsistency. |
+| Visualization | Styled HTML list | Chart library (chart.js, recharts) | A line-item price breakdown is text, not a chart. 3-8 items rendered as a list is clearer than any chart. |
 
 ---
 
-## What NOT to Use
+## What NOT to Add
 
-| Avoid | Why | Use Instead |
-|-------|-----|-------------|
-| `[slug].astro` + `getStaticPaths()` | Forces uniform structure across services that have distinct content needs | Individual `index.astro` per service |
-| Headless UI / Radix accordion | React island for static content, inflates bundle | Native `<details>/<summary>` |
-| `schema-dts` npm package | TypeScript types for Schema.org — schema is written once, type overhead not worth it | Inline JSON-LD objects with comments |
-| `react-table` / `@tanstack/table` | Data grid for static price tables | Plain HTML `<table>` in `.astro` |
-| New animation libraries | Framer Motion already handles all animation needs | Existing Framer Motion |
+| Library | Why People Suggest It | Why Not Here |
+|---------|----------------------|--------------|
+| Zustand / Jotai / Redux | "State management" | Single component, no shared state. `useReducer` is sufficient and built-in. |
+| React Hook Form / Formik | "Multi-step form" | This is not a form. No text inputs, no validation, no submission to an API. |
+| XState | "State machine for wizard" | Linear wizard with back button is not complex enough. Would triple the code for the same behavior. |
+| dinero.js / currency.js | "Money calculations" | Integer NOK only. No currency conversion. No floating point. Basic arithmetic. |
+| Zod | "Validate pricing config" | TypeScript interfaces validate at build time. Config is dev-authored, not user input. |
+| chart.js / recharts | "Visualize pricing" | A styled list of line items is clearer than any chart for 3-8 items. |
+| @tanstack/react-table | "Display pricing breakdown" | A plain HTML table/list with Tailwind is simpler and smaller. No sorting, filtering, or pagination needed. |
 
 ---
 
 ## Installation
 
-**No new packages required.**
-
-The existing stack covers all requirements for v1.1:
-- Routing: Astro file-based routing (built-in)
-- Styling: Tailwind CSS (existing)
-- Animations: Framer Motion (existing)
-- FAQ: Native HTML or static Astro (no library)
-- Tables: HTML (no library)
-- Sitemap: @astrojs/sitemap (existing, automatic)
-- JSON-LD: Inline script tags (established pattern)
-
 ```bash
-# Nothing to install. Run existing commands:
-npm run dev
-npm run build
+# No installation needed. Zero new dependencies.
+# The existing stack covers all v1.2 requirements.
+
+npm run dev    # Development
+npm run build  # Production build
 ```
 
 ---
 
-## Version Compatibility
+## New Files to Create
 
-All existing packages are compatible with the proposed patterns. No version conflicts introduced.
-
-| Concern | Status |
-|---------|--------|
-| Astro file-based routing for nested dirs | Works in Astro 5 (stable, unchanged from v4) |
-| `<slot name="head">` in BaseLayout | Working in current codebase |
-| JSON-LD `set:html` in Astro | Working in current codebase (see existing FAQ.astro, tjenester/index.astro) |
-| `<details>/<summary>` + Tailwind | No conflicts — native HTML, style with Tailwind classes normally |
+| File | Purpose |
+|------|---------|
+| `src/config/pricing.ts` | Additive pricing config — questions, options, base prices per service |
+| `src/lib/pricing.ts` | Pure calculation functions — `calculatePrice()`, `formatNOK()`, discount logic |
+| `src/components/islands/PrisKalkulatorIsland.tsx` | Rewritten calculator with useReducer + additive engine |
+| `src/pages/priskalkulator/index.astro` | Dedicated calculator page |
 
 ---
 
 ## Sources
 
-- Codebase analysis: `src/pages/tjenester/`, `src/layouts/BaseLayout.astro`, `src/pages/kontakt/_sections/ContactForm.tsx`, `src/pages/tjenester/_sections/FAQ.astro`, `package.json`
-- Schema.org Service type specification — training data, HIGH confidence (schema.org spec is stable)
-- Astro 5 routing documentation — training data, HIGH confidence (file-based routing is core, unchanged)
-- Pattern consistency: matches `/nettside-for-bedrift/` and `/kontakt/` page structure already in codebase
+- Codebase: `src/components/islands/PrisKalkulatorIsland.tsx` — current 380 LOC useState-based wizard, confirms rewrite needed
+- Codebase: `src/config/services.ts` — establishes TypeScript config pattern with typed interfaces
+- Codebase: `package.json` — React 19.2.3, Framer Motion 12.23.26, TypeScript 5 already installed
+- React docs: `useReducer` is a stable built-in hook since React 16.8, no version concerns
+- Confidence: HIGH — all recommendations based on existing codebase patterns and standard React patterns, no external dependencies to verify
 
 ---
-*Stack research for: v1.1 Tjenesteutvidelse — 7 service sub-pages in Astro 5*
-*Researched: 2026-03-04*
+*Stack research for: v1.2 Smart Priskalkulator — additive pricing engine*
+*Researched: 2026-03-06*
