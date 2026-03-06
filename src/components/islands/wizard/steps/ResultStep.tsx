@@ -129,7 +129,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       </motion.div>
 
       {/* Line items grouped by category */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-4">
+      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-5">
         {grouped.map((group) => (
           <div key={group.category}>
             <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-text-muted">
@@ -137,7 +137,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
             </h3>
             <div className="flex flex-col gap-1.5">
               {group.items.map((item) => (
-                <div key={item.id} className="pl-3 border-l border-white/10 text-sm text-text-muted">
+                <div key={item.id} className="pl-3 border-l border-white/15 text-sm text-text">
                   {item.label}
                 </div>
               ))}
@@ -150,7 +150,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between">
-            <span className="text-base font-semibold text-text-muted">Engangspris</span>
+            <span className="text-sm font-medium uppercase tracking-wide text-text-muted">Engangspris</span>
             {estimate.discountActive ? (
               <div className="flex flex-col items-end gap-0.5">
                 <span className="text-sm text-text-muted line-through">
@@ -178,7 +178,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       {estimate.monthly > 0 && (
         <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
           <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium text-text-muted">Drift og hosting</span>
+            <span className="text-sm font-medium uppercase tracking-wide text-text-muted">Drift og hosting</span>
             <span className="text-text">{formatPrice(estimate.monthly)} kr/mnd</span>
           </div>
         </motion.div>
