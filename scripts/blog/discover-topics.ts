@@ -70,7 +70,10 @@ export async function selectTopic(): Promise<Topic> {
     remaining: c.articles_target - countPublishedFromFiles(c.category),
   }))
     .filter((c) => c.remaining > 0)
-    .sort((a, b) => (b.remaining * b.cluster.priority) - (a.remaining * a.cluster.priority))[0];
+    .sort((a, b) => {
+      if (a.cluster.priority !== b.cluster.priority) return a.cluster.priority - b.cluster.priority;
+      return b.remaining - a.remaining;
+    })[0];
 
   if (!clusterWithCapacity) {
     throw new Error('All cluster targets are met — no topic to generate');
@@ -91,7 +94,7 @@ export async function selectTopic(): Promise<Topic> {
 
     const slug = norwegianSlugify(suggestion.slug || suggestion.title);
 
-    if (!readExistingSlugs().includes(slug)) {
+    if (!existingSlugs.includes(slug)) {
       topic = { slug, title: suggestion.title, cluster: selectedCluster.name };
       break;
     }

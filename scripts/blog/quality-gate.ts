@@ -6,6 +6,7 @@ export interface QualityResult {
   passed: boolean;
   aiScores: Record<string, number>;
   aiAverage: number;
+  automatedChecksRan: boolean;
   automatedChecks: {
     wordCount: boolean;
     lixScore: boolean;
@@ -75,6 +76,7 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
     passed: true,
     aiScores,
     aiAverage,
+    automatedChecksRan: false,
     automatedChecks: {
       wordCount: false,
       lixScore: false,
@@ -105,6 +107,7 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
     article.metadata.seoTitle.includes('| Nettup') &&
     article.metadata.seoTitle.length <= 60;
 
+  result.automatedChecksRan = true;
   result.automatedChecks = {
     wordCount: wordCount >= 1400,
     lixScore: lix <= 55,

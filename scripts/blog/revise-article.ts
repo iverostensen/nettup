@@ -41,13 +41,15 @@ function buildRevisionContext(quality: QualityResult): string {
     seoTitleFormat: 'seoTitle mangler "| Nettup" eller er over 60 tegn',
   };
 
-  const failedChecks = Object.entries(quality.automatedChecks)
-    .filter(([, passed]) => !passed)
-    .map(([check]) => `- ${checkLabels[check] ?? check}`);
+  if (quality.automatedChecksRan) {
+    const failedChecks = Object.entries(quality.automatedChecks)
+      .filter(([, passed]) => !passed)
+      .map(([check]) => `- ${checkLabels[check] ?? check}`);
 
-  if (failedChecks.length > 0) {
-    lines.push('\nAutomatiserte sjekker som feilet:');
-    lines.push(...failedChecks);
+    if (failedChecks.length > 0) {
+      lines.push('\nAutomatiserte sjekker som feilet:');
+      lines.push(...failedChecks);
+    }
   }
 
   if (quality.reason) {
