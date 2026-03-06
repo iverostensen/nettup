@@ -15,9 +15,50 @@ interface ChatRequest {
 }
 
 const MAX_MESSAGES = 20;
+const MAX_INPUT_LENGTH = 2000;
 
-export const POST: APIRoute = async ({ request }) => {
+// Simple in-memory rate limiting
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = requestLog.get(ip) ?? [];
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+
+  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(ip, recent);
+    return true;
+  }
+
+  recent.push(now);
+  requestLog.set(ip, recent);
+  return false;
+}
+
+// Prevent memory leak: clean up old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, timestamps] of requestLog) {
+    const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+    if (recent.length === 0) {
+      requestLog.delete(ip);
+    } else {
+      requestLog.set(ip, recent);
+    }
+  }
+}, RATE_LIMIT_WINDOW_MS);
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    if (isRateLimited(clientAddress)) {
+      return new Response(
+        JSON.stringify({ error: 'For mange forespørsler. Vent litt og prøv igjen.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
     const apiKey = import.meta.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return new Response(
@@ -37,7 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const messages = body.messages.slice(-MAX_MESSAGES).map((msg) => ({
       role: msg.role,
-      content: msg.content,
+      content: typeof msg.content === 'string' ? msg.content.slice(0, MAX_INPUT_LENGTH) : '',
     }));
 
     const currentPage = typeof body.currentPage === 'string' ? body.currentPage : '/';
