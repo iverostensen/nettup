@@ -3,10 +3,11 @@ import { SelectableCard } from '../cards/SelectableCard';
 
 interface DesignStepProps {
   serviceType: ServiceType;
+  selectedDesignId?: string | null;
   onSelectDesign: (designId: string) => void;
 }
 
-export function DesignStep({ serviceType, onSelectDesign }: DesignStepProps) {
+export function DesignStep({ serviceType, selectedDesignId, onSelectDesign }: DesignStepProps) {
   const designs = pricingConfig.services[serviceType].designs;
 
   return (
@@ -19,7 +20,7 @@ export function DesignStep({ serviceType, onSelectDesign }: DesignStepProps) {
           <SelectableCard
             key={design.id}
             label={design.label}
-            selected={false}
+            selected={design.id === selectedDesignId}
             onToggle={() => onSelectDesign(design.id)}
           />
         ))}

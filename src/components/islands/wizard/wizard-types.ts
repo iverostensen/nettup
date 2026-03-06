@@ -19,7 +19,7 @@ export const STEP_ORDER: WizardStep[] = [
 
 export const STEP_LABELS: Record<WizardStep, string> = {
   goal: 'Mal',
-  size: 'Storrelse',
+  size: 'Størrelse',
   features: 'Funksjoner',
   integrations: 'Integrasjoner',
   design: 'Design',

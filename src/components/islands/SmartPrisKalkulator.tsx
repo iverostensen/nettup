@@ -151,8 +151,8 @@ export default function SmartPrisKalkulator() {
           </button>
         )}
 
-        <div className="rounded-md border border-white/10 bg-surface-raised p-6 sm:p-8">
-          <AnimatePresence mode="wait" custom={state.direction}>
+        <motion.div layout="size" className="overflow-hidden rounded-md border border-white/10 bg-surface-raised p-6 sm:p-8">
+          <AnimatePresence mode="popLayout" custom={state.direction}>
             <motion.div
               key={state.currentStep}
               custom={state.direction}
@@ -165,7 +165,7 @@ export default function SmartPrisKalkulator() {
               {renderStep()}
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

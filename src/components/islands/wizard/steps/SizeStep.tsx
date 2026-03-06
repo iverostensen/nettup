@@ -3,6 +3,7 @@ import { SelectableCard } from '../cards/SelectableCard';
 
 interface SizeStepProps {
   serviceType: ServiceType;
+  selectedSizeId?: string | null;
   onSelectSize: (sizeId: string) => void;
 }
 
@@ -12,7 +13,7 @@ const headings: Record<ServiceType, string> = {
   landingsside: 'Hvor stor er landingssiden?',
 };
 
-export function SizeStep({ serviceType, onSelectSize }: SizeStepProps) {
+export function SizeStep({ serviceType, selectedSizeId, onSelectSize }: SizeStepProps) {
   const sizes = pricingConfig.services[serviceType].sizes;
 
   return (
@@ -25,7 +26,7 @@ export function SizeStep({ serviceType, onSelectSize }: SizeStepProps) {
           <SelectableCard
             key={size.id}
             label={size.label}
-            selected={false}
+            selected={size.id === selectedSizeId}
             onToggle={() => onSelectSize(size.id)}
           />
         ))}
