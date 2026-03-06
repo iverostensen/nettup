@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+
+const articles = (await getCollection('blogg'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Blogg — Nettup" description="Tips og innsikt om nettsider, SEO og netthandel for norske småbedrifter.">
+  <Section>
+    <SectionHeader title="Blogg" subtitle="Tips og innsikt om nettsider, SEO og netthandel." />
+    {articles.length === 0 ? (
+      <p class="text-center text-text-muted">Artikler kommer snart.</p>
+    ) : (
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    )}
+  </Section>
+</BaseLayout>
