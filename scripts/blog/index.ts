@@ -1,10 +1,9 @@
 import fs from 'node:fs';
-import { selectTopic, readQueue, writeQueue } from './discover-topics.ts';
+import { selectTopic } from './discover-topics.ts';
 import { generateArticle } from './generate-article.ts';
 import { runQualityGate } from './quality-gate.ts';
 import { reviseArticle } from './revise-article.ts';
 import { publishArticle } from './publish.ts';
-import { RETRY_LIMIT } from './config.ts';
 
 const MAX_REVISIONS = 2;
 
@@ -54,14 +53,6 @@ async function runPipeline(): Promise<void> {
     log('Generate', `Generation failed: ${message}`);
     writeJobSummary(`## Pipeline: Generation Failed\n\n${message}`);
 
-    // Update queue entry to rejected
-    const queue = readQueue();
-    const entry = queue.find((e) => e.slug === topic.slug);
-    if (entry) {
-      entry.status = 'rejected';
-      entry.reason = message;
-      writeQueue(queue);
-    }
     return;
   }
 
@@ -74,7 +65,7 @@ async function runPipeline(): Promise<void> {
   let revisionCount = 0;
 
   try {
-    quality = await runQualityGate(article, { skipQueueUpdate: true });
+    quality = await runQualityGate(article);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     log('Quality', `Quality gate error: ${message}`);
@@ -99,7 +90,7 @@ async function runPipeline(): Promise<void> {
     }
 
     try {
-      quality = await runQualityGate(article, { skipQueueUpdate: true });
+      quality = await runQualityGate(article);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       log('Quality', `Quality gate error after revision: ${message}`);
@@ -110,17 +101,7 @@ async function runPipeline(): Promise<void> {
     log('Quality', `Revision ${revisionCount} result: ${quality.aiAverage.toFixed(1)}/10 — ${quality.passed ? 'passed' : 'failed'}`);
   }
 
-  // Final rejection: update queue once here (all quality gate calls used skipQueueUpdate: true)
   if (!quality.passed) {
-    const queue = readQueue();
-    const entry = queue.find((e) => e.slug === topic.slug);
-    if (entry) {
-      entry.attempts = (entry.attempts ?? 0) + 1;
-      entry.reason = quality.reason;
-      entry.status = entry.attempts >= RETRY_LIMIT ? 'permanently_rejected' : 'rejected';
-      writeQueue(queue);
-    }
-
     const revisionNote = revisionCount > 0 ? ` after ${revisionCount} revision(s)` : '';
     log('Quality', `Rejected${revisionNote} — ${quality.reason}`);
     writeJobSummary(

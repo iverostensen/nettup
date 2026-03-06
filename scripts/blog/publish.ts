@@ -5,7 +5,6 @@ import { simpleGit } from 'simple-git';
 import { Octokit } from '@octokit/rest';
 import type { ArticleResult } from './generate-article.ts';
 import type { QualityResult } from './quality-gate.ts';
-import { readQueue, writeQueue } from './discover-topics.ts';
 import { buildPrBody } from './optimize-seo.ts';
 
 const repoRoot = path.resolve(fileURLToPath(import.meta.url), '../../../');
@@ -64,14 +63,6 @@ export async function publishArticle(article: ArticleResult, quality: QualityRes
     head: branchName,
     base: 'main',
   });
-
-  // 7. Update queue: mark as published
-  const queue = readQueue();
-  const entry = queue.find((e) => e.slug === article.slug);
-  if (entry) {
-    entry.status = 'published';
-    writeQueue(queue);
-  }
 
   return data.html_url;
 }

@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { CLAUDE_MODEL, RETRY_LIMIT, type QueueEntry } from './config.ts';
+import { CLAUDE_MODEL } from './config.ts';
 import type { ArticleResult } from './generate-article.ts';
-import { readQueue, writeQueue } from './discover-topics.ts';
 
 export interface QualityResult {
   passed: boolean;
@@ -47,10 +46,7 @@ norskkvalitet: [tall]
 geoOptimering: [tall]
 ctaKvalitet: [tall]`;
 
-export async function runQualityGate(
-  article: ArticleResult,
-  options?: { skipQueueUpdate?: boolean }
-): Promise<QualityResult> {
+export async function runQualityGate(article: ArticleResult): Promise<QualityResult> {
   const client = new Anthropic();
 
   // Pass 1: Claude self-review
@@ -93,9 +89,6 @@ export async function runQualityGate(
   if (aiAverage < 7) {
     result.passed = false;
     result.reason = `AI review: average score ${aiAverage.toFixed(1)}/10`;
-    if (!options?.skipQueueUpdate) {
-      await updateQueueOnRejection(article.topic, result.reason);
-    }
     return result;
   }
 
@@ -145,26 +138,5 @@ export async function runQualityGate(
     result.reason = `Automated check failed: seoTitle "${article.metadata.seoTitle}" must include "| Nettup" and be ≤ 60 chars`;
   }
 
-  if (!result.passed && result.reason && !options?.skipQueueUpdate) {
-    await updateQueueOnRejection(article.topic, result.reason);
-  }
-
   return result;
-}
-
-async function updateQueueOnRejection(topic: QueueEntry, reason: string): Promise<void> {
-  const queue = readQueue();
-  const entry = queue.find((e) => e.slug === topic.slug);
-  if (!entry) return;
-
-  entry.attempts = (entry.attempts ?? 0) + 1;
-  entry.reason = reason;
-
-  if (entry.attempts >= RETRY_LIMIT) {
-    entry.status = 'permanently_rejected';
-  } else {
-    entry.status = 'rejected';
-  }
-
-  writeQueue(queue);
 }

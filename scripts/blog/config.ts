@@ -1,16 +1,9 @@
 export const CLAUDE_MODEL = 'claude-sonnet-4-6';
 
-export const RETRY_LIMIT = 3;
-
-export interface QueueEntry {
+export interface Topic {
   slug: string;
   title: string;
   cluster: string;
-  status: 'pending' | 'published' | 'rejected' | 'permanently_rejected';
-  reason?: string;
-  previousFailureReason?: string;
-  attempts: number;
-  createdAt: string;
 }
 
 export interface ClusterConfig {

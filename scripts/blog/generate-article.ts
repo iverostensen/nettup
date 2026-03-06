@@ -3,12 +3,12 @@ import {
   CLAUDE_MODEL,
   SERVICE_PAGES,
   type ArticleMetadata,
-  type QueueEntry,
+  type Topic,
 } from './config.ts';
 import { readExistingSlugs } from './discover-topics.ts';
 
 export interface ArticleResult {
-  topic: QueueEntry;
+  topic: Topic;
   slug: string;
   markdownBody: string;
   metadata: ArticleMetadata;
@@ -129,7 +129,7 @@ ${existingSlugsText}`;
   return metadata;
 }
 
-export async function generateArticle(topic: QueueEntry): Promise<ArticleResult> {
+export async function generateArticle(topic: Topic): Promise<ArticleResult> {
   const client = new Anthropic();
   const existingSlugs = readExistingSlugs();
 
@@ -147,10 +147,6 @@ ${servicePagesText}
 
 Eksisterende artikler for intern lenking (bruk slug-format /blogg/slug):
 ${existingSlugsText}`;
-
-  if (topic.previousFailureReason) {
-    bodyUserMessage += `\n\nOBS: Forrige forsøk ble avvist fordi: ${topic.previousFailureReason}. Unngå dette problemet.`;
-  }
 
   // Call 1: Generate article body
   const bodyResponse = await client.messages.create({
