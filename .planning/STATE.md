@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 17 of 19 (Astro Blog Infrastructure)
-Plan: 2 of 2 — Complete
-Status: Phase complete
-Last activity: 2026-03-06 — Completed 17-02 (blog listing page, article page, seed articles)
+Phase: 18 of 19 (Generation Pipeline Scripts)
+Plan: 1 of 2 — Complete
+Status: In progress
+Last activity: 2026-03-06 — Completed 18-01 (config.ts, topics-queue.json, discover-topics.ts, generate-article.ts)
 
 Progress: [████░░░░░░] 40%
 
@@ -59,6 +59,9 @@ Key decisions from research to carry into planning:
 - [v1.3]: Run `astro sync` immediately after creating content config — before any page components
 - [v1.3]: LIX threshold ≤ 55 (not 45) — Norwegian technical content needs the wider margin
 - [v1.3]: Two-call Claude API pattern (content then metadata) — prevents JSON truncation at ~2000 words
+- [18-01]: CLAUDE_MODEL = 'claude-sonnet-4-6' — single constant in config.ts, referenced by all pipeline stages
+- [18-01]: buildFrontmatter writes date/readTime only (not publishDate/estimatedReadTime) to match live Zod schema
+- [18-01]: relatedSlugs filtered post-generation against disk — prevents broken internal references
 - [v1.3]: GITHUB_TOKEN cannot trigger CI on PRs — must use PAT stored as `secrets.GH_PAT`
 - [v1.3]: Branch protection rule required on `main` for auto-merge to wait for CI
 
@@ -86,5 +89,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 17-02-PLAN.md (blog user-facing pages + seed articles)
+Stopped at: Completed 18-01-PLAN.md (pipeline devDependencies, config.ts, discover-topics.ts, generate-article.ts)
 Resume file: None
