@@ -71,11 +71,11 @@ See archive: `.planning/milestones/v1.2-ROADMAP.md`
   3. Article pages include Article JSON-LD, FAQPage JSON-LD, and BreadcrumbList JSON-LD visible in page source
   4. Article pages display 2-3 related articles in a "Les også" section when `relatedSlugs` are configured
   5. Blog is linked from the site footer and `astro build` completes without errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: Content collection schema, ArticleCard, ArticleLayout, RelatedArticles components
-- [ ] 17-02: Listing page, dynamic article page, BaseLayout footer link, seed articles
+- [ ] 17-01-PLAN.md — Content schema (legacy API), astro.config.mjs legacy flag, ArticleCard and RelatedArticles components
+- [ ] 17-02-PLAN.md — Listing page, dynamic article page, footer link, BaseLayout pageLabels, 3 seed articles + build verification
 
 ### Phase 18: Generation Pipeline Scripts
 **Goal**: Running `npx tsx scripts/blog/index.ts` locally produces a Norwegian SEO article, passes a two-pass quality gate, and opens a GitHub PR — without any CI or cron involvement
