@@ -61,7 +61,7 @@ jobs:
 
       - name: Enable auto-merge on blog PR
         run: |
-          PR=$(gh pr list --head "blogg/" --json number --jq '.[0].number' 2>/dev/null || echo "")
+          PR=$(gh pr list --json number,headRefName --jq '[.[] | select(.headRefName | startswith("blogg/"))][0].number // ""' 2>/dev/null || echo "")
           if [ -n "$PR" ]; then
             gh pr merge "$PR" --auto --squash
             echo "Auto-merge enabled on PR #$PR" >> $GITHUB_STEP_SUMMARY
