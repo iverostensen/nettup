@@ -13,7 +13,7 @@ faq:
   - question: "Hva er en billig nettside?"
     answer: "En billig nettside koster typisk mellom 0 og 8 000 kroner. Det inkluderer gratis planer på plattformer som Wix, betalte maler og enkle frilansoppdrag. Prisen reflekterer som regel det du får."
   - question: "Kan jeg få en profesjonell nettside for under 10 000 kroner?"
-    answer: "I noen tilfeller ja — for eksempel gjennom pakkeløsninger fra seriøse leverandører. Men du bør alltid sjekke at SEO, universell utforming og support er inkludert, ikke bare selve designet."
+    answer: "I noen tilfeller ja, for eksempel gjennom pakkeløsninger fra seriøse leverandører. Men du bør alltid sjekke at SEO, universell utforming og support er inkludert, ikke bare selve designet."
   - question: "Hva er de vanligste skjulte kostnadene ved billige nettsider?"
     answer: "Hosting, domene, SSL-sertifikat, vedlikeholdstid, og tapt inntekt ved nedetid eller dårlig Google-rangering er de mest typiske skjulte kostnadene som ikke er synlige i det opprinnelige tilbudet."
   - question: "Er gratis nettsider (Wix, WordPress.com) egnet for en bedrift?"
@@ -22,17 +22,13 @@ faq:
     answer: "Eget domene, sikker hosting, SSL-sertifikat (HTTPS), grunnleggende SEO-oppsett, GDPR-dokumentasjon og mobiloptimalisering er minimumskravene for enhver seriøs bedriftsnettside."
 ---
 
-# Billig nettside: Hva får du egentlig for pengene?
-
-En billig nettside koster gjerne mellom 0 og 5 000 kroner, men det du sparer i kroner kan koste deg dyrt i tapt troverdighet, dårlig synlighet og fremtidige utgifter. Her er hva du faktisk får — og hva du ikke får.
-
----
+En billig nettside koster gjerne mellom 0 og 5 000 kroner, men det du sparer i kroner kan koste deg dyrt i tapt troverdighet, dårlig synlighet og fremtidige utgifter. Her er hva du faktisk får - og hva du ikke får.
 
 ## Definisjonen på "billig" varierer enormt
 
 Når norske bedriftseiere søker etter billig nettside, mener de vidt forskjellige ting. Noen tenker på gratis løsninger som Wix eller WordPress.com. Andre ser på tilbud til 1 500–3 000 kroner fra frilansutviklere på nettet. Noen har fått et tilbud på 50 000 kroner og synes alt under det er billig.
 
-For denne artikkelen bruker vi "billig nettside" om løsninger i spannet 0–8 000 kroner totalt. Det er her de fleste tilbudene dukker opp når man googler etter rimelige alternativer — og det er her forventningsgapet er størst.
+For denne artikkelen bruker vi "billig nettside" om løsninger i spannet 0–8 000 kroner totalt. Det er her de fleste tilbudene dukker opp når man googler etter rimelige alternativer, og det er her forventningsgapet er størst.
 
 Prisspennet i markedet er virkelig stort. En enkel nettside kan koste ingenting i dag, mens en profesjonell bedriftsnettside fra et norsk byrå gjerne koster 30 000–150 000 kroner. Hva forklarer denne forskjellen? Og er den alltid verdt det?
 
@@ -40,7 +36,7 @@ Prisspennet i markedet er virkelig stort. En enkel nettside kan koste ingenting 
 
 ## Gratis nettsider: Hva er egentlig gratis?
 
-Plattformer som Wix, Squarespace og WordPress.com tilbyr gratis planer. Det høres bra ut — men ingenting er egentlig gratis.
+Plattformer som Wix, Squarespace og WordPress.com tilbyr gratis planer. Det høres bra ut, men ingenting er egentlig gratis.
 
 På en gratis plan vil du typisk:
 
@@ -51,7 +47,7 @@ På en gratis plan vil du typisk:
 
 Et eget domene (f.eks. `dinbedrift.no`) koster normalt 150–300 kroner per år. Hosting koster 500–2 000 kroner per år, avhengig av leverandør og ytelse. Disse kostnadene legges raskt oppå "gratistilbudet."
 
-Det viktigste problemet med gratis planer er imidlertid ikke prisen — det er profesjonaliteten. Studier viser at 75 % av forbrukere bedømmer et selskaps troverdighet ut fra nettsidedesign alene. Et `wix.com`-domene sender et tydelig signal: denne bedriften har ikke investert i seg selv.
+Det viktigste problemet med gratis planer er imidlertid ikke prisen, men profesjonaliteten. Studier viser at 75 % av forbrukere bedømmer et selskaps troverdighet ut fra nettsidedesign alene. Et `wix.com`-domene sender et tydelig signal: denne bedriften har ikke investert i seg selv.
 
 ---
 
@@ -66,7 +62,7 @@ Neste nivå er betalte planer på byggeplattformer, eller enkle ferdiglagde nett
 
 Dette kan faktisk være nok for svært enkle behov. En håndverker som bare trenger et visittkort på nett, med adresse og telefonnummer, kan komme langt med dette.
 
-Men begrensningene er reelle. Maler ser ofte like ut på tvers av tusenvis av nettsteder. Søkemotoroptimalisering er begrenset eller ikke-eksisterende. Lastetidene kan være trege fordi plattformene er bygget for bredde, ikke ytelse. Og du har sjelden mulighet til å integrere systemene du bruker i bedriften din — CRM, bookingverktøy, betalingsløsninger eller lagerstyring.
+Men begrensningene er reelle. Maler ser ofte like ut på tvers av tusenvis av nettsteder. Søkemotoroptimalisering er begrenset eller ikke-eksisterende. Lastetidene kan være trege fordi plattformene er bygget for bredde, ikke ytelse. Og du har sjelden mulighet til å integrere systemene du bruker i bedriften din: CRM, bookingverktøy, betalingsløsninger eller lagerstyring.
 
 ---
 
@@ -74,13 +70,13 @@ Men begrensningene er reelle. Maler ser ofte like ut på tvers av tusenvis av ne
 
 Mange bedriftseiere finner tilbud på 3 000–7 000 kroner fra frilansutviklere på plattformer som Fiverr eller via Facebook-grupper. Her er bildet mer nyansert.
 
-Noen frilansere er dyktige og leverer solid arbeid. Andre — spesielt utenlandske leverandører til svært lav pris — leverer maler med ditt logo limt på, uten forståelse for norsk marked, norske regler (GDPR, universell utforming) eller din bransje.
+Noen frilansere er dyktige og leverer solid arbeid. Andre, spesielt utenlandske leverandører til svært lav pris, leverer maler med ditt logo limt på, uten forståelse for norsk marked, norske regler (GDPR, universell utforming) eller din bransje.
 
 Spørsmålene du bør stille er:
 
 - Har leverandøren erfaring med norske bedrifter?
 - Hvem eier domenet og hostingen etter levering?
-- Hva skjer hvis noe går galt — hvem fikser det?
+- Hva skjer hvis noe går galt - hvem fikser det?
 - Er universell utforming (WCAG 2.1) ivaretatt?
 - Er GDPR-compliance inkludert?
 
@@ -111,7 +107,7 @@ Dette er ikke en uvanlig historia. Det er snarere regelen enn unntaket.
 
 ## Hva SEO faktisk betyr for en billig nettside
 
-Søkemotoroptimalisering er kanskje den største forskjellen mellom en billig og en profesjonell nettside — og den minst synlige ved første øyekast.
+Søkemotoroptimalisering er kanskje den største forskjellen mellom en billig og en profesjonell nettside, og den minst synlige ved første øyekast.
 
 En billig nettside ser kanskje fin ut. Men hvis den ikke er bygget med riktig kodestruktur, raske lastetider, mobiloptimalisering og relevant innhold, vil Google rangere den lavt. En nettside ingen finner, er ikke verdt noe uansett hva den kostet.
 
@@ -137,7 +133,7 @@ Billige nettsider og ferdiglagde maler er sjelden bygget med dette i tankene. Ko
 - Bøter ved gjentatte brudd
 - Ekskludering av besøkende med funksjonsnedsettelser
 
-Dette er ikke bare et etisk spørsmål — det er et juridisk krav som din nettside må oppfylle, uansett hva du betalte for den.
+Dette er ikke bare et etisk spørsmål, men et juridisk krav som din nettside må oppfylle, uansett hva du betalte for den.
 
 ---
 
@@ -163,9 +159,9 @@ Tenk på nettsiden som en ansatt. En dårlig ansatt som jobber gratis, koster de
 
 ---
 
-## Hva koster en profesjonell nettside — og hva er forskjellen?
+## Hva koster en profesjonell nettside - og hva er forskjellen?
 
-En profesjonell nettside fra et norsk byrå eller en erfaren utvikler koster typisk 20 000–80 000 kroner for en SMB-nettside. Det er et betydelig sprang fra 4 000 kroner — men her er hva du faktisk betaler for:
+En profesjonell nettside fra et norsk byrå eller en erfaren utvikler koster typisk 20 000–80 000 kroner for en SMB-nettside. Det er et betydelig sprang fra 4 000 kroner, men her er hva du faktisk betaler for:
 
 - **Strategi**: Analyse av målgruppe, konkurrenter og konverteringsmål
 - **Design**: Skreddersydd for din merkevare, ikke en generisk mal
@@ -175,13 +171,13 @@ En profesjonell nettside fra et norsk byrå eller en erfaren utvikler koster typ
 - **Support og vedlikehold**: Noen å ringe når noe går galt
 - **Opplæring**: Du lærer å oppdatere innholdet selv
 
-Du kan utforske ulike prisnivåer og hva de inkluderer på vår [priskalkulator](/priskalkulator) — det gir et godt utgangspunkt for å forstå hva du faktisk trenger.
+Du kan utforske ulike prisnivåer og hva de inkluderer på vår [priskalkulator](/priskalkulator). Det gir et godt utgangspunkt for å forstå hva du faktisk trenger.
 
 For en grundig gjennomgang av hva en nettside faktisk koster i det norske markedet, se vår artikkel om [hva en nettside koster](/blogg/hva-koster-en-nettside).
 
 ---
 
-## Slik vurderer du et tilbud — uansett pris
+## Slik vurderer du et tilbud - uansett pris
 
 Når du mottar et tilbud på nettside, still disse spørsmålene uansett om tilbudet er på 5 000 eller 50 000 kroner:
 
@@ -200,11 +196,11 @@ Et seriøst byrå eller utvikler svarer klart på alle disse spørsmålene. Diff
 
 Det finnes ikke ett riktig svar på hva du bør betale for en nettside. Svaret avhenger av hva nettsiden skal gjøre for bedriften din.
 
-Men én ting er sikkert: En nettside er ikke en kostnad — den er en investering. Og som alle investeringer bør du vurdere avkastningen, ikke bare inngangsprisen.
+Men én ting er sikkert: En nettside er ikke en kostnad, den er en investering. Og som alle investeringer bør du vurdere avkastningen, ikke bare inngangsprisen.
 
-Hvis en profesjonell nettside hjelper deg å vinne én ekstra kunde per måned verdt 5 000 kroner, har den tjent inn kostnadene sine på under ett år. En billig nettside som ikke rangerer, ikke konverterer og ikke bygger tillit, koster deg de kundene — stille og usynlig.
+Hvis en profesjonell nettside hjelper deg å vinne én ekstra kunde per måned verdt 5 000 kroner, har den tjent inn kostnadene sine på under ett år. En billig nettside som ikke rangerer, ikke konverterer og ikke bygger tillit, koster deg de kundene - stille og usynlig.
 
-Hos Nettup tilbyr vi [nettsider for bedrift](/nettside-for-bedrift) i ulike prisklasser, alltid med fokus på at nettsiden faktisk skal gjøre en jobb for deg — ikke bare eksistere.
+Hos Nettup tilbyr vi [nettsider for bedrift](/nettside-for-bedrift) i ulike prisklasser, alltid med fokus på at nettsiden faktisk skal gjøre en jobb for deg.
 
 ---
 
@@ -214,7 +210,7 @@ Hos Nettup tilbyr vi [nettsider for bedrift](/nettside-for-bedrift) i ulike pris
 En billig nettside koster typisk mellom 0 og 8 000 kroner. Det inkluderer gratis planer på plattformer som Wix, betalte maler og enkle frilansoppdrag. Prisen reflekterer som regel det du får.
 
 **Kan jeg få en profesjonell nettside for under 10 000 kroner?**
-I noen tilfeller ja — for eksempel gjennom pakkeløsninger fra seriøse leverandører. Men du bør alltid sjekke at SEO, universell utforming og support er inkludert, ikke bare selve designet.
+I noen tilfeller ja, for eksempel gjennom pakkeløsninger fra seriøse leverandører. Men du bør alltid sjekke at SEO, universell utforming og support er inkludert, ikke bare selve designet.
 
 **Hva er de vanligste skjulte kostnadene ved billige nettsider?**
 Hosting, domene, SSL-sertifikat, vedlikeholdstid, og tapt inntekt ved nedetid eller dårlig Google-rangering er de mest typiske skjulte kostnadene som ikke er synlige i det opprinnelige tilbudet.

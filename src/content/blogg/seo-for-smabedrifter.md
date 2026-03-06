@@ -1,7 +1,7 @@
 ---
 title: "SEO for småbedrifter: Slik blir du funnet på Google"
 seoTitle: "SEO for småbedrifter i Norge – Grunnleggende guide 2026"
-category: "SEO"
+category: "Lokal SEO"
 date: 2026-03-06
 readTime: 5
 description: "Søkemotoroptimalisering trenger ikke å være komplisert. Her er de viktigste SEO-tiltakene norske småbedrifter kan gjøre selv — uten teknisk bakgrunn."
