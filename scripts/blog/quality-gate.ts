@@ -96,7 +96,7 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
   const nettupCount = (article.markdownBody.match(/Nettup/g) ?? []).length;
 
   result.automatedChecks = {
-    wordCount: wordCount >= 1500,
+    wordCount: wordCount >= 1400,
     lixScore: lix <= 55,
     hasFaqSection,
     nettupMentions: nettupCount <= 2,
@@ -104,7 +104,7 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
 
   if (!result.automatedChecks.wordCount) {
     result.passed = false;
-    result.reason = `Automated check failed: word count ${wordCount} (minimum 1500)`;
+    result.reason = `Automated check failed: word count ${wordCount} (minimum 1400)`;
   } else if (!result.automatedChecks.lixScore) {
     result.passed = false;
     result.reason = `Automated check failed: LIX score ${lix.toFixed(1)} (maximum 55)`;

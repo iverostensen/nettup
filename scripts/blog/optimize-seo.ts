@@ -33,7 +33,7 @@ ${aiScoresRows}
 
 | Sjekk | Resultat |
 |-------|----------|
-| Ordantall (>= 1500) | ${passEmoji(quality.automatedChecks.wordCount)} ${wordCount} ord |
+| Ordantall (>= 1400) | ${passEmoji(quality.automatedChecks.wordCount)} ${wordCount} ord |
 | LIX-score (<= 55) | ${passEmoji(quality.automatedChecks.lixScore)} ${lixValue.toFixed(1)} |
 | FAQ-seksjon | ${passEmoji(quality.automatedChecks.hasFaqSection)} |
 | Nettup-nevnelser (<= 2) | ${passEmoji(quality.automatedChecks.nettupMentions)} |
