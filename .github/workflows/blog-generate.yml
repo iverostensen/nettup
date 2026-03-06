@@ -1,0 +1,66 @@
+name: Blog Generate
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at 08:00 UTC
+  workflow_dispatch:       # Manual trigger — no inputs needed
+
+concurrency:
+  group: blog-generate
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    name: Generate Blog Article
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}  # PAT required — GITHUB_TOKEN cannot trigger CI on its own PRs
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate secrets
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "## Pipeline Error" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ANTHROPIC_API_KEY secret is not set. Add it in Settings → Secrets and variables → Actions." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+          if [ -z "$GH_PAT" ]; then
+            echo "## Pipeline Error" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "GH_PAT secret is not set. Add a PAT with contents:write and pull-requests:write scopes." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+
+      - name: Run blog pipeline
+        run: npx tsx scripts/blog/index.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Exposed as GITHUB_TOKEN so Octokit in publish.ts picks it up
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Enable auto-merge on blog PR
+        run: |
+          PR=$(gh pr list --head "blogg/" --json number --jq '.[0].number' 2>/dev/null || echo "")
+          if [ -n "$PR" ]; then
+            gh pr merge "$PR" --auto --squash
+            echo "Auto-merge enabled on PR #$PR" >> $GITHUB_STEP_SUMMARY
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        continue-on-error: true
