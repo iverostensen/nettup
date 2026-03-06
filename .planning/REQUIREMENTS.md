@@ -23,10 +23,10 @@ Requirements for milestone v1.3 — Automatisk Blogg.
 - [x] **PIPE-02**: Pipeline generates a 1500–2500 word Norwegian article using Claude Sonnet 4.6
 - [x] **PIPE-03**: Every generated article includes a "Vanlige spørsmål" section with 3–5 Q&A pairs
 - [x] **PIPE-04**: Generated articles include natural internal links to Nettup service pages and existing articles
-- [ ] **PIPE-05**: AI review pass scores article ≥ 7/10 average across 6 editorial criteria before publishing
-- [ ] **PIPE-06**: Automated checks verify word count ≥ 1500, LIX ≤ 55, FAQ present, Nettup mentions ≤ 2
+- [x] **PIPE-05**: AI review pass scores article ≥ 7/10 average across 6 editorial criteria before publishing
+- [x] **PIPE-06**: Automated checks verify word count ≥ 1500, LIX ≤ 55, FAQ present, Nettup mentions ≤ 2
 - [x] **PIPE-07**: Failed topic attempts are persisted to `topics-queue.json` and retried on next run before generating new
-- [ ] **PIPE-08**: Pipeline creates a GitHub PR with quality scores in the PR body — never commits directly to `main`
+- [x] **PIPE-08**: Pipeline creates a GitHub PR with quality scores in the PR body — never commits directly to `main`
 - [x] **PIPE-09**: Topic clusters are configurable via `scripts/blog/config.ts` (editorial direction controlled by Nettup)
 
 ### GitHub Actions + Repo Config (CI)
@@ -72,10 +72,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PIPE-02 | Phase 18 | Complete |
 | PIPE-03 | Phase 18 | Complete |
 | PIPE-04 | Phase 18 | Complete |
-| PIPE-05 | Phase 18 | Pending |
-| PIPE-06 | Phase 18 | Pending |
+| PIPE-05 | Phase 18 | Complete |
+| PIPE-06 | Phase 18 | Complete |
 | PIPE-07 | Phase 18 | Complete |
-| PIPE-08 | Phase 18 | Pending |
+| PIPE-08 | Phase 18 | Complete |
 | PIPE-09 | Phase 18 | Complete |
 | CI-01 | Phase 19 | Pending |
 | CI-02 | Phase 19 | Pending |

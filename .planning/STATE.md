@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Automatisk Blogg
 status: unknown
-last_updated: "2026-03-06T19:18:08.258Z"
+last_updated: "2026-03-06T19:54:17Z"
 progress:
   total_phases: 1
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 ## Current Position
 
 Phase: 18 of 19 (Generation Pipeline Scripts)
-Plan: 1 of 2 — Complete
-Status: In progress
-Last activity: 2026-03-06 — Completed 18-01 (config.ts, topics-queue.json, discover-topics.ts, generate-article.ts)
+Plan: 2 of 2 — Complete
+Status: Phase complete, ready for Phase 19
+Last activity: 2026-03-06 — Completed 18-02 (quality-gate.ts, optimize-seo.ts, publish.ts, index.ts)
 
-Progress: [████░░░░░░] 40%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -41,7 +41,7 @@ Progress: [████░░░░░░] 40%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
-| 18. Pipeline Scripts | 0/2 | - | - |
+| 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
 | 19. GitHub Actions | 0/1 | - | - |
 
 ## Accumulated Context
@@ -62,6 +62,9 @@ Key decisions from research to carry into planning:
 - [18-01]: CLAUDE_MODEL = 'claude-sonnet-4-6' — single constant in config.ts, referenced by all pipeline stages
 - [18-01]: buildFrontmatter writes date/readTime only (not publishDate/estimatedReadTime) to match live Zod schema
 - [18-01]: relatedSlugs filtered post-generation against disk — prevents broken internal references
+- [18-02]: ArticleResult defined in generate-article.ts (not config.ts) — import from the correct module
+- [18-02]: Pass 2 automated checks skipped on Pass 1 failure — avoids cost for already-rejected articles
+- [18-02]: fileURLToPath + '../../../' anchors repo root for simple-git, avoids cwd dependency
 - [v1.3]: GITHUB_TOKEN cannot trigger CI on PRs — must use PAT stored as `secrets.GH_PAT`
 - [v1.3]: Branch protection rule required on `main` for auto-merge to wait for CI
 
@@ -89,5 +92,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 18-01-PLAN.md (pipeline devDependencies, config.ts, discover-topics.ts, generate-article.ts)
+Stopped at: Completed 18-02-PLAN.md (quality-gate.ts, optimize-seo.ts, publish.ts, index.ts — pipeline complete)
 Resume file: None
