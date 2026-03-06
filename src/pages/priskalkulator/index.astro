@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import SmartPrisKalkulator from '@/components/islands/SmartPrisKalkulator';
+import CTA from '@/components/sections/CTA.astro';
+---
+
+<BaseLayout
+  title="Finn prisen på din nettside | Nettup"
+  description="Få et raskt prisestimat for nettside, nettbutikk eller landingsside. Svar på noen spørsmål — vi viser deg hva det koster."
+>
+  <main>
+    <Section class="pt-32 md:pt-40">
+      <h1 class="font-display text-4xl font-bold md:text-5xl">Få et prisestimat</h1>
+      <p class="mt-4 text-lg text-text-muted max-w-2xl">
+        Svar på noen enkle spørsmål, så finner vi riktig løsning — og viser deg hva det koster. Ingen forpliktelser.
+      </p>
+    </Section>
+
+    <Section>
+      <SmartPrisKalkulator client:visible />
+    </Section>
+
+    <CTA />
+  </main>
+</BaseLayout>
