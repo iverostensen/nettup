@@ -33,8 +33,13 @@ export function readExistingSlugs(): string[] {
   return fs.readdirSync(BLOGG_DIR).map((f) => f.replace(/\.md$/, ''));
 }
 
-function countPublished(queue: QueueEntry[], clusterName: string): number {
-  return queue.filter((e) => e.cluster === clusterName && e.status === 'published').length;
+function countPublishedFromFiles(category: string): number {
+  if (!fs.existsSync(BLOGG_DIR)) return 0;
+  const pattern = new RegExp(`^category:\\s*["']?${category}["']?\\s*$`, 'm');
+  return fs.readdirSync(BLOGG_DIR)
+    .filter((f) => f.endsWith('.md'))
+    .filter((f) => pattern.test(fs.readFileSync(path.join(BLOGG_DIR, f), 'utf8')))
+    .length;
 }
 
 async function askClaudeForTopic(
@@ -90,7 +95,7 @@ export async function selectTopic(): Promise<QueueEntry> {
   // Step 4: Select cluster by remaining capacity (round-robin weighted)
   const clusterWithCapacity = CLUSTERS.map((c) => ({
     cluster: c,
-    remaining: c.articles_target - countPublished(queue, c.name),
+    remaining: c.articles_target - countPublishedFromFiles(c.category),
   }))
     .filter((c) => c.remaining > 0)
     .sort((a, b) => b.remaining - a.remaining)[0];
