@@ -19,13 +19,14 @@ export interface ClusterConfig {
   keywords: string[];
   intent: 'informational' | 'commercial' | 'comparison';
   articles_target: number;
+  priority: number;
 }
 
 export const CLUSTERS: ClusterConfig[] = [
-  { name: 'Priser og kostnader', category: 'Priser',    keywords: ['hva koster nettside', 'webdesign pris', 'billig nettside'], intent: 'commercial', articles_target: 5 },
-  { name: 'Teknologi-valg',      category: 'Teknologi', keywords: ['wordpress vs astro', 'beste cms 2026', 'react nettside'], intent: 'informational', articles_target: 4 },
-  { name: 'SMB-tips',            category: 'SMB-tips',  keywords: ['trenger bedrift nettside', 'nettside tips', 'konvertere kunder'], intent: 'informational', articles_target: 5 },
-  { name: 'Lokal SEO',           category: 'Lokal SEO', keywords: ['seo oslo', 'google bedrift', 'lokal synlighet'], intent: 'informational', articles_target: 3 },
+  { name: 'Priser og kostnader', category: 'Priser',    keywords: ['hva koster nettside', 'webdesign pris', 'billig nettside'], intent: 'commercial',     articles_target: 5, priority: 1 },
+  { name: 'Teknologi-valg',      category: 'Teknologi', keywords: ['wordpress vs astro', 'beste cms 2026', 'react nettside'],   intent: 'informational', articles_target: 4, priority: 1 },
+  { name: 'SMB-tips',            category: 'SMB-tips',  keywords: ['trenger bedrift nettside', 'nettside tips', 'konvertere kunder'], intent: 'informational', articles_target: 5, priority: 1 },
+  { name: 'Lokal SEO',           category: 'Lokal SEO', keywords: ['seo oslo', 'google bedrift', 'lokal synlighet'],            intent: 'informational', articles_target: 3, priority: 2 },
 ];
 
 export const SERVICE_PAGES = [

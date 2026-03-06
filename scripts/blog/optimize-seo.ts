@@ -37,6 +37,9 @@ ${aiScoresRows}
 | LIX-score (<= 55) | ${passEmoji(quality.automatedChecks.lixScore)} ${lixValue.toFixed(1)} |
 | FAQ-seksjon | ${passEmoji(quality.automatedChecks.hasFaqSection)} |
 | Nettup-nevnelser (<= 2) | ${passEmoji(quality.automatedChecks.nettupMentions)} |
+| Ingen H1 i innhold | ${passEmoji(quality.automatedChecks.noH1InBody)} |
+| GEO: åpner med svar-avsnitt | ${passEmoji(quality.automatedChecks.geoFirstParagraph)} |
+| seoTitle-format (| Nettup, ≤60t) | ${passEmoji(quality.automatedChecks.seoTitleFormat)} ${article.metadata.seoTitle.length} tegn |
 
 ---
 

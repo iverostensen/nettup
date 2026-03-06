@@ -39,7 +39,12 @@ const articleSchema = {
     '@type': 'WebPage',
     '@id': `https://nettup.no/blogg/${article.slug}`,
   },
-  author: { '@type': 'Organization', name: 'Nettup', url: 'https://nettup.no' },
+  author: {
+    '@type': 'Person',
+    name: 'Iver Østensen',
+    url: 'https://nettup.no/om-oss',
+    sameAs: ['https://www.linkedin.com/in/iverostensen'],
+  },
   publisher: {
     '@type': 'Organization',
     name: 'Nettup',

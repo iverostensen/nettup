@@ -98,7 +98,7 @@ export async function selectTopic(): Promise<QueueEntry> {
     remaining: c.articles_target - countPublishedFromFiles(c.category),
   }))
     .filter((c) => c.remaining > 0)
-    .sort((a, b) => b.remaining - a.remaining)[0];
+    .sort((a, b) => (b.remaining * b.cluster.priority) - (a.remaining * a.cluster.priority))[0];
 
   const selectedCluster = clusterWithCapacity
     ? clusterWithCapacity.cluster

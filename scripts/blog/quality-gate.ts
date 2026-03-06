@@ -12,6 +12,9 @@ export interface QualityResult {
     lixScore: boolean;
     hasFaqSection: boolean;
     nettupMentions: boolean;
+    noH1InBody: boolean;
+    geoFirstParagraph: boolean;
+    seoTitleFormat: boolean;
   };
   reason?: string;
 }
@@ -78,6 +81,9 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
       lixScore: false,
       hasFaqSection: false,
       nettupMentions: false,
+      noH1InBody: false,
+      geoFirstParagraph: false,
+      seoTitleFormat: false,
     },
   };
 
@@ -94,12 +100,21 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
   const lix = lixScore(article.markdownBody);
   const hasFaqSection = /##\s*Vanlige spørsmål/i.test(article.markdownBody);
   const nettupCount = (article.markdownBody.match(/Nettup/g) ?? []).length;
+  const noH1InBody = !/^#\s/m.test(article.markdownBody);
+  const firstLine = article.markdownBody.split('\n').find((l) => l.trim().length > 0) ?? '';
+  const geoFirstParagraph = !firstLine.trim().startsWith('#');
+  const seoTitleFormat =
+    article.metadata.seoTitle.includes('| Nettup') &&
+    article.metadata.seoTitle.length <= 60;
 
   result.automatedChecks = {
     wordCount: wordCount >= 1400,
     lixScore: lix <= 55,
     hasFaqSection,
     nettupMentions: nettupCount <= 2,
+    noH1InBody,
+    geoFirstParagraph,
+    seoTitleFormat,
   };
 
   if (!result.automatedChecks.wordCount) {
@@ -114,6 +129,15 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
   } else if (!result.automatedChecks.nettupMentions) {
     result.passed = false;
     result.reason = `Automated check failed: Nettup mentioned ${nettupCount} times (maximum 2)`;
+  } else if (!result.automatedChecks.noH1InBody) {
+    result.passed = false;
+    result.reason = 'Automated check failed: article body contains an H1 heading (use H2 and below only)';
+  } else if (!result.automatedChecks.geoFirstParagraph) {
+    result.passed = false;
+    result.reason = 'Automated check failed: first line is a heading — GEO rule requires opening with a direct answer paragraph';
+  } else if (!result.automatedChecks.seoTitleFormat) {
+    result.passed = false;
+    result.reason = `Automated check failed: seoTitle "${article.metadata.seoTitle}" must include "| Nettup" and be ≤ 60 chars`;
   }
 
   if (!result.passed && result.reason) {
