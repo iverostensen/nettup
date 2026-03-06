@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Automatisk Blogg
-status: defining_requirements
+status: roadmap_complete
 last_updated: "2026-03-06T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 5
   completed_plans: 0
 ---
 
@@ -18,26 +18,51 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Defining requirements for v1.3
+**Current focus:** Phase 17 — Astro Blog Infrastructure
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-06 — Milestone v1.3 started
+Phase: 17 of 19 (Astro Blog Infrastructure)
+Plan: — of 2
+Status: Ready to plan
+Last activity: 2026-03-06 — Roadmap created for v1.3
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0 (v1.3)
+- Average duration: — min
+- Total execution time: —
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 17. Blog Infrastructure | 0/2 | - | - |
+| 18. Pipeline Scripts | 0/2 | - | - |
+| 19. GitHub Actions | 0/1 | - | - |
 
 ## Accumulated Context
 
 ### Decisions
 
-All v1.2 decisions logged in PROJECT.md Key Decisions table.
+Key decisions from research to carry into planning:
+
+- [v1.3]: Content collection config at `src/content/config.ts` (legacy path, intentional for v1.3)
+- [v1.3]: Run `astro sync` immediately after creating content config — before any page components
+- [v1.3]: LIX threshold ≤ 55 (not 45) — Norwegian technical content needs the wider margin
+- [v1.3]: Two-call Claude API pattern (content then metadata) — prevents JSON truncation at ~2000 words
+- [v1.3]: GITHUB_TOKEN cannot trigger CI on PRs — must use PAT stored as `secrets.GH_PAT`
+- [v1.3]: Branch protection rule required on `main` for auto-merge to wait for CI
 
 ### Pending Todos
 
 - Replace placeholder testimonials in `src/config/testimonials.ts` before launch traffic (carried from v1.0)
 - Verify Shopify platform fee figure before publishing on nettbutikk page (research flag)
 - Verify Nettup's Shopify Partner status before writing nettbutikk credibility copy (research flag)
+- Manual test run of pipeline against real topic recommended before enabling production cron (calibrate LIX)
 
 ### Blockers/Concerns
 
@@ -56,5 +81,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Starting v1.3 milestone
+Stopped at: Roadmap created — ready to plan Phase 17
 Resume file: None
