@@ -74,8 +74,8 @@ Plans:
 **Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 14-01-PLAN.md — Wizard types, state reducer, stepper, and card components
-- [ ] 14-02-PLAN.md — Step components and SmartPrisKalkulator assembly with animations
+- [x] 14-01-PLAN.md — Wizard types, state reducer, stepper, and card components
+- [x] 14-02-PLAN.md — Step components and SmartPrisKalkulator assembly with animations
 
 ### Phase 15: Result Display
 **Goal**: Users see a transparent, itemized price estimate with launch discount and a clear path to contact Nettup
@@ -86,10 +86,10 @@ Plans:
   2. Each selected add-on appears as a line item showing its individual price contribution
   3. Launch discount is displayed as crossed-out original price next to the discounted price
   4. A CTA button links to /kontakt with the selected service type pre-filled via query parameter
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 15-01: TBD
+- [ ] 15-01-PLAN.md — ResultStep component with line-item breakdown, discount, CTA, and clipboard copy
 
 ### Phase 16: Page Integration and Swap
 **Goal**: The new calculator is live on a dedicated page and embedded on /tjenester, fully replacing the old wizard
@@ -124,6 +124,6 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 14. Wizard Steps and State | 2/2 | Complete    | 2026-03-06 | - |
+| 14. Wizard Steps and State | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
