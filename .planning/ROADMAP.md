@@ -41,7 +41,7 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
 **Milestone Goal:** Erstatte den enkle priskalkulator-wizarden med en dyp, additiv prisestimator drevet av en konfigurerbar prisfil -- med detaljerte sporsmaal, linjeoversikt og prisintervall.
 
 - [x] **Phase 13: Pricing Config and Calculation Engine** - Typed pricing data model and pure additive calculation logic (completed 2026-03-06)
-- [ ] **Phase 14: Wizard Steps and State** - Multi-step wizard UI with back navigation and selection modes
+- [x] **Phase 14: Wizard Steps and State** - Multi-step wizard UI with back navigation and selection modes (completed 2026-03-06)
 - [ ] **Phase 15: Result Display** - Line-item breakdown, discount presentation, and contact CTA
 - [ ] **Phase 16: Page Integration and Swap** - Dedicated /priskalkulator page, /tjenester embed, old wizard replaced
 
@@ -71,7 +71,7 @@ Plans:
   2. User can navigate back to any previous step and all prior selections remain intact
   3. A progress indicator shows the current step and total steps
   4. Features and integrations steps allow multi-select; size and design steps enforce single-select
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 14-01-PLAN.md — Wizard types, state reducer, stepper, and card components
@@ -124,6 +124,6 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 14. Wizard Steps and State | 1/2 | In Progress|  | - |
+| 14. Wizard Steps and State | 2/2 | Complete   | 2026-03-06 | - |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
