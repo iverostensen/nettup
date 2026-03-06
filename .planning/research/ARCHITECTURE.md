@@ -1,467 +1,417 @@
-# Architecture: Smart Additive Price Calculator (v1.2)
+# Architecture Research
 
-**Domain:** Multi-step additive pricing wizard for web agency services
+**Domain:** Automated blog pipeline integration into existing Astro 5 marketing site
 **Researched:** 2026-03-06
-**Confidence:** HIGH (based on direct analysis of existing codebase -- all decisions grounded in current patterns)
+**Confidence:** HIGH — based on direct codebase inspection of all relevant files
 
-## Current State Analysis
-
-The existing `PrisKalkulatorIsland.tsx` is a **single 379-line React component** with:
-- Hardcoded questions and prices inline (not config-driven)
-- Simple linear flow: goal -> recommend -> narrow (2-3 questions) -> result
-- Pricing logic embedded in the last narrowing option's `priceEstimate` string
-- State managed via single `useState<State>` with phase/step tracking
-- No calculation engine -- the price is a static string on the final option
-
-**What works well and must be preserved:**
-- AnimatePresence slide transitions with `springs.gentle` from `lib/animation.ts`
-- `useReducedMotion` accessibility support
-- Integration pattern: Astro Section wraps `<PrisKalkulatorIsland client:visible />`
-- Connection to `services.ts` for service metadata (name, tagline, CTA param)
-- CTA flow linking to `/kontakt?tjeneste=`
-- Card-style UI with `bg-surface-raised`, `border-white/10`, hover states
-
-**What must change:**
-- Questions and options must come from config, not hardcoded arrays
-- Pricing must be computed additively (base + sum of adjustments), not stored as a string on the final option
-- Result must show a line-item breakdown with min-max range
-- Monthly costs must also be additive
-- More question categories (4 vs current 2-3)
-- Back navigation needed (users currently can only go forward or reset)
-- Component must work both embedded on /tjenester and standalone on /priskalkulator
-
-**Existing config files that change:**
-- `src/config/pricing.ts` -- currently defines old `Pakke` interface (Enkel/Standard/Premium tiers). Will be **replaced** with additive pricing config. The Pakke model is no longer used anywhere meaningful.
-
-## Recommended Architecture
+## Standard Architecture
 
 ### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Config Layer                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ pricing.ts   │  │ services.ts  │  │launchOffer.ts│  │
-│  │ (REPLACE)    │  │ (unchanged)  │  │ (unchanged)  │  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
-│         │                 │                  │           │
-├─────────┴─────────────────┴──────────────────┴──────────┤
-│                  Calculation Layer                        │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │ lib/pricing-engine.ts (NEW)                      │   │
-│  │ Pure functions: selections + config → estimate   │   │
-│  └──────────────────────┬───────────────────────────┘   │
-│                         │                                │
-├─────────────────────────┴───────────────────────────────┤
-│                    State Layer                            │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │ priskalkulator/useWizardState.ts (NEW)           │   │
-│  │ useReducer: actions → state transitions          │   │
-│  │ Derives estimate on every selection change       │   │
-│  └──────────────────────┬───────────────────────────┘   │
-│                         │                                │
-├─────────────────────────┴───────────────────────────────┤
-│                    UI Layer                               │
-│  ┌─────────────────────────────────────────────────────┐│
-│  │ PrisKalkulatorIsland.tsx (REWRITE — thin shell)    ││
-│  │   ├── WizardShell.tsx (progress + AnimatePresence) ││
-│  │   ├── GoalStep.tsx (service selection)             ││
-│  │   ├── QuestionStep.tsx (generic category renderer) ││
-│  │   └── ResultView.tsx (line-item breakdown + CTA)   ││
-│  └─────────────────────────────────────────────────────┘│
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│                   Mount Points                            │
-│  ┌────────────────────┐  ┌─────────────────────────┐    │
-│  │/tjenester (section)│  │/priskalkulator (page)   │    │
-│  │ client:visible     │  │ client:visible          │    │
-│  └────────────────────┘  └─────────────────────────┘    │
-└──────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                  GitHub Actions (cron: weekly)               │
+│                                                              │
+│  ┌────────────┐  ┌─────────────┐  ┌────────────┐            │
+│  │ discover-  │→ │  generate-  │→ │  quality-  │            │
+│  │ topics.ts  │  │  article.ts │  │  gate.ts   │            │
+│  └────────────┘  └─────────────┘  └────────────┘            │
+│        │               │                 │                   │
+│   reads existing   Claude API       Claude API +             │
+│   src/content/     Sonnet 4.6       LIX + checks             │
+│   blogg/*.md                              │                  │
+│                                    ┌────────────┐           │
+│                                    │ publish.ts  │           │
+│                                    └────────────┘           │
+│                                           │                  │
+└───────────────────────────────────────────┼──────────────────┘
+                                            ↓
+                               PR: feat(blogg): [title]
+                               CI: lint + build + Lighthouse
+                               Auto-merge on CI pass
+                                            ↓
+                               ┌────────────────────┐
+                               │   Vercel Deploy     │
+                               │   (output: static)  │
+                               └────────────────────┘
+                                            ↓
+                               nettup.no/blogg/[slug] live
 ```
-
-### Component Decomposition
-
-```
-src/
-├── config/
-│   └── pricing.ts              ← REPLACE: Additive pricing config
-│                                  (replaces old Pakke tier model)
-├── lib/
-│   └── pricing-engine.ts       ← NEW: Pure calculation functions
-│                                  No React, no UI — just math
-├── components/
-│   ├── islands/
-│   │   └── PrisKalkulatorIsland.tsx  ← REWRITE: Thin orchestrator
-│   │
-│   └── priskalkulator/         ← NEW: Sub-components (not islands)
-│       ├── types.ts             ← Shared TypeScript types
-│       ├── useWizardState.ts    ← Custom hook with useReducer
-│       ├── WizardShell.tsx      ← AnimatePresence + progress bar
-│       ├── GoalStep.tsx         ← Service selection (3 cards)
-│       ├── QuestionStep.tsx     ← Renders any question category
-│       └── ResultView.tsx       ← Line-item breakdown + CTAs
-│
-└── pages/
-    ├── priskalkulator/
-    │   └── index.astro          ← NEW: Dedicated calculator page
-    └── tjenester/
-        └── _sections/
-            └── PrisKalkulator.astro  ← MINOR UPDATE: subtitle text
-```
-
-**Why this decomposition:**
-- The current 379-line monolith will grow to 800+ with 4 question categories, multi-select, back navigation, and a line-item result. Splitting is necessary.
-- Sub-components go in `components/priskalkulator/` (not `islands/`) because they are not independently hydrated -- only the top-level island is the hydration boundary.
-- `pricing-engine.ts` as a pure module enables: (a) unit testing without React, (b) internal use by Nettup for quoting, (c) potential server-side reuse.
-- `useWizardState` hook separates state logic from rendering.
 
 ### Component Responsibilities
 
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| `pricing.ts` (config) | All prices, questions, options, adjustments | Read by useWizardState |
-| `pricing-engine.ts` (lib) | Pure calculation: config + selections -> estimate | Called by useWizardState |
-| `useWizardState.ts` (hook) | State machine via useReducer, derives estimate | Drives all sub-components |
-| `PrisKalkulatorIsland.tsx` | Top-level island, hydration boundary, mode prop | Mounts WizardShell with hook |
-| `WizardShell.tsx` | AnimatePresence wrapper, progress indicator | Renders current step component |
-| `GoalStep.tsx` | Service selection UI (3 goal cards) | Dispatches SELECT_SERVICE |
-| `QuestionStep.tsx` | Renders any question category (single or multi) | Dispatches SELECT/DESELECT_OPTION |
-| `ResultView.tsx` | Line-item breakdown, price range, CTAs | Reads estimate from hook |
-| `services.ts` (existing) | Service metadata (name, tagline, slug) | Read by GoalStep + ResultView |
-| `launchOffer.ts` (existing) | Remaining launch slots | Read by ResultView for urgency |
+| Component | Responsibility | Typical Implementation |
+|-----------|----------------|------------------------|
+| `src/content/config.ts` | Zod schema defining the `blogg` collection shape | Astro Content Collections v2 `defineCollection` |
+| `src/content/blogg/*.md` | Article files with typed frontmatter | Generated by pipeline, never edited manually |
+| `src/pages/blogg/index.astro` | Listing page — sorted article grid | Static, calls `getCollection('blogg')` |
+| `src/pages/blogg/[...slug].astro` | Per-article dynamic page | `getStaticPaths()` + `render()` |
+| `src/components/blogg/ArticleCard.astro` | Reusable card for listing + related articles | Pure Astro, no React needed |
+| `src/components/blogg/ArticleLayout.astro` | Article wrapper with JSON-LD schemas | Wraps BaseLayout via named slot |
+| `src/components/blogg/RelatedArticles.astro` | 2-3 related article cards | Fetches by `relatedSlugs`, renders ArticleCard |
+| `scripts/blog/index.ts` | Pipeline orchestrator (runs all 5 stages) | Node.js + tsx, not part of Astro bundle |
+| `scripts/blog/config.ts` | Topic clusters + SERVICE_PAGES list | Single source of editorial truth |
+| `scripts/blog/topics-queue.json` | Persistent topic state across runs | Committed to repo, updated by pipeline |
+| `.github/workflows/blog-generate.yml` | Weekly cron + manual trigger | Uses automatic `GITHUB_TOKEN` + `ANTHROPIC_API_KEY` secret |
 
-## Pricing Config Structure
+## Recommended Project Structure
 
-Replace the current `pricing.ts` (Pakke interface) with a service-centric additive model:
+```
+src/
+├── content/
+│   ├── config.ts           ← NEW: collection schema (Phase 1, first file created)
+│   └── blogg/              ← NEW directory: generated .md files land here
+│       └── [slug].md
+├── pages/
+│   ├── blogg/
+│   │   ├── index.astro     ← NEW: listing page (/blogg)
+│   │   └── [...slug].astro ← NEW: dynamic article pages (/blogg/[slug])
+│   └── [existing pages unchanged]
+├── components/
+│   ├── blogg/              ← NEW: blog-specific component folder
+│   │   ├── ArticleCard.astro
+│   │   ├── ArticleLayout.astro
+│   │   └── RelatedArticles.astro
+│   └── [existing components unchanged]
+└── layouts/
+    └── BaseLayout.astro    ← MODIFIED: add /blogg to pageLabels map
 
-```typescript
-// src/config/pricing.ts
+scripts/                    ← NEW directory at repo root (outside src/)
+└── blog/
+    ├── config.ts
+    ├── topics-queue.json
+    ├── discover-topics.ts
+    ├── generate-article.ts
+    ├── quality-gate.ts
+    ├── optimize-seo.ts
+    ├── publish.ts
+    └── index.ts
 
-type ServiceSlug = 'nettside' | 'nettbutikk' | 'landingsside';
-
-interface PricingConfig {
-  services: Record<ServiceSlug, ServicePricing>;
-  launchDiscount: number; // 0.4 = 40%
-}
-
-interface ServicePricing {
-  basePriceRange: { min: number; max: number };
-  baseMonthly: number;
-  categories: QuestionCategory[];
-}
-
-interface QuestionCategory {
-  id: string;              // 'size' | 'features' | 'integrations' | 'design'
-  label: string;           // Norwegian display name for progress bar
-  question: string;        // The question text shown to user
-  type: 'single' | 'multi'; // Single-select (radio) or multi-select (checkbox)
-  options: PricingOption[];
-}
-
-interface PricingOption {
-  id: string;
-  label: string;
-  description?: string;     // Optional sub-label
-  priceAdjustment: { min: number; max: number }; // Added to running total
-  monthlyAdjustment?: number;                     // Added to base monthly
-}
+.github/
+└── workflows/
+    ├── ci.yml              ← EXISTING (unchanged)
+    └── blog-generate.yml   ← NEW: cron workflow
 ```
 
-**Why this structure:**
-- `basePriceRange` with min/max produces range estimates from the start
-- Each option's `priceAdjustment` is also a range -- these naturally sum to a final min-max
-- `monthlyAdjustment` is optional because not all choices affect monthly cost
-- `type: 'multi'` allows features/integrations to be multi-select (checkboxes) while size/design remain single-select
-- Categories are ordered in the array -- the wizard renders them in sequence
-- Plain TypeScript object -- update prices by editing one file, no component changes
+### Structure Rationale
 
-**Why NOT multipliers:** For 3 services with 4 categories, additive adjustments are simpler, more transparent to users ("CMS adds 3000-5000 kr"), and easier to maintain. A multiplier system adds complexity without benefit when prices are already min-max ranges. If a future service needs multiplicative pricing, add an optional `multiplier` field to PricingOption later -- the engine can handle it then.
+- **`src/content/blogg/`:** Required path for Astro Content Collections. The `blogg` key in `config.ts` maps to this directory automatically. Astro generates type-safe `getCollection('blogg')` accessors.
+- **`src/components/blogg/`:** Follows established project convention — components shared across pages live in `src/components/`. Blog components are used by both `/blogg/index.astro` (ArticleCard, RelatedArticles) and `[...slug].astro` (ArticleLayout, RelatedArticles), so they belong in shared components, not co-located with pages.
+- **`scripts/blog/` at repo root:** Lives outside `src/` intentionally. Vite processes everything inside `src/` and would attempt to bundle Node.js APIs (`fs`, `simple-git`, `child_process`), which have no place in a browser bundle. `tsx` runs these scripts directly in GitHub Actions. TypeScript strict mode still applies via `tsconfig.json`.
+- **`topics-queue.json` committed to repo:** Persists pipeline state across weekly runs without external storage. Git history provides permanent audit trail of every topic decision.
 
-## Calculation Engine
+## Architectural Patterns
 
-```typescript
-// src/lib/pricing-engine.ts
+### Pattern 1: ArticleLayout wraps BaseLayout via named slot
 
-interface PriceEstimate {
-  oneTime: { min: number; max: number };
-  monthly: number;
-  lineItems: LineItem[];
-  discountedOneTime: { min: number; max: number };
-}
+**What:** `ArticleLayout.astro` imports and wraps `BaseLayout.astro` rather than duplicating its structure. Blog-specific JSON-LD (Article + FAQPage) is injected via the existing `<slot name="head" />` in BaseLayout.
 
-interface LineItem {
-  category: string;       // Category label (Norwegian)
-  selection: string;      // Selected option label(s)
-  priceRange: { min: number; max: number };
-  monthlyAdd: number;
-}
+**When to use:** Any page needing blog-specific structured data on top of the shared org/breadcrumb schemas already in BaseLayout.
 
-function calculateEstimate(
-  serviceConfig: ServicePricing,
-  selections: Map<string, string[]>,  // categoryId -> selected optionId(s)
-  discount: number
-): PriceEstimate {
-  // 1. Start with base price range
-  // 2. For each category with selections, sum adjustments
-  // 3. Multi-select: sum all selected options' adjustments
-  // 4. Single-select: use the one selected option's adjustment
-  // 5. Apply discount to one-time total
-  // 6. Return estimate with line items for breakdown display
-}
-```
+**Trade-offs:** Slight component nesting, but preserves the single source of truth for FloatingNav, ChatWidget, Footer, Analytics, ClientRouter, scroll reveal observer, font loading, and OG tags — all of which live in BaseLayout and would need to be duplicated otherwise.
 
-**Design decisions:**
-- Pure function, no side effects -- takes config + selections, returns estimate
-- Returns `lineItems` so ResultView can show exactly what the user chose and what each costs
-- Handles both single-select and multi-select (multi = sum all selected adjustments)
-- Discount applied as a separate step, keeping pre-discount visible for price anchoring
-
-## State Management
-
-Use `useReducer` instead of the current `useState`:
-
-```typescript
-// src/components/priskalkulator/useWizardState.ts
-
-type WizardPhase = 'goal' | 'questions' | 'result';
-
-interface WizardState {
-  phase: WizardPhase;
-  selectedService: ServiceSlug | null;
-  currentCategoryIndex: number;
-  selections: Map<string, string[]>;  // categoryId -> optionId(s)
-  estimate: PriceEstimate | null;
-  direction: 1 | -1;                  // For animation direction
-}
-
-type WizardAction =
-  | { type: 'SELECT_SERVICE'; service: ServiceSlug }
-  | { type: 'SELECT_OPTION'; categoryId: string; optionId: string; multi: boolean }
-  | { type: 'DESELECT_OPTION'; categoryId: string; optionId: string }
-  | { type: 'NEXT_CATEGORY' }
-  | { type: 'PREV_CATEGORY' }
-  | { type: 'GO_BACK' }              // Navigate to previous step
-  | { type: 'RESET' };
-
-function useWizardState(config: PricingConfig) {
-  // Reducer recalculates estimate on every selection change
-  // Derives current question from config + currentCategoryIndex
-  // Exposes: state, dispatch, currentCategory, totalCategories, canGoBack
-}
-```
-
-**Why useReducer over useState:**
-- Current code already has implicit state machine logic spread across 4 handler functions
-- With 4 categories, multi-select, and back navigation, state transitions get complex enough that a reducer prevents stale-state bugs
-- Actions are dispatchable from any sub-component without prop drilling multiple callbacks
-- The `GO_BACK` action is trivial in a reducer (decrement index, set direction = -1) but messy with useState
-
-**Why NOT external state management (Zustand, Context, etc.):**
-- The calculator is a single React island. No state crosses the island boundary.
-- React Context would be overkill for one component tree of 5 components.
-- Adding a state library dependency violates the "no new deps without good reason" constraint.
-
-## Sharing Between Pages
-
-The component is already sharable via the existing React island pattern. Same component, two mount points:
-
-**On /tjenester (embedded section) -- existing pattern, minimal change:**
+**Example:**
 ```astro
-<!-- src/pages/tjenester/_sections/PrisKalkulator.astro -->
-<Section>
-  <SectionHeader
-    title="Hva koster det?"
-    subtitle="Velg tjeneste og svar paa noen sporsmal — sa far du et prisestimat."
-  />
-  <PrisKalkulatorIsland client:visible />
-</Section>
-```
+---
+// src/components/blogg/ArticleLayout.astro
+import BaseLayout from '../../layouts/BaseLayout.astro'
 
-**On /priskalkulator (dedicated page) -- NEW:**
-```astro
-<!-- src/pages/priskalkulator/index.astro -->
-<BaseLayout
-  title="Priskalkulator | Nettup"
-  description="Fa et prisestimat for nettside, nettbutikk eller landingsside."
->
-  <main>
-    <Section>
-      <SectionHeader
-        title="Priskalkulator"
-        subtitle="Svar paa noen sporsmal og fa et detaljert prisestimat — tar under to minutter."
-      />
-      <PrisKalkulatorIsland client:visible mode="full" />
-    </Section>
-  </main>
+interface Props {
+  title: string       // H1 on page
+  seoTitle: string    // <title> tag (keyword-first, max 60 chars)
+  description: string
+  publishDate: Date
+  author: string
+  slug: string
+}
+const { title, seoTitle, description, publishDate, author, slug } = Astro.props
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", /* ... */ }
+const faqSchema    = { "@context": "https://schema.org", "@type": "FAQPage",  /* ... */ }
+---
+<BaseLayout title={seoTitle} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+  <article>
+    <h1>{title}</h1>
+    <slot />
+  </article>
 </BaseLayout>
 ```
 
-**Differences between contexts via `mode` prop:**
-- `mode="compact"` (default, /tjenester): `max-w-2xl`, streamlined layout
-- `mode="full"` (/priskalkulator): `max-w-3xl`, wider result breakdown, optional sticky progress sidebar on large screens
-- One component, one codebase -- the `mode` prop controls minor layout variations
-- No need for separate components or complex conditional rendering
+### Pattern 2: `getStaticPaths` for article pages (required, not optional)
 
-## Progress Indicator
+**What:** `[...slug].astro` uses `getStaticPaths()` to pre-render every article at build time. This is mandatory — `astro.config.mjs` sets `output: 'static'`, so there is no server rendering for these routes.
 
-The current wizard shows "Sporsmaal X av Y" as plain text. The new version needs a visual progress bar because 4+ categories need orientation:
+**When to use:** Always for blog pages. The spread slug `[...slug]` handles potential future nested paths (e.g., `/blogg/kategori/slug`) without changing the file.
 
+**Trade-offs:** A new article only goes live after a Vercel deploy. This is acceptable and intentional — the pipeline triggers a deploy automatically via PR merge.
+
+**Example:**
+```astro
+---
+import { getCollection, render } from 'astro:content'
+import ArticleLayout from '../../components/blogg/ArticleLayout.astro'
+
+export async function getStaticPaths() {
+  const articles = await getCollection('blogg')
+  return articles.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+---
+<ArticleLayout
+  title={entry.data.title}
+  seoTitle={entry.data.seoTitle}
+  description={entry.data.description}
+  publishDate={entry.data.publishDate}
+  author={entry.data.author}
+  slug={entry.slug}
+>
+  <Content />
+</ArticleLayout>
 ```
-[Mal] --- [Storrelse] --- [Funksjoner] --- [Integrasjoner] --- [Design] --- [Resultat]
-  ●          ●               ●                  ○                ○             ○
-```
 
-Implementation in `WizardShell.tsx`:
-- Completed steps: `text-brand` dot
-- Current step: `bg-brand` filled dot with label
-- Upcoming steps: `border-white/10` empty dot
-- Connecting lines: `bg-white/10` (completed: `bg-brand/40`)
-- On mobile (< 640px): show only "Steg X av Y" text (dots too cramped)
+Note: Astro 5 uses `render(entry)` (module-level function). The old `entry.render()` method is deprecated. HIGH confidence — confirmed in Astro 5 migration docs pattern.
+
+### Pattern 3: RelatedArticles fetches by slug at build time
+
+**What:** The pipeline writes `relatedSlugs: string[]` into each article's frontmatter. `RelatedArticles.astro` calls `getCollection('blogg')` at build time and filters to the specified slugs, then renders an `ArticleCard` for each.
+
+**When to use:** Every article page. Storing only slugs (not full article objects) in frontmatter keeps files minimal and ensures data is always in sync with the collection source.
+
+**Trade-offs:** If a `relatedSlug` points to an article that does not exist, `filter()` silently returns nothing. This is safer than an error — graceful degradation.
 
 ## Data Flow
 
+### Generation Flow (weekly, runs inside GitHub Actions)
+
 ```
-pricing.ts (config)
-    |
-    v
-useWizardState (hook)
-    |  - Reads config to get categories for selected service
-    |  - Tracks selections per category via useReducer
-    |  - Calls pricing-engine.calculateEstimate on each change
-    |  - Exposes: state, dispatch, derived values
-    |
-    |--- GoalStep
-    |       User selects service -> dispatch SELECT_SERVICE
-    |       -> phase becomes 'questions', categoryIndex = 0
-    |
-    |--- QuestionStep (rendered for each category in sequence)
-    |       User selects option(s) -> dispatch SELECT_OPTION
-    |       User clicks "Neste" -> dispatch NEXT_CATEGORY
-    |       User clicks "Tilbake" -> dispatch PREV_CATEGORY / GO_BACK
-    |       -> categoryIndex increments/decrements
-    |       -> estimate recalculated after each selection
-    |
-    |--- ResultView
-    |       Reads estimate.lineItems for breakdown table
-    |       Reads estimate.discountedOneTime for headline price
-    |       Reads estimate.monthly for monthly cost
-    |       Shows "Kom i gang" -> /kontakt?tjeneste=[slug]
-    |       Shows "Start pa nytt" -> dispatch RESET
-    |
-    v
-WizardShell wraps everything in AnimatePresence
-    - key = phase + categoryIndex
-    - direction from state drives slide animation direction
-    - Progress bar reads currentCategoryIndex + totalCategories
+scripts/blog/config.ts (topic clusters, SERVICE_PAGES)
+    +
+topics-queue.json (pending/published/rejected state)
+    +
+src/content/blogg/*.md (existing articles — read for duplicate check)
+    ↓
+discover-topics.ts → select topic, write queue status: "pending"
+    ↓
+generate-article.ts → Claude Sonnet 4.6 → JSON {frontmatter, content, relatedSlugs}
+    ↓
+quality-gate.ts → Claude review pass + LIX + automated checks
+    (on reject: exit 0, write job summary, queue status: "rejected", no PR)
+    ↓
+optimize-seo.ts → inject Article + FAQPage schema into .md file
+    ↓
+publish.ts → git checkout -b blogg/[slug]
+           → git add src/content/blogg/[slug].md
+           → git commit feat(blogg): [title]
+           → git push origin blogg/[slug]
+           → gh pr create (title + quality report body)
+           → topics-queue.json status: "published"
+    ↓
+ci.yml triggers on PR → lint + build (Astro processes new .md) + Lighthouse
+    ↓
+Auto-merge on CI green → Vercel deploys → nettup.no/blogg/[slug] live
 ```
 
-## Anti-Patterns to Avoid
+### Visitor Read Flow
 
-### Anti-Pattern 1: Monolith Component
-**What:** Putting all 4 question categories, calculation logic, and result display in one file.
-**Why bad:** Current 379-line component is at the maintainability edge. Adding 4 categories with multi-select, back navigation, progress bar, and line-item results would push it to 1000+ lines.
-**Instead:** Decompose into hook + shell + step components as described.
+```
+Browser → nettup.no/blogg/hva-koster-nettside
+    ↓
+Vercel CDN serves pre-built static HTML
+    ↓
+[...slug].astro pre-rendered at last Vercel deploy
+    ↓
+ArticleLayout → BaseLayout (FloatingNav, ChatWidget, Footer, Analytics)
+    ↓
+JSON-LD in <head>:
+  Organization + LocalBusiness + BreadcrumbList (from BaseLayout)
+  Article + FAQPage (from ArticleLayout via <slot name="head">)
+```
 
-### Anti-Pattern 2: Config Inside Components
-**What:** Defining pricing data, question text, or option lists inside React component files.
-**Why bad:** When Nettup updates prices (will happen regularly), they should edit one config file, not hunt through component code.
-**Instead:** All pricing data in `src/config/pricing.ts`. Components are pure renderers of config data.
+### Key Data Flows
 
-### Anti-Pattern 3: Derived State Stored as State
-**What:** Storing the calculated estimate in reducer state and manually recalculating it in specific actions.
-**Why bad:** Easy to forget recalculation in one action handler, leading to stale estimates.
-**Instead:** Calculate estimate as a derived value from selections -- either in the reducer (recalculate on every action that touches selections) or as a `useMemo` in the hook that depends on selections.
+1. **Duplicate prevention:** `discover-topics.ts` runs inside GitHub Actions after `checkout@v4`. It reads `src/content/blogg/*.md`, parses frontmatter titles and tags, passes the list to Claude so it picks a non-overlapping topic.
+2. **Related articles:** `generate-article.ts` passes `existingArticles` (slug + title pairs) to Claude, which returns `relatedSlugs`. `RelatedArticles.astro` fetches fresh metadata from the collection at each Vercel build.
+3. **Sitemap:** `@astrojs/sitemap` (already integrated, zero config change needed) picks up `/blogg` and all `/blogg/[slug]` routes automatically from `getStaticPaths` at build time.
+4. **Breadcrumbs:** BaseLayout's `pageLabels` map already falls back to raw path segment (`pageLabels[fullPath] ?? seg`). Adding `'/blogg': 'Blogg'` to the map is the only required change — article slugs resolve automatically.
 
-### Anti-Pattern 4: Separate Components Per Service
-**What:** Creating `NettsideQuestions.tsx`, `NettbutikkQuestions.tsx`, `LandingssideQuestions.tsx`.
-**Why bad:** Duplicates rendering logic. Questions differ in data (from config), not in UI structure.
-**Instead:** One generic `QuestionStep.tsx` that renders any `QuestionCategory` from config.
+## Integration Points
 
-### Anti-Pattern 5: Separate Islands for Steps
-**What:** Making GoalStep, QuestionStep, ResultView each their own `client:visible` islands.
-**Why bad:** They share state (selections, estimate). Separate islands cannot share React state. Would require external state management or URL params for communication.
-**Instead:** One island (`PrisKalkulatorIsland`) is the hydration boundary. Sub-components are regular React components inside it.
+### New vs Modified Files
 
-## Integration Points Summary
+| File | Status | Notes |
+|------|--------|-------|
+| `src/content/config.ts` | NEW — must be created first | Astro throws on `getCollection` without a schema |
+| `src/content/blogg/` | NEW directory | Created implicitly when first `.md` is committed |
+| `src/pages/blogg/index.astro` | NEW | Standard static listing page |
+| `src/pages/blogg/[...slug].astro` | NEW | `getStaticPaths` required; spread slug is forward-compatible |
+| `src/components/blogg/ArticleCard.astro` | NEW | Pure Astro — no React hydration needed |
+| `src/components/blogg/ArticleLayout.astro` | NEW | Wraps BaseLayout; injects Article + FAQPage JSON-LD |
+| `src/components/blogg/RelatedArticles.astro` | NEW | Uses `getCollection` + filter by `relatedSlugs` |
+| `src/layouts/BaseLayout.astro` | MODIFIED | Add `'/blogg': 'Blogg'` to `pageLabels` map (one line) |
+| `scripts/blog/config.ts` | NEW | Topic clusters, scheduling rules, SERVICE_PAGES |
+| `scripts/blog/topics-queue.json` | NEW | Initial empty array `[]`, committed to repo |
+| `scripts/blog/discover-topics.ts` | NEW | Stage 1: topic selection + duplicate check |
+| `scripts/blog/generate-article.ts` | NEW | Stage 2: Claude generation + Norwegian slugify |
+| `scripts/blog/quality-gate.ts` | NEW | Stage 3: two-pass review + inline LIX score |
+| `scripts/blog/optimize-seo.ts` | NEW | Stage 4: schema injection |
+| `scripts/blog/publish.ts` | NEW | Stage 5: PR creation, queue update |
+| `scripts/blog/index.ts` | NEW | Pipeline orchestrator |
+| `.github/workflows/blog-generate.yml` | NEW | Cron + manual trigger |
+| `package.json` | MODIFIED | Add `tsx` to `devDependencies` |
 
-### New Files (9)
+### External Services
 
-| File | Purpose |
-|------|---------|
-| `src/config/pricing.ts` | Additive pricing config (replaces Pakke model) |
-| `src/lib/pricing-engine.ts` | Pure calculation: selections -> estimate |
-| `src/components/priskalkulator/types.ts` | Shared TypeScript types for wizard |
-| `src/components/priskalkulator/useWizardState.ts` | State management hook (useReducer) |
-| `src/components/priskalkulator/WizardShell.tsx` | AnimatePresence + progress indicator |
-| `src/components/priskalkulator/GoalStep.tsx` | Service selection step |
-| `src/components/priskalkulator/QuestionStep.tsx` | Generic question category renderer |
-| `src/components/priskalkulator/ResultView.tsx` | Line-item breakdown + CTAs |
-| `src/pages/priskalkulator/index.astro` | Dedicated calculator page |
+| Service | Integration Pattern | Notes |
+|---------|---------------------|-------|
+| Claude API (Anthropic) | `@anthropic-ai/sdk` — already in `dependencies` | `ANTHROPIC_API_KEY` added as repo secret; same SDK already used by `/api/chat.ts` |
+| GitHub API (PR creation) | `GITHUB_TOKEN` — automatic secret, no configuration | Available in every Actions run by default; requires explicit `permissions` block (see below) |
+| Vercel | Auto-deploy on merge to `main` | No change to Vercel config or `astro.config.mjs` |
+| `@astrojs/sitemap` | Zero-config — picks up new routes at build time | Already integrated; blog pages appear in sitemap automatically |
 
-### Modified Files (2)
+### GitHub Actions Auth for PR Creation
 
-| File | Change |
-|------|--------|
-| `src/components/islands/PrisKalkulatorIsland.tsx` | REWRITE -- becomes thin orchestrator importing hook + sub-components |
-| `src/pages/tjenester/_sections/PrisKalkulator.astro` | MINOR -- update title/subtitle text |
+`GITHUB_TOKEN` is injected automatically into every GitHub Actions run by GitHub — it does not need to be added to repo secrets. The pipeline references it as `${{ secrets.GITHUB_TOKEN }}`.
 
-### Untouched Files
+**Critical:** GitHub changed the default token permissions to read-only in 2023 for security. Without an explicit `permissions` block, `gh pr create` and `git push` will fail with 403. The workflow must declare:
 
-- `src/config/services.ts` -- still used for service metadata in GoalStep + ResultView
-- `src/config/launchOffer.ts` -- still used for remaining slots urgency in ResultView
-- `src/lib/animation.ts` -- still used for springs, fadeUp, fadeIn variants
-- `src/layouts/BaseLayout.astro` -- no changes needed (new /priskalkulator page uses it as-is)
-- All other pages and components
+```yaml
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # allows git push of the new branch
+      pull-requests: write # allows gh pr create
+```
 
-### No New Dependencies
+`ANTHROPIC_API_KEY` is a repository secret added manually in GitHub repo Settings → Secrets and variables → Actions. It is not automatic.
 
-- `useReducer` -- standard React hook
-- `Intl.NumberFormat('nb-NO')` -- built-in browser API for Norwegian number formatting (e.g., "12 000 kr")
-- All animation via existing Framer Motion
-- All styling via existing Tailwind classes
+### Internal Boundaries
+
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| Pipeline scripts ↔ Astro content | File system: scripts write `.md` to `src/content/blogg/` | No runtime coupling — pipeline runs in CI, Astro reads at build time |
+| `ArticleLayout` ↔ `BaseLayout` | Props + named `head` slot | BaseLayout already has `<slot name="head" />` — no modification needed |
+| `[...slug].astro` ↔ collection | `getCollection('blogg')` + `render()` at build time | Astro 5 API; use module-level `render()`, not deprecated `entry.render()` |
+| `RelatedArticles` ↔ collection | `getCollection('blogg')` filtered by `relatedSlugs` | Pure build-time, no runtime fetching |
+| `blog-generate.yml` ↔ `ci.yml` | `ci.yml` triggers on PR created by pipeline | CI is the gate enabling auto-merge; the two workflows are independent |
+
+## Vercel Deployment Implications
+
+**Output is `static` (confirmed in `astro.config.mjs`):** All blog pages are pre-rendered HTML at deploy time. They serve from Vercel CDN with zero cold-start latency. No serverless functions are created for blog routes.
+
+**Existing `/api/chat.ts` is unaffected:** With `output: 'static'`, Astro handles API routes via the Vercel adapter. The chat endpoint already works in production — blog integration touches none of its plumbing.
+
+**Build time:** Current build is ~1.1s for 5 pages. With 10-20 articles, expect ~1.5-2.5s. Still well within Vercel hobby plan rebuild capacity.
+
+**Deploy trigger:** When the pipeline's PR auto-merges to `main`, Vercel detects the push and rebuilds. New article is live within ~1-2 minutes of merge.
+
+**Sitemap timing:** Sitemap is generated at build time. A new article appears in `sitemap-index.xml` the moment Vercel redeploys after merge — no manual sitemap ping step required.
 
 ## Build Order
 
-Dependency chain determines the correct sequence. Each step is independently testable:
+The dependency chain between new files determines correct implementation sequence:
 
-| Order | What to Build | Depends On | How to Test |
-|-------|--------------|------------|-------------|
-| 1 | `types.ts` -- shared interfaces | Nothing | TypeScript compiles |
-| 2 | `pricing.ts` -- config with real data | types.ts | Type-check, import in REPL |
-| 3 | `pricing-engine.ts` -- calculation functions | types.ts, pricing.ts shape | Unit test: mock selections -> verify estimate |
-| 4 | `useWizardState.ts` -- reducer + hook | pricing.ts, pricing-engine.ts | Test reducer transitions, verify estimate derivation |
-| 5 | `GoalStep.tsx` + `QuestionStep.tsx` | types.ts | Render with mock data, visual review |
-| 6 | `ResultView.tsx` | types.ts (PriceEstimate) | Render with mock estimate, visual review |
-| 7 | `WizardShell.tsx` -- progress + animation | GoalStep, QuestionStep, ResultView | Full visual integration |
-| 8 | `PrisKalkulatorIsland.tsx` rewrite | All above | Works on /tjenester (replace existing) |
-| 9 | `/priskalkulator/index.astro` | PrisKalkulatorIsland | New route builds and works |
+```
+1. src/content/config.ts
+      ↓ Astro collection must exist before any page queries it
+2. src/components/blogg/ArticleCard.astro
+      ↓ Used by both listing page and RelatedArticles
+3. src/components/blogg/ArticleLayout.astro
+      ↓ Used by article pages
+4. src/components/blogg/RelatedArticles.astro
+      ↓ Depends on ArticleCard (step 2)
+5. src/pages/blogg/index.astro          \  Can be built in parallel
+   src/pages/blogg/[...slug].astro      /  once steps 1-4 exist
+      ↓
+6. Modify src/layouts/BaseLayout.astro
+      (add '/blogg': 'Blogg' to pageLabels — one line change)
+      ↓
+7. scripts/blog/config.ts               \
+   scripts/blog/topics-queue.json       |  No Astro dependency;
+      ↓                                 |  can start after step 1
+8. scripts/blog/discover-topics.ts      |
+   scripts/blog/generate-article.ts     |
+   scripts/blog/quality-gate.ts         |
+   scripts/blog/optimize-seo.ts         |
+   scripts/blog/publish.ts              /
+      ↓
+9. scripts/blog/index.ts
+      (orchestrator — depends on all above scripts)
+      ↓
+10. .github/workflows/blog-generate.yml
+      ↓
+11. package.json: add tsx to devDependencies (npm i -D tsx)
+      ↓
+12. Repo configuration:
+      - Add ANTHROPIC_API_KEY secret in GitHub repo settings
+      - Enable auto-merge for blogg/* branches in repo settings
+```
 
-**Critical path:** Steps 1-3 are pure logic (no UI). Steps 5-6 are pure UI (no business logic). Step 4 bridges them. Steps 7-8 wire everything together. Step 9 is a thin page wrapper.
+Phase 1 (Astro infrastructure) = steps 1-6.
+Phase 2 (Pipeline scripts) = steps 7-9 + step 11.
+Phase 3 (GitHub Actions + repo config) = step 10 + step 12.
 
-**Parallelizable:** Steps 5+6 can run in parallel once types exist. Step 9 can start as soon as step 8 works.
+## Anti-Patterns
 
-## Scalability Considerations
+### Anti-Pattern 1: Peer layout instead of wrapping BaseLayout
 
-| Concern | Now (3 services, 4 categories) | Future (7+ services) |
-|---------|-------------------------------|---------------------|
-| Config size | ~150 lines | ~400 lines -- still one file |
-| Question categories | 4 per service | Same 4, different options per service |
-| Component code | Unchanged | Data-driven -- no code changes for new services |
-| Adding a service | Add entry to pricing.ts config | Same pattern, same components |
-| Conditional categories | Not needed yet | Add optional `condition` field to QuestionCategory if a category only applies to some services |
+**What people do:** Create `ArticleLayout.astro` as a full standalone layout with its own `<html>`, `<head>`, nav, and footer.
+
+**Why it's wrong:** Duplicates FloatingNav, ChatWidget, Footer, Vercel Analytics, ClientRouter (view transitions), scroll-reveal observer, font loading, OG tags, Organization JSON-LD, LocalBusiness JSON-LD, and BreadcrumbList JSON-LD. Every future change to BaseLayout must be mirrored.
+
+**Do this instead:** Import BaseLayout and inject blog-specific JSON-LD via the existing `<slot name="head" />`. Article content goes in the default slot.
+
+### Anti-Pattern 2: Direct commit to `main` from the pipeline
+
+**What people do:** Have the GitHub Action commit the generated article directly to `main` to skip the PR step.
+
+**Why it's wrong:** No audit trail, no CI gate, no Lighthouse check. A bad article or a runaway pipeline goes live immediately with no review point.
+
+**Do this instead:** Always `git checkout -b blogg/[slug]`, create a PR, let CI run, auto-merge on green. The PR body contains the quality report (scores from both review passes) as a permanent record.
+
+### Anti-Pattern 3: Placing pipeline scripts inside `src/`
+
+**What people do:** Put `scripts/blog/` inside `src/scripts/` to keep "all code together."
+
+**Why it's wrong:** Vite processes everything inside `src/`. Pipeline scripts use Node.js APIs (`fs`, `simple-git`) that cannot be bundled for the browser. Vite will fail or produce errors when encountering them.
+
+**Do this instead:** Place `scripts/blog/` at the repo root, outside `src/`. TypeScript still applies via `tsconfig.json`; `tsx` runs the scripts directly in GitHub Actions without Vite involvement.
+
+### Anti-Pattern 4: Storing full article objects in frontmatter for related articles
+
+**What people do:** Have the pipeline write full related article metadata (title, description, publishDate) into frontmatter to avoid a collection lookup at build time.
+
+**Why it's wrong:** Frontmatter bloat, data duplication, stale data risk if the related article's title or description is later updated.
+
+**Do this instead:** Store only `relatedSlugs: string[]` in frontmatter. `RelatedArticles.astro` calls `getCollection('blogg')` at each Vercel build and filters to the specified slugs — always in sync with the source.
+
+### Anti-Pattern 5: Using `entry.render()` (deprecated Astro 4 API)
+
+**What people do:** Call `const { Content } = await entry.render()` in `[...slug].astro` as shown in older Astro docs.
+
+**Why it's wrong:** `entry.render()` is deprecated in Astro 5. Using it produces deprecation warnings and will break in a future version.
+
+**Do this instead:** Use the module-level `render` function: `import { render } from 'astro:content'` then `const { Content } = await render(entry)`.
 
 ## Sources
 
-- Direct codebase analysis: `src/components/islands/PrisKalkulatorIsland.tsx` (current implementation, 379 lines)
-- Direct codebase analysis: `src/config/pricing.ts` (current Pakke model to be replaced)
-- Direct codebase analysis: `src/config/services.ts` (Service interface, used by GoalStep/ResultView)
-- Direct codebase analysis: `src/config/launchOffer.ts` (launch discount slots)
-- Direct codebase analysis: `src/lib/animation.ts` (springs, fadeUp, fadeIn -- reused in new components)
-- Direct codebase analysis: `src/pages/tjenester/_sections/PrisKalkulator.astro` (current mount pattern)
-- Direct codebase analysis: `src/pages/tjenester/index.astro` (page structure, Section/SectionHeader usage)
-- React useReducer: standard React API for complex state management (HIGH confidence)
-- Framer Motion AnimatePresence: already used successfully in current component (HIGH confidence)
+- Direct codebase inspection: `src/layouts/BaseLayout.astro` (slot structure, pageLabels map, existing JSON-LD schemas)
+- Direct codebase inspection: `astro.config.mjs` (confirmed `output: 'static'`, existing integrations)
+- Direct codebase inspection: `package.json` (confirmed `@anthropic-ai/sdk` already in dependencies; no `tsx` yet)
+- Direct codebase inspection: `tsconfig.json` (strict mode, `@/*` path alias)
+- Direct codebase inspection: `.github/workflows/ci.yml` (existing CI structure — lint + build + Lighthouse)
+- `.planning/blog-milestone-architecture.md` — pre-resolved architectural decisions (HIGH confidence)
+- Astro 5 Content Collections: `getCollection`, module-level `render()` replacing `entry.render()` — HIGH confidence from established Astro 5 patterns
+- GitHub Actions `GITHUB_TOKEN` permissions: explicit `contents: write` + `pull-requests: write` required since 2023 default-to-read-only change — MEDIUM confidence (verify on first run)
 
 ---
-*Architecture research for: v1.2 Smart Priskalkulator -- Additive pricing calculator integration*
+*Architecture research for: v1.3 Automatisk Blogg — pipeline integration with Astro 5*
 *Researched: 2026-03-06*

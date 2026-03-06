@@ -1,160 +1,233 @@
 # Project Research Summary
 
-**Project:** Nettup v1.2 Smart Priskalkulator
-**Domain:** Additive pricing calculator for Norwegian web agency
+**Project:** Nettup v1.3 — Automatisk Blogg
+**Domain:** Automated AI-generated SEO blog pipeline integrated into existing Astro 5 marketing site
 **Researched:** 2026-03-06
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The v1.2 milestone replaces the existing 4-phase pricing wizard (goal-first, hardcoded prices, "fra X kr" output) with a config-driven additive pricing calculator. The existing codebase already contains everything needed: React 19, Framer Motion, TypeScript, and established patterns for islands, animation, and service configuration. Zero new dependencies are required. The core technical challenge is not technology selection but data model design -- getting the pricing config structure right determines whether the calculator feels trustworthy to users and maintainable for the team.
+This milestone adds a fully automated, weekly blog pipeline to an already-complete 5-page marketing site (nettup.no). The approach is: GitHub Actions cron triggers Claude Sonnet 4.6 to generate Norwegian SEO content, which passes a two-pass quality gate before being published to Astro Content Collections via a GitHub PR that auto-merges on CI pass. Vercel then auto-deploys the article live. The architecture is pre-resolved in the existing milestone document, and research confirms all major decisions are sound. Only two new dev dependencies are needed (`tsx`, `@octokit/rest`); the rest of the stack is unchanged.
 
-The recommended approach is a 4-layer architecture: pricing config (TypeScript file with typed interfaces), pure calculation engine (selections + config = estimate), state management hook (useReducer for multi-step wizard with back navigation), and decomposed UI components (thin island shell + generic question renderer + result breakdown). The existing PrisKalkulatorIsland should be left untouched during development; the new calculator is built alongside it and swapped in only when complete.
+The recommended approach prioritizes quality over volume: 1 article/week with a strict editorial process (human-curated topic clusters, dual-gate review: Claude self-review + automated LIX check). This is the critical differentiator from AI content farms. The pipeline produces ~52 articles/year — a legitimate editorial volume that avoids Google's scaled-content spam policies. GEO-optimized structure (direct answer in first paragraph, mandatory FAQ section) targets Norwegian AI Overviews and citation surfaces. All content is in Norwegian bokmål, targeting SMB decision-makers.
 
-The primary risk is decision fatigue killing completion rates. The current wizard works because it asks 2-3 questions and takes under a minute. Moving to 4 categories with multiple options per category could easily reach 10+ questions, causing abandonment. The mitigation is strict: cap at 5-6 questions per service path, use smart defaults, and show a running total for immediate feedback. The secondary risk is the pricing config growing into a complex nested structure with conditional logic -- keep it flat, additive, and per-service.
+The primary risks are infrastructure configuration pitfalls, not design risks. Specifically: GITHUB_TOKEN cannot trigger CI on its own PRs (requires a Personal Access Token), auto-merge requires a branch protection rule in addition to the settings toggle, and the Astro 5 Content Layer config file path differs from Astro 4. These are all well-documented failure modes with clear fixes. On the implementation side, splitting Claude article generation into two sequential API calls (content then metadata) eliminates JSON truncation risk. The LIX readability threshold should be set to 55 (not 45 as stated in the architecture doc) to avoid systematic false rejections of legitimate Norwegian technical content.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-No new dependencies. The existing stack (React 19 + Framer Motion + TypeScript) handles everything. The key architectural decisions are internal: use `useReducer` over `useState` for wizard state, use a TypeScript config file over JSON for type safety and computed values, and derive price from state rather than storing it.
+The existing Astro 5 + Tailwind 4 + React + Vercel stack requires only two new dev dependencies. `@anthropic-ai/sdk` is already in `dependencies` and is reused directly in pipeline scripts. Astro Content Collections are built into Astro 5 — no new package needed.
 
-**Core technologies (all existing):**
-- **React 19 useReducer:** Multi-step wizard state with back navigation, explicit action-based transitions
-- **TypeScript config file (`pricing.ts`):** Typed additive pricing data, type-checked at build time, matches existing `services.ts` pattern
-- **Framer Motion AnimatePresence:** Step transitions only (not price animations), reusing existing slideVariants and springs
-- **Pure calculation functions (`pricing-engine.ts`):** Config + selections = estimate, testable without React, reusable server-side
+**Core technologies:**
+- `tsx ^4.21.0` (devDependency) — runs TypeScript pipeline scripts in GitHub Actions without a compile step; must be in devDependencies, not cold-downloaded via `npx tsx` (adds 15-30s per CI run and introduces registry failure risk)
+- `@octokit/rest ^22.0.1` (devDependency) — creates GitHub PRs from the pipeline's publish stage; lighter than the full `octokit` bundle (no GraphQL or webhooks needed)
+- `@anthropic-ai/sdk ^0.78.0` — already in `dependencies`; used for both content generation and quality-gate review passes
+- Astro Content Collections (built-in) — typed blog schema via `src/content/config.ts` with Zod; `getCollection('blogg')` at build time
+
+**Critical version note:** In Astro 5, the Content Collections config lives at `src/content.config.ts` (Content Layer API) or `src/content/config.ts` (legacy `type: 'content'` API). The architecture doc uses the legacy path intentionally — this is correct for v1.3 but carries long-term maintenance risk if Astro removes legacy support.
+
+See: `.planning/research/STACK.md`
 
 ### Expected Features
 
+The blog must function as a legitimate SEO asset and a quality signal for Nettup as an agency. The architecture doc pre-resolves most feature decisions correctly.
+
 **Must have (table stakes):**
-- Service type selection (goal-first, existing pattern)
-- Price range result (min-max, not a single binding number)
-- Line-item breakdown showing what drives the price
-- Monthly cost display (separate from one-time, also additive)
-- Progress indicator for 5-step flow
-- Back navigation without losing selections
-- Mobile-first layout (375px tap targets)
-- Launch discount display (40% crossed-out pattern)
-- CTA to `/kontakt?tjeneste=X`
+- Content collection schema (`src/content/config.ts`) — typed contract between pipeline output and Astro build; must be created first, before any page components
+- Blog listing page `/blogg` and dynamic article pages `/blogg/[...slug]` — entry points for all blog traffic
+- `ArticleLayout.astro` wrapping `BaseLayout.astro` with Article + FAQPage JSON-LD — non-negotiable for Google indexing and E-E-A-T signals
+- Separate `seoTitle` (keyword-first `<title>` tag) and `title` (conversational H1) fields — conflating them sacrifices either CTR or readability
+- Norwegian-aware slug generation (ae/oe/aa for ae/o/a) — 8 lines of code, no package needed
+- Two-pass quality gate: Claude self-review (6 criteria, avg ≥7) + automated checks (word count, LIX ≤55, self-promotion cap ≤2, FAQ section presence)
+- GitHub Actions cron (Monday 08:00 UTC) + `workflow_dispatch` — automation is the feature
+- PR-based publish flow — never commit directly to `main`; quality scores visible in PR body as a permanent audit trail
+- `inLanguage: "nb"` in Article JSON-LD — routes content to Norwegian SERPs, not global
+- Human-curated topic clusters (`scripts/blog/config.ts`) — 4 clusters: priser, teknologi, smb-tips, lokal-seo
 
 **Should have (differentiators):**
-- Additive pricing model (transparent per-item costs -- rare among Norwegian agencies)
-- Config-driven pricing (single source of truth for public calculator and internal quoting)
-- Running total updating live as selections change
-- Category-based flow (Storrelse, Funksjoner, Integrasjoner, Designniva)
-- "Hva er inkludert" descriptions per selection
-- "Kopier estimat" button on results
+- Persistent topic queue (`topics-queue.json` committed to repo) — prevents re-selecting rejected or already-published topics across weekly runs
+- Internal linking to Nettup service pages — converts blog readers to leads; hardcoded `SERVICE_PAGES` list prevents hallucinated URLs
+- `relatedSlugs` in frontmatter + `RelatedArticles.astro` component — topical authority via cross-linking, fetched at build time
+- Author E-E-A-T signals in Article JSON-LD (`sameAs` LinkedIn URL for Iver Ostensen) — Google E-E-A-T evaluation requires a verifiable real person
+- GEO-optimized structure (direct answer first paragraph, mandatory "Vanlige sporsmal" section) — targets AI Overviews citation surfaces
+- Self-promotion cap: max 2 "Nettup" mentions, enforced in both system prompt and automated quality check
 
 **Defer (v2+):**
-- PDF/email summary (requires email infrastructure)
-- Preset packages as quick-select shortcuts
-- Internal quoting UI beyond the config file itself
-- A/B testing calculator vs simple pricing
+- Hub/cluster pages (`/blogg/kategori/[cluster].astro`) — trigger after ≥10 articles total, ≥3 per cluster
+- Cover images per article — adds cost and brand risk; text-first is correct for v1.3
+- RSS feed, pagination, comment system, email newsletter, social share buttons
+
+See: `.planning/research/FEATURES.md`
 
 ### Architecture Approach
 
-A 4-layer architecture separating config, calculation, state, and UI. The existing 379-line monolith component becomes a thin orchestrator importing from dedicated sub-modules. Sub-components live in `components/priskalkulator/` (not as separate islands -- they share state within one hydration boundary). The calculator mounts identically on both `/tjenester` and the new `/priskalkulator` page with zero behavior-changing props.
+The pipeline is a 5-stage Node.js script (`scripts/blog/index.ts`) that runs inside GitHub Actions, completely decoupled from the Astro build. Pipeline scripts live at `scripts/blog/` at the repo root (not inside `src/`) because Vite would attempt to bundle Node.js APIs. Astro reads the generated `.md` files from `src/content/blogg/` at build time only. The two systems share only the filesystem — no runtime coupling.
 
-**Major components (9 new files, 2 modified):**
-1. **`src/config/pricing.ts`** -- Replaces old Pakke tier model with additive per-service pricing config
-2. **`src/lib/pricing-engine.ts`** -- Pure calculation: selections + config = estimate with line items
-3. **`src/components/priskalkulator/useWizardState.ts`** -- useReducer hook managing phase, selections, and derived estimate
-4. **`src/components/priskalkulator/QuestionStep.tsx`** -- Generic category renderer handling both single-select and multi-select
-5. **`src/components/priskalkulator/ResultView.tsx`** -- Line-item breakdown, discount display, CTAs
-6. **`src/components/priskalkulator/WizardShell.tsx`** -- AnimatePresence wrapper + visual progress bar
-7. **`src/components/priskalkulator/GoalStep.tsx`** -- Service selection (reuses goal-first pattern)
-8. **`src/components/islands/PrisKalkulatorIsland.tsx`** -- Rewritten as thin orchestrator (swap only when ready)
-9. **`src/pages/priskalkulator/index.astro`** -- Dedicated calculator page
+**Major components:**
+1. `src/content/config.ts` — Zod schema defining the `blogg` collection; must be created first (everything else depends on it)
+2. `src/components/blogg/ArticleLayout.astro` — wraps `BaseLayout.astro` via named `head` slot; injects Article + FAQPage JSON-LD without duplicating nav, footer, or analytics
+3. `scripts/blog/quality-gate.ts` — two-pass review (Claude self-critique + automated LIX/checks); rejection exits 0 with job summary, never exits 1
+4. `scripts/blog/publish.ts` — creates `blogg/*` branch, commits article, opens PR with quality report body; uses `@octokit/rest` and a PAT (not GITHUB_TOKEN)
+5. `.github/workflows/blog-generate.yml` — cron + manual trigger; requires `ANTHROPIC_API_KEY` secret and a PAT stored as `GH_PAT`
+
+**Build order:** content.config → ArticleCard → ArticleLayout → RelatedArticles → listing/article pages → BaseLayout modification → pipeline scripts (config, queue, 5 stages) → orchestrator → workflow → package.json (`tsx`)
+
+See: `.planning/research/ARCHITECTURE.md`
 
 ### Critical Pitfalls
 
-1. **Decision fatigue kills completion** -- Cap at 5-6 questions per service. Use smart defaults. Show running total for motivation. Group related choices into single compound questions.
-2. **Pricing config becomes a second codebase** -- Flat additive model only (fixed NOK amounts). No conditional logic, no cross-option dependencies. Keep under 150 lines. Separate per service.
-3. **Price ranges so wide they're meaningless** -- Target max 2x spread on final range. Use fixed additions per option; range comes from base price only. Line items justify the spread.
-4. **State management breaks on back navigation** -- Use useReducer from the start. Store all selections keyed by category. Derive price on every render. Never incrementally update a running total.
-5. **Replacing the working wizard too early** -- Build new component with new name alongside existing one. Swap only when complete and tested. One-line change in Astro wrapper.
+1. **GITHUB_TOKEN cannot trigger CI on its own PR** — GitHub's loop-prevention blocks `pull_request` workflows on PRs created by `GITHUB_TOKEN`. Without CI running, auto-merge either merges immediately with no safety gate or never merges. Fix: store a PAT as `secrets.GH_PAT` and use it for checkout and `gh pr create`. Must decide before writing the workflow file.
+
+2. **Auto-merge requires a branch protection rule, not just the settings toggle** — Enabling "Allow auto-merge" in repo settings is not sufficient. A branch protection rule on `main` with at least one required status check must exist, or auto-merge has no condition to wait for and either fires immediately or never. Fix: Settings → Branches → Add rule → require `build` check.
+
+3. **JSON truncation from single-call article generation** — Requesting a JSON blob containing a 2000-word `content` field in one Claude call risks hitting the 8K output token limit for Sonnet 4.6. `JSON.parse()` throws on truncated output, crashing the pipeline after consuming API credits. Fix: two sequential API calls — plain Markdown for content, small JSON for metadata. Alternatively, use Anthropic Structured Outputs beta (`anthropic-beta: structured-outputs-2025-11-13`).
+
+4. **LIX threshold 45 causes systematic false rejections of Norwegian technical content** — Norwegian is a compounding language; technical terms like "sokemotoroptimalisering" count as long words. LIX ≤45 is appropriate for fiction, not web-technology content. Fix: raise threshold to ≤55, or treat LIX as a soft warning in the job summary rather than a hard rejection gate.
+
+5. **`relatedSlugs` hallucination breaks the Astro build** — If Claude returns a slug that does not exist in the collection, `getEntry()` returns `undefined`. Rendering `entry.data.title` on undefined throws and fails the entire build. Fix: `RelatedArticles.astro` must filter out undefined entries. Quality gate must also validate all `relatedSlugs` exist before writing the `.md` file.
+
+Additional pitfalls documented in research: Astro 5 config file path (legacy vs Content Layer), `tsx` must be in devDependencies not fetched via `npx`, `topics-queue.json` update must be committed back on each run, `discover-topics.ts` must guard against `src/content/blogg/` not existing on first run, `getStaticPaths` params key must match `[...slug]` filename exactly.
+
+See: `.planning/research/PITFALLS.md`
+
+---
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+The research and architecture doc both agree on a 3-phase structure. The dependency chain makes the order non-negotiable: Astro must know about the collection before any page can query it; pages must exist before the pipeline has a validated output target; the GitHub Action is wired up last because it depends on everything else being correct.
 
-### Phase 1: Pricing Config and Calculation Engine
+### Phase 1: Astro Blog Infrastructure
 
-**Rationale:** Everything depends on the data model. UI cannot be built until the config structure is defined and the calculation engine works. This phase has zero UI and can be fully unit-tested.
-**Delivers:** `pricing.ts` config with all 3 services, `pricing-engine.ts` with `calculateEstimate()`, shared `types.ts`
-**Addresses:** Config-driven pricing, additive model, line-item breakdown data, monthly cost calculation
-**Avoids:** Config complexity (Pitfall 2), wide ranges (Pitfall 3), decision fatigue (Pitfall 1 -- question count is locked here)
+**Rationale:** The content collection schema is the contract between the pipeline and the Astro build. Everything — listing pages, article pages, components, and pipeline output — depends on this existing first. This phase has no external dependencies and can be fully verified locally with `astro build` before touching CI or the Anthropic API.
 
-### Phase 2: Wizard State and Core UI Components
+**Delivers:** A working blog with manually-created seed articles, verifiable via `astro build` and `astro preview`. Establishes all URLs, SEO structure, and component boundaries.
 
-**Rationale:** With config and engine ready, build the state management and individual step components. Each component can be developed and visually reviewed independently before wiring together.
-**Delivers:** `useWizardState` hook, `GoalStep`, `QuestionStep`, `ResultView` components
-**Addresses:** Back navigation, multi-select support, running total, line-item result display, launch discount integration
-**Avoids:** State management bugs (Pitfall 4), monolith component (Architecture anti-pattern), dual-use paralysis (Pitfall 5 -- customer-first, no internal mode)
+**Addresses:**
+- Content collection schema (run `astro sync` and verify `.astro/types.d.ts` before proceeding to pages)
+- `/blogg` listing page, `/blogg/[...slug]` dynamic pages
+- `ArticleCard.astro`, `ArticleLayout.astro` with both JSON-LD schemas, `RelatedArticles.astro`
+- `BaseLayout.astro` modification (add `'/blogg': 'Blogg'` to `pageLabels`)
+- At least 2 seed articles to validate the full build path end-to-end
 
-### Phase 3: Integration, Polish, and Page Creation
+**Avoids:** Pitfall 1 (config location — run `astro sync` immediately after creating config), Pitfall 9 (getStaticPaths params key — verify with `astro build` not just `astro dev`), Pitfall 10 (relatedSlugs undefined guard in `RelatedArticles.astro`)
 
-**Rationale:** Wire everything together in `WizardShell` and the island orchestrator. Create the dedicated `/priskalkulator` page. Polish animations and progress indicator. Test on both mount points.
-**Delivers:** Complete working calculator on both `/tjenester` and `/priskalkulator`, progress bar, step animations, mobile optimization
-**Addresses:** Two-page sharing, progress indicator, mobile layout, animation polish, reduced motion support
-**Avoids:** Over-animation (Pitfall 8), two-page drift (Pitfall 6), replacing wizard too early (Pitfall 7 -- swap happens at end of this phase)
+**Research flag:** Standard patterns — Astro Content Collections and `getStaticPaths` are well-documented. No phase research needed.
 
-### Phase 4: Swap and Cleanup
+---
 
-**Rationale:** Only after the new calculator is complete and tested, swap it into production and remove the old component.
-**Delivers:** Live additive calculator replacing old wizard, old component removed
-**Addresses:** Production deployment, old code cleanup
-**Avoids:** Broken live site during development (Pitfall 7)
+### Phase 2: Pipeline Scripts
+
+**Rationale:** Scripts can be developed and tested locally once Phase 1 infrastructure exists. The `tsx` dev dependency, all 5 pipeline stages, and the orchestrator are self-contained Node.js code with no GitHub Actions involvement yet. A manual `npx tsx scripts/blog/index.ts` run verifies the pipeline before wiring the cron.
+
+**Delivers:** A runnable pipeline triggerable manually. Includes the quality gate with calibrated LIX threshold, topic queue management, and PR creation logic.
+
+**Uses:**
+- `tsx` (devDependency) — installed via `npm install -D tsx`, not cold-downloaded
+- `@octokit/rest` (devDependency) — PR creation in `publish.ts`
+- `@anthropic-ai/sdk` (already in dependencies) — generation and review passes
+
+**Implements:**
+- `scripts/blog/config.ts` — 4 topic clusters, `SERVICE_PAGES` list
+- `scripts/blog/discover-topics.ts` — with `fs.existsSync` guard for first run against empty directory
+- `scripts/blog/generate-article.ts` — two API calls (content then metadata); Norwegian slugify (no package)
+- `scripts/blog/quality-gate.ts` — LIX threshold ≤55; exit 0 with job summary on reject
+- `scripts/blog/optimize-seo.ts` — FAQPage extraction and Article + FAQPage schema injection
+- `scripts/blog/publish.ts` — branch, commit, PR via `@octokit/rest`; updates queue status
+- `scripts/blog/index.ts` — top-level try/catch on the entire pipeline; all failures exit 0 with job summary
+
+**Avoids:** Pitfall 3 (JSON truncation — two-call generation), Pitfall 4 (LIX threshold — 55 not 45), Pitfall 5 (`tsx` in devDependencies), Pitfall 6 (email spam — exit 0 always), Pitfall 7 (directory non-existence — `fs.existsSync` guard), Pitfall 10 (slug validation in quality gate before writing `.md`)
+
+**Research flag:** The two-call API pattern and Anthropic Structured Outputs are documented but untested in this codebase. Recommended: run the pipeline manually against a real topic before enabling the cron. Calibrate LIX threshold against 3-5 sample Norwegian tech articles before production use.
+
+---
+
+### Phase 3: GitHub Actions and Repo Configuration
+
+**Rationale:** Last phase because it orchestrates everything from Phase 1 and Phase 2. The workflow cannot be verified without the pipeline scripts and Astro infrastructure being correct. This phase also involves non-code configuration (repo secrets, branch protection, auto-merge settings) that must be set up in a specific sequence.
+
+**Delivers:** Fully automated weekly pipeline. Articles generated Monday morning, pass quality gate, PR created, CI runs, auto-merges on green, Vercel deploys, article live within ~2 minutes of merge.
+
+**Addresses:**
+- `.github/workflows/blog-generate.yml` — cron + `workflow_dispatch`; explicit `permissions: contents: write, pull-requests: write`
+- `ANTHROPIC_API_KEY` secret in repo settings
+- `GH_PAT` secret (PAT with `contents: write` + `pull-requests: write` scope only) — required for CI to trigger on pipeline PRs
+- Branch protection rule on `main` — require `build` check to pass before auto-merge fires
+- Auto-merge enabled at repo level
+
+**Avoids:** Pitfall 1 (GITHUB_TOKEN blocks CI — use PAT instead), Pitfall 2 (auto-merge without branch protection rule)
+
+**Research flag:** PAT setup and branch protection rules are standard GitHub procedures — no research needed. Verify on first test run: create a manual PR using the PAT and confirm the CI workflow appears in the PR Checks tab before enabling the cron.
+
+---
 
 ### Phase Ordering Rationale
 
-- Config-first because every other layer reads from it. A wrong config schema cascades into UI rework.
-- State + components before integration because individual pieces are testable in isolation.
-- Integration last because it is mostly wiring, not logic. Problems at this stage are layout/animation issues, not architectural.
-- Separate swap phase because the old wizard must remain live until the new one is verified.
+- Schema must exist before pages (`getCollection` fails without it)
+- Pages must exist before pipeline scripts have a valid output target
+- Pipeline scripts must be correct before the GitHub Action runs them weekly
+- The "Looks Done But Isn't" checklist in `PITFALLS.md` provides a concrete verification sequence for each phase — follow it before marking any phase complete
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 1:** Needs careful design of actual pricing numbers per service. The config structure is well-defined but the specific prices, question wording, and option sets require business input from Nettup. This is a content/business decision, not a technical one.
+Phases needing deeper research during planning: None identified. The architecture doc pre-resolves all major decisions and research confirms them.
 
-Phases with standard patterns (skip research-phase):
-- **Phase 2:** useReducer wizard state is a well-documented React pattern. Sub-component decomposition follows established island architecture.
-- **Phase 3:** Framer Motion AnimatePresence with existing patterns. Astro page creation is boilerplate.
-- **Phase 4:** One-line component swap. No research needed.
+Phases where standard patterns apply (skip research-phase):
+- **Phase 1:** Astro Content Collections, `getStaticPaths`, slot-based layout composition — all established Astro 5 patterns with official documentation
+- **Phase 2:** Node.js script patterns, Anthropic SDK usage — already proven in `/api/chat.ts`; the two-call generation pattern is straightforward
+- **Phase 3:** GitHub Actions workflow structure, branch protection — standard GitHub features
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero new dependencies. All recommendations verified against existing codebase (React 19.2.3, FM 12.23.26, TS 5). |
-| Features | MEDIUM-HIGH | Table stakes well-grounded in competitor analysis (4 Norwegian agencies analyzed). Specific pricing numbers are illustrative, not final. |
-| Architecture | HIGH | Directly based on analysis of existing 379-line component, established React patterns, and current Astro island architecture. |
-| Pitfalls | HIGH | All pitfalls grounded in existing codebase limitations and well-known multi-step wizard UX patterns. |
+| Stack | HIGH | Official npm and Astro docs; `package.json` inspected directly; versions confirmed current as of 2026-03-06 |
+| Features | HIGH | Architecture doc (primary source) validated by research; Norwegian SEO specifics from multiple consistent sources; feature deferrals are conservative and correct |
+| Architecture | HIGH | Direct codebase inspection of `BaseLayout.astro`, `astro.config.mjs`, `package.json`, `tsconfig.json`, `.github/workflows/ci.yml`; no guesswork |
+| Pitfalls | HIGH | GITHUB_TOKEN/CI trigger issue confirmed via GitHub community docs; auto-merge branch protection confirmed via GitHub official docs; LIX calibration from formula documentation; JSON truncation from Anthropic token limit documentation |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Actual pricing data:** Research provides illustrative prices. Nettup must define real base prices, add-on costs, and category options per service before Phase 1 can produce the final config.
-- **Question wording in Norwegian:** The config will contain user-facing Norwegian text. Final copy should be reviewed for tone and clarity with non-technical test users.
-- **Multi-select UX on mobile:** The architecture supports multi-select (checkboxes) for Features and Integrations categories. The exact mobile interaction pattern (checkboxes vs toggle buttons vs cards) needs visual design validation during Phase 2.
-- **Old Pakke model deprecation:** The existing `pricing.ts` with Enkel/Standard/Premium packages will be replaced. Any other code referencing the old Pakke interface needs to be identified and updated.
+- **OG image for individual articles** — Architecture doc does not specify. Correct v1.3 decision: reuse site-wide `og-image.jpg` for all articles. Per-article OG cards are Phase 2+ scope. Decide and document in Phase 1 scope.
+
+- **BreadcrumbList JSON-LD on article pages** — Not in the architecture doc but is a standard SEO signal and low-cost addition in `ArticleLayout.astro`. Recommend including in Phase 1 scope alongside the Article and FAQPage schemas.
+
+- **Blog discoverability from main site** — No `/blogg` link is in FloatingNav (correct — it would clutter nav before there is enough content). Recommendation: add blog link to Footer immediately; add a "Les fra bloggen" section on `/` or `/tjenester` after 5+ articles exist. Not blocking for v1.3 launch.
+
+- **CI check name for branch protection rule** — Branch protection rule must reference the exact job name from `ci.yml`. Confirm the job name (likely `build`) before configuring the branch protection rule in Phase 3.
+
+- **Quality gate calibration** — The LIX threshold change (45 to 55) and Claude scoring prompts should be validated against real Norwegian web articles before enabling the production cron. Manual test run recommended immediately after Phase 2 is complete.
+
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Codebase analysis: `PrisKalkulatorIsland.tsx`, `services.ts`, `pricing.ts`, `launchOffer.ts`, `animation.ts`, `PrisKalkulator.astro`
-- React useReducer documentation (stable API since React 16.8)
-- Framer Motion AnimatePresence (already in use in codebase)
-- NNGroup wizard design guidelines (under 10 steps, progress indicators, back navigation)
+- `/Users/iverostensen/nettup/.planning/blog-milestone-architecture.md` — pre-resolved architectural decisions
+- Codebase: `package.json`, `astro.config.mjs`, `tsconfig.json`, `src/layouts/BaseLayout.astro`, `.github/workflows/ci.yml` — direct inspection
+- [Astro Content Collections docs](https://docs.astro.build/en/guides/content-collections/) — Content Layer API, Astro 5 config path
+- [@anthropic-ai/sdk on npm](https://www.npmjs.com/package/@anthropic-ai/sdk) — version 0.78.0 confirmed
+- [@octokit/rest on npm](https://www.npmjs.com/package/@octokit/rest) — version 22.0.1 confirmed
+- [tsx on npm](https://www.npmjs.com/package/tsx) — version 4.21.0 confirmed
+- [GitHub Docs: auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request) — branch protection requirement confirmed
+- [Anthropic Structured Outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) — JSON schema compliance beta, Sonnet 4.5+
 
 ### Secondary (MEDIUM confidence)
-- Nettsidelab, WebPluss, Drobak Design, Webaas pricing calculators (Norwegian competitor analysis)
-- Shakuro project calculator (international reference for wizard-based pricing)
-- Eleken wizard UI pattern guide (progress indicators, mobile optimization)
-- CPQ (Configure, Price, Quote) enterprise pattern adapted for consumer use
+- [GitHub community: GITHUB_TOKEN PR workflow trigger](https://github.com/orgs/community/discussions/65321) — PAT workaround confirmed
+- [peter-evans/create-pull-request #48](https://github.com/peter-evans/create-pull-request/issues/48) — PAT workaround documented
+- [Strapi GEO guide 2025](https://strapi.io/blog/generative-engine-optimization-geo-guide) — direct answer structure, FAQ for citations
+- [Whitespark Local Search Ranking Factors 2026](https://whitespark.ca/local-search-ranking-factors/) — local SEO signals
+- [LIX readability formula](https://readabilityformulas.com/the-lix-readability-formula/) — threshold scale and Norwegian applicability
+
+### Tertiary (LOW confidence — validate during implementation)
+- ALM Corp SEO Trends 2026 — AI Overview citation patterns
+- 1702digital E-E-A-T 2026 — E-E-A-T as ranking filter
 
 ---
 *Research completed: 2026-03-06*

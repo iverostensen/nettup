@@ -1,288 +1,169 @@
-# Technology Stack
+# Stack Research
 
-**Project:** v1.2 Smart Priskalkulator (additive pricing engine)
+**Domain:** Automated blog pipeline — Astro Content Collections + GitHub Actions + Claude API
 **Researched:** 2026-03-06
 **Confidence:** HIGH
 
-> Scope: additive pricing engine, config-driven pricing file, multi-step question wizard, range estimate calculation. The existing stack handles everything. Zero new dependencies needed.
+## Scope
+
+This file covers ONLY stack additions for the v1.3 automated blog milestone.
+Existing validated stack (Astro 5, Tailwind 4, React, Framer Motion, Vercel, TypeScript, @anthropic-ai/sdk) is NOT re-researched here.
 
 ---
 
-## Recommendation: Zero New Dependencies
+## Recommended Stack
 
-| Requirement | Solution | Already Installed |
-|-------------|----------|-------------------|
-| Multi-step wizard UI | React 19 + Framer Motion AnimatePresence | Yes |
-| Complex step state | React `useReducer` (upgrade from `useState`) | Yes (React built-in) |
-| Additive calculation | Pure TypeScript functions | Yes |
-| Config-driven pricing | TypeScript file (`.ts`) with typed constants | Yes (pattern from `services.ts`) |
-| Step animations | Framer Motion slide variants | Yes (pattern from current `PrisKalkulatorIsland`) |
-| Range estimates (min-max) | TypeScript arithmetic | Yes |
-| Line-item breakdown | Derived from state + config, rendered as list | Yes |
-| Monthly cost accumulation | Same additive pattern as setup cost | Yes |
+### Core Technologies (existing — confirmed compatible)
+
+| Technology | Version | Purpose | Why Confirmed |
+|------------|---------|---------|---------------|
+| @anthropic-ai/sdk | ^0.78.0 | Claude API calls for content generation and quality-gate review | Already in `dependencies`. Reused in pipeline scripts — no change needed. Latest version as of 2026-03-06. |
+| Astro Content Collections | built-in (Astro 5) | Blog schema, type-safe frontmatter, `getCollection()` query | No new package. Ships with Astro 5. Zero additional install. |
+
+### New Dev Dependencies
+
+| Library | Version | Purpose | When to Use |
+|---------|---------|---------|-------------|
+| tsx | ^4.21.0 | Run TypeScript pipeline scripts in GitHub Actions without compile step | Required for `npx tsx scripts/blog/index.ts` in the workflow. Must be in devDependencies so `npm ci` makes it available — do not rely on cold `npx tsx` download on every CI run. |
+| @octokit/rest | ^22.0.1 | Create GitHub PRs from the pipeline's publish stage | Used in `scripts/blog/publish.ts` via `octokit.rest.pulls.create()`. The REST-only package — lighter than the full `octokit` bundle which adds GraphQL, webhooks, and plugins that are not needed. |
+
+**Total new installs: 2 devDependencies.**
 
 ---
 
-## Key Decision: TypeScript Config Over JSON
+## Astro Content Collections: Critical Config Path Change
 
-**Use `src/config/pricing.ts`, not `pricing.json`.**
+Content Collections are built into Astro 5 — no new package is needed. However, the config file path changed between Astro 4 and Astro 5.
 
-| Criterion | TypeScript (.ts) | JSON (.json) |
-|-----------|------------------|--------------|
-| Type safety | Full — interfaces enforce structure at build time | None — needs runtime validation |
-| Computed values | Yes — `Math.round(base * (1 - LAUNCH_DISCOUNT))` | No — must duplicate values |
-| Shared constants | Yes — import `LAUNCH_DISCOUNT` from `services.ts` | No — stringly typed |
-| IDE support | Full autocomplete and refactor | Partial |
-| Import pattern | Matches existing `services.ts` | Different pattern |
-| Non-dev editing | Requires TS knowledge | Slightly more accessible |
+| Astro version | Config file location |
+|---------------|---------------------|
+| Astro 2–4 | `src/content/config.ts` |
+| Astro 5+ | `src/content.config.ts` (at src root, not inside content/) |
 
-Non-dev editing is irrelevant: PROJECT.md states this is "brukes internt av Nettup for kundeprising" — the team is technical. TypeScript wins on every criterion that matters.
+**The architecture document references `src/content/config.ts` — this is the Astro 4 path. Use `src/content.config.ts`.**
 
-### Recommended Config Structure
+The Astro 5 Content Layer API also introduces explicit loaders. The `glob()` loader replaces the implicit file scanning from Astro 4:
 
 ```typescript
-// src/config/pricing.ts
+// src/content.config.ts  ← correct path for Astro 5
+import { defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'   // Astro 5 Content Layer — explicit loader required
+import { z } from 'astro/zod'          // z from astro/zod, not zod directly
 
-export interface PricingOption {
-  id: string;
-  label: string;
-  subLabel?: string;
-  setupPrice: number;      // One-time cost addition in NOK (can be 0)
-  monthlyPrice: number;    // Monthly cost addition in NOK (can be 0)
-}
+const blogg = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blogg' }),
+  schema: z.object({
+    title: z.string(),
+    seoTitle: z.string(),
+    description: z.string(),
+    publishDate: z.coerce.date(),
+    author: z.string().default('Iver Østensen'),
+    category: z.string(),
+    tags: z.array(z.string()),
+    estimatedReadTime: z.number(),
+    relatedSlugs: z.array(z.string()).optional(),
+  }),
+})
 
-export interface PricingQuestion {
-  id: string;
-  question: string;
-  helpText?: string;       // Optional explainer shown below question
-  options: PricingOption[];
-}
-
-export interface ServicePricing {
-  serviceSlug: string;
-  baseSetupPrice: number;    // Starting point before additions
-  baseMonthlyPrice: number;  // Starting monthly before additions
-  questions: PricingQuestion[];
-}
-
-export const pricing: Record<string, ServicePricing> = {
-  nettside: {
-    serviceSlug: 'nettside',
-    baseSetupPrice: 8000,
-    baseMonthlyPrice: 350,
-    questions: [
-      {
-        id: 'size',
-        question: 'Hvor mange sider trenger du?',
-        options: [
-          { id: 'small', label: '1-5 sider', subLabel: 'Enkel presentasjon', setupPrice: 0, monthlyPrice: 0 },
-          { id: 'medium', label: '6-15 sider', subLabel: 'Komplett nettsted', setupPrice: 4000, monthlyPrice: 100 },
-          { id: 'large', label: '16+ sider', subLabel: 'Stort nettsted', setupPrice: 10000, monthlyPrice: 200 },
-        ],
-      },
-      {
-        id: 'cms',
-        question: 'Trenger du a kunne oppdatere innholdet selv?',
-        options: [
-          { id: 'no', label: 'Nei, dere oppdaterer for meg', setupPrice: 0, monthlyPrice: 0 },
-          { id: 'yes', label: 'Ja, med et enkelt CMS-panel', setupPrice: 3000, monthlyPrice: 100 },
-        ],
-      },
-      // ... design level, integrations, etc.
-    ],
-  },
-  // nettbutikk, landingsside...
-};
+export const collections = { blogg }
 ```
 
-**Why this shape works for additive pricing:**
-
-```typescript
-// Calculation is trivial:
-const totalSetup = pricing.baseSetupPrice
-  + selections.reduce((sum, sel) => sum + sel.setupPrice, 0);
-
-const totalMonthly = pricing.baseMonthlyPrice
-  + selections.reduce((sum, sel) => sum + sel.monthlyPrice, 0);
-
-// Range estimate: apply variance
-const estimate = {
-  min: Math.round(totalSetup * 0.9),
-  max: Math.round(totalSetup * 1.15),
-};
-```
-
-No engine library needed. This is integer arithmetic on NOK values.
+Content files still live in `src/content/blogg/` — only the config file moved to `src/`.
 
 ---
 
-## Key Decision: useReducer Over useState
+## GitHub Actions Environment
 
-The current `PrisKalkulatorIsland` uses `useState` with a flat state object. This will not scale to 8-12 questions with back-navigation and accumulated selections.
+The workflow uses only tooling that `npm ci` provides. No extra runner setup needed beyond:
 
-**Use `useReducer` because:**
-1. State transitions are explicit and predictable (dispatch actions, not setState mutations)
-2. Back-navigation requires undoing the last selection — reducer makes this clean
-3. All selections must be tracked for the line-item breakdown — reducer accumulates naturally
-4. Price is derived (computed from state + config), never stored in state, preventing desync
+- `actions/checkout@v4`
+- `actions/setup-node@v4` with `node-version: 20` (Node 20 LTS — compatible with tsx 4.x and @anthropic-ai/sdk 0.78.x)
+- `ANTHROPIC_API_KEY` stored as a GitHub Actions repository secret
+- `GITHUB_TOKEN` auto-provided by Actions — sufficient for PR creation on the same repo via `@octokit/rest`
 
-### Recommended State Shape
+Git identity must be configured explicitly inside the workflow before any commit:
 
-```typescript
-interface CalcState {
-  service: string | null;       // Selected service slug
-  currentStep: number;          // Index into questions array
-  selections: Map<string, PricingOption>;  // questionId -> selected option
-  phase: 'service' | 'questions' | 'result';
-}
-
-type CalcAction =
-  | { type: 'SELECT_SERVICE'; service: string }
-  | { type: 'SELECT_OPTION'; questionId: string; option: PricingOption }
-  | { type: 'GO_BACK' }
-  | { type: 'RESET' };
-
-function calcReducer(state: CalcState, action: CalcAction): CalcState {
-  switch (action.type) {
-    case 'SELECT_SERVICE':
-      return { ...state, service: action.service, phase: 'questions', currentStep: 0, selections: new Map() };
-    case 'SELECT_OPTION': {
-      const newSelections = new Map(state.selections);
-      newSelections.set(action.questionId, action.option);
-      const questions = pricing[state.service!].questions;
-      const nextStep = state.currentStep + 1;
-      return nextStep >= questions.length
-        ? { ...state, selections: newSelections, phase: 'result' }
-        : { ...state, selections: newSelections, currentStep: nextStep };
-    }
-    case 'GO_BACK': {
-      if (state.phase === 'result') {
-        // Go back to last question
-        const questions = pricing[state.service!].questions;
-        const lastQ = questions[questions.length - 1];
-        const newSelections = new Map(state.selections);
-        newSelections.delete(lastQ.id);
-        return { ...state, phase: 'questions', currentStep: questions.length - 1, selections: newSelections };
-      }
-      if (state.currentStep > 0) {
-        const questions = pricing[state.service!].questions;
-        const prevQ = questions[state.currentStep - 1];
-        const newSelections = new Map(state.selections);
-        newSelections.delete(prevQ.id);
-        return { ...state, currentStep: state.currentStep - 1, selections: newSelections };
-      }
-      return { ...state, phase: 'service', service: null, selections: new Map() };
-    }
-    case 'RESET':
-      return initialState;
-  }
-}
+```bash
+git config user.name "nettup-blog-bot"
+git config user.email "bot@nettup.no"
 ```
-
-**Price is a derived value, not state:**
-
-```typescript
-function calculatePrice(service: string, selections: Map<string, PricingOption>): {
-  setupTotal: number;
-  monthlyTotal: number;
-  lineItems: Array<{ label: string; setup: number; monthly: number }>;
-} {
-  const config = pricing[service];
-  const lineItems = Array.from(selections.values()).map(opt => ({
-    label: opt.label,
-    setup: opt.setupPrice,
-    monthly: opt.monthlyPrice,
-  }));
-  return {
-    setupTotal: config.baseSetupPrice + lineItems.reduce((s, i) => s + i.setup, 0),
-    monthlyTotal: config.baseMonthlyPrice + lineItems.reduce((s, i) => s + i.monthly, 0),
-    lineItems,
-  };
-}
-```
-
----
-
-## Integration Points
-
-### With existing `services.ts`
-`pricing.ts` references service slugs from `services.ts` but does NOT duplicate service metadata (name, tagline, description). Import `services` to look up display names. `LAUNCH_DISCOUNT` should be defined once (keep in `services.ts`, import into `pricing.ts` and the calculator component).
-
-### With existing `PrisKalkulatorIsland.tsx`
-**Rewrite, not extend.** The current architecture (hardcoded narrowing questions, price stored on the last option only) cannot support additive pricing. Preserve the animation patterns (slideVariants, AnimatePresence `mode="wait"`, `useReducedMotion`) but replace state management and data source entirely.
-
-### With `/priskalkulator` page (new)
-New Astro page at `src/pages/priskalkulator/index.astro`. Imports the React island with `client:load`. Fully static page — calculator runs client-side.
-
-### With `/tjenester` section (existing)
-The same island component can be embedded on `/tjenester` too. The island is self-contained and works wherever mounted.
-
-### With chat endpoint
-The pricing config is importable server-side. The chat endpoint could reference `pricing.ts` to give accurate price quotes in conversation. This is a future opportunity, not a v1.2 requirement.
-
----
-
-## Alternatives Considered
-
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| State management | `useReducer` | Zustand | Overkill for single-island state. No cross-component sharing needed. Adds a dependency for zero benefit. |
-| State management | `useReducer` | XState | State machine formalism is elegant but heavy for a linear wizard. The "machine" here is just step index + selections map. |
-| Pricing config | TypeScript file | JSON file | No type safety, no computed values, different import pattern from `services.ts`. |
-| Pricing config | TypeScript file | Database / CMS | Massive overkill. Prices change quarterly at most. File deploy is fine. |
-| Calculation | Pure functions | dinero.js / currency.js | Integer NOK arithmetic. No currency conversion, no floating point, no locale formatting beyond `toLocaleString('nb-NO')`. `a + b` is sufficient. |
-| Form handling | Direct React | React Hook Form | Not a form. Single-choice button selections per step. No text inputs, no validation rules, no submission. RHF adds complexity for zero value. |
-| Validation | TypeScript interfaces | Zod | Config is authored by developers, not user input. TypeScript catches structural errors at build time. Zod would validate at runtime — unnecessary. |
-| Animation | Framer Motion (existing) | View Transitions API | Already using FM with established patterns. Switching adds inconsistency. |
-| Visualization | Styled HTML list | Chart library (chart.js, recharts) | A line-item price breakdown is text, not a chart. 3-8 items rendered as a list is clearer than any chart. |
-
----
-
-## What NOT to Add
-
-| Library | Why People Suggest It | Why Not Here |
-|---------|----------------------|--------------|
-| Zustand / Jotai / Redux | "State management" | Single component, no shared state. `useReducer` is sufficient and built-in. |
-| React Hook Form / Formik | "Multi-step form" | This is not a form. No text inputs, no validation, no submission to an API. |
-| XState | "State machine for wizard" | Linear wizard with back button is not complex enough. Would triple the code for the same behavior. |
-| dinero.js / currency.js | "Money calculations" | Integer NOK only. No currency conversion. No floating point. Basic arithmetic. |
-| Zod | "Validate pricing config" | TypeScript interfaces validate at build time. Config is dev-authored, not user input. |
-| chart.js / recharts | "Visualize pricing" | A styled list of line items is clearer than any chart for 3-8 items. |
-| @tanstack/react-table | "Display pricing breakdown" | A plain HTML table/list with Tailwind is simpler and smaller. No sorting, filtering, or pagination needed. |
 
 ---
 
 ## Installation
 
 ```bash
-# No installation needed. Zero new dependencies.
-# The existing stack covers all v1.2 requirements.
+# New dev dependencies only
+npm install -D tsx @octokit/rest
 
-npm run dev    # Development
-npm run build  # Production build
+# No runtime dependency changes — @anthropic-ai/sdk already in dependencies at ^0.78.0
 ```
 
 ---
 
-## New Files to Create
+## Alternatives Considered
 
-| File | Purpose |
-|------|---------|
-| `src/config/pricing.ts` | Additive pricing config — questions, options, base prices per service |
-| `src/lib/pricing.ts` | Pure calculation functions — `calculatePrice()`, `formatNOK()`, discount logic |
-| `src/components/islands/PrisKalkulatorIsland.tsx` | Rewritten calculator with useReducer + additive engine |
-| `src/pages/priskalkulator/index.astro` | Dedicated calculator page |
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| @octokit/rest | `octokit` (full bundle) | Only if you also need GraphQL API, webhooks, or Octokit plugin system. This pipeline creates PRs — REST only. |
+| @octokit/rest | GitHub CLI (`gh pr create` via shell) | Simpler for shell-only scripts. Rejected here because TypeScript error handling around PR creation is cleaner with the SDK. |
+| tsx | ts-node | ts-node requires explicit ESM configuration and uses tsc (slower). tsx uses esbuild and handles ESM natively with zero config for a project already using `"type": "module"`. |
+| tsx | Bun | Bun is faster but adds setup complexity to a Node-based CI environment. `actions/setup-node` is the standard; Bun would require a separate `oven-sh/setup-bun` action step. |
+| tsx as devDependency | `npx tsx` cold download | Cold `npx tsx` downloads ~23MB on every CI run — adds 5-10 seconds and introduces a network failure vector. devDependency ensures `npm ci` handles it. |
+| Plain Markdown (.md) | MDX (.mdx) | Claude generates plain Markdown. MDX requires `@astrojs/mdx` and adds JSX parsing complexity for no benefit when content has no React components. |
+
+---
+
+## What NOT to Use
+
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| Separate CMS (Sanity, Strapi, Contentful) | No human editor exists. A CMS UI adds infrastructure cost and maintenance for a fully automated pipeline. | Astro Content Collections with `.md` files committed to the repo. |
+| `@astrojs/mdx` | Pipeline generates plain Markdown. MDX support is unnecessary complexity and would require file extension changes everywhere. | Plain `.md` with Astro Content Collections. |
+| `gray-matter` in Astro components | Astro's Content Layer API parses frontmatter automatically — `getCollection('blogg')` returns fully typed entries. | `getCollection()` and `getEntry()` from `astro:content`. |
+| `gray-matter` in pipeline scripts | The pipeline WRITES frontmatter via template strings, not reads it. No parser needed. | Template literal with YAML frontmatter string in `generate-article.ts`. |
+| `simple-git` npm package | Adds 4MB for 4 git commands. Use `execSync` from Node's built-in `child_process`. | `execSync('git checkout -b ...')` directly in `publish.ts`. |
+| Vercel Cron + Serverless for generation | Hobby plan has a 10-second function timeout. Article generation takes 20-40 seconds. GitHub Actions has no such constraint. | GitHub Actions scheduled workflow (free, 2000 min/month included). |
+
+---
+
+## Version Compatibility
+
+| Package | Compatible With | Notes |
+|---------|-----------------|-------|
+| tsx ^4.21.0 | Node 20, TypeScript ^5.0, ESM | Project uses `"type": "module"` — tsx handles this correctly without tsconfig changes |
+| @octokit/rest ^22.0.1 | Node 18+, ESM | Ships with full TypeScript types. No `@types/octokit` package needed. |
+| @anthropic-ai/sdk ^0.78.0 | Node 18+, ESM | Already proven in the chat endpoint (`/api/chat`). Same import works in Node scripts. |
+| Astro 5 Content Layer | Astro ^5.0.0 | Breaking vs Astro 4: config at `src/content.config.ts`, `glob()` loader required. |
+
+---
+
+## Integration Points with Existing Astro 5 Setup
+
+**Sitemap:** `@astrojs/sitemap` already installed. Blog pages at `/blogg/[slug]` are included automatically — no sitemap config changes needed.
+
+**Vercel adapter:** Blog pages use `getStaticPaths()` + `getCollection('blogg')` — fully static output. No serverless function needed for the blog. The existing `output: 'hybrid'` config handles this correctly.
+
+**TypeScript strict mode:** `@octokit/rest` and `@anthropic-ai/sdk` both ship their own types. No `@types/*` packages needed for either.
+
+**ESLint:** Verify that `eslint.config.js` globs cover `scripts/**/*.ts` — pipeline scripts should be linted under the same rules.
+
+**Bundle size:** tsx and @octokit/rest are devDependencies. Vercel does not bundle devDependencies into the output. No impact on client bundle or cold start times.
 
 ---
 
 ## Sources
 
-- Codebase: `src/components/islands/PrisKalkulatorIsland.tsx` — current 380 LOC useState-based wizard, confirms rewrite needed
-- Codebase: `src/config/services.ts` — establishes TypeScript config pattern with typed interfaces
-- Codebase: `package.json` — React 19.2.3, Framer Motion 12.23.26, TypeScript 5 already installed
-- React docs: `useReducer` is a stable built-in hook since React 16.8, no version concerns
-- Confidence: HIGH — all recommendations based on existing codebase patterns and standard React patterns, no external dependencies to verify
+- [Astro Content Collections Docs](https://docs.astro.build/en/guides/content-collections/) — config file path, API shape, Astro 5 Content Layer (HIGH confidence — official docs)
+- [Migrating content collections from Astro 4 to 5](https://chenhuijing.com/blog/migrating-content-collections-from-astro-4-to-5/) — breaking change: `src/content.config.ts` path (MEDIUM confidence, consistent with official docs)
+- [@anthropic-ai/sdk on npm](https://www.npmjs.com/package/@anthropic-ai/sdk) — version 0.78.0 confirmed current (HIGH confidence)
+- [@octokit/rest on npm](https://www.npmjs.com/package/@octokit/rest) — version 22.0.1 confirmed current (HIGH confidence)
+- [octokit/rest.js v22 docs](https://octokit.github.io/rest.js/v22/) — `octokit.rest.pulls.create()` method signature verified (HIGH confidence)
+- [tsx on npm](https://www.npmjs.com/package/tsx) — version 4.21.0, esbuild-based, ESM-native (HIGH confidence)
+- [tsx FAQ](https://tsx.is/faq) — devDependency vs npx tradeoffs (HIGH confidence)
+- Project `package.json` — existing dependencies confirmed, @anthropic-ai/sdk already present (HIGH confidence)
 
 ---
-*Stack research for: v1.2 Smart Priskalkulator — additive pricing engine*
+
+*Stack research for: Nettup v1.3 automated blog pipeline*
 *Researched: 2026-03-06*
