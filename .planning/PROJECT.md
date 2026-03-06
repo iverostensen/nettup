@@ -41,6 +41,14 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ### Active
 
+<!-- v1.3 Automatisk Blogg -->
+
+- [ ] Astro Content Collection for blogg (schema, listing page, article pages, components)
+- [ ] Automatisk innholdsgenerasjonspipeline (topic selection, content generation, quality gate, SEO, PR publish)
+- [ ] GitHub Actions cron-jobb med ukentlig artikkelgenerering og auto-merge via PR
+- [ ] SEO/GEO-optimalisert artikkelmal med JSON-LD Article + FAQPage schema
+- [ ] Redaksjonelle temakonfigurasjoner (4 clusters: priser, teknologi, smb-tips, lokal-seo)
+
 ### Deferred
 
 - [ ] Ekte kundeuttalelser — erstatt plassholder-testimonials
@@ -49,7 +57,7 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ### Out of Scope
 
-- Blogg/innholdsmarkedsforing — for mye vedlikehold, ikke kjerneprodukt
+- Manuell blogg — for mye vedlikehold; erstattet av automatisert pipeline i v1.3
 - Flerspraklig stotte — norsk er primaermarked na
 - Ny fargepall — token-system fungerer, kan evalueres ved behov
 - Booking-system — ikke relevant for presentasjonsside
@@ -101,5 +109,15 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Item rows show name only (no per-item prices) | Per-item prices created decision friction, shifted focus from total | ✓ Good — users focus on total estimate, not component costs |
 | TDD for calculation engine | Engine is pure function with no UI dependencies — easy to test | ✓ Good — 15 tests caught edge cases before UI was built |
 
+## Current Milestone: v1.3 Automatisk Blogg
+
+**Goal:** Automatisert SEO-blogg som publiserer 1 artikkel/uke uten manuell innsats — GitHub Actions + Claude API + Astro Content Collections.
+
+**Target features:**
+- Astro blogg-infrastruktur (/blogg listing + artikkelmal med JSON-LD)
+- Generasjonspipeline (topic selection → generate → quality gate → PR)
+- GitHub Actions cron-workflow med auto-merge
+- Hub/cluster-sider (deferred til 10+ artikler finnes)
+
 ---
-*Last updated: 2026-03-06 after v1.2 milestone*
+*Last updated: 2026-03-06 after v1.3 milestone start*

@@ -1,49 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Smart Priskalkulator
-status: complete
+milestone: v1.3
+milestone_name: Automatisk Blogg
+status: defining_requirements
 last_updated: "2026-03-06T00:00:00.000Z"
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 7
-  completed_plans: 7
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-06 after v1.2 milestone)
+See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Planning next milestone (v1.3)
+**Current focus:** Defining requirements for v1.3
 
 ## Current Position
 
-Milestone v1.2 Smart Priskalkulator -- COMPLETE (shipped 2026-03-06)
-Status: All 5 phases (13–16.1), 7 plans archived; tag v1.2 pending
-Last activity: 2026-03-06 -- Archived v1.2 milestone
-
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 5 (v1.2)
-- Average duration: 2min
-- Total execution time: 10min
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 13 | 2 | 3min | 1.5min |
-| 14 | 2 | 5min | 2.5min |
-| 15 | 1 | 2min | 2min |
-| 16 | 1 | 2min | 2min |
-| 16.1 | 1 | 3min | 3min |
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-06 — Milestone v1.3 started
 
 ## Accumulated Context
 
@@ -74,5 +56,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed v1.2 milestone archival
+Stopped at: Starting v1.3 milestone
 Resume file: None
