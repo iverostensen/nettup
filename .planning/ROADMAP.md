@@ -88,11 +88,11 @@ Plans:
   3. The quality gate runs two passes (Claude self-review scoring 6 criteria avg ≥ 7, plus automated checks: word count, LIX ≤ 55, FAQ presence, Nettup mentions ≤ 2) and either approves or rejects with a written reason — exiting 0 in both cases
   4. On approval, a GitHub PR is created on a `blogg/*` branch with quality scores in the PR body — no direct commit to `main`
   5. Rejected topics are persisted to `topics-queue.json` and will be retried before new topics are generated on the next run
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 18-01: Package.json deps, config.ts (clusters + SERVICE_PAGES), discover-topics.ts, generate-article.ts
-- [ ] 18-02: quality-gate.ts, optimize-seo.ts, publish.ts, index.ts orchestrator
+- [ ] 18-01-PLAN.md — Package.json deps, config.ts (clusters + SERVICE_PAGES), discover-topics.ts, generate-article.ts
+- [ ] 18-02-PLAN.md — quality-gate.ts, optimize-seo.ts, publish.ts, index.ts orchestrator
 
 ### Phase 19: GitHub Actions + Repo Config
 **Goal**: A blog article is generated and published automatically every Monday at 08:00 UTC — no manual action required after setup
