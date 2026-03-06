@@ -130,6 +130,7 @@ None.
 | 1 | Analyse and implement refined microanimations and hover effects on /tjenester | 2026-03-05 | 9875bc9 | [1-analyse-the-tjenester-page-and-the-micro](.planning/quick/1-analyse-the-tjenester-page-and-the-micro/) |
 | 2 | Add PrisKalkulator island to tjenester page | 2026-03-05 | ff8dd70 | [2-add-priskalkulator-island-to-tjenester-p](.planning/quick/2-add-priskalkulator-island-to-tjenester-p/) |
 | 3 | Enhance price calculator with narrowing questions | 2026-03-05 | 5a13402 | [3-enhance-price-calculator-with-narrowing-](.planning/quick/3-enhance-price-calculator-with-narrowing-/) |
+| 4 | Update /tjenester/[slug] pages: remove RelaterteTjenester, fix support text, add 9th feature | 2026-03-06 | f5ca5ab | [4-update-tjenester-slug-pages-remove-relat](.planning/quick/4-update-tjenester-slug-pages-remove-relat/) |
 
 ## Session Continuity
 
