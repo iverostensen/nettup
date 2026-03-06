@@ -111,115 +111,117 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
     }
   }
 
+  const finalPrice = estimate.discountActive ? estimate.discounted : estimate.oneTime;
+
   return (
     <motion.div
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="flex flex-col gap-6"
+      className="grid grid-cols-1 gap-8 sm:grid-cols-[3fr_2fr]"
     >
-      {/* Header with optional discount badge */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="flex items-center gap-3">
-        <h2 className="text-xl font-semibold text-text">Ditt prisestimat</h2>
-        {estimate.discountActive && (
-          <span className="rounded-full bg-brand/10 px-3 py-0.5 text-xs font-medium text-brand">
-            Lanseringstilbud
-          </span>
-        )}
-      </motion.div>
+      {/* Left column: price hero + actions */}
+      <div className="flex flex-col gap-5">
+        {/* Header */}
+        <motion.div variants={fadeUp} transition={springs.gentle} className="flex items-center gap-3">
+          <h2 className="text-lg font-medium text-text-muted">Ditt prisestimat</h2>
+          {estimate.discountActive && (
+            <span className="rounded-full bg-brand/10 px-3 py-0.5 text-xs font-medium text-brand">
+              Lanseringstilbud
+            </span>
+          )}
+        </motion.div>
 
-      {/* Line items grouped by category */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-5">
+        {/* Price hero */}
+        <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-1">
+          {estimate.discountActive && (
+            <span className="text-sm text-text-muted line-through">
+              {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
+            </span>
+          )}
+          <span className={`text-4xl font-bold leading-tight ${estimate.discountActive ? 'text-brand' : 'text-text'}`}>
+            {formatPrice(finalPrice.min)} &ndash; {formatPrice(finalPrice.max)} kr
+          </span>
+          {estimate.discountActive && (
+            <span className="text-sm text-emerald-400">
+              Spar {formatPrice(estimate.oneTime.min - estimate.discounted.min)} &ndash; {formatPrice(estimate.oneTime.max - estimate.discounted.max)} kr
+            </span>
+          )}
+        </motion.div>
+
+        {/* Cost summary rows */}
+        <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-2 border-t border-white/10 pt-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium uppercase tracking-wide text-text-muted">Engangspris</span>
+            <span className="text-sm text-text">{formatPrice(finalPrice.min)} &ndash; {formatPrice(finalPrice.max)} kr</span>
+          </div>
+          {estimate.monthly > 0 && (
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium uppercase tracking-wide text-text-muted">Drift og hosting</span>
+              <span className="text-sm text-text">{formatPrice(estimate.monthly)} kr/mnd</span>
+            </div>
+          )}
+        </motion.div>
+
+        {/* Disclaimer */}
+        <motion.p variants={fadeUp} transition={springs.gentle} className="text-xs text-text-muted">
+          Dette er et estimat &ndash; endelig pris avhenger av prosjektets omfang.
+        </motion.p>
+
+        {/* Action buttons */}
+        <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-3 sm:flex-row">
+          <a
+            href={contactHref}
+            className="w-full rounded-md bg-brand px-6 py-3 text-center font-semibold text-surface transition-colors hover:bg-brand-light sm:w-auto"
+          >
+            Kontakt oss for tilbud
+          </a>
+          <button
+            type="button"
+            onClick={onReset}
+            className="w-full rounded-md border border-white/20 px-6 py-3 text-text transition-colors hover:border-white/40 sm:w-auto"
+          >
+            Beregn på nytt
+          </button>
+        </motion.div>
+
+        {/* Clipboard copy */}
+        <motion.div variants={fadeUp} transition={springs.gentle}>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex items-center gap-1.5 text-sm text-text-muted transition hover:text-text active:scale-95"
+          >
+            {copied ? (
+              <CheckIcon className="h-4 w-4 text-emerald-400" />
+            ) : (
+              <ClipboardIcon className="h-4 w-4" />
+            )}
+            {copied ? 'Kopiert!' : copyFailed ? 'Kunne ikke kopiere' : 'Kopier estimat'}
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Right column: line items summary */}
+      <motion.div
+        variants={fadeUp}
+        transition={springs.gentle}
+        className="flex flex-col gap-4 sm:border-l sm:border-white/10 sm:pl-6"
+      >
         {grouped.map((group) => (
           <div key={group.category}>
-            <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-text-muted">
+            <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
               {group.label}
             </h3>
             <div className="flex flex-col gap-1.5">
               {group.items.map((item) => (
-                <div key={item.id} className="pl-3 border-l border-white/15 text-sm text-text">
+                <div key={item.id} className="border-l border-white/15 pl-3 text-sm text-text">
                   {item.label}
                 </div>
               ))}
             </div>
           </div>
         ))}
-      </motion.div>
-
-      {/* One-time total */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium uppercase tracking-wide text-text-muted">Engangspris</span>
-            {estimate.discountActive ? (
-              <div className="flex flex-col items-end gap-0.5">
-                <span className="text-sm text-text-muted line-through">
-                  {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
-                </span>
-                <span className="text-2xl font-bold text-brand">
-                  {formatPrice(estimate.discounted.min)} &ndash; {formatPrice(estimate.discounted.max)} kr
-                </span>
-              </div>
-            ) : (
-              <span className="text-2xl font-bold text-text">
-                {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
-              </span>
-            )}
-          </div>
-          {estimate.discountActive && (
-            <p className="text-right text-sm text-emerald-400">
-              Spar {formatPrice(estimate.oneTime.min - estimate.discounted.min)} &ndash; {formatPrice(estimate.oneTime.max - estimate.discounted.max)} kr
-            </p>
-          )}
-        </div>
-      </motion.div>
-
-      {/* Monthly cost */}
-      {estimate.monthly > 0 && (
-        <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
-          <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium uppercase tracking-wide text-text-muted">Drift og hosting</span>
-            <span className="text-text">{formatPrice(estimate.monthly)} kr/mnd</span>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Disclaimer */}
-      <motion.p variants={fadeUp} transition={springs.gentle} className="text-xs text-text-muted">
-        Dette er et estimat &ndash; endelig pris avhenger av prosjektets omfang.
-      </motion.p>
-
-      {/* Action buttons */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col items-center gap-3 sm:flex-row">
-        <a
-          href={contactHref}
-          className="w-full rounded-md bg-brand px-6 py-3 text-center font-semibold text-surface transition-colors hover:bg-brand-light sm:w-auto"
-        >
-          Kontakt oss for tilbud
-        </a>
-        <button
-          type="button"
-          onClick={onReset}
-          className="w-full rounded-md border border-white/20 px-6 py-3 text-text transition-colors hover:border-white/40 sm:w-auto"
-        >
-          Beregn på nytt
-        </button>
-      </motion.div>
-
-      {/* Clipboard copy */}
-      <motion.div variants={fadeUp} transition={springs.gentle} className="flex justify-center">
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 text-sm text-text-muted transition hover:text-text active:scale-95"
-        >
-          {copied ? (
-            <CheckIcon className="h-4 w-4 text-emerald-400" />
-          ) : (
-            <ClipboardIcon className="h-4 w-4" />
-          )}
-          {copied ? 'Kopiert!' : copyFailed ? 'Kunne ikke kopiere' : 'Kopier estimat'}
-        </button>
       </motion.div>
     </motion.div>
   );
