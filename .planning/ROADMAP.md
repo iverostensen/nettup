@@ -99,10 +99,10 @@ Plans:
   1. /priskalkulator exists as a dedicated page with the full calculator, page metadata, and navigation
   2. The same calculator component is embedded as a section on /tjenester with identical behavior
   3. The old PrisKalkulatorIsland is replaced -- no remnants of the old wizard code remain in production
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 16-01: TBD
+- [ ] 16-01-PLAN.md — /priskalkulator dedicated page, BaseLayout pageLabels, wizard directory audit
 
 ## Progress
 
