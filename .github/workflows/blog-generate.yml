@@ -47,6 +47,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GH_PAT: ${{ secrets.GH_PAT }}
 
+      - name: Configure git identity
+        run: |
+          git config --global user.email "blogg-bot@nettup.no"
+          git config --global user.name "Nettup Blogg Bot"
+
       - name: Run blog pipeline
         run: npx tsx scripts/blog/index.ts
         env:
