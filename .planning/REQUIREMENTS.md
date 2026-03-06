@@ -60,26 +60,26 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PRIS-01 | — | Pending |
-| PRIS-02 | — | Pending |
-| PRIS-03 | — | Pending |
-| PRIS-04 | — | Pending |
-| WIZARD-01 | — | Pending |
-| WIZARD-02 | — | Pending |
-| WIZARD-03 | — | Pending |
-| WIZARD-04 | — | Pending |
-| RES-01 | — | Pending |
-| RES-02 | — | Pending |
-| RES-03 | — | Pending |
-| PAGE-01 | — | Pending |
-| PAGE-02 | — | Pending |
-| PAGE-03 | — | Pending |
+| PRIS-01 | Phase 13 | Pending |
+| PRIS-02 | Phase 13 | Pending |
+| PRIS-03 | Phase 15 | Pending |
+| PRIS-04 | Phase 13 | Pending |
+| WIZARD-01 | Phase 14 | Pending |
+| WIZARD-02 | Phase 14 | Pending |
+| WIZARD-03 | Phase 14 | Pending |
+| WIZARD-04 | Phase 14 | Pending |
+| RES-01 | Phase 15 | Pending |
+| RES-02 | Phase 15 | Pending |
+| RES-03 | Phase 15 | Pending |
+| PAGE-01 | Phase 16 | Pending |
+| PAGE-02 | Phase 16 | Pending |
+| PAGE-03 | Phase 16 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-06 after initial definition*
+*Last updated: 2026-03-06 after roadmap creation*

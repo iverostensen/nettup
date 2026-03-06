@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Smart Priskalkulator
-status: defining_requirements
-last_updated: "2026-03-06T12:00:00Z"
+status: ready_to_plan
+last_updated: "2026-03-06T13:00:00Z"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
-  total_plans: 0
+  total_plans: 6
   completed_plans: 0
 ---
 
@@ -17,17 +17,40 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-03-06 after v1.2 milestone start)
 
-**Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
-**Current focus:** Defining requirements for v1.2 Smart Priskalkulator
+**Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
+**Current focus:** Phase 13 - Pricing Config and Calculation Engine
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-06 — Milestone v1.2 started
+Phase: 13 of 16 (Pricing Config and Calculation Engine)
+Plan: 0 of 2 in current phase
+Status: Ready to plan
+Last activity: 2026-03-06 -- Roadmap created for v1.2
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0 (v1.2)
+- Average duration: --
+- Total execution time: --
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
 
 ## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- [v1.2 roadmap]: 4-phase structure -- config/engine first, then wizard UI, then result display, then page integration/swap
+- [v1.2 roadmap]: Build new calculator alongside old one, swap only when complete (research Pitfall 5)
 
 ### Pending Todos
 
@@ -51,5 +74,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Defining v1.2 requirements
+Stopped at: Roadmap created for v1.2 Smart Priskalkulator
 Resume file: None
