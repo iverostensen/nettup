@@ -17,9 +17,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 ### Wizard
 
 - [ ] **WIZARD-01**: Category-based flow: Goal → Size → Features → Integrations → Design → Result
-- [ ] **WIZARD-02**: User can navigate back to any previous step without losing selections
-- [ ] **WIZARD-03**: Progress indicator shows current step and total steps
-- [ ] **WIZARD-04**: Multi-select for features/integrations, single-select for size/design
+- [x] **WIZARD-02**: User can navigate back to any previous step without losing selections
+- [x] **WIZARD-03**: Progress indicator shows current step and total steps
+- [x] **WIZARD-04**: Multi-select for features/integrations, single-select for size/design
 
 ### Resultat
 
@@ -65,9 +65,9 @@ Requirements for the smart additive price calculator. Each maps to roadmap phase
 | PRIS-03 | Phase 15 | Pending |
 | PRIS-04 | Phase 13 | Complete |
 | WIZARD-01 | Phase 14 | Pending |
-| WIZARD-02 | Phase 14 | Pending |
-| WIZARD-03 | Phase 14 | Pending |
-| WIZARD-04 | Phase 14 | Pending |
+| WIZARD-02 | Phase 14 | Complete |
+| WIZARD-03 | Phase 14 | Complete |
+| WIZARD-04 | Phase 14 | Complete |
 | RES-01 | Phase 15 | Pending |
 | RES-02 | Phase 15 | Pending |
 | RES-03 | Phase 15 | Pending |

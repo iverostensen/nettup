@@ -71,7 +71,7 @@ Plans:
   2. User can navigate back to any previous step and all prior selections remain intact
   3. A progress indicator shows the current step and total steps
   4. Features and integrations steps allow multi-select; size and design steps enforce single-select
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 14-01-PLAN.md — Wizard types, state reducer, stepper, and card components
@@ -124,6 +124,6 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 14. Wizard Steps and State | v1.2 | 0/2 | Not started | - |
+| 14. Wizard Steps and State | 1/2 | In Progress|  | - |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
