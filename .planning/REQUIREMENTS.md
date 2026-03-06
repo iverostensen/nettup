@@ -31,10 +31,10 @@ Requirements for milestone v1.3 — Automatisk Blogg.
 
 ### GitHub Actions + Repo Config (CI)
 
-- [ ] **CI-01**: Blog article is generated automatically every Monday at 08:00 UTC without manual intervention
-- [ ] **CI-02**: Workflow can be triggered manually via `workflow_dispatch`
-- [ ] **CI-03**: Quality gate rejection exits with code 0 and writes a job summary explaining the rejection (no CI failure email)
-- [ ] **CI-04**: PR auto-merges when CI passes, using a PAT with `contents: write` + `pull-requests: write` permissions
+- [x] **CI-01**: Blog article is generated automatically every Monday at 08:00 UTC without manual intervention
+- [x] **CI-02**: Workflow can be triggered manually via `workflow_dispatch`
+- [x] **CI-03**: Quality gate rejection exits with code 0 and writes a job summary explaining the rejection (no CI failure email)
+- [x] **CI-04**: PR auto-merges when CI passes, using a PAT with `contents: write` + `pull-requests: write` permissions
 
 ## v2 Requirements
 
@@ -77,10 +77,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PIPE-07 | Phase 18 | Complete |
 | PIPE-08 | Phase 18 | Complete |
 | PIPE-09 | Phase 18 | Complete |
-| CI-01 | Phase 19 | Pending |
-| CI-02 | Phase 19 | Pending |
-| CI-03 | Phase 19 | Pending |
-| CI-04 | Phase 19 | Pending |
+| CI-01 | Phase 19 | Complete |
+| CI-02 | Phase 19 | Complete |
+| CI-03 | Phase 19 | Complete |
+| CI-04 | Phase 19 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 20 total

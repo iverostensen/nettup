@@ -56,7 +56,7 @@ See archive: `.planning/milestones/v1.2-ROADMAP.md`
 
 - [x] **Phase 17: Astro Blog Infrastructure** - Content collection schema, listing page, article pages, and all blog components
 - [x] **Phase 18: Generation Pipeline Scripts** - Topic selection, content generation, quality gate, and PR-based publish flow (completed 2026-03-06)
-- [ ] **Phase 19: GitHub Actions + Repo Config** - Cron workflow, secrets, branch protection, and auto-merge
+- [x] **Phase 19: GitHub Actions + Repo Config** - Cron workflow, secrets, branch protection, and auto-merge (completed 2026-03-06)
 
 ## Phase Details
 
@@ -132,4 +132,4 @@ Plans:
 | 16.1. Remove per-item pricing from wizard | v1.2 | 1/1 | Complete | 2026-03-06 |
 | 17. Astro Blog Infrastructure | v1.3 | Complete    | 2026-03-06 | 2026-03-06 |
 | 18. Generation Pipeline Scripts | 2/2 | Complete    | 2026-03-06 | - |
-| 19. GitHub Actions + Repo Config | v1.3 | 0/1 | Not started | - |
+| 19. GitHub Actions + Repo Config | 1/1 | Complete   | 2026-03-06 | - |

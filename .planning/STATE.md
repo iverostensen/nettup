@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Automatisk Blogg
 status: unknown
-last_updated: "2026-03-06T19:59:22.785Z"
+last_updated: "2026-03-06T20:15:00.000Z"
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_phases: 3
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 17 — Astro Blog Infrastructure
+**Current focus:** v1.3 milestone complete — blog pipeline fully automated
 
 ## Current Position
 
-Phase: 18 of 19 (Generation Pipeline Scripts)
-Plan: 2 of 2 — Complete
-Status: Phase complete, ready for Phase 19
-Last activity: 2026-03-06 — Completed 18-02 (quality-gate.ts, optimize-seo.ts, publish.ts, index.ts)
+Phase: 19 of 19 (GitHub Actions Repo Config)
+Plan: 1 of 1 — Complete
+Status: All phases complete. v1.3 milestone delivered.
+Last activity: 2026-03-06 — Completed 19-01 (blog-generate.yml, repo secrets, auto-merge attempt blocked by GitHub Free plan)
 
-Progress: [████████░░] 80%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -42,7 +42,7 @@ Progress: [████████░░] 80%
 |-------|-------|-------|----------|
 | 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
 | 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
-| 19. GitHub Actions | 0/1 | - | - |
+| 19. GitHub Actions | 1/1 | 15 min | 15 min |
 
 ## Accumulated Context
 
@@ -67,6 +67,9 @@ Key decisions from research to carry into planning:
 - [18-02]: fileURLToPath + '../../../' anchors repo root for simple-git, avoids cwd dependency
 - [v1.3]: GITHUB_TOKEN cannot trigger CI on PRs — must use PAT stored as `secrets.GH_PAT`
 - [v1.3]: Branch protection rule required on `main` for auto-merge to wait for CI
+- [19-01]: PAT used for checkout in blog-generate.yml — GITHUB_TOKEN cannot trigger CI on its own PRs (GitHub loop-prevention)
+- [19-01]: Branch protection + auto-merge blocked on GitHub Free for private repos — workflow file is complete and ready, features activate on Pro or public repo
+- [19-01]: `gh repo edit --enable-auto-merge` exits 0 even when feature is unavailable — must verify via GraphQL to detect silent failure
 
 ### Pending Todos
 
@@ -77,7 +80,7 @@ Key decisions from research to carry into planning:
 
 ### Blockers/Concerns
 
-None.
+- Branch protection and auto-merge require GitHub Pro for private repos. Blog PRs will be created but require manual merge until plan is upgraded or repo made public.
 
 ### Quick Tasks Completed
 
@@ -92,5 +95,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 18-02-PLAN.md (quality-gate.ts, optimize-seo.ts, publish.ts, index.ts — pipeline complete)
+Stopped at: Completed 19-01-PLAN.md (blog-generate.yml workflow, repo secrets, auto-merge attempt — v1.3 milestone complete)
 Resume file: None
