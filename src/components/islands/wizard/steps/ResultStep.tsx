@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { pricingConfig, type LineItem } from '@/config/pricing-config';
+import { type LineItem } from '@/config/pricing-config';
 import { calculateEstimate } from '@/lib/calculate-estimate';
 import { fadeUp, staggerContainer, springs } from '@/lib/animation';
 import type { WizardState } from '../wizard-types';
@@ -65,22 +65,6 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
     }))
     .filter((group) => group.items.length > 0);
 
-  const service = pricingConfig.services[estimate.serviceType];
-
-  function getSizeRange(item: LineItem): { min: number; max: number } | null {
-    if (item.category !== 'size') return null;
-    const tier = service.sizes.find((s) => s.id === item.id);
-    return tier ? { min: tier.minPrice, max: tier.maxPrice } : null;
-  }
-
-  function formatItemPrice(item: LineItem): string {
-    const range = getSizeRange(item);
-    if (range) {
-      return `${formatPrice(range.min)} \u2013 ${formatPrice(range.max)} kr`;
-    }
-    return `${formatPrice(item.price)} kr`;
-  }
-
   const contactParams = new URLSearchParams({
     tjeneste: estimate.serviceType,
     estimat: `${estimate.discounted.min}-${estimate.discounted.max}`,
@@ -97,7 +81,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
     for (const group of grouped) {
       lines.push(`${group.label}:`);
       for (const item of group.items) {
-        lines.push(`- ${item.label}: ${formatItemPrice(item)}`);
+        lines.push(`- ${item.label}`);
       }
       lines.push('');
     }
@@ -151,9 +135,8 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
             </h3>
             <div className="flex flex-col gap-1.5">
               {group.items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span className="text-text">{item.label}</span>
-                  <span className="text-text-muted">{formatItemPrice(item)}</span>
+                <div key={item.id} className="text-sm text-text-muted">
+                  {item.label}
                 </div>
               ))}
             </div>
@@ -165,18 +148,18 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       <motion.div variants={fadeUp} transition={springs.gentle} className="border-t border-white/10 pt-4">
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium text-text-muted">Engangspris</span>
+            <span className="text-base font-semibold text-text-muted">Engangspris</span>
             {estimate.discountActive ? (
               <div className="flex flex-col items-end gap-0.5">
                 <span className="text-sm text-text-muted line-through">
                   {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
                 </span>
-                <span className="text-lg font-bold text-brand">
+                <span className="text-2xl font-bold text-brand">
                   {formatPrice(estimate.discounted.min)} &ndash; {formatPrice(estimate.discounted.max)} kr
                 </span>
               </div>
             ) : (
-              <span className="text-lg font-bold text-text">
+              <span className="text-2xl font-bold text-text">
                 {formatPrice(estimate.oneTime.min)} &ndash; {formatPrice(estimate.oneTime.max)} kr
               </span>
             )}
