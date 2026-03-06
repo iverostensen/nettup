@@ -124,6 +124,6 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
 | 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 14. Wizard Steps and State | 2/2 | Complete   | 2026-03-06 | - |
+| 14. Wizard Steps and State | 2/2 | Complete    | 2026-03-06 | - |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
