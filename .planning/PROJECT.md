@@ -34,20 +34,12 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ Cross-linking mellom relaterte tjenester — v1.1
 - ✓ Breadcrumbs og aktiv nav-state pa alle undersider — v1.1
 
+- ✓ Additiv priskalkulator med konfigurerbar prisfil og ren kalkulasjonsmotor — v1.2
+- ✓ 6-stegs wizard (mål → størrelse → features → integrasjoner → design → resultat) med AnimatePresence-overganger — v1.2
+- ✓ Resultatvisning med min/maks prisintervall, lanseringsrabatt, linjeoppstilling og kontakt-CTA — v1.2
+- ✓ Dedikert /priskalkulator-side + seksjon på /tjenester, gammel wizard fjernet — v1.2
+
 ### Active
-
-## Current Milestone: v1.2 Smart Priskalkulator
-
-**Goal:** Erstatte den enkle priskalkulator-wizarden med en dyp, additiv prisestimator som dekker alle 3 tjenester med detaljerte sporsmaal om storrelse, funksjonalitet, integrasjoner og designniva — drevet av en konfigurerbar prisfil.
-
-**Target features:**
-- Additiv prismodell: grunnpris + tillegg per feature/integrasjon/storrelse/design
-- Dype sporsmaal pa tvers av 4 kategorier (storrelse, features, integrasjoner, designniva)
-- Konfigurerbar prisfil (TS/JSON) for enkel oppdatering av priser
-- Resultat som prisintervall (min–maks) med linjeoversikt
-- Maanedlige kostnader ogsa additive basert pa valg
-- Dedikert /priskalkulator-side + seksjon pa /tjenester
-- Brukes internt av Nettup for kundeprising
 
 ### Deferred
 
@@ -65,9 +57,9 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Context
 
-**Current state (post v1.1):** Fullverdig tjenestekatalog med 7 dedikerte undersider, mal-forst priskalkulator, og AI chatbot-radgiver. Komplett konverteringsflyt fra oppdagelse til kontakt.
+**Current state (post v1.2):** Fullverdig tjenestekatalog med 7 dedikerte undersider, dyp additiv priskalkulator med dedikert side, og AI chatbot-rådgiver. Komplett konverteringsflyt fra oppdagelse til kontakt.
 - **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid)
-- **LOC:** ~8,112 TypeScript/TSX/Astro
+- **LOC:** ~9,217 TypeScript/TSX/Astro
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
 - **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi
@@ -102,6 +94,12 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Claude Haiku for chat endpoint | Cost-efficient for conversational UI | ✓ Good — fast responses, low cost |
 | In-chat lead capture after 3rd response | Balance engagement vs interruption | ✓ Good — natural conversation timing |
 | transition:persist on ChatWidget | Cross-page conversation persistence | ✓ Good — conversations survive navigation |
+| Pricing config as single TS file (not JSON) | Type safety + IDE support for pricing data | ✓ Good — types flow through engine and UI without duplication |
+| useReducer with downstream reset on goal change | Different services have different option sets | ✓ Good — state stays coherent across goal switches |
+| Direction-aware AnimatePresence slide transitions | Polished back/forward navigation feel | ✓ Good — 40px offset gives clear spatial orientation |
+| /priskalkulator not in FloatingNav | Tool page, not a top-level site section | ✓ Good — keeps nav focused, page still reachable via CTA |
+| Item rows show name only (no per-item prices) | Per-item prices created decision friction, shifted focus from total | ✓ Good — users focus on total estimate, not component costs |
+| TDD for calculation engine | Engine is pure function with no UI dependencies — easy to test | ✓ Good — 15 tests caught edge cases before UI was built |
 
 ---
-*Last updated: 2026-03-06 after v1.2 milestone start*
+*Last updated: 2026-03-06 after v1.2 milestone*

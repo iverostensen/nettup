@@ -93,6 +93,50 @@
 
 ---
 
+## Milestone: v1.2 — Smart Priskalkulator
+
+**Shipped:** 2026-03-06
+**Phases:** 5 | **Plans:** 7 | **Timeline:** ~10 min (single session, 2026-03-06)
+
+### What Was Built
+- Typed pricing config (`src/config/pricing-config.ts`) — 10 typer, komplett prisdata for nettside, nettbutikk, landingsside
+- Ren additiv kalkulasjonsmotor (`calculateEstimate()`) med 15 Vitest-tester (TDD-workflow)
+- Wizard-infrastruktur: `useReducer` med nedstrøms reset, `WizardStepper`, `SelectableCard`, `GoalCard`
+- 5 steg-komponenter + `SmartPrisKalkulator` island med `AnimatePresence` retningsbevisste slide-transitions
+- `ResultStep` med kategorisert linjeoppstilling, lanseringsrabatt, månedlig kost, kontakt-CTA, clipboard-kopi
+- Dedikert `/priskalkulator`-side + `pageLabels`-oppføring for breadcrumb JSON-LD; gammel `PrisKalkulatorIsland` fjernet
+- Phase 16.1 (inserted): Forenklet ResultStep — ingen per-element priser, total som visuelt ankerpunkt
+
+### What Worked
+- **Config-first-tilnærming:** Prisfilen ble definert og testet (Phase 13) før noe UI ble bygget — wizard-komponentene importerte ferdig-validerte typer og feilet aldri på prislogikk
+- **TDD for kalkulasjonsmotoren:** 15 tester skrevet før implementering fanget edge cases (f.eks. landing page size IDs ≠ standard size IDs) — ingen regresjoner i Phase 14-16
+- **Liten tilstandsmaskin:** `useReducer` med nedstrøms reset er kompakt og forutsigbar — back-navigasjon og goal-switch virket feilfritt i Phase 14 verifisering
+- **Phase 16.1 som urgent insert:** Problemet ble identifisert etter fase 16, løst umiddelbart som 16.1 i stedet for å leve med det som tech debt — raskere enn å planlegge ny fase
+
+### What Was Inefficient
+- Phase 15 success criterion #2 ("each add-on shows individual price contribution") ble raskt snudd i Phase 16.1 — raskere brukeropplevelse ville ha forkortet Phase 15 scope
+- Vitest test-infrastruktur hadde ingen eksisterende mal — `vitest.config.ts` med `@/` alias krevde iterasjon
+
+### Patterns Established
+- `src/config/pricing-config.ts` — prisdata som single source of truth; aldri hardkod priser i UI
+- `src/lib/__tests__/` — test-mappe for pure functions; Vitest med `@/` alias via `vitest.config.ts`
+- Wizard reducer pattern: `useReducer` + `GO_TO_STEP` bare bakover — forhindrer hoppet fremover
+- Steg-komponent-mønster: mottar `dispatch`-callbacks + relevant state, leser config-data internt
+- Resultatvisning: navn-kun item-liste + tydelig total som visuelt fokus (per-item priser er noise)
+
+### Key Lessons
+1. **Bygg datakontrakten og test den før UI.** Phase 13 (config + engine med TDD) ga Phase 14-16 stabile fundament — ingen wizard-komponent trengte å reparere prislogikk.
+2. **"Success criterion" bør speile brukeropplevelse, ikke teknisk output.** "Viser per-element priser" er teknisk korrekt men UX-feil — formuler kriterier fra brukerens perspektiv.
+3. **Hurtig insertion er bedre enn tech debt.** Phase 16.1 tok 3 min å planlegge og utføre. Alternativet var å leve med et forvirrende resultatskjerm til v1.3.
+4. **Animasjoner bør defineres som komponist-egenskaper, ikke inline magic numbers.** `40px` x-offset er en beslutning som bor i config, ikke spedd ut i `AnimatePresence`-kode.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6, quality profile
+- 7 planer fullført på ~10 min total (1–3 min per plan)
+- Raskeste milestone til nå — veldefinert domene (priskalkulator), klare faser, og eksisterende infrastruktur
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -101,11 +145,14 @@
 |-----------|--------|-------|----------|------------|
 | v1.0 | 5 | 15 | 2 days | Established brand-first sequencing and token system pattern |
 | v1.1 | 7 | 18 | 3 days | Config-driven service catalog, AI integration, hybrid hosting |
+| v1.2 | 5 | 7 | ~10 min | TDD-first engine, wizard reducer pattern, urgent phase insert |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. **Config-driven data is architecture** — brand.ts (v1.0), services.ts (v1.1). Every content domain benefits from a typed config file as single source of truth
-2. **Brand identity first** — all visual/copy decisions become easier with concrete anchors (v1.0, reused in v1.1)
+1. **Config-driven data is architecture** — brand.ts (v1.0), services.ts (v1.1), pricing-config.ts (v1.2). Every content domain benefits from a typed config file as single source of truth
+2. **Brand identity first** — all visual/copy decisions become easier with concrete anchors (v1.0, reused in v1.1–v1.2)
 3. **Content operations are feature work** — don't ship placeholder content without a plan to replace it (testimonials still unresolved)
 4. **Define scope before "TBD"** — phases with undefined plan counts cause planning overhead at execution time (v1.1 Phases 8-10)
-5. **Don't build features you'll remove** — evaluate user need before implementing (RelaterteTjenester built then removed)
+5. **Don't build features you'll remove** — evaluate user need before implementing (RelaterteTjenester built then removed; per-item pricing shipped then simplified)
+6. **Test pure functions before UI** — TDD on calculation engine (v1.2) prevented any pricing bug reaching the wizard UI
+7. **Urgent inserts beat tech debt** — Phase 16.1 resolved a UX issue in 3 min rather than carrying it to v1.3

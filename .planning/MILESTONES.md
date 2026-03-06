@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.2 Smart Priskalkulator (Shipped: 2026-03-06)
+
+**Phases completed:** 5 phases (13–16.1), 7 plans
+**Timeline:** 2026-03-06 (single session — ~10 min execution)
+**LOC:** ~9,217 TypeScript/TSX/Astro
+**Git range:** `a245256` (feat(13-01)) → `2ebfff6` (feat(wizard))
+**Files changed:** 49 files, 5,291 insertions, 488 deletions
+
+**Delivered:** Mål-først priskalkulator erstattet med fullverdig additiv prisestimator — konfigurerbar prisfil, 6-stegs wizard med AnimatePresence-overganger, transparent linjeoppstilling og dedikert /priskalkulator-side.
+
+**Key accomplishments:**
+1. Typing system + pricing config (`src/config/pricing-config.ts`) — 10 eksporterte typer og komplett prisdata for 3 tjenester (nettside, nettbutikk, landingsside)
+2. Ren additiv kalkulasjonsmotor med 15 TDD-tester — `calculateEstimate()` håndterer grunnpris, tillegg, 40% lanseringsrabatt og min/maks-intervall
+3. Wizard-infrastruktur — `useReducer` med nedstrøms reset, `WizardStepper`, `SelectableCard`, `GoalCard`
+4. 5 steg-komponenter + `SmartPrisKalkulator` island med `AnimatePresence` retningsbevisste slideoverganger (enkel-valg auto-advance, flervalg med Neste)
+5. `ResultStep` med kategorisert linjeoppstilling, rabatt med strikethrough, månedlig kostnad, kontakt-CTA med query params, og clipboard-kopi
+6. Dedikert `/priskalkulator`-side live — breadcrumb JSON-LD, gammel wizard fjernet, null dead code
+
+---
+
 ## v1.1 Tjenesteutvidelse (Shipped: 2026-03-06)
 
 **Phases completed:** 7 phases (6–12), 18 plans
