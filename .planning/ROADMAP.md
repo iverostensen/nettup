@@ -59,8 +59,8 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
 **Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 13-01-PLAN.md — Typed pricing config with service data for all 3 services
-- [ ] 13-02-PLAN.md — Additive calculation engine with TDD
+- [x] 13-01-PLAN.md — Typed pricing config with service data for all 3 services
+- [x] 13-02-PLAN.md — Additive calculation engine with TDD
 
 ### Phase 14: Wizard Steps and State
 **Goal**: Users can walk through a multi-step wizard selecting service type, size, features, integrations, and design level with full back navigation and preserved selections
@@ -71,11 +71,11 @@ Plans:
   2. User can navigate back to any previous step and all prior selections remain intact
   3. A progress indicator shows the current step and total steps
   4. Features and integrations steps allow multi-select; size and design steps enforce single-select
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 14-01: TBD
-- [ ] 14-02: TBD
+- [ ] 14-01-PLAN.md — Wizard types, state reducer, stepper, and card components
+- [ ] 14-02-PLAN.md — Step components and SmartPrisKalkulator assembly with animations
 
 ### Phase 15: Result Display
 **Goal**: Users see a transparent, itemized price estimate with launch discount and a clear path to contact Nettup
@@ -123,7 +123,7 @@ Phases execute in numeric order: 13 -> 14 -> 15 -> 16
 | 10. Cross-linking & Validation | v1.1 | 2/2 | Complete | 2026-03-05 |
 | 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
 | 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
-| 13. Pricing Config and Calculation Engine | 2/2 | Complete    | 2026-03-06 | - |
+| 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
 | 14. Wizard Steps and State | v1.2 | 0/2 | Not started | - |
 | 15. Result Display | v1.2 | 0/1 | Not started | - |
 | 16. Page Integration and Swap | v1.2 | 0/1 | Not started | - |
