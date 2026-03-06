@@ -85,9 +85,10 @@ None.
 | 2 | Add PrisKalkulator island to tjenester page | 2026-03-05 | ff8dd70 | [2-add-priskalkulator-island-to-tjenester-p](.planning/quick/2-add-priskalkulator-island-to-tjenester-p/) |
 | 3 | Enhance price calculator with narrowing questions | 2026-03-05 | 5a13402 | [3-enhance-price-calculator-with-narrowing-](.planning/quick/3-enhance-price-calculator-with-narrowing-/) |
 | 4 | Update /tjenester/[slug] pages: remove RelaterteTjenester, fix support text, add 9th feature | 2026-03-06 | f5ca5ab | [4-update-tjenester-slug-pages-remove-relat](.planning/quick/4-update-tjenester-slug-pages-remove-relat/) |
+| 5 | Iterate on price calculator UI/UX: animated check icons, hover depth, press states, connector transitions | 2026-03-06 | 2e21e48 | [5-iterate-on-price-calculator-ui-ux-layout](.planning/quick/5-iterate-on-price-calculator-ui-ux-layout/) |
 
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 16.1-01-PLAN.md (Phase 16.1 complete — per-item pricing removed from wizard)
+Stopped at: Completed quick-005 (price calculator UI/UX polish — animated checks, hover depth, press feedback)
 Resume file: None
