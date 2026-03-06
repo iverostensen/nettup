@@ -21,7 +21,7 @@ const BODY_SYSTEM_PROMPT = `Du er en erfaren norsk webutvikler og markedsfører 
 Regler:
 - Skriv på norsk bokmål, profesjonelt men tilgjengelig
 - Målgruppe: norske SMB-eiere uten teknisk bakgrunn
-- Lengde: 1500-2500 ord
+- Lengde: MINIMUM 1500 ord, mål 1800-2200 ord. Dette er et hardt krav — skriv grundig og utfyllende.
 - Struktur: H2 hvert 150-200 ord, korte avsnitt
 - Inkluder konkrete tall, eksempler, sammenligninger
 - Nevn Nettup naturlig maksimalt 2 ganger (ikke mer, ikke spammy)
@@ -108,7 +108,7 @@ ${existingSlugsText}`;
   // Call 1: Generate article body
   const bodyResponse = await client.messages.create({
     model: CLAUDE_MODEL,
-    max_tokens: 4096,
+    max_tokens: 8096,
     system: BODY_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: bodyUserMessage }],
   });
