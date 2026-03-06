@@ -39,15 +39,15 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ Resultatvisning med min/maks prisintervall, lanseringsrabatt, linjeoppstilling og kontakt-CTA — v1.2
 - ✓ Dedikert /priskalkulator-side + seksjon på /tjenester, gammel wizard fjernet — v1.2
 
+- ✓ Astro Content Collection for blogg — schema, listeside, artikkelside, komponenter med JSON-LD — v1.3
+- ✓ Automatisk innholdsgenerasjonspipeline — topic selection, to-kall Claude-generering, to-trinns kvalitetsport, PR-publisering — v1.3
+- ✓ GitHub Actions cron-workflow — Monday 08:00 UTC, PAT-autentisering, exit-0 ved avvisning — v1.3
+- ✓ SEO/GEO-optimalisert artikkelmal — Article + FAQPage + BreadcrumbList JSON-LD, seoTitle vs title-mønster — v1.3
+- ✓ Redaksjonelle temakonfigurasjoner — 4 clusters (priser, teknologi, smb-tips, lokal-seo) i config.ts — v1.3
+
 ### Active
 
-<!-- v1.3 Automatisk Blogg -->
-
-- [ ] Astro Content Collection for blogg (schema, listing page, article pages, components)
-- [ ] Automatisk innholdsgenerasjonspipeline (topic selection, content generation, quality gate, SEO, PR publish)
-- [ ] GitHub Actions cron-jobb med ukentlig artikkelgenerering og auto-merge via PR
-- [ ] SEO/GEO-optimalisert artikkelmal med JSON-LD Article + FAQPage schema
-- [ ] Redaksjonelle temakonfigurasjoner (4 clusters: priser, teknologi, smb-tips, lokal-seo)
+<!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
 
 ### Deferred
 
@@ -65,16 +65,18 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Context
 
-**Current state (post v1.2):** Fullverdig tjenestekatalog med 7 dedikerte undersider, dyp additiv priskalkulator med dedikert side, og AI chatbot-rådgiver. Komplett konverteringsflyt fra oppdagelse til kontakt.
-- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid)
-- **LOC:** ~9,217 TypeScript/TSX/Astro
+**Current state (post v1.3):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver, og nå fullautomatisert SEO-blogg som publiserer norske fagartikler ukentlig via GitHub Actions + Claude API.
+- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions
+- **LOC:** ~10,643 TypeScript/TSX/Astro
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
 - **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi
 - **Konverteringsmal:** Besoekende → riktig tjenesteside → kontaktskjema (eller chatbot)
 - **Kompetanse:** Nettsider, nettbutikk (Shopify), webapplikasjoner, SEO, AI-integrasjoner, vedlikehold
+- **Blog pipeline:** 2 artikler publisert etter milestone — LIX ≤ 55, review+revision-løkke fungerer i produksjon
 - **Known gap:** Testimonials are placeholder — must replace before heavy traffic
 - **Known gap:** Shopify platform fee figure and Partner status unverified
+- **Known gap:** Auto-merge krever GitHub Pro for private repo — manuell merge fungerer frem til da
 
 ## Constraints
 
@@ -108,16 +110,12 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | /priskalkulator not in FloatingNav | Tool page, not a top-level site section | ✓ Good — keeps nav focused, page still reachable via CTA |
 | Item rows show name only (no per-item prices) | Per-item prices created decision friction, shifted focus from total | ✓ Good — users focus on total estimate, not component costs |
 | TDD for calculation engine | Engine is pure function with no UI dependencies — easy to test | ✓ Good — 15 tests caught edge cases before UI was built |
-
-## Current Milestone: v1.3 Automatisk Blogg
-
-**Goal:** Automatisert SEO-blogg som publiserer 1 artikkel/uke uten manuell innsats — GitHub Actions + Claude API + Astro Content Collections.
-
-**Target features:**
-- Astro blogg-infrastruktur (/blogg listing + artikkelmal med JSON-LD)
-- Generasjonspipeline (topic selection → generate → quality gate → PR)
-- GitHub Actions cron-workflow med auto-merge
-- Hub/cluster-sider (deferred til 10+ artikler finnes)
+| Two-call Claude pattern for article generation | Single call truncates JSON at ~2000 words | ✓ Good — body then metadata prevents truncation |
+| LIX threshold 55 not 45 | Norwegian technical content is compounding language — 45 causes systematic rejections | ✓ Good — pipeline produces approvable articles in production |
+| title (H1) vs seoTitle (<title>) as separate schema fields | SEO best practice for blog | ✓ Good — clean pattern across all articles |
+| PAT (GH_PAT) for checkout in blog-generate.yml | GITHUB_TOKEN loop-prevention blocks CI on self-created PRs | ✓ Good — PRs trigger CI correctly |
+| Exit-0 pattern for pipeline failures | Quality rejections are expected flow, not CI failures | ✓ Good — no false alarm emails |
+| Manual .prose-article CSS over @tailwindcss/typography | Avoid new dependency for a single use case | ✓ Good — sufficient for article formatting |
 
 ---
-*Last updated: 2026-03-06 after v1.3 milestone start*
+*Last updated: 2026-03-07 after v1.3 milestone*

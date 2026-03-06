@@ -137,6 +137,51 @@
 
 ---
 
+## Milestone: v1.3 — Automatisk Blogg
+
+**Shipped:** 2026-03-07
+**Phases:** 3 | **Plans:** 5 | **Timeline:** 2 days (2026-03-06 → 2026-03-07)
+
+### What Was Built
+- Astro Content Collection for blogg — legacy API schema med 8 felt, `title` (H1) vs `seoTitle` (`<title>`) mønster, `ArticleCard`, `RelatedArticles` med undefined type guard
+- `/blogg`-listeside + `/blogg/[slug]`-artikkelside med BlogPosting + FAQPage + BreadcrumbList JSON-LD, footer-lenke, og 3 cross-lenkede seed-artikler
+- Genereringspipeline (7 filer): topic selection med kø-logikk, to-kall Claude-generering (~2000 ord), to-trinns kvalitetsport (AI-vurdering + automatiserte sjekker), Octokit PR-publisering
+- blog-generate.yml workflow: Monday 08:00 UTC cron + `workflow_dispatch`, PAT-autentisering, exit-0 ved avvisning/feil
+- Post-ship iterasjoner: review+revision-løkke, ban på em-dash, SEO/GEO gap-closing, sterkere kvalitetsporter — pipeline produserte 2 ekte artikler i produksjon
+
+### What Worked
+- **To-kall Claude-mønster:** Innhold i kall 1, JSON-metadata i kall 2 — eliminerte JSON-avkorting som systematisk sviktet ved ~2000 ord i enkelt-kall
+- **LIX ≤ 55 (ikke 45):** Tidlig validering mot norsk faginnhold avdekket at 45 ville avvist nesten alt. Høyere terskel på plass fra dag 1 — ingen tid mistet på systematiske falske avvisninger
+- **Exit-0 mønster:** Kvalitetsavvisning er forventet utfall, ikke feil — ingen CI-varslingsepost ved avvisning. Tydelig avgrensning mellom "forventet avvisning" og "systemfeil"
+- **Kø-forst-logikk:** Avviste tema persisteres og retryes på neste kjøring — ingen tapt innsats fra delvis generering
+- **PAT-mønster for CI-triggering:** GITHUB_TOKEN-loopblokkering er ikke intuitivt — løst ved PAT + GITHUB_TOKEN env override. Mønsteret er nå dokumentert og gjenbrukbart
+
+### What Was Inefficient
+- Phase 19 hadde to uventede GitHub Free-begrensninger (branch protection + auto-merge) som krevde workarounds. Disse er plattformspesifikke og vanskelige å oppdage uten å prøve — men en rask sjekk av GitHub-plan-krav i Phase 19-forskning ville avdekket dem
+- Post-ship hadde 6 commit-iterasjoner (fix/refactor) for pipeline-bugs og SEO/GEO-hull. De fleste var enkle, men viser at pipeline ikke ble end-to-end testet lokalt med ekte API-kall før deploy. En manuell testkjøring i Phase 18 ville fanget flere av disse
+
+### Patterns Established
+- `title` (konversasjonell H1) vs `seoTitle` (søkeord-forst `<title>`-tag) — standardmønster for alle bloggartikler
+- To-kall Claude-mønster: kall 1 returnerer innholdet, kall 2 returnerer strukturert JSON — hindrer avkorting på store responser
+- `writeJobSummary` + `exit 0` for pipeline-avvisninger — skiller forventet avvisning fra systemfeil
+- `import.meta.url + fileURLToPath` for cwd-uavhengige scriptpaths (queue-fil, repo-root)
+- PAT-checkout-mønster for CI-triggering når workflow oppretter PRs
+- `.prose-article` manuell CSS — tilstrekkelig for artikkelformatering uten ny avhengighet
+
+### Key Lessons
+1. **Test end-to-end med ekte API-kall.** 6 post-ship fixar kunne vært fanget i en lokal testkjøring av `npx tsx scripts/blog/index.ts` mot virkelige Claude og GitHub API-er i Phase 18.
+2. **Sjekk GitHub plan-begrensninger tidlig.** Branch protection og auto-merge er Pro-features for private repos. 15 min research i Phase 19-planlegging ville avdekket dette og satt riktige forventninger.
+3. **Kø-forst-mønsteret er verdifullt.** Å persistere og retrye avviste tema er billig å implementere og hindrer at mislykkede kjøringer kaster bort tidligere innsats. Gjenbruk i fremtidige pipeline-prosjekter.
+4. **Separate JSON-metadata fra innholdsgenerering.** Blanding av ~2000 ords markdown og strukturert JSON i ett kall er skjørt. To-kall-mønsteret er det riktige standardvalget for Claude-pipelines med store outputs.
+5. **Astro legacy mode er trivielt å sette opp.** `legacy: { collections: true }` + `astro sync` er alt som trengs — dokumentert i STATE.md og ROADMAP. Ikke la Astro 5 Content Layer-endringer skremme fra legacy-bruk der det passer.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6 for all execution, quality profile
+- 5 plans + 6 post-ship fix commits
+- Notable: Selve pipeline-koden (Phase 18, 2 planer) var raskest å skrive (~13 min) men genererte mest post-ship iterasjon — kompleksiteten lå i integrasjonspunktene (Claude API + GitHub API + git), ikke i koden selv
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -146,6 +191,7 @@
 | v1.0 | 5 | 15 | 2 days | Established brand-first sequencing and token system pattern |
 | v1.1 | 7 | 18 | 3 days | Config-driven service catalog, AI integration, hybrid hosting |
 | v1.2 | 5 | 7 | ~10 min | TDD-first engine, wizard reducer pattern, urgent phase insert |
+| v1.3 | 3 | 5 | 2 days | Automated blog pipeline, two-call Claude pattern, exit-0 CI discipline |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -156,3 +202,6 @@
 5. **Don't build features you'll remove** — evaluate user need before implementing (RelaterteTjenester built then removed; per-item pricing shipped then simplified)
 6. **Test pure functions before UI** — TDD on calculation engine (v1.2) prevented any pricing bug reaching the wizard UI
 7. **Urgent inserts beat tech debt** — Phase 16.1 resolved a UX issue in 3 min rather than carrying it to v1.3
+8. **Test integration points end-to-end before shipping** — pipeline code is fast to write; the complexity is in Claude API + GitHub API interactions (v1.3)
+9. **Two-call pattern for large Claude outputs** — mixing ~2000-word markdown and structured JSON in one call is fragile; split into content call then metadata call (v1.3)
+10. **Check platform plan limitations during research** — GitHub Free blocks branch protection on private repos; discover early to set correct expectations (v1.3)

@@ -1,5 +1,28 @@
 # Milestones
 
+## v1.3 Automatisk Blogg (Shipped: 2026-03-07)
+
+**Phases completed:** 3 phases (17–19), 5 plans
+**Timeline:** 2026-03-06 → 2026-03-07
+**LOC:** ~10,643 TypeScript/TSX/Astro
+**Git range:** `e44c037` (feat(17-01)) → `0758dea` (fix(blogg))
+**Files changed:** 46 files, 7,546 insertions, 208 deletions
+
+**Delivered:** Fullautomatisert SEO-blogg — Astro Content Collections for `/blogg`, to-trinns Claude-drevet genereringspipeline med kvalitetsport, og Monday 08:00 UTC GitHub Actions cron som produserer norske fagartikler og publiserer via PR uten manuell innsats.
+
+**Key accomplishments:**
+1. Astro Content Collection for blogg — Legacy API schema med 8 felt, `title` (H1) vs `seoTitle` (`<title>`) mønster, `ArticleCard` og `RelatedArticles` med TypeScript type guards
+2. `/blogg`-listeside og `/blogg/[slug]`-artikkelside med BlogPosting + FAQPage + BreadcrumbList JSON-LD og 3 seed-artikler med kryss-referanser
+3. Genereringspipeline — to-kall Claude-mønster (innhold, deretter metadata) for ~2000-ords norske fagartikler, LIX ≤ 55-terskel, kø-forst-logikk for feiltema
+4. To-trinns kvalitetsport — AI-vurdering (6 kriterier, snitt ≥ 7) + automatiske sjekker (ordtelling, LIX, FAQ-seksjon, Nettup-omtaler ≤ 2); exit 0 ved avvisning
+5. GitHub PR-basert publiseringsflyt — `blogg/*`-grener, Octokit PR med kvalitetsscore i PR-body; ingen direkte commits til main
+6. blog-generate.yml — Monday 08:00 UTC cron + `workflow_dispatch`, PAT-autentisering, post-ship iterasjoner (review+revision-løkke, SEO/GEO-hull, em-dash-forbud); pipeline produserte 2 ekte artikler
+
+**Known gaps:**
+- CI-04 (auto-merge): Branch protection + auto-merge krever GitHub Pro for private repos. Workflow-filen er klar — aktiveres ved oppgradering til Pro eller offentlig repo. Manuell merge fungerer frem til da.
+
+---
+
 ## v1.2 Smart Priskalkulator (Shipped: 2026-03-06)
 
 **Phases completed:** 5 phases (13–16.1), 7 plans
