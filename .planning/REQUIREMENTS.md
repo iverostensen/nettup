@@ -9,12 +9,12 @@ Requirements for milestone v1.3 — Automatisk Blogg.
 
 ### Blog Infrastructure (INFRA)
 
-- [ ] **INFRA-01**: Visitor can browse all published articles at `/blogg` with title, category, date, and read time
-- [ ] **INFRA-02**: Visitor can read a full article at `/blogg/[slug]` with formatted markdown content
-- [ ] **INFRA-03**: Article pages include Article JSON-LD and FAQPage JSON-LD structured data
-- [ ] **INFRA-04**: Article pages include BreadcrumbList JSON-LD
+- [x] **INFRA-01**: Visitor can browse all published articles at `/blogg` with title, category, date, and read time
+- [x] **INFRA-02**: Visitor can read a full article at `/blogg/[slug]` with formatted markdown content
+- [x] **INFRA-03**: Article pages include Article JSON-LD and FAQPage JSON-LD structured data
+- [x] **INFRA-04**: Article pages include BreadcrumbList JSON-LD
 - [x] **INFRA-05**: Article pages display 2–3 related articles based on frontmatter `relatedSlugs`
-- [ ] **INFRA-06**: Blog is reachable from the main site footer and via homepage section (once articles exist)
+- [x] **INFRA-06**: Blog is reachable from the main site footer and via homepage section (once articles exist)
 - [x] **INFRA-07**: Article `<title>` uses keyword-first `seoTitle` field; article `<h1>` uses conversational `title` field
 
 ### Generation Pipeline (PIPE)
@@ -61,12 +61,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 17 | Pending |
-| INFRA-02 | Phase 17 | Pending |
-| INFRA-03 | Phase 17 | Pending |
-| INFRA-04 | Phase 17 | Pending |
+| INFRA-01 | Phase 17 | Complete |
+| INFRA-02 | Phase 17 | Complete |
+| INFRA-03 | Phase 17 | Complete |
+| INFRA-04 | Phase 17 | Complete |
 | INFRA-05 | Phase 17 | Complete |
-| INFRA-06 | Phase 17 | Pending |
+| INFRA-06 | Phase 17 | Complete |
 | INFRA-07 | Phase 17 | Complete |
 | PIPE-01 | Phase 18 | Pending |
 | PIPE-02 | Phase 18 | Pending |

@@ -8,7 +8,7 @@ progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-06 after v1.3 milestone start)
 ## Current Position
 
 Phase: 17 of 19 (Astro Blog Infrastructure)
-Plan: 1 of 2 — Complete
-Status: In progress
-Last activity: 2026-03-06 — Completed 17-01 (content schema + blog components)
+Plan: 2 of 2 — Complete
+Status: Phase complete
+Last activity: 2026-03-06 — Completed 17-02 (blog listing page, article page, seed articles)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -40,7 +40,7 @@ Progress: [██░░░░░░░░] 20%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 17. Blog Infrastructure | 1/2 | 2 min | 2 min |
+| 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
 | 18. Pipeline Scripts | 0/2 | - | - |
 | 19. GitHub Actions | 0/1 | - | - |
 
@@ -52,6 +52,9 @@ Key decisions from research to carry into planning:
 
 - [17-01]: title vs seoTitle are distinct schema fields — title for H1 (conversational), seoTitle for <title> tag (keyword-first)
 - [17-01]: RelatedArticles renders nothing (not even heading) when related array is empty — prevents orphaned headings
+- [17-02]: No @tailwindcss/typography — manual .prose-article CSS class used to avoid new dependency
+- [17-02]: Article page injects its own BreadcrumbList JSON-LD via head slot for accurate article title in breadcrumb position 3
+- [17-02]: FAQPage JSON-LD is conditional — only emitted when faq frontmatter field has items
 - [v1.3]: Content collection config at `src/content/config.ts` (legacy path, intentional for v1.3)
 - [v1.3]: Run `astro sync` immediately after creating content config — before any page components
 - [v1.3]: LIX threshold ≤ 55 (not 45) — Norwegian technical content needs the wider margin
@@ -83,5 +86,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 17-01-PLAN.md (blog infrastructure foundations)
+Stopped at: Completed 17-02-PLAN.md (blog user-facing pages + seed articles)
 Resume file: None
