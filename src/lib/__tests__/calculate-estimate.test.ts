@@ -132,7 +132,7 @@ describe('calculateEstimate', () => {
 
   // --- Monthly ---
 
-  it('returns monthly as service monthlyPrice unchanged', () => {
+  it('returns monthly as size monthlyPrice when no add-ons selected', () => {
     const request: EstimateRequest = {
       serviceType: 'nettside',
       sizeId: 'small',
@@ -142,7 +142,22 @@ describe('calculateEstimate', () => {
     };
     const result = calculateEstimate(request);
 
-    expect(result.monthly).toBe(nettsideConfig.monthlyPrice);
+    const size = nettsideConfig.sizes.find((s) => s.id === 'small')!;
+    expect(result.monthly).toBe(size.monthlyPrice); // 249
+  });
+
+  it('adds add-on monthly fees on top of size base', () => {
+    const request: EstimateRequest = {
+      serviceType: 'nettside',
+      sizeId: 'small',
+      featureIds: ['cms', 'booking'],
+      integrationIds: [],
+      designId: 'standard',
+    };
+    const result = calculateEstimate(request);
+
+    // small: 249 + cms: 100 + booking: 200 = 549
+    expect(result.monthly).toBe(549);
   });
 
   // --- Line items ---
@@ -259,7 +274,7 @@ describe('calculateEstimate', () => {
     expect(result.serviceType).toBe('nettbutikk');
     expect(result.oneTime.min).toBe(size.minPrice + addOnSum);
     expect(result.oneTime.max).toBe(size.maxPrice + addOnSum);
-    expect(result.monthly).toBe(nettbutikkConfig.monthlyPrice);
+    expect(result.monthly).toBe(nettbutikkConfig.sizes.find((s) => s.id === 'medium')!.monthlyPrice); // 599
   });
 
   it('works for landingsside service type', () => {
@@ -278,6 +293,6 @@ describe('calculateEstimate', () => {
     expect(result.serviceType).toBe('landingsside');
     expect(result.oneTime.min).toBe(size.minPrice + feature.price);
     expect(result.oneTime.max).toBe(size.maxPrice + feature.price);
-    expect(result.monthly).toBe(landingssideConfig.monthlyPrice);
+    expect(result.monthly).toBe(landingssideConfig.sizes.find((s) => s.id === 'single')!.monthlyPrice); // 199
   });
 });

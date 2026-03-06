@@ -81,7 +81,13 @@ export function calculateEstimate(request: EstimateRequest): EstimateResult {
     lineItems,
     oneTime,
     discounted,
-    monthly: service.monthlyPrice,
+    monthly: size.monthlyPrice +
+      [...featureIds, ...integrationIds].reduce((sum, id) => {
+        const item =
+          service.features.find((f) => f.id === id) ??
+          service.integrations.find((i) => i.id === id);
+        return sum + (item?.monthlyPrice ?? 0);
+      }, 0),
     discountPercent,
     discountActive,
   };
