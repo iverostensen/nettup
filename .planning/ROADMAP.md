@@ -56,11 +56,11 @@ See archive: `.planning/milestones/v1.1-ROADMAP.md`
   2. A pure calculation function accepts a service type and set of selections, returning a min-max estimate with individual line items
   3. Launch discount (40%) is applied correctly to one-time prices in the calculation output
   4. Adding or changing a price requires editing only the config file -- zero UI code changes needed
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 13-01: TBD
-- [ ] 13-02: TBD
+- [ ] 13-01-PLAN.md — Typed pricing config with service data for all 3 services
+- [ ] 13-02-PLAN.md — Additive calculation engine with TDD
 
 ### Phase 14: Wizard Steps and State
 **Goal**: Users can walk through a multi-step wizard selecting service type, size, features, integrations, and design level with full back navigation and preserved selections
