@@ -34,9 +34,9 @@ export function IntegrationsStep({
       <button
         type="button"
         onClick={onNext}
-        className="mt-6 w-full rounded-md bg-brand py-3 text-center font-semibold text-white transition-colors hover:bg-brand-light"
+        className="mt-6 w-full rounded-md bg-brand py-3 text-center font-semibold text-white transition hover:bg-brand-light active:scale-[0.98]"
       >
-        Neste
+        {selectedIds.length === 0 ? 'Ingen, hopp over' : 'Neste'}
       </button>
     </div>
   );

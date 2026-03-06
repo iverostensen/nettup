@@ -13,7 +13,7 @@ interface ResultStepProps {
 const CATEGORY_ORDER: LineItem['category'][] = ['size', 'feature', 'integration', 'design'];
 
 const CATEGORY_LABELS: Record<LineItem['category'], string> = {
-  size: 'Storrelse',
+  size: 'Størrelse',
   feature: 'Funksjoner',
   integration: 'Integrasjoner',
   design: 'Design',
@@ -48,6 +48,7 @@ function CheckIcon({ className }: { className?: string }) {
 
 export function ResultStep({ state, onReset }: ResultStepProps) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
 
   const estimate = calculateEstimate({
     serviceType: state.serviceType!,
@@ -105,7 +106,8 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard API not available
+      setCopyFailed(true);
+      setTimeout(() => setCopyFailed(false), 2000);
     }
   }
 
@@ -135,7 +137,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
             </h3>
             <div className="flex flex-col gap-1.5">
               {group.items.map((item) => (
-                <div key={item.id} className="text-sm text-text-muted">
+                <div key={item.id} className="pl-3 border-l border-white/10 text-sm text-text-muted">
                   {item.label}
                 </div>
               ))}
@@ -200,7 +202,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
           onClick={onReset}
           className="w-full rounded-md border border-white/20 px-6 py-3 text-text transition-colors hover:border-white/40 sm:w-auto"
         >
-          Beregn pa nytt
+          Beregn på nytt
         </button>
       </motion.div>
 
@@ -209,14 +211,14 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-sm text-text-muted transition-colors hover:text-text"
+          className="flex items-center gap-1.5 text-sm text-text-muted transition hover:text-text active:scale-95"
         >
           {copied ? (
             <CheckIcon className="h-4 w-4 text-emerald-400" />
           ) : (
             <ClipboardIcon className="h-4 w-4" />
           )}
-          {copied ? 'Kopiert!' : 'Kopier estimat'}
+          {copied ? 'Kopiert!' : copyFailed ? 'Kunne ikke kopiere' : 'Kopier estimat'}
         </button>
       </motion.div>
     </motion.div>

@@ -33,7 +33,7 @@ export default function SmartPrisKalkulator() {
 
   const currentStepIndex = STEP_ORDER.indexOf(state.currentStep);
   const slideVariants = createSlideVariants(prefersReducedMotion);
-  const showBack = state.currentStep !== 'goal' && state.currentStep !== 'result';
+  const showBack = state.currentStep !== 'goal';
 
   function handleStepClick(index: number) {
     dispatch({ type: 'GO_TO_STEP', step: STEP_ORDER[index] });
@@ -62,6 +62,7 @@ export default function SmartPrisKalkulator() {
         return (
           <SizeStep
             serviceType={state.serviceType}
+            selectedSizeId={state.sizeId}
             onSelectSize={(sizeId) =>
               dispatch({ type: 'SELECT_SIZE', sizeId })
             }
@@ -99,6 +100,7 @@ export default function SmartPrisKalkulator() {
         return (
           <DesignStep
             serviceType={state.serviceType}
+            selectedDesignId={state.designId}
             onSelectDesign={(designId) =>
               dispatch({ type: 'SELECT_DESIGN', designId })
             }
@@ -131,7 +133,7 @@ export default function SmartPrisKalkulator() {
           <button
             type="button"
             onClick={handleBack}
-            className="mb-4 flex items-center gap-1 text-sm text-text-muted transition-colors hover:text-text"
+            className="mb-4 flex items-center gap-1 text-sm text-text-muted transition hover:text-text active:scale-95"
           >
             <svg
               className="h-4 w-4"

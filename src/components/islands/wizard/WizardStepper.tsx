@@ -23,7 +23,7 @@ export function WizardStepper({
             {index > 0 && (
               <div
                 className={clsx(
-                  'h-0.5 w-4 sm:w-6 md:w-8',
+                  'h-0.5 w-4 sm:w-6 md:w-8 transition-colors duration-300',
                   isCompleted || isCurrent ? 'bg-brand/40' : 'bg-white/10',
                 )}
               />
