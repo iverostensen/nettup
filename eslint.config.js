@@ -32,6 +32,14 @@ export default [
     },
   },
   {
+    files: ['scripts/**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     ignores: ['dist/', 'node_modules/', '.astro/', '.vercel/'],
   },
 ];
