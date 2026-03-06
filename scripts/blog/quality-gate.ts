@@ -47,7 +47,10 @@ norskkvalitet: [tall]
 geoOptimering: [tall]
 ctaKvalitet: [tall]`;
 
-export async function runQualityGate(article: ArticleResult): Promise<QualityResult> {
+export async function runQualityGate(
+  article: ArticleResult,
+  options?: { skipQueueUpdate?: boolean }
+): Promise<QualityResult> {
   const client = new Anthropic();
 
   // Pass 1: Claude self-review
@@ -90,7 +93,9 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
   if (aiAverage < 7) {
     result.passed = false;
     result.reason = `AI review: average score ${aiAverage.toFixed(1)}/10`;
-    await updateQueueOnRejection(article.topic, result.reason);
+    if (!options?.skipQueueUpdate) {
+      await updateQueueOnRejection(article.topic, result.reason);
+    }
     return result;
   }
 
@@ -140,7 +145,7 @@ export async function runQualityGate(article: ArticleResult): Promise<QualityRes
     result.reason = `Automated check failed: seoTitle "${article.metadata.seoTitle}" must include "| Nettup" and be ≤ 60 chars`;
   }
 
-  if (!result.passed && result.reason) {
+  if (!result.passed && result.reason && !options?.skipQueueUpdate) {
     await updateQueueOnRejection(article.topic, result.reason);
   }
 

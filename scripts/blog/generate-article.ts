@@ -47,7 +47,7 @@ Språk:
 
 Output-format: Kun Markdown (ingen JSON, ingen forklaring). Start direkte med innholdet.`;
 
-const METADATA_SYSTEM_PROMPT = `Du er et presist JSON-ekstraksjonssystem. Returner BARE gyldig JSON, ingen forklaring.
+export const METADATA_SYSTEM_PROMPT = `Du er et presist JSON-ekstraksjonssystem. Returner BARE gyldig JSON, ingen forklaring.
 Feltene: title (konversasjonell H1), seoTitle (keyword-først, maks 60 tegn, inkluder "| Nettup"),
 description (150-160 tegn), category (én av: Priser, Teknologi, SMB-tips, Lokal SEO),
 readTime (estimert lesetid i minutter, heltall), relatedSlugs (2-3 slugs fra listen som passer, eller []),
@@ -83,6 +83,50 @@ export function buildFrontmatter(slug: string, metadata: ArticleMetadata): strin
 
   lines.push('---');
   return lines.join('\n');
+}
+
+export async function extractMetadata(
+  markdownBody: string,
+  existingSlugs: string[]
+): Promise<ArticleMetadata> {
+  const client = new Anthropic();
+
+  const existingSlugsText = existingSlugs.length > 0
+    ? existingSlugs.join('\n')
+    : '(ingen eksisterende artikler ennå)';
+
+  const metadataUserMessage = `Basert på denne artikkelen, returner JSON:
+
+${markdownBody}
+
+Tilgjengelige relaterte slug-er for relatedSlugs-feltet:
+${existingSlugsText}`;
+
+  const metadataResponse = await client.messages.create({
+    model: CLAUDE_MODEL,
+    max_tokens: 1024,
+    system: METADATA_SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: metadataUserMessage }],
+  });
+
+  const metadataText = metadataResponse.content[0].type === 'text'
+    ? metadataResponse.content[0].text
+    : '';
+
+  let metadata: ArticleMetadata;
+  try {
+    const cleaned = metadataText.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    metadata = JSON.parse(cleaned) as ArticleMetadata;
+  } catch {
+    throw new Error(`Failed to parse metadata JSON. Raw response:\n${metadataText}`);
+  }
+
+  // Filter relatedSlugs to only include slugs that actually exist
+  metadata.relatedSlugs = (metadata.relatedSlugs ?? []).filter((s) =>
+    existingSlugs.includes(s)
+  );
+
+  return metadata;
 }
 
 export async function generateArticle(topic: QueueEntry): Promise<ArticleResult> {
@@ -121,37 +165,7 @@ ${existingSlugsText}`;
     : '';
 
   // Call 2: Extract metadata from body
-  const metadataUserMessage = `Basert på denne artikkelen, returner JSON:
-
-${markdownBody}
-
-Tilgjengelige relaterte slug-er for relatedSlugs-feltet:
-${existingSlugsText}`;
-
-  const metadataResponse = await client.messages.create({
-    model: CLAUDE_MODEL,
-    max_tokens: 1024,
-    system: METADATA_SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: metadataUserMessage }],
-  });
-
-  const metadataText = metadataResponse.content[0].type === 'text'
-    ? metadataResponse.content[0].text
-    : '';
-
-  // Parse metadata JSON
-  let metadata: ArticleMetadata;
-  try {
-    const cleaned = metadataText.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-    metadata = JSON.parse(cleaned) as ArticleMetadata;
-  } catch {
-    throw new Error(`Failed to parse metadata JSON. Raw response:\n${metadataText}`);
-  }
-
-  // Filter relatedSlugs to only include slugs that actually exist
-  metadata.relatedSlugs = (metadata.relatedSlugs ?? []).filter((s) =>
-    existingSlugs.includes(s)
-  );
+  const metadata = await extractMetadata(markdownBody, existingSlugs);
 
   const frontmatter = buildFrontmatter(topic.slug, metadata);
   const fullContent = frontmatter + '\n\n' + markdownBody;
