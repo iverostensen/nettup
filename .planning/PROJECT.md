@@ -45,7 +45,28 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ SEO/GEO-optimalisert artikkelmal — Article + FAQPage + BreadcrumbList JSON-LD, seoTitle vs title-mønster — v1.3
 - ✓ Redaksjonelle temakonfigurasjoner — 4 clusters (priser, teknologi, smb-tips, lokal-seo) i config.ts — v1.3
 
+## Current Milestone: v1.4 Portefølje 2.0
+
+**Goal:** Restructure `/prosjekter` into a scalable, SEO/GEO-optimized portfolio with dedicated case study pages, adding Blom Company alongside iGive.
+
+**Target features:**
+- `/prosjekter` index redesigned as project grid with cards linking to dedicated pages
+- `/prosjekter/igive` — expanded iGive case study (screenshots, tech stack, metrics, testimonial)
+- `/prosjekter/blom-company` — new Blom Company case study (headless Shopify, dual collections, performance scores)
+- Scalable project architecture: adding project #3 = one new page file, no structural changes
+- Per-project SEO: dedicated `<title>`, meta description, structured data (CreativeWork schema)
+- GEO-ready content: structured, citable copy that AI assistants can discover and surface
+- Visual content plan: documented brief of which screenshots/visuals are needed per project
+
 ### Active
+
+- [ ] `/prosjekter` index redesigned as project grid (cards → dedicated pages)
+- [ ] Dedicated `/prosjekter/igive` case study page
+- [ ] Dedicated `/prosjekter/blom-company` case study page
+- [ ] Scalable project config architecture (slug-based, easy to extend)
+- [ ] Per-project SEO metadata + structured data (CreativeWork/WebSite schemas)
+- [ ] GEO-optimized project copy
+- [ ] Visual content plan document (which screenshots needed per project)
 
 <!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
 
@@ -118,4 +139,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Manual .prose-article CSS over @tailwindcss/typography | Avoid new dependency for a single use case | ✓ Good — sufficient for article formatting |
 
 ---
-*Last updated: 2026-03-07 after v1.3 milestone*
+*Last updated: 2026-03-07 after v1.4 milestone start*

@@ -1,31 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Automatisk Blogg
-status: unknown
-last_updated: "2026-03-06T23:52:13.716Z"
+milestone: v1.4
+milestone_name: Portefølje 2.0
+status: planning
+last_updated: "2026-03-07T00:00:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 12
-  completed_plans: 12
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-07 after v1.3 milestone)
+See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Planning next milestone — use /gsd:new-milestone
+**Current focus:** v1.4 Portefølje 2.0 — defining requirements
 
 ## Current Position
 
-Phase: 19 of 19 (GitHub Actions Repo Config)
-Plan: 1 of 1 — Complete
-Status: All phases complete. v1.3 milestone delivered.
-Last activity: 2026-03-06 — Completed 19-01 (blog-generate.yml, repo secrets, auto-merge attempt blocked by GitHub Free plan)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-07 — Milestone v1.4 started
 
 Progress: [██████████] 100%
 
