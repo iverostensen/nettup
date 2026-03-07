@@ -16,4 +16,11 @@ export const testimonials: Testimonial[] = [
     company: "iGive",
     photoUrl: "/images/stein_eriksen_profile_picture.jpg",
   },
+  {
+    quote: 'Vi trengte noen som forsto at vi ikke er én butikk, men to kolleksjoner med ulik stil og kundegruppe. Nettup leverte en løsning som holder begge separate og tydelige, uten at det føles fragmentert.',
+    result: 'Nettbutikken håndterer begge kolleksjonene sømløst og gir oss full kontroll over innholdet via Sanity',
+    name: 'Placeholder',
+    title: 'Daglig leder',
+    company: 'Blom Company',
+  },
 ];

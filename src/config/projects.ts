@@ -105,6 +105,24 @@ export const projects: Project[] = [
     metaDescription:
       'Nettup bygget en eksklusiv nettbutikk for Blom Company med Next.js 15, Shopify og Sanity. Rask, visuell og klar for vekst.',
     metrics: { performance: 99, accessibility: 96, bestPractices: 100, seo: 100 },
+    challenge: 'Blom Company er et norsk klesmerke med to distinkte kolleksjoner — livsstil og golf. De trengte en nettbutikk som kunne presentere begge kolleksjonene med en tydelig visuell identitet, integrere sømløst med Shopify for betalingsbehandling og lagerstyring, og levere en shoppingopplevelse som matcher merkevaren deres.',
+    solution: 'Vi bygde en nettbutikk med Next.js 15 og Shopify som ryggrad, og Sanity CMS for innholdsstyring. Løsningen støtter to separate kolleksjoner — livsstil og golf — under én merkevare, med kolleksjonsfiltrering og produktsider som fremhever materialkvalitet og design. Sanity gir Blom Company full kontroll over innhold uten å måtte røre kode.',
+    features: [
+      'Dual-kolleksjon arkitektur (livsstil + golf)',
+      'Shopify integrasjon for handel',
+      'Sanity CMS for innholdsstyring',
+      'Høyytelses Next.js 15 frontend',
+      'Mobiloptimalisert shoppingopplevelse',
+      'Fleksibelt produktkatalog-system',
+    ],
     featuresImage: { src: blomFeaturesImage, alt: 'Skjermbilde av Blom Company nettbutikk med produktkolleksjon' },
+    summary: 'Blom Company er et norsk klesmerke med to distinkte kolleksjoner — livsstil og golf. Nettup bygget en moderne nettbutikk som presenterer begge kolleksjonene under én merkevare, med Shopify for handel og Sanity CMS for full innholdskontroll. Nettbutikken scorer 99/100 på Google PageSpeed (Performance) med Accessibility, Best Practices og SEO alle på 100/100. Bygget med Next.js 15, Tailwind CSS 4 og driftet på Vercel.',
+    testimonial: {
+      quote: 'Vi trengte noen som forsto at vi ikke er én butikk, men to kolleksjoner med ulik stil og kundegruppe. Nettup leverte en løsning som holder begge separate og tydelige, uten at det føles fragmentert.',
+      result: 'Nettbutikken håndterer begge kolleksjonene sømløst og gir oss full kontroll over innholdet via Sanity',
+      name: 'Placeholder',
+      title: 'Daglig leder',
+      company: 'Blom Company',
+    },
   },
 ];
