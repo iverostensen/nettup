@@ -1,87 +1,74 @@
-# Roadmap: Nettup.no
+# Roadmap: v1.4 Portefølje 2.0
 
-## Milestones
+## Overview
 
-- ✅ **v1.0 Launch** — Phases 1-4 (shipped 2026-03-04)
-- ✅ **v1.1 Tjenesteutvidelse** — Phases 6-12 (shipped 2026-03-06)
-- ✅ **v1.2 Smart Priskalkulator** — Phases 13-16.1 (shipped 2026-03-06)
-- ✅ **v1.3 Automatisk Blogg** — Phases 17-19 (shipped 2026-03-07)
+This milestone transforms `/prosjekter` from a single-page showcase into a scalable multi-page portfolio system. Two dedicated case study pages (`/prosjekter/igive` and `/prosjekter/blom-company`) replace the existing inline layout. The work proceeds in strict dependency order: visual assets and verified metrics must exist before any page imports them, the config layer must be stable before components are built against it, and SEO structured data is validated only after both pages are live.
 
 ## Phases
 
-<details>
-<summary>✅ v1.0 Launch (Phases 1-4) — SHIPPED 2026-03-04</summary>
+- [ ] **Phase 20: Innholdsforutsetninger** - Capture screenshots, measure Lighthouse scores, produce visual content plan — unblocks all visual content downstream
+- [ ] **Phase 21: Konfig og indeks** - Extend `projects.ts` interface, redesign `/prosjekter` index as card grid, update `ProjectTeaser` — stable data layer for case study pages
+- [ ] **Phase 22: Kasusstudie-sider** - Build `/prosjekter/igive` and `/prosjekter/blom-company` with shared components and GEO-optimized copy
+- [ ] **Phase 23: SEO/GEO-pass** - Emit `CreativeWork` + `BreadcrumbList` JSON-LD, verify sitemap coverage, validate all structured data
 
-- [x] Phase 1: Brand Identity (4/4 plans) — completed 2026-03-03
-- [x] Phase 2: Animation & Interaction (3/3 plans) — completed 2026-03-03
-- [x] Phase 2.1: Hero animation rework — delivery story (2/2 plans) — completed 2026-03-03 (INSERTED)
-- [x] Phase 3: SEO & Portfolio (4/4 plans) — completed 2026-03-04
-- [x] Phase 4: Conversion Optimization (2/2 plans) — completed 2026-03-04
+## Phase Details
 
-See archive: `.planning/milestones/v1.0-ROADMAP.md`
+### Phase 20: Innholdsforutsetninger
+**Goal**: All visual assets and verified performance data exist on disk before any page file imports them
+**Depends on**: Nothing (first phase)
+**Requirements**: INNHOLD-01, INNHOLD-02, INNHOLD-03
+**Success Criteria** (what must be TRUE):
+  1. `.planning/VISUAL-CONTENT-PLAN.md` exists listing every required screenshot with filename, section, dimensions, and crop guide for both projects
+  2. iGive Lighthouse/PageSpeed scores for `salg.igive.no` are recorded (Performance, Accessibility, Best Practices, SEO) — numbers are real and current, not from the existing hardcoded `Results.astro`
+  3. Blom Company screenshots are captured from `blom-no.vercel.app` and committed to `src/assets/images/` following the visual content plan filenames
+  4. `npm run build` passes with the committed screenshot files present (no `ENOENT` errors)
+**Plans**: TBD
 
-</details>
+### Phase 21: Konfig og indeks
+**Goal**: `projects.ts` interface is extended and all consumers updated atomically; `/prosjekter` renders as a peer card grid linking to slug-based URLs
+**Depends on**: Phase 20
+**Requirements**: INFR-01, INFR-02, INFR-03, INFR-04
+**Success Criteria** (what must be TRUE):
+  1. `projects.ts` `Project` interface includes `slug`, `techStack[]`, `metrics{}`, `gallery[]`, `testimonialId`, `metaTitle`, `metaDescription`, `publishedAt`; `caseStudySection` flag is absent
+  2. `/prosjekter` index page shows both iGive and Blom Company as equal peer cards — each card displays cover image, category, name, tagline, and links to `/prosjekter/[slug]`
+  3. `ProjectShowcase.astro` and `Results.astro` are removed from the prosjekter index with no visual regressions on the index page
+  4. `BaseLayout` `pageLabels` map contains entries for `/prosjekter/igive` and `/prosjekter/blom-company` (human-readable labels, not raw slugs)
+  5. `ProjectTeaser.astro` on the homepage links to `/prosjekter/igive` (not `/prosjekter`)
+**Plans**: TBD
 
-<details>
-<summary>✅ v1.1 Tjenesteutvidelse (Phases 6-12) — SHIPPED 2026-03-06</summary>
+### Phase 22: Kasusstudie-sider
+**Goal**: Both case study pages exist as complete, production-quality pages with GEO-optimized Norwegian copy
+**Depends on**: Phase 20, Phase 21
+**Requirements**: SIDE-01, SIDE-02, SIDE-03
+**Success Criteria** (what must be TRUE):
+  1. `/prosjekter/igive` renders with all required sections: opening summary, challenge, solution, tech stack, features delivered, metrics block (real verified Lighthouse scores), testimonial, live site link
+  2. `/prosjekter/blom-company` renders with all required sections: opening summary, challenge, solution, tech stack (Next.js 15 / Shopify / Sanity / Tailwind 4 / Vercel), dual-collection story, Lighthouse scores, testimonial, live site link
+  3. Both pages open with a standalone summary paragraph within the first 200 words that a reader (or AI assistant) can cite without additional context
+  4. Concrete verifiable numbers (Lighthouse scores, load times, specific tech versions) appear in a distinct visual metrics block on each page
+  5. `npm run build` passes with all screenshots imported via `astro:assets` `<Image>`
+**Plans**: TBD
 
-- [x] Phase 6: Infrastructure (3/3 plans) — completed 2026-03-04
-- [x] Phase 7: Tjenesteoversikt (2/2 plans) — completed 2026-03-05
-- [x] Phase 8: Core Service Pages (3/3 plans) — completed 2026-03-05
-- [x] Phase 9: Specialist Service Pages (5/5 plans) — completed 2026-03-05
-- [x] Phase 10: Cross-linking & Validation (2/2 plans) — completed 2026-03-05
-- [x] Phase 11: Enhanced Price Calculator (1/1 plan) — completed 2026-03-05
-- [x] Phase 12: AI Chatbot Widget (2/2 plans) — completed 2026-03-06
-
-See archive: `.planning/milestones/v1.1-ROADMAP.md`
-
-</details>
-
-<details>
-<summary>✅ v1.2 Smart Priskalkulator (Phases 13-16.1) — SHIPPED 2026-03-06</summary>
-
-- [x] Phase 13: Pricing Config and Calculation Engine (2/2 plans) — completed 2026-03-06
-- [x] Phase 14: Wizard Steps and State (2/2 plans) — completed 2026-03-06
-- [x] Phase 15: Result Display (1/1 plan) — completed 2026-03-06
-- [x] Phase 16: Page Integration and Swap (1/1 plan) — completed 2026-03-06
-- [x] Phase 16.1: Remove per-item pricing from wizard (1/1 plan) — completed 2026-03-06 (INSERTED)
-
-See archive: `.planning/milestones/v1.2-ROADMAP.md`
-
-</details>
-
-<details>
-<summary>✅ v1.3 Automatisk Blogg (Phases 17-19) — SHIPPED 2026-03-07</summary>
-
-- [x] Phase 17: Astro Blog Infrastructure (2/2 plans) — completed 2026-03-06
-- [x] Phase 18: Generation Pipeline Scripts (2/2 plans) — completed 2026-03-06
-- [x] Phase 19: GitHub Actions + Repo Config (1/1 plan) — completed 2026-03-07
-
-See archive: `.planning/milestones/v1.3-ROADMAP.md`
-
-</details>
+### Phase 23: SEO/GEO-pass
+**Goal**: Both case study pages have correct structured data, unique SEO metadata, and appear in the sitemap
+**Depends on**: Phase 22
+**Requirements**: SEO-01, SEO-02, SEO-03, SEO-04
+**Success Criteria** (what must be TRUE):
+  1. Both pages emit `CreativeWork` JSON-LD with `creator: { "@id": "https://nettup.no/#business" }` and `about: { "@type": "WebSite", url: [client URL] }` — no inline re-declaration of Organization fields
+  2. Both pages emit `BreadcrumbList` JSON-LD with human-readable item names (not raw slugs), consistent with the pattern on tjenester and blogg pages
+  3. Both pages have `<title>` tags 50–60 characters and meta descriptions 150–160 characters following the `seoTitle` pattern in Norwegian
+  4. After `npm run build`, the generated sitemap includes `/prosjekter/igive` and `/prosjekter/blom-company`
+**Plans**: TBD
 
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Brand Identity | v1.0 | 4/4 | Complete | 2026-03-03 |
-| 2. Animation & Interaction | v1.0 | 3/3 | Complete | 2026-03-03 |
-| 2.1. Hero animation rework | v1.0 | 2/2 | Complete | 2026-03-03 |
-| 3. SEO & Portfolio | v1.0 | 4/4 | Complete | 2026-03-04 |
-| 4. Conversion Optimization | v1.0 | 2/2 | Complete | 2026-03-04 |
-| 6. Infrastructure | v1.1 | 3/3 | Complete | 2026-03-04 |
-| 7. Tjenesteoversikt | v1.1 | 2/2 | Complete | 2026-03-05 |
-| 8. Core Service Pages | v1.1 | 3/3 | Complete | 2026-03-05 |
-| 9. Specialist Service Pages | v1.1 | 5/5 | Complete | 2026-03-05 |
-| 10. Cross-linking & Validation | v1.1 | 2/2 | Complete | 2026-03-05 |
-| 11. Enhanced Price Calculator | v1.1 | 1/1 | Complete | 2026-03-05 |
-| 12. AI Chatbot Widget | v1.1 | 2/2 | Complete | 2026-03-06 |
-| 13. Pricing Config and Calculation Engine | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 14. Wizard Steps and State | v1.2 | 2/2 | Complete | 2026-03-06 |
-| 15. Result Display | v1.2 | 1/1 | Complete | 2026-03-06 |
-| 16. Page Integration and Swap | v1.2 | 1/1 | Complete | 2026-03-06 |
-| 16.1. Remove per-item pricing from wizard | v1.2 | 1/1 | Complete | 2026-03-06 |
-| 17. Astro Blog Infrastructure | v1.3 | 2/2 | Complete | 2026-03-06 |
-| 18. Generation Pipeline Scripts | v1.3 | 2/2 | Complete | 2026-03-06 |
-| 19. GitHub Actions + Repo Config | v1.3 | 1/1 | Complete | 2026-03-07 |
+| 20. Innholdsforutsetninger | v1.4 | 0/TBD | Not started | - |
+| 21. Konfig og indeks | v1.4 | 0/TBD | Not started | - |
+| 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
+| 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
+
+---
+*Roadmap created: 2026-03-07*
+*Milestone: v1.4 Portefølje 2.0*
+*Coverage: 14/14 requirements mapped*
