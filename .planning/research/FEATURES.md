@@ -1,22 +1,23 @@
 # Feature Research
 
-**Domain:** Automated AI-generated SEO blog — Astro 5 + GitHub Actions + Claude API
-**Milestone:** v1.3 Automatisk Blogg (nettup.no)
-**Researched:** 2026-03-06
-**Confidence:** HIGH (architecture doc pre-resolves most decisions; research validates and fills gaps)
+**Domain:** Web agency case study / portfolio pages — SEO + GEO optimized
+**Milestone:** v1.4 Portefolje 2.0 (nettup.no)
+**Researched:** 2026-03-07
+**Confidence:** HIGH (GEO patterns from 2025-2026 sources; case study content standards from multiple credible sources)
 
 ---
 
 ## Context: What Already Exists
 
-This milestone adds a blog to a complete 5-page marketing site. The existing Astro 5 + Vercel stack is the foundation. All decisions below assume:
+The current `/prosjekter` page has a single inline case study (iGive) with: challenge/solution card pair, feature checklist (6 bullets), testimonial block, and one hero screenshot. There is no dedicated per-project URL, no per-project SEO metadata, and no scalable architecture for adding more projects.
 
-- Astro 5 with Content Layer API (loaders replace `type: "content"` declarations)
-- `@astrojs/sitemap` already integrated — blog pages included automatically
-- `@astrojs/rss` available as first-party package for feed generation
-- Vercel adapter with hybrid rendering (static pages + `/api/chat` serverless)
-- ANTHROPIC_API_KEY already in use by the chat endpoint
-- Norwegian (bokmål) — all content and infrastructure
+This milestone adds:
+- A project grid index at `/prosjekter` (cards linking to dedicated pages)
+- `/prosjekter/igive` — expanded iGive case study
+- `/prosjekter/blom-company` — new Blom Company case study
+- Scalable `projects.ts` config driving both index cards and per-page metadata
+
+Existing tech: Astro 5 + Tailwind 4 + React islands + Framer Motion. No new dependencies required for this milestone.
 
 ---
 
@@ -24,165 +25,316 @@ This milestone adds a blog to a complete 5-page marketing site. The existing Ast
 
 ### Table Stakes (Users and Crawlers Expect These)
 
-Features that must exist for the blog to function as a legitimate SEO asset. Missing any of these means the blog either fails to rank or fails to convert.
+Features that a professional web agency case study page must have. Missing any of these makes the page feel incomplete or unprofessional to prospects who are evaluating whether to hire the agency.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| **Astro Content Collection schema** | Astro 5 requires a typed schema (`src/content/config.ts`) for the `blogg` collection. Without it, `getCollection()` returns untyped entries and the build fails on schema validation. | LOW | Zod schema with `title`, `seoTitle`, `description`, `publishDate`, `author`, `category`, `tags`, `estimatedReadTime`, `relatedSlugs`. Architecture doc has exact schema — follow it. |
-| **Blog listing page `/blogg`** | Entry point for all blog traffic and internal links from the main site. Crawlers treat this as the topic hub. | LOW | `src/pages/blogg/index.astro` using `getCollection('blogg')`, sorted by `publishDate` desc. Static generation at build time. |
-| **Dynamic article pages `/blogg/[...slug]`** | Each article needs a canonical URL. The `[...slug].astro` pattern handles any slug depth. | LOW | Standard Astro pattern. `getStaticPaths()` reads collection entries at build time. |
-| **Article card component** | Listing page needs a reusable card: title, category badge, read time, date, excerpt. | LOW | `ArticleCard.astro` — Astro-only (no React needed, no animation required here). |
-| **Article layout with structured data** | Every article needs `<title>` (seoTitle), `<meta description>`, Article JSON-LD, and FAQPage JSON-LD. These are non-negotiable for Google indexing and E-E-A-T signals. | MEDIUM | `ArticleLayout.astro` wraps `BaseLayout.astro`. Injects both schemas. Architecture doc has exact JSON-LD structure — follow it. |
-| **Separate `seoTitle` and `title` fields** | `title` is the H1 (conversational: "Hva koster en nettside?"), `seoTitle` is the `<title>` tag (keyword-first: "Nettside pris 2026: Hva koster det? \| Nettup"). These serve different ranking and CTR functions. | LOW | Both in frontmatter schema. `ArticleLayout.astro` uses `seoTitle` for `<title>`, `title` for `<h1>`. Critical distinction — conflating them wastes CTR. |
-| **Norwegian-aware slug generation** | Standard slugify breaks Norwegian: "øst" → "ost" (cheese). Must map æ→ae, ø→oe, å→aa. | LOW | Inline utility function in `generate-article.ts`. No npm package needed — 8 lines of code. Architecture doc has the correct mapping. |
-| **GitHub Actions cron workflow** | The automation is the feature. Without a working cron job, everything else is manual. | MEDIUM | `.github/workflows/blog-generate.yml` — Monday 08:00 UTC + `workflow_dispatch` for manual trigger. `tsx` must be in `devDependencies`, not cold-downloaded via `npx`. |
-| **PR-based publish flow** | Never commit directly to main. PR creates the audit trail — quality scores visible in PR body, auto-merge on CI pass. | MEDIUM | `gh` CLI in the GitHub Action, `GITHUB_TOKEN` available automatically. Auto-merge must be enabled on the repo for `blogg/*` branches. |
-| **Topic cluster config** | Human-curated seed topics are the editorial control mechanism. Without them, generation is directionless. | LOW | `scripts/blog/config.ts` with 4 clusters (priser, teknologi, smb-tips, lokal-seo). This is the editorial input Nettup controls. |
-| **Duplicate detection** | Without checking existing articles, the pipeline will generate near-duplicate content. Near-duplication is an E-E-A-T signal that hurts rankings. | LOW | Read all `src/content/blogg/*.md` frontmatter titles + tags at topic selection time, pass list to Claude. Covered in architecture doc. |
-| **`inLanguage: "nb"` in Article schema** | Google uses this to serve the article to Norwegian-language searchers. Missing it means the article competes globally rather than in the Norwegian SERP. | LOW | One field in the JSON-LD. Architecture doc includes it. Do not omit. |
+| **Project hero section** | Prospects form their first judgment from the hero. A headline, one-sentence project description, client name, category tag, and the hero screenshot must all be visible above the fold. | LOW | For Blom: editorial product grid image. For iGive: current `salg.igive.no.png`. Desktop-first crop as hero is typically wider than tall. |
+| **Challenge section** | Decision-makers need to recognize their own problem before they trust the solution. Without this, the page reads as self-promotion rather than problem-solving evidence. | LOW | 3-5 concise sentences. The existing iGive challenge text is good — expand it. For Blom: the brief already has the framing ("no template would do"). |
+| **Solution section** | Explains what was built and how it solved the challenge. Must explain reasoning, not just list outputs. 31.82% of B2B tech buyers rank challenge-solution framing as their top priority in a case study (2025 Tech Buyer Preferences survey). | LOW | Each solution section should mention the specific technical decisions that are non-obvious. For Blom: why headless, why Sanity for CMS, why two collections. |
+| **Tech stack display** | Prospects need to verify that the agency uses the technologies they care about. A scannable tech stack (logos or chips) is expected on any professional portfolio page. | LOW | For Blom: Next.js 15 / Shopify Storefront API / Sanity / Tailwind 4 / TypeScript / Vercel. For iGive: Astro 5 / Tailwind. Display as labeled icon chips. |
+| **Outcomes / metrics section** | The single most credible section. Real numbers outperform any copy. Prospects share metrics internally when advocating for hiring an agency. | MEDIUM | For Blom: Lighthouse scores are available and strong (Desktop perf 98, SEO 100, LCP 1.1s). For iGive: performance claims ("under ett sekund") need an actual Lighthouse score or PageSpeed screenshot. Do not make up metrics. |
+| **Client testimonial** | Social proof from the actual client. Expected on any agency portfolio page. Its absence signals that no real client could be found to endorse the work. | LOW | Blom testimonial is real and available in the brief. iGive testimonial is currently placeholder — this is a known gap in PROJECT.md. Use Blom's real one as the model. |
+| **Live site link** | Prospects want to verify the work is real and live. A "Se live-siden" link (opens in new tab) is expected on every project. | LOW | Blom: `blomcompany.com`. iGive: `salg.igive.no`. For Blom, note that staging screenshots (`blom-no.vercel.app`) may precede the live domain — update when launched. |
+| **Breadcrumb navigation** | Users navigating from `/prosjekter` index need a clear path back. Breadcrumbs also drive BreadcrumbList JSON-LD which is a GEO signal. | LOW | `Nettup > Prosjekter > [Project Name]` — consistent with the pattern established in v1.1 service pages. |
+| **Project index card linking to dedicated page** | The `/prosjekter` index must show project cards with a clear CTA ("Les case study") linking to the dedicated URL. This is how the portfolio becomes discoverable. | LOW | Card fields: project name, category tag, tagline, hero thumbnail, CTA button. Cards are already partially defined in `projects.ts` — extend the schema. |
+| **Per-project SEO metadata** | Each case study page needs its own `<title>`, `<meta description>`, and OG tags. A shared generic title for all projects wastes ranking potential for "[agency] [client]" queries. | LOW | Pattern: `<title>Blom Company — Headless Shopify-nettbutikk | Nettup</title>`. Meta description: outcome-first in Norwegian, 120-155 characters. |
 
-### Differentiators (What Makes This Quality, Not Spam)
+### Differentiators (Competitive Advantage)
 
-Features that separate this pipeline from generic AI content farms. These are what allow the content to rank and build E-E-A-T.
+Features that elevate these case studies above what a typical Norwegian web agency publishes. Aligned with Nettup's positioning: modern technology, fast delivery, measurable results.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Two-pass quality gate** | Pass 1: Claude reviews its own output with a strict editorial prompt (scores 1-10 on 6 criteria, must average ≥7). Pass 2: Automated checks (word count, heading frequency, LIX score, self-promotion cap, FAQ section presence). Articles failing either pass are rejected without publishing — rejection is logged as a job summary, not a CI failure. | MEDIUM | This is the single most important differentiator. Mass AI content farms skip the review step. The architecture doc has both the review prompt and automated checks. Implement exactly as specified. |
-| **LIX readability score (inline, no dependency)** | Norwegian readability measurement — LIX ≤ 45 targets "medium" complexity, appropriate for Norwegian SMB owners. LIX = (words/sentences) + (long words × 100/words). Enforced at quality gate stage. | LOW | 10-line formula, no npm package. Architecture doc has the calculation. This is a concrete quality signal that generic pipelines don't include. |
-| **GEO-optimized article structure** | First paragraph directly answers the question in 1-2 sentences (no preamble). Mandatory "Vanlige spørsmål" section at end. Short, citable, standalone sentences throughout. GEO targets ChatGPT, Perplexity, and Google AI Overviews as citation sources — LLMs cite only 2-7 domains per response, making early authority establishment critical. | LOW | Enforced in system prompt AND verified in quality gate (`hasFaqSection` automated check). The FAQ section feeds FAQPage JSON-LD — structural and SEO benefit combined. |
-| **Self-promotion cap (max 2 Nettup mentions)** | AI content that reads as thinly-veiled advertising ranks poorly and damages E-E-A-T. The cap is enforced in the system prompt AND checked with `countMentions("Nettup", article) <= 2` in automated checks. Both gates must agree. | LOW | Dual enforcement (prompt + code) prevents the model from drifting on this. Single-enforcement fails. |
-| **Human-curated topic clusters** | Editorial direction (the "what to write about") is human-decided. The AI handles the "how to write it". This split preserves the strategic intent while automating the execution. Prevents the pipeline from generating off-brand content. | LOW | `scripts/blog/config.ts` with cluster definitions. Nettup controls this file — adding/removing clusters changes editorial direction without touching pipeline code. |
-| **Author attribution with E-E-A-T signals** | Real person (Iver Østensen) as author in Article JSON-LD with `sameAs` LinkedIn URL. Google's E-E-A-T framework evaluates whether a real person with verifiable expertise wrote the content. Anonymous or "AI-generated" attribution signals low E-E-A-T. | LOW | One JSON-LD field. Architecture doc includes it. Do not make the author "Nettup Blog Bot". |
-| **Rate limiting (1 article/week)** | Scaled content abuse — generating high volumes of AI content rapidly — is explicitly named in Google's spam policies. 1 article/week over a year produces 52 articles, a legitimate editorial volume. | LOW | GitHub Actions cron schedule controls this. Do not add parallel generation or multiple-article-per-run capability. |
-| **Persistent topic queue** | `topics-queue.json` tracks pending/published/rejected topics. If quality gate rejects an article, the topic stays in queue with rejection reason — next run retries before generating new topics. Prevents lost weeks from rejection cascades. | MEDIUM | Committed to the repo, updated by pipeline at each stage. Requires careful git handling in the GitHub Action (pull before write, push after). |
-| **Internal linking to service pages** | Every article links to 1-2 Nettup service pages where relevant. `SERVICE_PAGES` list is hardcoded in `generate-article.ts`. Claude is instructed to link organically, not forcibly. Links convert blog readers into leads. | LOW | The hardcoded list prevents hallucinated URLs. Instruction to link "only where organic" prevents spammy anchor text. Both matter. |
-| **Related article cross-linking** | `relatedSlugs` in frontmatter (chosen by Claude from the existing articles list passed in Stage 2) drives a `RelatedArticles.astro` component at article bottom. Builds topical authority by linking thematically related articles. | LOW | `RelatedArticles.astro` reads `relatedSlugs`, fetches those collection entries, renders `ArticleCard` for each. Zero extra API calls — runs at build time. |
-| **Hub/cluster pages (deferred)** | `/blogg/kategori/[cluster].astro` — category index pages with spoke articles listed. Hub-and-spoke signals topical authority to Google. Prerequisite: ≥3 articles per cluster. Trigger: after 10+ total articles exist. | MEDIUM | Defer until content volume justifies it. Building hub pages with 1-2 articles per cluster wastes crawl budget and looks thin. |
+| **Lighthouse / Core Web Vitals display** | Most Norwegian web agencies don't publish their performance scores. Publishing real scores (especially Blom's desktop 98 / SEO 100 / LCP 1.1s) signals technical credibility in a way text cannot. | LOW | Render as a visual score card (circular gauge or score chips). Blom scores are ready from the brief. iGive: run PageSpeed on `salg.igive.no` and document before writing the page. Flag: Blom mobile perf is 75 (LCP 6.6s hero image issue) — acknowledge this honestly, state it's a pre-launch staging score, re-run post-launch. |
+| **GEO-optimized project copy** | AI assistants (ChatGPT, Perplexity, Google AI Overviews) are increasingly the first touchpoint when a prospect searches "best norsk webbyrå" or "headless Shopify Norge". Case study pages with structured, factual, citable content surface in these answers. | MEDIUM | See the GEO Patterns section below for specific implementation rules. This is the single highest-ROI differentiator relative to implementation cost. |
+| **CreativeWork + WebSite JSON-LD schema** | Structured data helps Google understand the page as a documented project, not just marketing copy. LLMs achieve 300% higher accuracy with structured data vs unstructured content. CreativeWork schema maps cleanly to case study content. | LOW | `@type: "WebSite"` for the client's site as the output (`url: "https://blomcompany.com"`, `name: "Blom Company"`, `creator: { @type: "Organization", name: "Nettup" }`). Wrap in a CreativeWork for the case study page itself. See the Structured Data section below. |
+| **Multiple contextual screenshots** | A single hero image doesn't demonstrate breadth of work. 3-5 screenshots at key sections (homepage, product page, mobile view, CMS or admin interface) give prospects a fuller picture. | MEDIUM | Requires a documented visual content brief per project. See the Visual Content section below. For Blom: editorial homepage, product listing, product detail, mobile viewport. For iGive: homepage, one product block, contact form section. |
+| **"Slik gikk det" (How it went) narrative** | A short process narrative (2-3 sentences on timeline and collaboration style) answers the unspoken question: "What is it like to work with Nettup?" Most agency portfolio pages skip this. | LOW | Integrate into solution section or as its own brief paragraph. For Blom: "Blom kom med klar retning — vi leverte uten unødvendige runder." This is already in their testimonial, which supports it. |
+| **Mobile/desktop viewport pair** | Showing both desktop and mobile views demonstrates that responsive design is actually implemented, not assumed. Prospects with mobile-heavy traffic care about this. | MEDIUM | For each project: one full desktop viewport screenshot + one mobile viewport screenshot. Can be displayed as a paired mockup (browser frame + phone frame side by side). |
+| **Technology rationale (one-liner per tech choice)** | Listing "Next.js, Shopify, Sanity" is table stakes. Explaining *why* each was chosen ("Shopify handles inventory so we don't reinvent checkout security") builds trust and demonstrates expertise. | LOW | 1 sentence per major technology decision in the tech stack section. Blom brief has this context — translate to Norwegian for the page. |
 
 ### Anti-Features (Explicitly Avoid)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| **Google Trends API integration** | Automate topic discovery with real search signal data | No official API exists. Unofficial npm packages are scraping-based and break on Google's rate limiting — causing pipeline failures on the most important step. | Human-curated seed clusters. At 1 article/week, editorial curation is a 5-minute monthly task. |
-| **"People Also Ask" scraping** | Enrich topics with SERP data | Same problem as Trends — scraping-based, brittle, against Google's ToS. Pipeline reliability is more valuable than marginal topic quality improvement. | Claude's awareness of Norwegian SMB questions, informed by the system prompt's audience definition. |
-| **`draft` boolean in frontmatter** | Ability to generate without publishing | The PR is the review gate. A draft flag creates a second, redundant gate — articles would accumulate in the collection without ever being published. | If an article shouldn't be published, the quality gate should reject it. The PR process is the human review mechanism if manual inspection is needed. |
-| **Cover/hero images per article** | Visual richness, social sharing aesthetics | AI image generation costs ($0.04-0.20/image) add up. More importantly, generated images for professional agency content risk looking generic or off-brand. Alt text and descriptions add complexity to the pipeline. | Text-only for v1.3. Add images in a future phase if blog performance data justifies it. |
-| **Comment system** | Reader engagement, community building | Spam magnet, requires moderation infrastructure, adds no SEO value for a B2B lead-gen blog targeting Norwegian SMB owners who don't comment on agency blogs. | Contact form CTA at article end. Leads contact directly. |
-| **Pagination on listing page** | Handle large article volumes | At 1 article/week, the listing page won't need pagination for 2+ years. Adding pagination now creates complexity (Astro's `paginate()` + `[...page].astro`) that provides zero immediate value. | Simple flat listing, sorted by date. Add pagination when the listing page has >30 articles. |
-| **CMS / admin UI for articles** | Edit generated content without code | No human is editing these articles — the pipeline is designed to be hands-free. A CMS adds infrastructure, credentials, and maintenance cost with no benefit in this model. | Edit the `.md` files directly if manual correction is needed. This is a developer-controlled repo. |
-| **RSS feed** | Blog syndication, feed readers | Norwegian SMB owners don't use feed readers. An RSS feed for a B2B agency blog with AI-generated content provides marginal distribution value. `@astrojs/rss` is easy to add but creates an additional feed endpoint to maintain. | Defer to post-launch if there's specific demand. The sitemap handles Google's discovery needs. |
-| **Email newsletter from blog** | Convert blog readers to newsletter subscribers | Adds Mailchimp/Buttondown integration, double opt-in flows, list management. Significant scope increase for uncertain return in the Norwegian SMB market at this stage. | Contact form CTA. One conversion goal at a time. |
-| **Social share buttons** | Increase article distribution | Norwegian SMB decision-makers don't share agency blog posts on social. Adds external JavaScript, potential privacy concerns (GDPR), and page weight. | OG tags ensure clean link previews if someone manually shares. That's sufficient. |
-| **Vercel Cron + Serverless for generation** | Keep everything on Vercel | Hobby plan has 10-second function timeout — generation + review pass takes 60-120 seconds. Edge functions are not a viable host for a Claude API call of this duration. | GitHub Actions handles this correctly. 2000 free minutes/month, no timeout issue. |
+| **Process timeline / Gantt chart** | Looks thorough and professional | For a small web agency, publishing specific sprint lengths or delivery timelines creates pressure to match them for future clients. It also signals to competitors how long projects take. | "Rask levering" as a value claim, backed by a concrete delivery window in the hero or CTA ("fra brief til lansering på 4 uker"). |
+| **Budget / price disclosure per project** | Prospects want to know cost | Specific project budgets anchor price expectations in the wrong direction — either too high (scares SMBs) or too low (devalues premium work). | Link from case study CTAs to `/priskalkulator` — the price calculator already handles this correctly. |
+| **Before/after website comparison** | Compelling visual contrast | iGive and Blom are new-build projects with no predecessor. Before/after only makes sense for redesign projects. Showing a bad "before" that doesn't exist damages the client's brand (even older screenshots look unprofessional). | For redesigns (future projects): use before/after. For greenfield: use "problem statement" + "outcome" framing instead. |
+| **Case study PDF download** | B2B lead gen tactic | PDFs leave the indexed web, skip tracking, and require maintenance (version drift). On a portfolio page for an SMB-focused agency, nobody downloads PDFs — they want to see the work and contact. | The case study page itself is the asset. Contact CTA at the bottom. |
+| **Video walkthrough of the project** | High engagement, shows the work in motion | Requires a separate production workflow (recording, editing, hosting, embedding) that doesn't exist yet. Video adds page weight and introduces autoplay accessibility issues. | Device mockup images with hover animations (Framer Motion on the mockup card) achieve similar effect with zero video infrastructure. |
+| **Client logo wall without attribution** | Looks impressive at a glance | Without a linked case study or at least a testimonial, logos are unverifiable name-dropping. Norwegian SMB clients are suspicious of "we've worked with 50 companies" claims. | Only display logos for clients with a live case study page. 2 real ones > 20 unattributed logos. |
+| **Infinite scroll / lazy-loaded projects grid** | Scales as projects are added | At 2 projects, any pagination or infinite scroll is over-engineering. The grid should be simple — cards in a CSS grid, no JavaScript required for the index page. | Simple static grid. Add pagination only at 8+ projects (years away at current growth rate). |
+
+---
+
+## GEO Patterns for Case Study Pages
+
+GEO (Generative Engine Optimization) is the practice of structuring content so AI systems — ChatGPT, Perplexity, Claude, Google AI Overviews — cite it when answering user queries. This section translates GEO research into specific implementation patterns for Nettup's case study pages.
+
+**Why GEO matters for these pages:** When a prospect asks ChatGPT "beste norsk webbyrå for headless Shopify" or Perplexity "norsk webbyrå nettbutikk Next.js", a well-structured case study is citable evidence. The 2023 Princeton/Georgia Tech/IIT Delhi GEO study found that adding citations, statistics, and structured content to pages improved AI search visibility by 30-40%.
+
+### Pattern 1: Direct Answer in First 200 Words
+
+AI systems using RAG (Retrieval-Augmented Generation) evaluate page relevance primarily from opening content. The case study intro must answer the core question directly.
+
+**Do:** "Blom Company er en norsk golf- og streetwear-merkevare. Nettup bygde et fullt tilpasset headless Shopify-utstillingsvindu med Next.js 15, Sanity CMS og Tailwind CSS 4 — lansert med Lighthouse-score 98 på desktop og LCP 1,1 sekund."
+
+**Don't:** Begin with "Da Blom Company tok kontakt med oss, visste vi at dette skulle bli et spennende prosjekt..."
+
+### Pattern 2: Specific, Verifiable Facts
+
+AI engines prefer citable facts over general claims. Every case study must contain:
+- Specific technology versions (Next.js 15, not "Next.js")
+- Concrete metrics (LCP 1.1s, Lighthouse 98, not "rask")
+- Named deliverables (Lifestyle-kolleksjon og Sport-kolleksjon, not "to produktlinjer")
+- Timeline indicators if verifiable ("lansert [month year]")
+
+Avoid vague phrases: "moderne teknologi", "rask levering", "stor forbedring". Replace each with a specific claim.
+
+### Pattern 3: Structured Heading Hierarchy
+
+AI systems parse content using heading structure. Case study pages must use:
+- `<h1>`: Project name + one-line description (e.g., "Blom Company — Headless Shopify for norsk golf- og streetwear-merkevare")
+- `<h2>`: Section labels that read as standalone statements ("Utfordringen: en butikk som matchet merkevaren", "Resultater: 98 i ytelse på desktop")
+- `<h3>`: Subsections within major sections if needed
+
+Do not use generic headings like "Om prosjektet" or "Løsningen" — AI systems can't distinguish these from any other agency's boilerplate.
+
+### Pattern 4: Schema Markup as Machine-Readable Summary
+
+Structured data is the highest-confidence signal for AI systems. A LLM cited in a study achieves 300% higher accuracy when processing structured data vs unstructured text. The CreativeWork schema for each case study should include:
+
+```json
+{
+  "@type": "WebSite",
+  "name": "Blom Company",
+  "url": "https://blomcompany.com",
+  "description": "Headless Shopify-nettbutikk for norsk golf- og streetwear-merkevare. Bygget med Next.js 15, Sanity CMS og Tailwind CSS 4.",
+  "creator": {
+    "@type": "Organization",
+    "name": "Nettup",
+    "url": "https://nettup.no"
+  },
+  "keywords": ["headless shopify", "Next.js nettbutikk", "Sanity CMS", "norsk webbyrå"],
+  "inLanguage": "nb"
+}
+```
+
+### Pattern 5: FAQ Section ("Vanlige spørsmål")
+
+AI systems disproportionately cite FAQ sections because they map directly to query patterns. Adding a 3-4 question FAQ at the bottom of each case study creates high-citation-potential content.
+
+Recommended FAQ questions for Blom:
+- "Hva er headless Shopify og hvorfor valgte dere det for Blom Company?"
+- "Hvordan håndterer nettstedet to ulike produktlinjer?"
+- "Hva oppnådde dere på Lighthouse-testen?"
+
+Recommended FAQ questions for iGive:
+- "Hva var utfordringen Nettup løste for iGive?"
+- "Hvorfor ble det bygget som en egen salgsside i stedet for å bruke nettbutikken?"
+- "Hva er ytelsen på salg.igive.no?"
+
+This FAQ section also feeds `FAQPage` JSON-LD, consistent with the blog pipeline's pattern.
+
+### Pattern 6: Cross-References and Internal Links
+
+Perplexity AI shows preference for content with internal cross-references. Each case study should link to:
+- The relevant Nettup service page (Blom → `/tjenester/nettbutikk`, iGive → `/tjenester/nettside`)
+- The `/prosjekter` index
+- The other case study (cross-link between iGive and Blom at the bottom: "Se også:")
+
+This network of links signals topical authority and increases the probability of multi-page citation chains.
+
+---
+
+## SEO Patterns for Case Study Pages
+
+### Title and Meta Description Patterns
+
+Google and AI Overviews give high weight to `<title>` tags. For agency portfolio pages targeting "[agency name] [client]" and "[service] [location]" queries:
+
+**Title pattern:** `[Client Name] — [Project type] | Nettup`
+- "Blom Company — Headless Shopify-nettbutikk | Nettup"
+- "iGive — B2B salgsside for gavekortplattform | Nettup"
+
+**Meta description pattern:** Outcome-first, specific metric, 120-155 characters.
+- "Custom headless nettbutikk for Blom Company. Next.js 15, Sanity CMS og Tailwind CSS 4 — Lighthouse 98 på desktop, LCP 1,1s."
+- "Dedikert B2B-salgsside for iGive. Presenterer tre gavekortprodukter klart for bedriftskunder — under ett sekund lastestid."
+
+### URL Structure
+
+- `/prosjekter/igive` — matches client slug, not a generic `/prosjekter/1`
+- `/prosjekter/blom-company` — hyphenated, Norwegian-friendly
+- Consistent with `id` field in `projects.ts`
+
+### BreadcrumbList JSON-LD
+
+Consistent with v1.1 service pages pattern:
+```
+Nettup (/) > Prosjekter (/prosjekter) > Blom Company (/prosjekter/blom-company)
+```
+
+This is a confirmed ranking signal and already established as a pattern in this codebase.
+
+---
+
+## Visual Content Requirements
+
+The visual content brief defines exactly which screenshots and assets are needed per project. This is a dependency: the page cannot be built (or built well) without the assets first.
+
+### Visual Content Checklist — Per Project
+
+**Hero image** (required, 1 per project)
+- [ ] Full-width desktop viewport screenshot of the most visually impressive page (homepage or product listing)
+- [ ] Crop: 1600 x 900px (16:9) or 1600 x 1000px
+- [ ] Format: WebP via Astro `<Image>` pipeline
+- [ ] Alt text: "[Client name] — [page name] screenshot" in Norwegian
+- [ ] File size target: < 300KB after Astro optimization
+
+**Section screenshots** (recommended, 2-4 per project)
+- [ ] One screenshot per major section that demonstrates a distinct deliverable
+- [ ] For e-commerce: product listing page + product detail page
+- [ ] For marketing sites: hero section + one content section
+- [ ] Crop: consistent width (1440px desktop or 390px mobile), height flexible
+- [ ] Labelled with caption text in the page component
+
+**Mobile viewport screenshot** (recommended, 1 per project)
+- [ ] iPhone or Android viewport width (390px)
+- [ ] Shows the same hero or product page at mobile breakpoint
+- [ ] Demonstrates that responsive design is real, not assumed
+- [ ] Display in a phone frame mockup (CSS or SVG frame, no third-party service)
+
+**Desktop browser frame** (optional, 1 per project)
+- [ ] Hero screenshot wrapped in a browser chrome mockup
+- [ ] Adds visual professionalism to section screenshots
+- [ ] Implemented as a CSS component, not a Figma export (keeps it maintainable)
+
+**Lighthouse score card** (required for Blom, required for iGive after measurement)
+- [ ] Screenshot or designed card showing: Performance, Accessibility, Best Practices, SEO scores
+- [ ] For Blom desktop: 98 / 96 / 96 / 100
+- [ ] For Blom mobile: 75 / 96 / 96 / 100 — include with a note ("mobilscoren er trukket ned av hero-bildet, alle andre målinger er grønne")
+- [ ] For iGive: run PageSpeed Insights on `salg.igive.no` and document before writing the section
+
+**Visual content NOT needed for this milestone:**
+- Before/after comparisons (both projects are greenfield builds — see Anti-Features)
+- Video walkthroughs (see Anti-Features)
+- Process diagrams or wireframes (adds scope without proportional value at this stage)
+
+### Per-Project Visual Brief
+
+**Blom Company visual brief:**
+1. Hero: Editorial homepage screenshot — cream/gold design, full product grid, Cormorant Garamond headings visible
+2. Product listing: Lifestyle or Sport collection grid
+3. Product detail: Single product page with variant selector, size guide, image gallery
+4. Mobile: Homepage or product listing at 390px viewport
+5. Lighthouse card: Desktop scores (designed card, not raw screenshot)
+
+Source for all Blom screenshots: `blom-no.vercel.app` (staging) until `blomcompany.com` is live.
+
+**iGive visual brief:**
+1. Hero: `salg.igive.no` homepage — full viewport at 1440px desktop
+2. Product block: One of the three product cards (Digitalt / QR / Fysisk) in detail
+3. CTA/contact section: The "Ta kontakt" section to demonstrate conversion path
+4. Mobile: Homepage at 390px viewport
+5. Performance: Run PageSpeed Insights, design score card with actual numbers
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Content Collection Schema] (src/content/config.ts)
-    +-- required by --> [Listing page /blogg]
-    +-- required by --> [Article pages /blogg/[...slug]]
-    +-- required by --> [ArticleCard component]
-    +-- required by --> [ArticleLayout component]
-    +-- required by --> [Pipeline: generate-article.ts output]
+[projects.ts config schema — extended]
+    +-- required by --> [/prosjekter index page]
+    +-- required by --> [/prosjekter/[slug] page routing]
+    +-- required by --> [per-project SEO metadata]
+    +-- drives --> [project card display on index]
+    +-- drives --> [case study page content]
 
-[ArticleLayout component]
-    +-- required by --> [Article pages /blogg/[...slug]]
-    +-- includes --> [Article JSON-LD]
+[Visual assets — screenshots per project]
+    +-- required by --> [Hero section on case study page]
+    +-- required by --> [Section screenshots component]
+    +-- required by --> [Mobile viewport display]
+    +-- MUST EXIST BEFORE page content is written
+
+[/prosjekter index redesign]
+    +-- required by --> [user discovery path to case study pages]
+    +-- links to --> [/prosjekter/igive]
+    +-- links to --> [/prosjekter/blom-company]
+
+[Case study page template / layout]
+    +-- required by --> [/prosjekter/igive]
+    +-- required by --> [/prosjekter/blom-company]
+    +-- includes --> [CreativeWork JSON-LD]
+    +-- includes --> [BreadcrumbList JSON-LD]
     +-- includes --> [FAQPage JSON-LD]
-    +-- includes --> [OG meta tags]
+    +-- includes --> [per-project <title> + meta description]
 
-[Topic cluster config] (scripts/blog/config.ts)
-    +-- drives --> [Stage 1: discover-topics.ts]
-    +-- determines --> [Editorial direction]
+[FAQPage JSON-LD]
+    +-- requires --> [FAQ section written in page content first]
+    +-- consistent with --> [blog pipeline FAQPage pattern]
 
-[Stage 1: Topic Selection]
-    +-- required by --> [Stage 2: Content Generation]
-    +-- reads --> [Existing articles in blogg/ for duplicate detection]
-    +-- reads/writes --> [topics-queue.json]
-
-[Stage 2: Content Generation]
-    +-- required by --> [Stage 3: Quality Gate]
-    +-- reads --> [SERVICE_PAGES list for internal link instructions]
-    +-- reads --> [Existing article slugs for relatedSlugs selection]
-
-[Stage 3: Quality Gate]
-    +-- gates --> [Stage 4: SEO Optimization]
-    +-- on reject: exits 0, writes job summary, no PR
-
-[Stage 4: SEO Optimization]
-    +-- required by --> [Stage 5: PR Creation]
-    +-- injects --> [Article JSON-LD]
-    +-- injects --> [FAQPage JSON-LD parsed from "Vanlige spørsmål" section]
-
-[Stage 5: PR Creation]
-    +-- depends on --> [GitHub token with PR creation permission]
-    +-- depends on --> [Auto-merge enabled on repo for blogg/* branches]
-    +-- on merge --> [Vercel auto-deploy]
-    +-- on merge --> [Sitemap updates automatically via @astrojs/sitemap]
-    +-- writes --> [topics-queue.json status: "published"]
-
-[RelatedArticles component]
-    +-- reads --> [frontmatter.relatedSlugs]
-    +-- fetches --> [those collection entries at build time]
-    +-- renders --> [ArticleCard for each]
-
-[Hub/cluster pages] (deferred)
-    +-- requires --> [>= 3 articles per cluster]
-    +-- links back to --> [Article pages (spoke articles link to hub)]
+[GEO-optimized copy]
+    +-- requires --> [specific metrics verified (Lighthouse, performance)]
+    +-- requires --> [tech stack confirmed with client / brief]
+    +-- enhances --> [structured data (more citable = more cited)]
 ```
 
 ### Dependency Notes
 
-- **Schema first, everything else second.** The content collection schema is the contract between the pipeline output and the Astro build. Get it right before writing any pipeline code or page components.
-- **Quality gate is the critical path.** If the quality gate has false positives (rejects good content), the pipeline becomes useless. If it has false negatives (passes bad content), the blog publishes spam. Test the quality gate with real Claude output before enabling auto-merge.
-- **topics-queue.json needs careful git handling.** The GitHub Action must `git pull` before updating the queue file, then push the update. Race conditions (two parallel runs) are unlikely at 1/week but the git flow must be correct.
-- **Hub pages depend on content volume.** Do not build category index pages until there are ≥3 articles per cluster. Empty or near-empty hub pages harm rather than help topical authority.
+- **Visual assets are the critical path blocker.** Do not write the case study pages without screenshots in hand. Placeholder images lead to text-and-layout iterations that must be redone when real images arrive. Capture screenshots first, then write content around what the images show.
+- **iGive metrics are unverified.** The current copy says "under ett sekund" but there is no Lighthouse score in the existing project config. Run PageSpeed Insights on `salg.igive.no` before writing the metrics section. If the score is disappointing, reframe honestly.
+- **Blom Company is staging-only.** All visual assets come from `blom-no.vercel.app` until `blomcompany.com` is live. Note this in the page at launch if needed; update live URL when available.
+- **`projects.ts` schema extension.** The current schema has `challenge`, `solution`, `features` as strings and string arrays. The new schema needs: `techStack[]`, `metrics{}`, `screenshots[]`, `faq[]`, `liveUrl`, `slug`. The index page and case study pages both read from this config — changes to the schema affect both consumers.
 
 ---
 
 ## MVP Definition
 
-### Launch With (v1.3 core — 3 phases)
+### Launch With (v1.4 core)
 
-**Phase 1: Astro Blog Infrastructure**
-- [ ] `src/content/config.ts` — content collection schema with all fields
-- [ ] `src/pages/blogg/index.astro` — listing page, sorted by date
-- [ ] `src/pages/blogg/[...slug].astro` — dynamic article pages
-- [ ] `src/components/blogg/ArticleCard.astro` — card for listing page
-- [ ] `src/components/blogg/ArticleLayout.astro` — article template with both JSON-LD schemas
-- [ ] `src/components/blogg/RelatedArticles.astro` — related articles from `relatedSlugs`
-- [ ] At least 2 seed articles (hand-written or manually generated) to verify the infrastructure before automation goes live
+This is the full milestone — all items are required for a meaningful v1.4 release.
 
-**Phase 2: Pipeline Scripts**
-- [ ] `scripts/blog/config.ts` — topic clusters, SERVICE_PAGES list
-- [ ] `scripts/blog/topics-queue.json` — empty initial queue (committed)
-- [ ] `scripts/blog/discover-topics.ts` — topic selection + duplicate detection + queue management
-- [ ] `scripts/blog/generate-article.ts` — Claude Sonnet 4.6 generation with system prompt
-- [ ] `scripts/blog/quality-gate.ts` — two-pass review (Claude + automated checks including LIX)
-- [ ] `scripts/blog/optimize-seo.ts` — schema injection + FAQPage extraction
-- [ ] `scripts/blog/publish.ts` — PR creation + queue status update
-- [ ] `scripts/blog/index.ts` — pipeline orchestrator
-- [ ] `tsx` added to `devDependencies`
+**Infrastructure:**
+- [ ] `projects.ts` schema extended with new fields (techStack, metrics, screenshots, slug, faq)
+- [ ] `/prosjekter` index rebuilt as project grid (Astro, static, no React needed)
+- [ ] `[slug].astro` routing for `/prosjekter/[slug]` (or individual `igive/index.astro` + `blom-company/index.astro` files if sections diverge significantly)
+- [ ] Case study page template with all standard sections
 
-**Phase 3: GitHub Action + Repo Config**
-- [ ] `.github/workflows/blog-generate.yml` — cron + workflow_dispatch
-- [ ] `ANTHROPIC_API_KEY` secret in repo settings
-- [ ] Auto-merge enabled on repo for `blogg/*` branches after CI pass
+**iGive case study (`/prosjekter/igive`):**
+- [ ] Visual assets captured (PageSpeed run, screenshots taken)
+- [ ] Metrics section with verified Lighthouse scores
+- [ ] Tech stack section (Astro 5 / Tailwind 4 / Vercel)
+- [ ] GEO-optimized copy (direct answer intro, specific metrics, named deliverables)
+- [ ] FAQ section (3-4 questions, feeds FAQPage JSON-LD)
+- [ ] Per-project SEO metadata (title, description, OG tags)
+- [ ] CreativeWork + BreadcrumbList JSON-LD
 
-### Add After Validation (trigger: 10+ articles published)
+**Blom Company case study (`/prosjekter/blom-company`):**
+- [ ] Visual assets captured from staging (`blom-no.vercel.app`)
+- [ ] Hero screenshot (editorial homepage)
+- [ ] 3-4 section screenshots
+- [ ] Mobile viewport screenshot
+- [ ] Lighthouse score card (desktop 98 / 96 / 96 / 100)
+- [ ] Tech stack section (Next.js 15 / Shopify Storefront API / Sanity / Tailwind 4 / TypeScript / Vercel)
+- [ ] GEO-optimized copy
+- [ ] Real testimonial from brief (or editorial rewrite in same voice)
+- [ ] FAQ section (3-4 questions, feeds FAQPage JSON-LD)
+- [ ] Per-project SEO metadata
+- [ ] CreativeWork + BreadcrumbList JSON-LD
 
-- [ ] Hub/cluster pages (`/blogg/kategori/[cluster].astro`) — builds topical authority once content volume justifies it
-- [ ] Breadcrumbs on article pages linking back to `/blogg` — minor UX + structured data improvement
-- [ ] Category filter on listing page — useful at 15+ articles, not before
+### Add After Validation
 
-### Future Consideration (v1.4+)
+- [ ] Device mockup frames (phone/browser CSS frames) — if visual quality warrants it
+- [ ] iGive testimonial replacement (real quote) — currently placeholder, unblock when client provides one
+- [ ] Third project card on index (placeholder or "snart" state) — when project #3 exists
 
-- [ ] Cover images per article — if social sharing or visual differentiation becomes a priority
-- [ ] RSS feed — if there's specific distribution demand
-- [ ] Email newsletter — if blog traffic converts and email capture is strategic
-- [ ] Search within blog — only relevant at 50+ articles
+### Future Consideration (v1.5+)
+
+- [ ] Category filtering on `/prosjekter` index — only relevant at 6+ projects
+- [ ] Case study search or filtering by tech stack — only relevant at 10+ projects
+- [ ] Video walkthrough — if a high-impact project justifies the production workflow
+- [ ] Before/after comparisons — for the first redesign project (when it exists)
 
 ---
 
@@ -190,94 +342,62 @@ Features that separate this pipeline from generic AI content farms. These are wh
 
 | Feature | User/SEO Value | Implementation Cost | Priority |
 |---------|----------------|---------------------|----------|
-| Content Collection schema | HIGH | LOW | P1 |
-| Listing page `/blogg` | HIGH | LOW | P1 |
-| Article pages `/blogg/[...slug]` | HIGH | LOW | P1 |
-| ArticleLayout with JSON-LD | HIGH | MEDIUM | P1 |
-| Two-pass quality gate | HIGH | MEDIUM | P1 |
-| GEO structure (direct answer + FAQ) | HIGH | LOW | P1 |
-| Topic cluster config | HIGH | LOW | P1 |
-| GitHub Actions cron | HIGH | MEDIUM | P1 |
-| PR-based publish + auto-merge | MEDIUM | MEDIUM | P1 |
-| Norwegian slug generation | MEDIUM | LOW | P1 |
-| Duplicate detection | MEDIUM | LOW | P1 |
-| Self-promotion cap enforcement | MEDIUM | LOW | P1 |
-| `inLanguage: "nb"` in schema | MEDIUM | LOW | P1 |
-| RelatedArticles component | MEDIUM | LOW | P2 |
-| ArticleCard component | MEDIUM | LOW | P1 |
-| Persistent topic queue | MEDIUM | MEDIUM | P2 |
-| Internal linking to service pages | MEDIUM | LOW | P1 |
-| Author E-E-A-T signals in schema | MEDIUM | LOW | P1 |
-| Hub/cluster pages | HIGH (at scale) | MEDIUM | P3 (deferred) |
-| RSS feed | LOW | LOW | P3 |
-| Pagination | LOW | MEDIUM | P3 |
+| `projects.ts` schema extension | HIGH | LOW | P1 |
+| `/prosjekter` index grid rebuild | HIGH | LOW | P1 |
+| Case study page template | HIGH | MEDIUM | P1 |
+| Visual assets — Blom screenshots | HIGH | LOW (capture work) | P1 |
+| Visual assets — iGive metrics | HIGH | LOW (run PageSpeed) | P1 |
+| GEO-optimized copy (both projects) | HIGH | LOW | P1 |
+| FAQ section + FAQPage JSON-LD | HIGH | LOW | P1 |
+| CreativeWork JSON-LD | MEDIUM | LOW | P1 |
+| BreadcrumbList JSON-LD | MEDIUM | LOW | P1 |
+| Per-project SEO metadata | HIGH | LOW | P1 |
+| Lighthouse score card display | HIGH | LOW | P1 |
+| Tech stack section with rationale | MEDIUM | LOW | P1 |
+| Multiple section screenshots | MEDIUM | MEDIUM | P2 |
+| Mobile viewport screenshot | MEDIUM | LOW | P2 |
+| Desktop browser frame mockup | LOW | LOW | P2 |
+| Device mockup CSS frames | LOW | MEDIUM | P3 |
+| Real iGive testimonial | HIGH | EXTERNAL (client) | P2 (blocked) |
 
 **Priority key:**
-- P1: Required for v1.3 launch
-- P2: Should have, add within Phase 2-3 scope
-- P3: Future — defer until content volume or usage data justifies it
+- P1: Required for v1.4 launch
+- P2: Improve quality, add when P1 scope is stable
+- P3: Future milestone
 
 ---
 
-## Norwegian SEO Specifics
+## Competitor Feature Analysis
 
-The architecture doc covers general SEO well but doesn't address Norway-specific ranking signals.
+Context: Norwegian web agencies with portfolio pages — observed patterns as of early 2026.
 
-| Factor | Norwegian Context | Implementation |
-|--------|-------------------|----------------|
-| **Language declaration** | Norwegian search is almost entirely `nb` (bokmål) or `nn` (nynorsk). Google uses `lang` attribute and `inLanguage` schema field to route articles to Norwegian SERPs. | `lang="nb"` on `<html>`, `inLanguage: "nb"` in Article JSON-LD — both required |
-| **Local SEO cluster** | "seo oslo", "google bedrift", "lokal synlighet" — Norwegian SMBs search with location qualifiers. These cluster articles rank in local pack and organic simultaneously. | Include as one of 4 topic clusters; generate city-specific variants ("nettside oslo", "nettside bergen") as article variants, not separate service pages |
-| **Google AI Overviews (Norway)** | Google AI Overviews are expanding in Norwegian search. The GEO structure (direct answer in first paragraph, FAQ section) is specifically designed to be cited in AI Overviews. | Already in architecture doc — enforce via system prompt + quality gate |
-| **Norwegian readability (LIX)** | Norwegian text has naturally longer words than English (agglutinative tendencies). LIX ≤ 45 is the right ceiling for SMB audience. LIX > 54 is academic text. | Quality gate enforces this. The system prompt instructs "korte avsnitt" (short paragraphs) which helps LIX |
-| **Bokmål vs Nynorsk** | 85-90% of Norwegian web searches use bokmål. Never mix. | System prompt specifies "norsk bokmål" — Claude respects this consistently |
-
----
-
-## What the Architecture Doc Has Right
-
-These decisions in the architecture doc are validated by research — do not second-guess them:
-
-1. **Claude Sonnet 4.6 (not Haiku)** — Norwegian editorial content quality matters. Haiku produces noticeably more generic output in non-English languages. The cost difference ($0.05 vs $0.01/article) is irrelevant at 4 articles/month.
-
-2. **GitHub Actions over Vercel Cron** — Vercel hobby plan's 10s timeout is fatal for a Claude generation pipeline (60-120s). GitHub Actions is the correct tool.
-
-3. **PR always, never direct commit** — Audit trail + CI gate + auto-merge is the correct pattern. Direct commits to main would bypass quality validation and lose the review history.
-
-4. **No `draft` flag** — Redundant gate. The PR is the review mechanism. Confirmed correct.
-
-5. **No cover images in v1** — Adds cost, complexity, and brand risk (AI images for a design agency look generic). Text-first is the right starting point.
-
-6. **Separate `seoTitle` and `title` fields** — This is aligned with SEO best practice. `<title>` tags optimize for SERP CTR (keyword-first format), while H1s optimize for readability and user trust. Conflating them sacrifices one goal for the other.
-
----
-
-## Gaps the Architecture Doc Leaves Open
-
-These require decisions during implementation:
-
-1. **OG image for articles** — The architecture doc doesn't specify Open Graph images for articles. Options: (a) use the existing site `og-image.jpg` for all articles, (b) generate text-on-image OG cards at build time. Option (a) is correct for v1.3 — implementing per-article OG images is Phase 2+ scope.
-
-2. **Breadcrumb JSON-LD on article pages** — `/blogg` → `/blogg/[slug]` breadcrumb path is a standard SEO signal the architecture doc doesn't mention. Low-complexity addition with measurable benefit. Add `BreadcrumbList` JSON-LD in `ArticleLayout.astro`.
-
-3. **Category listing URL structure** — Hub/cluster pages are deferred, but the URL structure decision affects slug design now. Recommend `/blogg/kategori/priser-og-kostnader` as the pattern — establishes the namespace without requiring implementation yet.
-
-4. **How to link to blog from main site** — The architecture doc doesn't specify where on nettup.no the blog is discoverable. The FloatingNav doesn't include `/blogg` (correct per the architecture decision that `/priskalkulator` isn't in nav). Recommend: add blog link to Footer + a "Les fra bloggen" section on `/` or `/tjenester` after 5+ articles exist.
-
-5. **CI check on blog PRs** — What does "CI pass" mean for auto-merge? The architecture doc mentions auto-merge triggers on CI pass but doesn't define what CI checks run. At minimum: `npm run build` must pass. The build will fail if a generated article has malformed frontmatter — this is a useful safety net.
+| Feature | Typical Norwegian agency portfolio | Our approach |
+|---------|-----------------------------------|--------------|
+| Challenge/solution | Generic ("kunden trengte ny nettside") | Specific ("Blom hadde to ulike målgrupper i én merkevare") |
+| Metrics | Absent or vague ("stor økning i trafikk") | Specific Lighthouse scores, named Core Web Vitals |
+| Tech stack | Listed without rationale | Each technology choice explained in one sentence |
+| Testimonials | Often placeholder or absent | Real Blom testimonial available; iGive deferred until real quote |
+| GEO / AI-ready content | Not addressed | Direct-answer intro, FAQ section, CreativeWork schema |
+| Visual depth | Single screenshot or no screenshots | 3-5 screenshots per project, mobile + desktop |
+| Per-project SEO | Generic `/prosjekter` page title | Individual `<title>` and meta per case study URL |
 
 ---
 
 ## Sources
 
-- Architecture doc: `/Users/iverostensen/nettup/.planning/blog-milestone-architecture.md` — pre-resolved decisions (HIGH confidence, primary source)
-- [Astro Content Collections docs](https://docs.astro.build/en/guides/content-collections/) — Content Layer API, Astro 5 loaders (HIGH confidence)
-- [Google's guidance on AI-generated content](https://developers.google.com/search/blog/2023/02/google-search-and-ai-content) — Quality over origin (HIGH confidence)
-- [Whitespark Local Search Ranking Factors 2026](https://whitespark.ca/local-search-ranking-factors/) — GBP signals, review signals (MEDIUM confidence)
-- [Strapi GEO guide 2025](https://strapi.io/blog/generative-engine-optimization-geo-guide) — Direct answer structure, FAQ for citations (MEDIUM confidence, multiple sources agree)
-- [ALM Corp SEO Trends 2026](https://almcorp.com/blog/seo-trends-2026-rank-google-ai-search/) — AI Overview citation patterns (MEDIUM confidence)
-- [1702digital E-E-A-T 2026](https://1702digital.com/blog/latest-seo-trends-2026/) — E-E-A-T as ranking filter (MEDIUM confidence)
-- Codebase analysis: existing Astro 5 stack, `@astrojs/sitemap` integration, Vercel adapter config (HIGH confidence)
+- PROJECT.md (`/Users/iverostensen/nettup/.planning/PROJECT.md`) — milestone scope and existing architecture (HIGH confidence, primary source)
+- `nettup-case-study-brief.md` — Blom Company project facts, tech stack, Lighthouse scores, testimonial (HIGH confidence)
+- `src/config/projects.ts` — existing iGive project schema and data (HIGH confidence)
+- [Webflow: How to write the perfect case study](https://webflow.com/blog/write-the-perfect-case-study) — content section standards (MEDIUM confidence)
+- [New Media Campaigns: Agency website case study guide](https://www.newmediacampaigns.com/blog/tips-for-writing-agency-website-case-studies) — challenge-solution framing, 31.82% stat (MEDIUM confidence, survey-sourced)
+- [Search Engine Land: Mastering GEO in 2026](https://searchengineland.com/mastering-generative-engine-optimization-in-2026-full-guide-469142) — GEO structural patterns (HIGH confidence, 2026 source)
+- [Enrich Labs: GEO Complete Guide 2026](https://www.enrichlabs.ai/blog/generative-engine-optimization-geo-complete-guide-2026) — RAG citation patterns, platform preferences (MEDIUM confidence)
+- [GEO academic paper — Princeton/Georgia Tech/IIT Delhi](https://arxiv.org/pdf/2311.09735) — 30-40% visibility improvement with structured content (HIGH confidence, peer-reviewed)
+- [Averi.ai: GEO Playbook 2026](https://www.averi.ai/blog/the-geo-playbook-2026-getting-cited-by-llms-(not-just-ranked-by-google)) — 300% LLM accuracy with structured data stat, case study citation patterns (MEDIUM confidence)
+- [Schema.org: CreativeWork type](https://schema.org/CreativeWork) — property definitions for structured data (HIGH confidence, authoritative)
+- [IxDF: Visuals for UX case studies](https://www.interaction-design.org/literature/article/how-to-create-visuals-for-your-ux-case-study) — visual content types and roles (MEDIUM confidence)
+- [UXfol.io: UX Case Study Template 2026](https://blog.uxfol.io/ux-case-study-template/) — visual content checklist patterns (MEDIUM confidence)
 
 ---
-*Feature research for: Nettup v1.3 — Automatisk Blogg (automated AI-generated SEO blog)*
-*Researched: 2026-03-06*
+*Feature research for: Nettup v1.4 — Portefolje 2.0 (dedicated case study pages)*
+*Researched: 2026-03-07*

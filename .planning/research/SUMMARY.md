@@ -1,17 +1,17 @@
 # Project Research Summary
 
-**Project:** Nettup v1.3 — Automatisk Blogg
-**Domain:** Automated AI-generated SEO blog pipeline integrated into existing Astro 5 marketing site
-**Researched:** 2026-03-06
+**Project:** Nettup v1.4 — Portefolje 2.0
+**Domain:** Multi-page portfolio / case study system on an existing Astro 5 marketing site
+**Researched:** 2026-03-07
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This milestone adds a fully automated, weekly blog pipeline to an already-complete 5-page marketing site (nettup.no). The approach is: GitHub Actions cron triggers Claude Sonnet 4.6 to generate Norwegian SEO content, which passes a two-pass quality gate before being published to Astro Content Collections via a GitHub PR that auto-merges on CI pass. Vercel then auto-deploys the article live. The architecture is pre-resolved in the existing milestone document, and research confirms all major decisions are sound. Only two new dev dependencies are needed (`tsx`, `@octokit/rest`); the rest of the stack is unchanged.
+This milestone transforms the existing single-page `/prosjekter` section into a scalable multi-page portfolio system with two dedicated case study pages: `/prosjekter/igive` and `/prosjekter/blom-company`. The existing stack (Astro 5, Tailwind 4, Framer Motion, Vercel) handles everything; zero new dependencies are required. The architectural pattern is already proven by the tjenester pages — individual `index.astro` files per project rather than a `[slug].astro` template — and applies here with even more justification given the structural differences between a B2B landing page case study (iGive) and a headless Shopify storefront case study (Blom Company).
 
-The recommended approach prioritizes quality over volume: 1 article/week with a strict editorial process (human-curated topic clusters, dual-gate review: Claude self-review + automated LIX check). This is the critical differentiator from AI content farms. The pipeline produces ~52 articles/year — a legitimate editorial volume that avoids Google's scaled-content spam policies. GEO-optimized structure (direct answer in first paragraph, mandatory FAQ section) targets Norwegian AI Overviews and citation surfaces. All content is in Norwegian bokmål, targeting SMB decision-makers.
+The recommended approach is config-first: extend `projects.ts` before touching any page files, then build shared `_shared/` components, then assemble the individual case study pages, then update the index. This order eliminates the main class of build failures and ensures no page is built against an unstable data model. GEO optimization — structuring copy for AI citation (ChatGPT, Perplexity, Google AI Overviews) — is the single highest-ROI differentiator at minimal implementation cost: specific metrics, factual writing, structured headings, and `CreativeWork` JSON-LD schema.
 
-The primary risks are infrastructure configuration pitfalls, not design risks. Specifically: GITHUB_TOKEN cannot trigger CI on its own PRs (requires a Personal Access Token), auto-merge requires a branch protection rule in addition to the settings toggle, and the Astro 5 Content Layer config file path differs from Astro 4. These are all well-documented failure modes with clear fixes. On the implementation side, splitting Claude article generation into two sequential API calls (content then metadata) eliminates JSON truncation risk. The LIX readability threshold should be set to 55 (not 45 as stated in the architecture doc) to avoid systematic false rejections of legitimate Norwegian technical content.
+The critical risk is the screenshot dependency: Astro's image pipeline fails at build time if a referenced image file is missing. Visual assets for both projects must be captured and committed before case study page files import them. A secondary risk is a cluster of schema issues that are invisible to `npm run build` but silently degrade SEO: BreadcrumbList showing raw slugs instead of human-readable labels, and duplicate Organization entities in JSON-LD. Both are preventable with a specific checklist at page authoring time.
 
 ---
 
@@ -19,165 +19,113 @@ The primary risks are infrastructure configuration pitfalls, not design risks. S
 
 ### Recommended Stack
 
-The existing Astro 5 + Tailwind 4 + React + Vercel stack requires only two new dev dependencies. `@anthropic-ai/sdk` is already in `dependencies` and is reused directly in pipeline scripts. Astro Content Collections are built into Astro 5 — no new package needed.
+The existing stack requires no additions for v1.4. All patterns needed — `<Fragment slot="head">` for JSON-LD, Astro `<Image>` for screenshot optimization, individual page files without `getStaticPaths`, the `image` prop on BaseLayout for per-page OG images — are already in the codebase and proven. The only extension is the `projects.ts` TypeScript interface.
 
 **Core technologies:**
-- `tsx ^4.21.0` (devDependency) — runs TypeScript pipeline scripts in GitHub Actions without a compile step; must be in devDependencies, not cold-downloaded via `npx tsx` (adds 15-30s per CI run and introduces registry failure risk)
-- `@octokit/rest ^22.0.1` (devDependency) — creates GitHub PRs from the pipeline's publish stage; lighter than the full `octokit` bundle (no GraphQL or webhooks needed)
-- `@anthropic-ai/sdk ^0.78.0` — already in `dependencies`; used for both content generation and quality-gate review passes
-- Astro Content Collections (built-in) — typed blog schema via `src/content/config.ts` with Zod; `getCollection('blogg')` at build time
-
-**Critical version note:** In Astro 5, the Content Collections config lives at `src/content.config.ts` (Content Layer API) or `src/content/config.ts` (legacy `type: 'content'` API). The architecture doc uses the legacy path intentionally — this is correct for v1.3 but carries long-term maintenance risk if Astro removes legacy support.
-
-See: `.planning/research/STACK.md`
+- **Astro 5 individual page files** — `/prosjekter/igive/index.astro`, `/prosjekter/blom-company/index.astro`; same routing decision as service pages, documented good outcome in PROJECT.md
+- **`src/config/projects.ts` (extended)** — single source of truth for all project data; drives index grid cards and case study page metadata; add `slug`, `techStack[]`, `metrics[]`, `gallery[]`, `testimonialCompany`, `metaTitle`, `metaDescription`, `publishedAt`; remove `caseStudySection`
+- **`astro:assets` Image** — build-time optimized screenshots; requires static imports at top of `projects.ts`, not dynamic paths
+- **Static OG images in `public/images/og/`** — no Satori needed at 2 projects; justified once portfolio exceeds ~10 projects
+- **`CreativeWork` JSON-LD** — correct schema.org type for "agency built X for client Y"; paired with `BreadcrumbList`; `creator` must reference `@id` of the existing LocalBusiness entity in BaseLayout, not re-declare an inline Organization node
 
 ### Expected Features
 
-The blog must function as a legitimate SEO asset and a quality signal for Nettup as an agency. The architecture doc pre-resolves most feature decisions correctly.
-
 **Must have (table stakes):**
-- Content collection schema (`src/content/config.ts`) — typed contract between pipeline output and Astro build; must be created first, before any page components
-- Blog listing page `/blogg` and dynamic article pages `/blogg/[...slug]` — entry points for all blog traffic
-- `ArticleLayout.astro` wrapping `BaseLayout.astro` with Article + FAQPage JSON-LD — non-negotiable for Google indexing and E-E-A-T signals
-- Separate `seoTitle` (keyword-first `<title>` tag) and `title` (conversational H1) fields — conflating them sacrifices either CTR or readability
-- Norwegian-aware slug generation (ae/oe/aa for ae/o/a) — 8 lines of code, no package needed
-- Two-pass quality gate: Claude self-review (6 criteria, avg ≥7) + automated checks (word count, LIX ≤55, self-promotion cap ≤2, FAQ section presence)
-- GitHub Actions cron (Monday 08:00 UTC) + `workflow_dispatch` — automation is the feature
-- PR-based publish flow — never commit directly to `main`; quality scores visible in PR body as a permanent audit trail
-- `inLanguage: "nb"` in Article JSON-LD — routes content to Norwegian SERPs, not global
-- Human-curated topic clusters (`scripts/blog/config.ts`) — 4 clusters: priser, teknologi, smb-tips, lokal-seo
+- Project hero section — client name, category, tagline, hero screenshot above the fold
+- Challenge and solution sections — decision-makers recognize their own problem before trusting the solution
+- Tech stack display — labeled badge chips with one rationale sentence per major technology choice
+- Outcomes / metrics section — Lighthouse scores and Core Web Vitals (real, verified numbers only; do not publish unverified claims)
+- Client testimonial — real Blom testimonial is available from the brief; iGive testimonial is a known gap (placeholder acceptable at launch)
+- Live site link — prospects verify the work is real
+- Breadcrumb navigation — consistent with service page pattern; drives BreadcrumbList JSON-LD
+- Per-project SEO metadata — title pattern: `[Client] — [Project type] | Nettup`; meta description < 155 characters, outcome-first in Norwegian
+- Updated `/prosjekter` index with peer card grid linking to dedicated pages via slug
 
 **Should have (differentiators):**
-- Persistent topic queue (`topics-queue.json` committed to repo) — prevents re-selecting rejected or already-published topics across weekly runs
-- Internal linking to Nettup service pages — converts blog readers to leads; hardcoded `SERVICE_PAGES` list prevents hallucinated URLs
-- `relatedSlugs` in frontmatter + `RelatedArticles.astro` component — topical authority via cross-linking, fetched at build time
-- Author E-E-A-T signals in Article JSON-LD (`sameAs` LinkedIn URL for Iver Ostensen) — Google E-E-A-T evaluation requires a verifiable real person
-- GEO-optimized structure (direct answer first paragraph, mandatory "Vanlige sporsmal" section) — targets AI Overviews citation surfaces
-- Self-promotion cap: max 2 "Nettup" mentions, enforced in both system prompt and automated quality check
+- Lighthouse score card displayed as a visual element — most Norwegian agencies do not publish scores; publishing Blom's 98/100 desktop is a credibility signal that prose cannot match
+- GEO-optimized copy — direct-answer intro in first 200 words, specific verifiable facts, named deliverables ("Next.js 15" not "Next.js"), factual peer-developer tone
+- Multiple contextual screenshots (3-5 per project) — desktop hero, detail section, mobile viewport
+- Technology rationale — one sentence per major tech choice explaining why it was selected
+- Internal cross-links from service pages to relevant portfolio pages
 
 **Defer (v2+):**
-- Hub/cluster pages (`/blogg/kategori/[cluster].astro`) — trigger after ≥10 articles total, ≥3 per cluster
-- Cover images per article — adds cost and brand risk; text-first is correct for v1.3
-- RSS feed, pagination, comment system, email newsletter, social share buttons
-
-See: `.planning/research/FEATURES.md`
+- Category filtering on index — only relevant at 6+ projects
+- Satori dynamic OG image generation — justified at ~10+ projects
+- `[slug].astro` dynamic routing — reconsider at ~15 structurally identical projects
+- Video walkthroughs — separate production workflow
+- Before/after comparisons — only valid for redesign projects (none exist yet)
+- FAQ sections with FAQPage JSON-LD — Google deprecated FAQPage rich results for most sites in 2023; do not add FAQPage schema to portfolio pages
 
 ### Architecture Approach
 
-The pipeline is a 5-stage Node.js script (`scripts/blog/index.ts`) that runs inside GitHub Actions, completely decoupled from the Astro build. Pipeline scripts live at `scripts/blog/` at the repo root (not inside `src/`) because Vite would attempt to bundle Node.js APIs. Astro reads the generated `.md` files from `src/content/blogg/` at build time only. The two systems share only the filesystem — no runtime coupling.
+The architecture follows a strict separation between the data layer (`projects.ts` config), shared UI components (`_shared/`), and page assembly (`igive/index.astro`, `blom-company/index.astro`). Config holds structured data only; pages own section composition; shared components handle presentational logic. The entire build is static — no React islands, no client-side data fetching on case study pages. This mirrors `src/config/services.ts` → `tjenester/` pages.
 
 **Major components:**
-1. `src/content/config.ts` — Zod schema defining the `blogg` collection; must be created first (everything else depends on it)
-2. `src/components/blogg/ArticleLayout.astro` — wraps `BaseLayout.astro` via named `head` slot; injects Article + FAQPage JSON-LD without duplicating nav, footer, or analytics
-3. `scripts/blog/quality-gate.ts` — two-pass review (Claude self-critique + automated LIX/checks); rejection exits 0 with job summary, never exits 1
-4. `scripts/blog/publish.ts` — creates `blogg/*` branch, commits article, opens PR with quality report body; uses `@octokit/rest` and a PAT (not GITHUB_TOKEN)
-5. `.github/workflows/blog-generate.yml` — cron + manual trigger; requires `ANTHROPIC_API_KEY` secret and a PAT stored as `GH_PAT`
-
-**Build order:** content.config → ArticleCard → ArticleLayout → RelatedArticles → listing/article pages → BaseLayout modification → pipeline scripts (config, queue, 5 stages) → orchestrator → workflow → package.json (`tsx`)
-
-See: `.planning/research/ARCHITECTURE.md`
+1. **`projects.ts` (extended)** — extended interface; populated iGive and Blom entries; `caseStudySection` flag removed
+2. **`_sections/ProjectGrid.astro`** — replaces `ProjectShowcase.astro` on the index; renders all projects as equal peer cards with slug-derived links; `comingSoon` projects show a badge with no link
+3. **`_shared/` components** — `CaseStudyHero`, `ChallengeAndSolution`, `TechStack`, `MetricsGrid`, `VisualGallery`, `CaseStudyTestimonial` — built once, reused by all case study pages
+4. **`igive/index.astro` and `blom-company/index.astro`** — page assemblies that own section ordering, JSON-LD, and `<title>`; section ordering can differ between projects
+5. **BaseLayout integration** — `pageLabels` map updated with new sub-routes; `image` prop passes project-specific OG image path
 
 ### Critical Pitfalls
 
-1. **GITHUB_TOKEN cannot trigger CI on its own PR** — GitHub's loop-prevention blocks `pull_request` workflows on PRs created by `GITHUB_TOKEN`. Without CI running, auto-merge either merges immediately with no safety gate or never merges. Fix: store a PAT as `secrets.GH_PAT` and use it for checkout and `gh pr create`. Must decide before writing the workflow file.
+1. **`ProjectShowcase.astro` breaks silently when `caseStudySection` flag is removed** — `projects.find(p => p.caseStudySection === true)` returns `undefined`; the hero section renders nothing; `npm run build` succeeds but the page is visually blank. Prevention: treat config restructuring and index redesign as one atomic task; never add Blom to the old schema without simultaneously replacing the dependent section.
 
-2. **Auto-merge requires a branch protection rule, not just the settings toggle** — Enabling "Allow auto-merge" in repo settings is not sufficient. A branch protection rule on `main` with at least one required status check must exist, or auto-merge has no condition to wait for and either fires immediately or never. Fix: Settings → Branches → Add rule → require `build` check.
+2. **Screenshot assets are hard build-time dependencies** — Astro's `<Image>` fails the build (`ENOENT`) if a referenced file is missing. Prevention: capture and commit all screenshots before writing any image imports; make `gallery?: ImageMetadata[]` optional with placeholder rendering as a fallback.
 
-3. **JSON truncation from single-call article generation** — Requesting a JSON blob containing a 2000-word `content` field in one Claude call risks hitting the 8K output token limit for Sonnet 4.6. `JSON.parse()` throws on truncated output, crashing the pipeline after consuming API credits. Fix: two sequential API calls — plain Markdown for content, small JSON for metadata. Alternatively, use Anthropic Structured Outputs beta (`anthropic-beta: structured-outputs-2025-11-13`).
+3. **BreadcrumbList schema shows raw URL slugs as labels** — `BaseLayout.astro` `pageLabels` map has no entry for new sub-routes; the fallback returns `"igive"` and `"blom-company"` instead of `"iGive"` and `"Blom Company"`. This is silent at build time but wrong in rich results. Prevention: add both routes to `pageLabels` before each page goes live; verify via schema validator.
 
-4. **LIX threshold 45 causes systematic false rejections of Norwegian technical content** — Norwegian is a compounding language; technical terms like "sokemotoroptimalisering" count as long words. LIX ≤45 is appropriate for fiction, not web-technology content. Fix: raise threshold to ≤55, or treat LIX as a soft warning in the job summary rather than a hard rejection gate.
+4. **Duplicate Organization entity in structured data** — Case study pages that inline a new Organization node instead of referencing the existing `@id` create two separate Organization entities for the same domain. Prevention: use `"creator": {"@id": "https://nettup.no/#business"}` — never re-declare the Organization fields from BaseLayout. Note: the existing tjenester pages use the weaker inline pattern; do not copy it.
 
-5. **`relatedSlugs` hallucination breaks the Astro build** — If Claude returns a slug that does not exist in the collection, `getEntry()` returns `undefined`. Rendering `entry.data.title` on undefined throws and fails the entire build. Fix: `RelatedArticles.astro` must filter out undefined entries. Quality gate must also validate all `relatedSlugs` exist before writing the `.md` file.
-
-Additional pitfalls documented in research: Astro 5 config file path (legacy vs Content Layer), `tsx` must be in devDependencies not fetched via `npx`, `topics-queue.json` update must be committed back on each run, `discover-topics.ts` must guard against `src/content/blogg/` not existing on first run, `getStaticPaths` params key must match `[...slug]` filename exactly.
-
-See: `.planning/research/PITFALLS.md`
+5. **`ProjectTeaser.astro` on homepage is hardcoded** — bypasses `projects.ts` entirely; links to `/prosjekter` not `/prosjekter/igive`. Prevention: update the teaser during Phase 1 config restructuring, not as an afterthought.
 
 ---
 
 ## Implications for Roadmap
 
-The research and architecture doc both agree on a 3-phase structure. The dependency chain makes the order non-negotiable: Astro must know about the collection before any page can query it; pages must exist before the pipeline has a validated output target; the GitHub Action is wired up last because it depends on everything else being correct.
+Based on combined research, a 4-phase structure is appropriate. Each phase unlocks the next; no phase should begin before its predecessor is verified.
 
-### Phase 1: Astro Blog Infrastructure
+### Phase 0: Prerequisites
+**Rationale:** Visual assets are hard build-time dependencies and unverified metrics cannot appear in copy. Both must be resolved before any page files are created — otherwise the build fails and copy requires a full rewrite cycle.
+**Delivers:** Committed screenshots for both projects; verified Lighthouse scores for iGive; Blom Company staging screenshots from `blom-no.vercel.app`
+**Addresses:** Pitfall 5 (missing screenshots block build), GEO accuracy (no fake metrics)
+**Tasks:** Run PageSpeed Insights on `salg.igive.no` and document scores; capture Blom Company screenshots (hero, product listing, product detail, mobile viewport); commit assets to `src/assets/images/`
+**Research flag:** None — operational task, no research questions
 
-**Rationale:** The content collection schema is the contract between the pipeline and the Astro build. Everything — listing pages, article pages, components, and pipeline output — depends on this existing first. This phase has no external dependencies and can be fully verified locally with `astro build` before touching CI or the Anthropic API.
+### Phase 1: Config and Infrastructure Restructuring
+**Rationale:** `projects.ts` is imported by every consumer in this milestone. It must be correct and stable before any component is built against it. The index redesign is bundled here because `ProjectShowcase.astro` breaks silently the moment `caseStudySection` is removed — treating them as separate tasks creates a window where the prosjekter index is visually broken.
+**Delivers:** Extended `Project` interface with `slug`, `techStack`, `metrics`, `gallery`, etc.; `caseStudySection` removed; iGive and Blom entries populated; `/prosjekter` index redesigned as a peer card grid; `ProjectTeaser.astro` updated to use `project.slug` and link to the direct case study URL
+**Addresses:** Pitfall 1 (ProjectShowcase breaks), Pitfall 2 (ProjectTeaser hardcoded), Pitfall 7 (slug/ID mismatch — use `slug` field as the URL key, not `id`)
+**Research flag:** None — direct codebase extension following the `services.ts` pattern
 
-**Delivers:** A working blog with manually-created seed articles, verifiable via `astro build` and `astro preview`. Establishes all URLs, SEO structure, and component boundaries.
+### Phase 2: Individual Case Study Pages
+**Rationale:** Build iGive first to validate the `_shared/` component API and JSON-LD patterns with known data before replicating for Blom Company. Schema decisions must be locked before the first page is committed — the `@id` reference pattern cannot be retrofitted without a schema audit of both pages.
+**Delivers:** Full `_shared/` component library; `igive/index.astro` complete case study; `blom-company/index.astro` complete case study; `CreativeWork` + `BreadcrumbList` JSON-LD on both pages; `pageLabels` updated in BaseLayout; per-project OG images in `public/images/og/`; GEO-optimized Norwegian copy with specific metrics and factual tone
+**Addresses:** Pitfall 3 (BreadcrumbList labels), Pitfall 4 (duplicate Organization entity), Pitfall 6 (meta description < 155 characters)
+**Research flag:** None — architecture fully specified; schema patterns confirmed against schema.org and Google documentation
 
-**Addresses:**
-- Content collection schema (run `astro sync` and verify `.astro/types.d.ts` before proceeding to pages)
-- `/blogg` listing page, `/blogg/[...slug]` dynamic pages
-- `ArticleCard.astro`, `ArticleLayout.astro` with both JSON-LD schemas, `RelatedArticles.astro`
-- `BaseLayout.astro` modification (add `'/blogg': 'Blogg'` to `pageLabels`)
-- At least 2 seed articles to validate the full build path end-to-end
-
-**Avoids:** Pitfall 1 (config location — run `astro sync` immediately after creating config), Pitfall 9 (getStaticPaths params key — verify with `astro build` not just `astro dev`), Pitfall 10 (relatedSlugs undefined guard in `RelatedArticles.astro`)
-
-**Research flag:** Standard patterns — Astro Content Collections and `getStaticPaths` are well-documented. No phase research needed.
-
----
-
-### Phase 2: Pipeline Scripts
-
-**Rationale:** Scripts can be developed and tested locally once Phase 1 infrastructure exists. The `tsx` dev dependency, all 5 pipeline stages, and the orchestrator are self-contained Node.js code with no GitHub Actions involvement yet. A manual `npx tsx scripts/blog/index.ts` run verifies the pipeline before wiring the cron.
-
-**Delivers:** A runnable pipeline triggerable manually. Includes the quality gate with calibrated LIX threshold, topic queue management, and PR creation logic.
-
-**Uses:**
-- `tsx` (devDependency) — installed via `npm install -D tsx`, not cold-downloaded
-- `@octokit/rest` (devDependency) — PR creation in `publish.ts`
-- `@anthropic-ai/sdk` (already in dependencies) — generation and review passes
-
-**Implements:**
-- `scripts/blog/config.ts` — 4 topic clusters, `SERVICE_PAGES` list
-- `scripts/blog/discover-topics.ts` — with `fs.existsSync` guard for first run against empty directory
-- `scripts/blog/generate-article.ts` — two API calls (content then metadata); Norwegian slugify (no package)
-- `scripts/blog/quality-gate.ts` — LIX threshold ≤55; exit 0 with job summary on reject
-- `scripts/blog/optimize-seo.ts` — FAQPage extraction and Article + FAQPage schema injection
-- `scripts/blog/publish.ts` — branch, commit, PR via `@octokit/rest`; updates queue status
-- `scripts/blog/index.ts` — top-level try/catch on the entire pipeline; all failures exit 0 with job summary
-
-**Avoids:** Pitfall 3 (JSON truncation — two-call generation), Pitfall 4 (LIX threshold — 55 not 45), Pitfall 5 (`tsx` in devDependencies), Pitfall 6 (email spam — exit 0 always), Pitfall 7 (directory non-existence — `fs.existsSync` guard), Pitfall 10 (slug validation in quality gate before writing `.md`)
-
-**Research flag:** The two-call API pattern and Anthropic Structured Outputs are documented but untested in this codebase. Recommended: run the pipeline manually against a real topic before enabling the cron. Calibrate LIX threshold against 3-5 sample Norwegian tech articles before production use.
-
----
-
-### Phase 3: GitHub Actions and Repo Configuration
-
-**Rationale:** Last phase because it orchestrates everything from Phase 1 and Phase 2. The workflow cannot be verified without the pipeline scripts and Astro infrastructure being correct. This phase also involves non-code configuration (repo secrets, branch protection, auto-merge settings) that must be set up in a specific sequence.
-
-**Delivers:** Fully automated weekly pipeline. Articles generated Monday morning, pass quality gate, PR created, CI runs, auto-merges on green, Vercel deploys, article live within ~2 minutes of merge.
-
-**Addresses:**
-- `.github/workflows/blog-generate.yml` — cron + `workflow_dispatch`; explicit `permissions: contents: write, pull-requests: write`
-- `ANTHROPIC_API_KEY` secret in repo settings
-- `GH_PAT` secret (PAT with `contents: write` + `pull-requests: write` scope only) — required for CI to trigger on pipeline PRs
-- Branch protection rule on `main` — require `build` check to pass before auto-merge fires
-- Auto-merge enabled at repo level
-
-**Avoids:** Pitfall 1 (GITHUB_TOKEN blocks CI — use PAT instead), Pitfall 2 (auto-merge without branch protection rule)
-
-**Research flag:** PAT setup and branch protection rules are standard GitHub procedures — no research needed. Verify on first test run: create a manual PR using the PAT and confirm the CI workflow appears in the PR Checks tab before enabling the cron.
-
----
+### Phase 3: Cross-Linking and SEO Pass
+**Rationale:** Internal links from service pages to portfolio pages cannot be written until the destination pages exist and their canonical URLs are confirmed. This is a deliberate final pass across the whole site, not an afterthought.
+**Delivers:** Link from `/tjenester/nettbutikk` to Blom Company case study; link from `/tjenester/nettside` to iGive case study; GEO copy review across both case study pages; sitemap verification confirming new routes appear after first deploy
+**Addresses:** Pitfall 8 (no internal cross-links from tjenester pages)
+**Research flag:** None — content editing task with clear targets
 
 ### Phase Ordering Rationale
 
-- Schema must exist before pages (`getCollection` fails without it)
-- Pages must exist before pipeline scripts have a valid output target
-- Pipeline scripts must be correct before the GitHub Action runs them weekly
-- The "Looks Done But Isn't" checklist in `PITFALLS.md` provides a concrete verification sequence for each phase — follow it before marking any phase complete
+- Phase 0 before Phase 1: screenshots and verified metrics are prerequisites for writing content; capturing them up front eliminates rebuild cycles
+- Phase 1 before Phase 2: the `projects.ts` types and index redesign must be stable before any component imports from them; the `caseStudySection` silent breakage would corrupt staging reviews if left unresolved
+- iGive before Blom within Phase 2: iGive data already exists and is partially written; validates the shared component API with known-good data before applying it to the new Blom entry
+- Phase 3 last: cross-links reference final canonical URLs; linking before pages exist risks dead links in production
 
 ### Research Flags
 
-Phases needing deeper research during planning: None identified. The architecture doc pre-resolves all major decisions and research confirms them.
+No phases require `/gsd:research-phase` during planning. All four research files are HIGH confidence based on direct codebase analysis and authoritative documentation. The architecture is pre-resolved.
 
-Phases where standard patterns apply (skip research-phase):
-- **Phase 1:** Astro Content Collections, `getStaticPaths`, slot-based layout composition — all established Astro 5 patterns with official documentation
-- **Phase 2:** Node.js script patterns, Anthropic SDK usage — already proven in `/api/chat.ts`; the two-call generation pattern is straightforward
-- **Phase 3:** GitHub Actions workflow structure, branch protection — standard GitHub features
+Phases with standard patterns:
+- **Phase 0:** Screenshot capture is operational
+- **Phase 1:** Config extension mirrors the proven `services.ts` pattern
+- **Phase 2:** Architecture fully specified; schema patterns validated
+- **Phase 3:** Internal linking is content editing
 
 ---
 
@@ -185,50 +133,49 @@ Phases where standard patterns apply (skip research-phase):
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Official npm and Astro docs; `package.json` inspected directly; versions confirmed current as of 2026-03-06 |
-| Features | HIGH | Architecture doc (primary source) validated by research; Norwegian SEO specifics from multiple consistent sources; feature deferrals are conservative and correct |
-| Architecture | HIGH | Direct codebase inspection of `BaseLayout.astro`, `astro.config.mjs`, `package.json`, `tsconfig.json`, `.github/workflows/ci.yml`; no guesswork |
-| Pitfalls | HIGH | GITHUB_TOKEN/CI trigger issue confirmed via GitHub community docs; auto-merge branch protection confirmed via GitHub official docs; LIX calibration from formula documentation; JSON truncation from Anthropic token limit documentation |
+| Stack | HIGH | Zero new dependencies — all patterns already in the codebase and confirmed working; direct code inspection |
+| Features | HIGH | Table stakes grounded in case study content standards; GEO patterns from peer-reviewed academic source plus 2026 practitioner guides; anti-features identified with clear rationale |
+| Architecture | HIGH | Based entirely on direct codebase analysis; mirrors the tjenester pattern with a documented good outcome in PROJECT.md |
+| Pitfalls | HIGH | All critical pitfalls derived from reading actual source files — `ProjectShowcase.astro`, `ProjectTeaser.astro`, `BaseLayout.astro`; confirmed behavior, not speculation |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **OG image for individual articles** — Architecture doc does not specify. Correct v1.3 decision: reuse site-wide `og-image.jpg` for all articles. Per-article OG cards are Phase 2+ scope. Decide and document in Phase 1 scope.
+- **iGive Lighthouse scores are unverified:** The existing `Results.astro` shows hardcoded "95" but this has not been measured against the current live site. Run PageSpeed Insights on `salg.igive.no` before writing the metrics section. If the score has changed, update both the case study copy and `Results.astro`.
 
-- **BreadcrumbList JSON-LD on article pages** — Not in the architecture doc but is a standard SEO signal and low-cost addition in `ArticleLayout.astro`. Recommend including in Phase 1 scope alongside the Article and FAQPage schemas.
+- **Blom Company live domain timing:** All visual assets come from `blom-no.vercel.app` staging. If `blomcompany.com` is not live before the case study publishes, the live site link and `url` field should point to staging with a note, and be updated at launch.
 
-- **Blog discoverability from main site** — No `/blogg` link is in FloatingNav (correct — it would clutter nav before there is enough content). Recommendation: add blog link to Footer immediately; add a "Les fra bloggen" section on `/` or `/tjenester` after 5+ articles exist. Not blocking for v1.3 launch.
-
-- **CI check name for branch protection rule** — Branch protection rule must reference the exact job name from `ci.yml`. Confirm the job name (likely `build`) before configuring the branch protection rule in Phase 3.
-
-- **Quality gate calibration** — The LIX threshold change (45 to 55) and Claude scoring prompts should be validated against real Norwegian web articles before enabling the production cron. Manual test run recommended immediately after Phase 2 is complete.
+- **iGive testimonial is placeholder:** No real client quote exists for iGive. Launch with a placeholder and treat the real quote as a post-launch update. The Blom testimonial is real and available — use it immediately.
 
 ---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- `/Users/iverostensen/nettup/.planning/blog-milestone-architecture.md` — pre-resolved architectural decisions
-- Codebase: `package.json`, `astro.config.mjs`, `tsconfig.json`, `src/layouts/BaseLayout.astro`, `.github/workflows/ci.yml` — direct inspection
-- [Astro Content Collections docs](https://docs.astro.build/en/guides/content-collections/) — Content Layer API, Astro 5 config path
-- [@anthropic-ai/sdk on npm](https://www.npmjs.com/package/@anthropic-ai/sdk) — version 0.78.0 confirmed
-- [@octokit/rest on npm](https://www.npmjs.com/package/@octokit/rest) — version 22.0.1 confirmed
-- [tsx on npm](https://www.npmjs.com/package/tsx) — version 4.21.0 confirmed
-- [GitHub Docs: auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request) — branch protection requirement confirmed
-- [Anthropic Structured Outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) — JSON schema compliance beta, Sonnet 4.5+
+- `src/config/projects.ts` — existing interface and iGive data
+- `src/config/services.ts` — reference pattern for config-driven pages
+- `src/layouts/BaseLayout.astro` — `pageLabels` map, BreadcrumbList generation, `image` prop behavior
+- `src/pages/prosjekter/_sections/ProjectShowcase.astro` — `caseStudySection` discriminator pattern confirmed
+- `src/pages/_home/ProjectTeaser.astro` — hardcoded iGive content confirmed, no `projects.ts` usage
+- `src/pages/tjenester/nettside/index.astro` — individual file pattern and JSON-LD injection confirmed
+- `.planning/PROJECT.md` — milestone scope and routing decision log
+- `nettup-case-study-brief.md` — Blom Company data: real testimonial, tech stack, Lighthouse scores, staging URL
+- [schema.org/CreativeWork](https://schema.org/CreativeWork) — property definitions
+- [Astro Routing Docs](https://docs.astro.build/en/guides/routing/) — individual files vs `[slug].astro` decision criteria
+- [Google Structured Data Docs — BreadcrumbList](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb) — item name must be human-readable
+- [Google FAQPage deprecation (Aug 2023)](https://developers.google.com/search/blog/2023/08/howto-faq-changes) — FAQPage rich results deprecated for most sites
 
 ### Secondary (MEDIUM confidence)
-- [GitHub community: GITHUB_TOKEN PR workflow trigger](https://github.com/orgs/community/discussions/65321) — PAT workaround confirmed
-- [peter-evans/create-pull-request #48](https://github.com/peter-evans/create-pull-request/issues/48) — PAT workaround documented
-- [Strapi GEO guide 2025](https://strapi.io/blog/generative-engine-optimization-geo-guide) — direct answer structure, FAQ for citations
-- [Whitespark Local Search Ranking Factors 2026](https://whitespark.ca/local-search-ranking-factors/) — local SEO signals
-- [LIX readability formula](https://readabilityformulas.com/the-lix-readability-formula/) — threshold scale and Norwegian applicability
+- [Search Engine Land: Mastering GEO in 2026](https://searchengineland.com/mastering-generative-engine-optimization-in-2026-full-guide-469142) — GEO structural patterns
+- [GEO academic paper — Princeton/Georgia Tech/IIT Delhi](https://arxiv.org/pdf/2311.09735) — 30-40% AI visibility improvement with structured content (peer-reviewed)
+- [Static OG images in Astro](https://arne.me/blog/static-og-images-in-astro/) — static file vs Satori tradeoffs
+- [Webflow: How to write the perfect case study](https://webflow.com/blog/write-the-perfect-case-study) — case study content section standards
 
-### Tertiary (LOW confidence — validate during implementation)
-- ALM Corp SEO Trends 2026 — AI Overview citation patterns
-- 1702digital E-E-A-T 2026 — E-E-A-T as ranking filter
+### Tertiary (LOW confidence)
+- GEO practitioner reports — "300% LLM accuracy with structured data" stat; consistent with academic finding but single-source
 
 ---
-*Research completed: 2026-03-06*
+
+*Research completed: 2026-03-07*
 *Ready for roadmap: yes*
