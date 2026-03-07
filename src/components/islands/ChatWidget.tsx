@@ -32,6 +32,12 @@ const WELCOME_MESSAGE: ChatMessage = {
   content: 'Hei! Jeg er Nettup sin AI-assistent. Hvordan kan jeg hjelpe deg i dag?',
 };
 
+const QUICK_REPLIES = [
+  'Hva koster en nettside?',
+  'Hva tilbyr dere?',
+  'Hvordan kommer jeg i gang?',
+];
+
 // Inline SVG icons to avoid icon library dependency
 function ChatBubbleIcon({ className }: { className?: string }) {
   return (
@@ -174,6 +180,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [showTeaser, setShowTeaser] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [leadFormData, setLeadFormData] = useState<LeadFormData>({
@@ -182,6 +189,8 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     melding: '',
   });
   const [leadFormError, setLeadFormError] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -205,7 +214,10 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     }
 
     const showTimer = setTimeout(() => {
-      if (!isOpen) setShowTeaser(true);
+      if (!isOpen) {
+        setShowTeaser(true);
+        setHasUnread(true);
+      }
     }, TEASER_SHOW_DELAY);
 
     return () => clearTimeout(showTimer);
@@ -247,13 +259,51 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
+  const fetchSuggestions = useCallback(async (currentMessages: ChatMessage[]) => {
+    const hasExchange = currentMessages.some((m) => m.role === 'user');
+    if (!hasExchange) return;
+
+    setIsFetchingSuggestions(true);
+    try {
+      const res = await fetch('/api/suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: currentMessages.filter(
+            (m) => !(m.role === 'assistant' && m.content === WELCOME_MESSAGE.content)
+          ),
+          currentPage,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { suggestions?: string[] };
+        setSuggestions(data.suggestions ?? []);
+      }
+    } catch {
+      // Suggestions are enhancement-only — fail silently
+    } finally {
+      setIsFetchingSuggestions(false);
+    }
+  }, [currentPage]);
+
+  // After streaming completes, fetch suggestions
+  useEffect(() => {
+    if (!isStreaming && messages.length > 1) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === 'assistant' && lastMsg.content) {
+        fetchSuggestions(messages);
+      }
+    }
+  }, [isStreaming]); // intentionally only trigger on isStreaming change
+
   const handleBubbleClick = useCallback(() => {
     setShowTeaser(false);
+    setHasUnread(false);
     setIsOpen((prev) => !prev);
   }, []);
 
-  const sendMessage = useCallback(async () => {
-    const trimmed = input.trim();
+  const sendMessage = useCallback(async (overrideText?: string) => {
+    const trimmed = (overrideText !== undefined ? overrideText : input).trim();
     if (!trimmed || isStreaming) return;
 
     const userMessage: ChatMessage = { role: 'user', content: trimmed };
@@ -261,6 +311,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
 
     setMessages(updatedMessages);
     setInput('');
+    setSuggestions([]);
     setIsStreaming(true);
 
     // Add empty assistant placeholder
@@ -272,19 +323,20 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: updatedMessages.filter((m) => m.content !== WELCOME_MESSAGE.content || m.role !== 'assistant').length > 0
-            ? updatedMessages
-            : [userMessage],
+          messages: updatedMessages.filter(
+            (m) => !(m.role === 'assistant' && m.content === WELCOME_MESSAGE.content)
+          ),
           currentPage,
         }),
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({})) as { error?: string };
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = {
             role: 'assistant',
-            content: 'Beklager, noe gikk galt. Prøv igjen.',
+            content: errorData.error ?? 'Beklager, noe gikk galt. Prøv igjen.',
           };
           return updated;
         });
@@ -582,6 +634,36 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
 
             {/* Input area */}
             <div className="border-t border-white/10 px-4 py-3">
+              {messages.length === 1 && !isStreaming && (
+                <div className="flex flex-wrap gap-2 pb-3">
+                  {QUICK_REPLIES.map((reply) => (
+                    <button
+                      key={reply}
+                      onClick={() => sendMessage(reply)}
+                      className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-text-muted transition-colors hover:border-brand/40 hover:bg-brand/10 hover:text-text"
+                    >
+                      {reply}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {/* AI-generated suggestions */}
+              {suggestions.length > 0 && !isStreaming && !isFetchingSuggestions && (
+                <div className="flex flex-wrap gap-2 pb-3">
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => {
+                        setSuggestions([]);
+                        sendMessage(s);
+                      }}
+                      className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-text-muted transition-colors hover:border-brand/40 hover:bg-brand/10 hover:text-text"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -594,7 +676,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                   className="flex-1 rounded-xl border border-white/10 bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted focus:border-brand focus:outline-none disabled:opacity-50"
                 />
                 <button
-                  onClick={sendMessage}
+                  onClick={() => sendMessage()}
                   disabled={!input.trim() || isStreaming}
                   aria-label="Send melding"
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-surface transition-colors hover:bg-brand-light disabled:opacity-50 disabled:cursor-not-allowed"
@@ -625,6 +707,9 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
           'focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-surface'
         )}
       >
+        {hasUnread && !isOpen && (
+          <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-red-500 ring-2 ring-surface" />
+        )}
         <AnimatePresence mode="wait" initial={false}>
           {isOpen ? (
             <motion.span
