@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Portefølje 2.0
-status: planning
+status: ready_to_plan
 last_updated: "2026-03-07T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,25 +18,25 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.4 Portefølje 2.0 — defining requirements
+**Current focus:** v1.4 Portefølje 2.0 — Phase 20 ready to plan
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 20 of 23 (Innholdsforutsetninger)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-07 — Milestone v1.4 started
+Status: Ready to plan
+Last activity: 2026-03-07 — Roadmap created for v1.4 (4 phases, 20–23)
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1 (v1.3)
-- Average duration: 2 min
-- Total execution time: 2 min
+- Total plans completed: 5 (v1.3)
+- Average duration: ~7 min
+- Total execution time: ~35 min
 
-**By Phase:**
+**By Phase (v1.3):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
@@ -48,39 +48,25 @@ Progress: [██████████] 100%
 
 ### Decisions
 
-Key decisions from research to carry into planning:
+Key decisions from v1.4 research to carry into planning:
 
-- [17-01]: title vs seoTitle are distinct schema fields — title for H1 (conversational), seoTitle for <title> tag (keyword-first)
-- [17-01]: RelatedArticles renders nothing (not even heading) when related array is empty — prevents orphaned headings
-- [17-02]: No @tailwindcss/typography — manual .prose-article CSS class used to avoid new dependency
-- [17-02]: Article page injects its own BreadcrumbList JSON-LD via head slot for accurate article title in breadcrumb position 3
-- [17-02]: FAQPage JSON-LD is conditional — only emitted when faq frontmatter field has items
-- [v1.3]: Content collection config at `src/content/config.ts` (legacy path, intentional for v1.3)
-- [v1.3]: Run `astro sync` immediately after creating content config — before any page components
-- [v1.3]: LIX threshold ≤ 55 (not 45) — Norwegian technical content needs the wider margin
-- [v1.3]: Two-call Claude API pattern (content then metadata) — prevents JSON truncation at ~2000 words
-- [18-01]: CLAUDE_MODEL = 'claude-sonnet-4-6' — single constant in config.ts, referenced by all pipeline stages
-- [18-01]: buildFrontmatter writes date/readTime only (not publishDate/estimatedReadTime) to match live Zod schema
-- [18-01]: relatedSlugs filtered post-generation against disk — prevents broken internal references
-- [18-02]: ArticleResult defined in generate-article.ts (not config.ts) — import from the correct module
-- [18-02]: Pass 2 automated checks skipped on Pass 1 failure — avoids cost for already-rejected articles
-- [18-02]: fileURLToPath + '../../../' anchors repo root for simple-git, avoids cwd dependency
-- [v1.3]: GITHUB_TOKEN cannot trigger CI on PRs — must use PAT stored as `secrets.GH_PAT`
-- [v1.3]: Branch protection rule required on `main` for auto-merge to wait for CI
-- [19-01]: PAT used for checkout in blog-generate.yml — GITHUB_TOKEN cannot trigger CI on its own PRs (GitHub loop-prevention)
-- [19-01]: Branch protection + auto-merge blocked on GitHub Free for private repos — workflow file is complete and ready, features activate on Pro or public repo
-- [19-01]: `gh repo edit --enable-auto-merge` exits 0 even when feature is unavailable — must verify via GraphQL to detect silent failure
+- [v1.4 research]: Screenshots must be committed BEFORE any Astro `<Image>` imports on case study pages — hard build-time dependency (ENOENT on missing files)
+- [v1.4 research]: `caseStudySection` flag removal must be atomic with `ProjectShowcase.astro` removal — silent blank page otherwise
+- [v1.4 research]: Use `"creator": {"@id": "https://nettup.no/#business"}` in CreativeWork JSON-LD — never re-declare Organization fields inline
+- [v1.4 research]: `ProjectTeaser.astro` on homepage is hardcoded — must update to use `project.slug` in Phase 21
+- [v1.4 research]: BreadcrumbList shows raw slugs if `pageLabels` not updated — fix in Phase 21 before pages go live
+- [v1.4 research]: iGive Lighthouse scores in existing `Results.astro` are hardcoded "95" — must remeasure against live `salg.igive.no` before writing metrics section
 
 ### Pending Todos
 
 - Replace placeholder testimonials in `src/config/testimonials.ts` before launch traffic (carried from v1.0)
 - Verify Shopify platform fee figure before publishing on nettbutikk page (research flag)
 - Verify Nettup's Shopify Partner status before writing nettbutikk credibility copy (research flag)
-- Manual test run of pipeline against real topic recommended before enabling production cron (calibrate LIX)
+- iGive: real testimonial quote requires client outreach — launch with placeholder, update post-launch
 
 ### Blockers/Concerns
 
-(none — v1.3 shipped, pipeline running in production)
+- Blom Company staging URL (`blom-no.vercel.app`) is the source for screenshots — if live domain goes up before publish, update `url` field in projects.ts and live site link
 
 ### Quick Tasks Completed
 
@@ -94,6 +80,6 @@ Key decisions from research to carry into planning:
 
 ## Session Continuity
 
-Last session: 2026-03-06
-Stopped at: Completed 19-01-PLAN.md (blog-generate.yml workflow, repo secrets, auto-merge attempt — v1.3 milestone complete)
+Last session: 2026-03-07
+Stopped at: v1.4 roadmap created — Phase 20 ready to plan
 Resume file: None
