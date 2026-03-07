@@ -1,0 +1,207 @@
+---
+import { projects, type Project } from '@/config/projects';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Card from '@/components/ui/Card.astro';
+import Button from '@/components/ui/Button.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={project.metaTitle} description={project.metaDescription}>
+  <main>
+    <!-- Section 1: Breadcrumbs -->
+    <div class="container pt-8">
+      <Breadcrumbs
+        items={[
+          { label: 'Hjem', href: '/' },
+          { label: 'Prosjekter', href: '/prosjekter' },
+          { label: project.name },
+        ]}
+      />
+    </div>
+
+    <!-- Section 2: Opening summary -->
+    <Section>
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="reveal-on-scroll inline-block rounded-full bg-brand/10 px-4 py-1.5 text-sm font-medium text-brand mb-4">
+          {project.category} · {project.type}
+        </span>
+        <h1 class="reveal-on-scroll reveal-stagger-1 text-4xl font-bold md:text-5xl">{project.name}</h1>
+        <p class="reveal-on-scroll reveal-stagger-2 mt-4 text-xl text-text-muted">{project.tagline}</p>
+        {project.summary && (
+          <p class="reveal-on-scroll reveal-stagger-3 mt-6 text-base text-text-muted leading-relaxed">
+            {project.summary}
+          </p>
+        )}
+      </div>
+    </Section>
+
+    <!-- Section 3: Hero image -->
+    <div class="reveal-on-scroll mx-auto max-w-6xl px-4 pb-16 md:px-8">
+      <div class="overflow-hidden rounded-2xl border border-white/10">
+        <Image
+          src={project.image}
+          alt={project.imageAlt}
+          width={1600}
+          quality={85}
+          class="w-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- Section 4: Utfordring -->
+    {project.challenge && (
+      <Section>
+        <div class="mx-auto max-w-3xl">
+          <SectionHeader title="Utfordringen" />
+          <p class="reveal-on-scroll mt-6 text-text-muted leading-relaxed">{project.challenge}</p>
+        </div>
+      </Section>
+    )}
+
+    <!-- Section 5: Løsning (with featuresImage inline) -->
+    {project.solution && (
+      <Section background="raised">
+        <div class="mx-auto max-w-3xl">
+          <SectionHeader title="Løsningen" />
+          <p class="reveal-on-scroll mt-6 text-text-muted leading-relaxed">{project.solution}</p>
+        </div>
+        {project.featuresImage && (
+          <div class="reveal-on-scroll mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl border border-white/10">
+            <Image
+              src={project.featuresImage.src}
+              alt={project.featuresImage.alt}
+              width={1600}
+              quality={85}
+              class="w-full object-cover"
+            />
+          </div>
+        )}
+      </Section>
+    )}
+
+    <!-- Section 6: Tech stack -->
+    {project.techStack.length > 0 && (
+      <Section>
+        <div class="mx-auto max-w-3xl">
+          <SectionHeader title="Teknologi" />
+          <div class="reveal-on-scroll mt-6 flex flex-wrap gap-3">
+            {project.techStack.map((tech) => (
+              <span class="rounded-full bg-brand/10 px-4 py-1.5 text-sm font-medium text-brand">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Section>
+    )}
+
+    <!-- Section 7: Features -->
+    {project.features && project.features.length > 0 && (
+      <Section background="raised">
+        <div class="mx-auto max-w-3xl">
+          <SectionHeader title="Leveranser" />
+          <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+            {project.features.map((feature, i) => (
+              <li class={`reveal-on-scroll reveal-stagger-${(i % 4) + 1} flex items-start gap-3`}>
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-text-muted">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+    )}
+
+    <!-- Section 8: Metrics block -->
+    {project.metrics && (
+      <Section>
+        <div class="mx-auto max-w-4xl">
+          <SectionHeader title="Resultater" />
+          <p class="reveal-on-scroll mt-2 text-center text-sm text-text-muted">
+            Målt med Google PageSpeed Insights
+          </p>
+          <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {[
+              { label: 'Performance', value: project.metrics.performance },
+              { label: 'Accessibility', value: project.metrics.accessibility },
+              { label: 'Best Practices', value: project.metrics.bestPractices },
+              { label: 'SEO', value: project.metrics.seo },
+            ].map((m, i) => (
+              <Card padding="lg" class={`reveal-on-scroll reveal-stagger-${i + 1} text-center`}>
+                <span class="block text-5xl font-bold text-brand">{m.value}</span>
+                <span class="mt-2 block text-sm text-text-muted">{m.label}</span>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </Section>
+    )}
+
+    <!-- Section 9: Testimonial -->
+    {project.testimonial && (
+      <Section background="raised">
+        <Card padding="lg" class="reveal-on-scroll mx-auto max-w-3xl">
+          <blockquote class="text-xl italic text-text leading-relaxed">
+            «{project.testimonial.quote}»
+          </blockquote>
+          <p class="mt-4 text-text-muted">{project.testimonial.result}</p>
+          <footer class="mt-6">
+            <p class="font-semibold text-text">{project.testimonial.name}</p>
+            <p class="text-sm text-text-muted">{project.testimonial.title}, {project.testimonial.company}</p>
+          </footer>
+        </Card>
+      </Section>
+    )}
+
+    <!-- Section 10: CTA -->
+    <Section>
+      <div class="reveal-on-scroll mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold">Se prosjektet live</h2>
+        <p class="mt-4 text-text-muted">
+          Nysgjerrig på hva vi kan bygge for deg? Ta kontakt for en uforpliktende prat.
+        </p>
+        <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center gap-2 font-medium text-brand transition-colors hover:text-brand-light"
+            >
+              Besøk {project.name}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="h-4 w-4 transition-transform group-hover:translate-x-1"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          )}
+          <Button href="/kontakt" variant="secondary">Ta kontakt</Button>
+        </div>
+      </div>
+    </Section>
+  </main>
+</BaseLayout>
