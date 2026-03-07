@@ -154,6 +154,16 @@ body {
    REDUCED MOTION
    ============================================ */
 
+/* During page navigation, suppress reveal-on-scroll CSS transitions so elements
+   instantly jump to their revealed state. This prevents the compound-opacity
+   problem where (VTA fade-in opacity) × (element transition opacity) makes
+   content semi-transparent during the crossfade — the "seeing the HTML" flicker.
+   data-astro-transition is set on <html> for the full VTA duration and removed
+   on finished, so scroll-reveal transitions re-enable normally after navigation. */
+[data-astro-transition] .reveal-on-scroll {
+  transition: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,

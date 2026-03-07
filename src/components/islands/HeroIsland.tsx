@@ -1,10 +1,24 @@
+import { useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { heroContainer, fadeUp, springPop, fadeIn, springs } from '@/lib/animation';
 import RotatingText from './RotatingText';
 import HeroDeliveryAnimation from './HeroDeliveryAnimation';
 
+// Persists across React mount/unmount cycles for the JS module's lifetime.
+// On first load hasHydrated is false → entrance animation plays as designed.
+// On subsequent navigations (ClientRouter re-mounts the island) it is true →
+// skip initial="hidden" so Framer Motion doesn't hide then re-animate content
+// that was already visible in the server-rendered HTML during the VTA crossfade.
+let hasHydrated = false;
+
 export default function HeroIsland() {
   const shouldReduceMotion = useReducedMotion();
+  // Computed once at mount — module-level flag means this is false on navigation re-mounts
+  const shouldAnimate = !hasHydrated;
+
+  useEffect(() => {
+    hasHydrated = true;
+  }, []);
 
   if (shouldReduceMotion) {
     return (
@@ -91,7 +105,7 @@ export default function HeroIsland() {
           <motion.div
             className="flex flex-col justify-center text-center lg:text-left"
             variants={heroContainer}
-            initial="hidden"
+            initial={shouldAnimate ? 'hidden' : false}
             animate="visible"
           >
             <motion.h1
@@ -135,7 +149,7 @@ export default function HeroIsland() {
           <motion.div
             className="hidden items-center justify-center lg:flex lg:justify-end"
             variants={springPop}
-            initial="hidden"
+            initial={shouldAnimate ? 'hidden' : false}
             animate="visible"
             transition={{ ...springs.gentle, delay: 0.35 }}
             aria-hidden="true"
@@ -150,7 +164,7 @@ export default function HeroIsland() {
       <motion.div
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
         variants={fadeIn}
-        initial="hidden"
+        initial={shouldAnimate ? 'hidden' : false}
         animate="visible"
         transition={{ ...springs.gentle, delay: 0.8 }}
       >
