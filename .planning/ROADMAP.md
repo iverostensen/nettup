@@ -68,7 +68,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 20. Innholdsforutsetninger | v1.4 | 0/3 | Not started | - |
+| 20. Innholdsforutsetninger | 1/3 | In Progress|  | - |
 | 21. Konfig og indeks | v1.4 | 0/TBD | Not started | - |
 | 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |

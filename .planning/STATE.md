@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.4
-milestone_name: Portefølje 2.0
-status: ready_to_plan
-last_updated: "2026-03-07T00:00:00.000Z"
+milestone_name: milestone
+status: unknown
+last_updated: "2026-03-07T20:23:35.237Z"
 progress:
-  total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 6
+  completed_phases: 5
+  total_plans: 10
+  completed_plans: 8
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 ## Current Position
 
 Phase: 20 of 23 (Innholdsforutsetninger)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-07 — Roadmap created for v1.4 (4 phases, 20–23)
+Plan: 01 complete, 02 next
+Status: In progress
+Last activity: 2026-03-07 — Completed 20-01 (VISUAL-CONTENT-PLAN.md)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 8%
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Progress: [░░░░░░░░░░] 0%
 | 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
 | 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
 | 19. GitHub Actions | 1/1 | 15 min | 15 min |
+| Phase 20 P01 | 1 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -56,6 +57,8 @@ Key decisions from v1.4 research to carry into planning:
 - [v1.4 research]: `ProjectTeaser.astro` on homepage is hardcoded — must update to use `project.slug` in Phase 21
 - [v1.4 research]: BreadcrumbList shows raw slugs if `pageLabels` not updated — fix in Phase 21 before pages go live
 - [v1.4 research]: iGive Lighthouse scores in existing `Results.astro` are hardcoded "95" — must remeasure against live `salg.igive.no` before writing metrics section
+- [Phase 20]: Filenames locked before capture: igive-hero.png, igive-features.png, blom-hero.png, blom-features.png (1600x900)
+- [Phase 20]: Lighthouse scores left as pending dashes — measured after screenshots, never fabricated
 
 ### Pending Todos
 
@@ -81,5 +84,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: v1.4 roadmap created — Phase 20 ready to plan
+Stopped at: Completed 20-01-PLAN.md — VISUAL-CONTENT-PLAN.md created
 Resume file: None
