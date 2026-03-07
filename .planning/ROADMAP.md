@@ -39,7 +39,11 @@ Plans:
   3. `ProjectShowcase.astro` and `Results.astro` are removed from the prosjekter index with no visual regressions on the index page
   4. `BaseLayout` `pageLabels` map contains entries for `/prosjekter/igive` and `/prosjekter/blom-company` (human-readable labels, not raw slugs)
   5. `ProjectTeaser.astro` on the homepage links to `/prosjekter/igive` (not `/prosjekter`)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 21-01-PLAN.md — Extend projects.ts interface, add Blom Company entry, update pageLabels + ProjectTeaser
+- [ ] 21-02-PLAN.md — Create ProjectGrid.astro, update index.astro, delete obsolete section files
 
 ### Phase 22: Kasusstudie-sider
 **Goal**: Both case study pages exist as complete, production-quality pages with GEO-optimized Norwegian copy
