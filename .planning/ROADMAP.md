@@ -73,7 +73,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 20. Innholdsforutsetninger | 3/3 | Complete    | 2026-03-07 | - |
-| 21. Konfig og indeks | v1.4 | 0/TBD | Not started | - |
+| 21. Konfig og indeks | 1/2 | In Progress|  | - |
 | 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
 

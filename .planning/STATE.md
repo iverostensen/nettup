@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T21:11:41.368Z"
+last_updated: "2026-03-07T21:59:26.347Z"
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 6
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 12
+  completed_plans: 11
 ---
 
 # Project State
@@ -45,6 +45,7 @@ Progress: [█░░░░░░░░░] 9%
 | 19. GitHub Actions | 1/1 | 15 min | 15 min |
 | Phase 20 P01 | 1 | 1 tasks | 1 files |
 | Phase 20-innholdsforutsetninger P03 | 10 | 3 tasks | 9 files |
+| Phase 21-konfig-og-indeks P01 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,8 @@ Key decisions from v1.4 research to carry into planning:
 - [Phase 20-02]: Blom Company (blomcompany.com) measured 99/96/100/100 — blomcompany.com DNS resolved, no fallback needed
 - [Phase 20-innholdsforutsetninger]: salg.igive.no.png renamed to igive-hero.png — four import sites updated atomically (Hero.astro was a missed site not in plan)
 - [Phase 20-innholdsforutsetninger]: blomcompany.com DNS resolved, no fallback URL needed
+- [Phase 21-konfig-og-indeks]: comingSoon field retained in Project interface — harmless and may be useful for future projects
+- [Phase 21-konfig-og-indeks]: Blom Company url set to staging (blom-no.vercel.app) — update to live domain when available
 
 ### Pending Todos
 
