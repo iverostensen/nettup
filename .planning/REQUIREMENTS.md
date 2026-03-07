@@ -16,7 +16,7 @@
 
 - [x] **INNHOLD-01**: Visual content plan document exists at `.planning/VISUAL-CONTENT-PLAN.md` listing all required screenshots per project (filename, section, dimensions, crop guide)
 - [x] **INNHOLD-02**: iGive Lighthouse/PageSpeed scores measured against `salg.igive.no` production URL and recorded (Performance, Accessibility, Best Practices, SEO, plus Core Web Vitals where available)
-- [ ] **INNHOLD-03**: Blom Company screenshots captured from `blom-no.vercel.app` staging and committed to `src/assets/images/` per the visual content plan
+- [x] **INNHOLD-03**: Blom Company screenshots captured from `blom-no.vercel.app` staging and committed to `src/assets/images/` per the visual content plan
 
 ### Sider
 
@@ -55,7 +55,7 @@
 |-------------|-------|--------|
 | INNHOLD-01 | Phase 20 | Complete |
 | INNHOLD-02 | Phase 20 | Complete |
-| INNHOLD-03 | Phase 20 | Pending |
+| INNHOLD-03 | Phase 20 | Complete |
 | INFR-01 | Phase 21 | Pending |
 | INFR-02 | Phase 21 | Pending |
 | INFR-03 | Phase 21 | Pending |

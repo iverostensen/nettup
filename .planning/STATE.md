@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T21:00:00.000Z"
+last_updated: "2026-03-07T21:09:08.660Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 ## Current Position
 
 Phase: 20 of 23 (Innholdsforutsetninger)
-Plan: 02 complete, 03 next
+Plan: 03 complete, phase 20 complete
 Status: In progress
-Last activity: 2026-03-07 — Completed 20-02 (Lighthouse scores recorded)
+Last activity: 2026-03-07 — Completed 20-03 (screenshots committed, imports updated, build passing)
 
 Progress: [█░░░░░░░░░] 9%
 
@@ -44,6 +44,7 @@ Progress: [█░░░░░░░░░] 9%
 | 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
 | 19. GitHub Actions | 1/1 | 15 min | 15 min |
 | Phase 20 P01 | 1 | 1 tasks | 1 files |
+| Phase 20-innholdsforutsetninger P03 | 10 | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,8 @@ Key decisions from v1.4 research to carry into planning:
 - [Phase 20]: Lighthouse scores left as pending dashes — measured after screenshots, never fabricated
 - [Phase 20-02]: iGive (salg.igive.no) measured 96/96/100/100 (Perf/A11y/BP/SEO) on 2026-03-07
 - [Phase 20-02]: Blom Company (blomcompany.com) measured 99/96/100/100 — blomcompany.com DNS resolved, no fallback needed
+- [Phase 20-innholdsforutsetninger]: salg.igive.no.png renamed to igive-hero.png — four import sites updated atomically (Hero.astro was a missed site not in plan)
+- [Phase 20-innholdsforutsetninger]: blomcompany.com DNS resolved, no fallback URL needed
 
 ### Pending Todos
 
@@ -86,5 +89,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 20-02-PLAN.md — Lighthouse scores recorded in VISUAL-CONTENT-PLAN.md
+Stopped at: Completed 20-03-PLAN.md — screenshots committed, imports updated, npm run build passing
 Resume file: None
