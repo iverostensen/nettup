@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T20:23:35.237Z"
+last_updated: "2026-03-07T21:00:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 10
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 ## Current Position
 
 Phase: 20 of 23 (Innholdsforutsetninger)
-Plan: 01 complete, 02 next
+Plan: 02 complete, 03 next
 Status: In progress
-Last activity: 2026-03-07 — Completed 20-01 (VISUAL-CONTENT-PLAN.md)
+Last activity: 2026-03-07 — Completed 20-02 (Lighthouse scores recorded)
 
-Progress: [█░░░░░░░░░] 8%
+Progress: [█░░░░░░░░░] 9%
 
 ## Performance Metrics
 
@@ -59,6 +59,8 @@ Key decisions from v1.4 research to carry into planning:
 - [v1.4 research]: iGive Lighthouse scores in existing `Results.astro` are hardcoded "95" — must remeasure against live `salg.igive.no` before writing metrics section
 - [Phase 20]: Filenames locked before capture: igive-hero.png, igive-features.png, blom-hero.png, blom-features.png (1600x900)
 - [Phase 20]: Lighthouse scores left as pending dashes — measured after screenshots, never fabricated
+- [Phase 20-02]: iGive (salg.igive.no) measured 96/96/100/100 (Perf/A11y/BP/SEO) on 2026-03-07
+- [Phase 20-02]: Blom Company (blomcompany.com) measured 99/96/100/100 — blomcompany.com DNS resolved, no fallback needed
 
 ### Pending Todos
 
@@ -84,5 +86,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 20-01-PLAN.md — VISUAL-CONTENT-PLAN.md created
+Stopped at: Completed 20-02-PLAN.md — Lighthouse scores recorded in VISUAL-CONTENT-PLAN.md
 Resume file: None
