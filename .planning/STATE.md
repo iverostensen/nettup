@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T22:46:01.280Z"
+last_updated: "2026-03-07T23:58:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 7
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 ## Current Position
 
 Phase: 22 of 23 (Kasusstudie-sider)
-Plan: 01 complete
-Status: In progress
-Last activity: 2026-03-07 — Completed 22-01 (data layer for case study pages: featuresImage, summary, testimonial, Blom Company content)
+Plan: 02 complete — Phase 22 complete
+Status: In progress (phase 23 pending)
+Last activity: 2026-03-07 — Completed 22-02 ([slug].astro dynamic route, both case study pages live-ready)
 
-Progress: [█░░░░░░░░░] 9%
+Progress: [██████████] 100% (14/14 plans complete)
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Progress: [█░░░░░░░░░] 9%
 | Phase 21-konfig-og-indeks P01 | 3 | 2 tasks | 3 files |
 | Phase 21-konfig-og-indeks P02 | 15 | 3 tasks | 4 files |
 | Phase 22-kasusstudie-sider P01 | 3 | 2 tasks | 2 files |
+| Phase 22-kasusstudie-sider P02 | 10 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,10 @@ Key decisions from v1.4 research to carry into planning:
 - [Phase 21-konfig-og-indeks]: reveal-on-scroll applied per card with delay-1 and delay-2 for staggered animation
 - [Phase 22-kasusstudie-sider]: Inline testimonial on project entry — template reads project.testimonial directly, no separate array lookup needed
 - [Phase 22-kasusstudie-sider]: summary field added as GEO-optimized opening paragraph (distinct from short description field)
+- [Phase 22-02]: Breadcrumbs requires explicit items prop — plan assumed auto-reading from pageLabels but component requires items array passed explicitly
+- [Phase 22-02]: LinkWithArrow does not support target/rel props — inline anchor used for CTA external links needing target=_blank
+- [Phase 22-02]: Blom Company URL confirmed as blomcompany.com (live domain) — staging URL blom-no.vercel.app no longer needed
+- [Phase 22-02]: testimonials.ts Blom Company entry removed — homepage shows only iGive testimonial
 
 ### Pending Todos
 
@@ -83,7 +88,7 @@ Key decisions from v1.4 research to carry into planning:
 
 ### Blockers/Concerns
 
-- Blom Company staging URL (`blom-no.vercel.app`) is the source for screenshots — if live domain goes up before publish, update `url` field in projects.ts and live site link
+- iGive testimonial quote is placeholder — real quote requires client outreach before launch
 
 ### Quick Tasks Completed
 
@@ -98,5 +103,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 22-01-PLAN.md — data layer ready, both projects fully populated, build passes
+Stopped at: Completed 22-02-PLAN.md — [slug].astro built, both case study pages verified and live-ready. Phase 22 complete.
 Resume file: None
