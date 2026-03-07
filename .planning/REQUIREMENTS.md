@@ -8,8 +8,8 @@
 ### Infrastruktur
 
 - [x] **INFR-01**: `projects.ts` interface extended with `slug`, `techStack[]`, `metrics{}`, `gallery[]`, `testimonialId`, `metaTitle`, `metaDescription`, `publishedAt`; `caseStudySection` flag removed and all consumers updated atomically
-- [ ] **INFR-02**: `/prosjekter` index redesigned as project card grid — each card shows cover image, category, name, tagline, and links to `/prosjekter/[slug]`
-- [ ] **INFR-03**: `ProjectShowcase.astro` and `Results.astro` removed from prosjekter index, replaced by project grid section
+- [x] **INFR-02**: `/prosjekter` index redesigned as project card grid — each card shows cover image, category, name, tagline, and links to `/prosjekter/[slug]`
+- [x] **INFR-03**: `ProjectShowcase.astro` and `Results.astro` removed from prosjekter index, replaced by project grid section
 - [x] **INFR-04**: `BaseLayout` `pageLabels` updated with explicit entries for `/prosjekter/igive` and `/prosjekter/blom-company` so BreadcrumbList structured data renders correctly
 
 ### Innhold
@@ -57,8 +57,8 @@
 | INNHOLD-02 | Phase 20 | Complete |
 | INNHOLD-03 | Phase 20 | Complete |
 | INFR-01 | Phase 21 | Complete |
-| INFR-02 | Phase 21 | Pending |
-| INFR-03 | Phase 21 | Pending |
+| INFR-02 | Phase 21 | Complete |
+| INFR-03 | Phase 21 | Complete |
 | INFR-04 | Phase 21 | Complete |
 | SIDE-01 | Phase 22 | Pending |
 | SIDE-02 | Phase 22 | Pending |

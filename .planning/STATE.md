@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T21:59:26.347Z"
+last_updated: "2026-03-07T22:05:13.972Z"
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 12
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 
 ## Current Position
 
-Phase: 20 of 23 (Innholdsforutsetninger)
-Plan: 03 complete, phase 20 complete
+Phase: 21 of 23 (Konfig og indeks)
+Plan: 02 complete, phase 21 complete
 Status: In progress
-Last activity: 2026-03-07 — Completed 20-03 (screenshots committed, imports updated, build passing)
+Last activity: 2026-03-07 — Completed 21-02 (ProjectGrid created, prosjekter index updated, human-verified)
 
 Progress: [█░░░░░░░░░] 9%
 
@@ -46,6 +46,7 @@ Progress: [█░░░░░░░░░] 9%
 | Phase 20 P01 | 1 | 1 tasks | 1 files |
 | Phase 20-innholdsforutsetninger P03 | 10 | 3 tasks | 9 files |
 | Phase 21-konfig-og-indeks P01 | 3 | 2 tasks | 3 files |
+| Phase 21-konfig-og-indeks P02 | 15 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Key decisions from v1.4 research to carry into planning:
 - [Phase 20-innholdsforutsetninger]: blomcompany.com DNS resolved, no fallback URL needed
 - [Phase 21-konfig-og-indeks]: comingSoon field retained in Project interface — harmless and may be useful for future projects
 - [Phase 21-konfig-og-indeks]: Blom Company url set to staging (blom-no.vercel.app) — update to live domain when available
+- [Phase 21-konfig-og-indeks]: Cards render as <a> elements via Card as='a' with group class for hover effects on children
+- [Phase 21-konfig-og-indeks]: reveal-on-scroll applied per card with delay-1 and delay-2 for staggered animation
 
 ### Pending Todos
 
@@ -92,5 +95,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 20-03-PLAN.md — screenshots committed, imports updated, npm run build passing
+Stopped at: Completed 21-02-PLAN.md — ProjectGrid created, prosjekter index updated, human-verified
 Resume file: None

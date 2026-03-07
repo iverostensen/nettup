@@ -7,7 +7,7 @@ This milestone transforms `/prosjekter` from a single-page showcase into a scala
 ## Phases
 
 - [x] **Phase 20: Innholdsforutsetninger** - Capture screenshots, measure Lighthouse scores, produce visual content plan — unblocks all visual content downstream (completed 2026-03-07)
-- [ ] **Phase 21: Konfig og indeks** - Extend `projects.ts` interface, redesign `/prosjekter` index as card grid, update `ProjectTeaser` — stable data layer for case study pages
+- [x] **Phase 21: Konfig og indeks** - Extend `projects.ts` interface, redesign `/prosjekter` index as card grid, update `ProjectTeaser` — stable data layer for case study pages (completed 2026-03-07)
 - [ ] **Phase 22: Kasusstudie-sider** - Build `/prosjekter/igive` and `/prosjekter/blom-company` with shared components and GEO-optimized copy
 - [ ] **Phase 23: SEO/GEO-pass** - Emit `CreativeWork` + `BreadcrumbList` JSON-LD, verify sitemap coverage, validate all structured data
 
@@ -73,7 +73,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 20. Innholdsforutsetninger | 3/3 | Complete    | 2026-03-07 | - |
-| 21. Konfig og indeks | 1/2 | In Progress|  | - |
+| 21. Konfig og indeks | 2/2 | Complete   | 2026-03-07 | - |
 | 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
 
