@@ -78,7 +78,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 20. Innholdsforutsetninger | 3/3 | Complete    | 2026-03-07 | - |
 | 21. Konfig og indeks | 2/2 | Complete    | 2026-03-07 | - |
-| 22. Kasusstudie-sider | v1.4 | 0/2 | Not started | - |
+| 22. Kasusstudie-sider | 1/2 | In Progress|  | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
 
 ---

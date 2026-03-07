@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T22:11:38.771Z"
+last_updated: "2026-03-07T22:46:01.280Z"
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 7
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 14
+  completed_plans: 13
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 
 ## Current Position
 
-Phase: 21 of 23 (Konfig og indeks)
-Plan: 02 complete, phase 21 complete
+Phase: 22 of 23 (Kasusstudie-sider)
+Plan: 01 complete
 Status: In progress
-Last activity: 2026-03-07 — Completed 21-02 (ProjectGrid created, prosjekter index updated, human-verified)
+Last activity: 2026-03-07 — Completed 22-01 (data layer for case study pages: featuresImage, summary, testimonial, Blom Company content)
 
 Progress: [█░░░░░░░░░] 9%
 
@@ -47,6 +47,7 @@ Progress: [█░░░░░░░░░] 9%
 | Phase 20-innholdsforutsetninger P03 | 10 | 3 tasks | 9 files |
 | Phase 21-konfig-og-indeks P01 | 3 | 2 tasks | 3 files |
 | Phase 21-konfig-og-indeks P02 | 15 | 3 tasks | 4 files |
+| Phase 22-kasusstudie-sider P01 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Key decisions from v1.4 research to carry into planning:
 - [Phase 21-konfig-og-indeks]: Blom Company url set to staging (blom-no.vercel.app) — update to live domain when available
 - [Phase 21-konfig-og-indeks]: Cards render as <a> elements via Card as='a' with group class for hover effects on children
 - [Phase 21-konfig-og-indeks]: reveal-on-scroll applied per card with delay-1 and delay-2 for staggered animation
+- [Phase 22-kasusstudie-sider]: Inline testimonial on project entry — template reads project.testimonial directly, no separate array lookup needed
+- [Phase 22-kasusstudie-sider]: summary field added as GEO-optimized opening paragraph (distinct from short description field)
 
 ### Pending Todos
 
@@ -95,5 +98,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 21-02-PLAN.md — ProjectGrid created, prosjekter index updated, human-verified
+Stopped at: Completed 22-01-PLAN.md — data layer ready, both projects fully populated, build passes
 Resume file: None

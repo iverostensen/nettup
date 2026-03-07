@@ -22,7 +22,7 @@
 
 - [ ] **SIDE-01**: `/prosjekter/igive` exists as a dedicated page with all table-stakes sections: opening summary paragraph, challenge, solution, tech stack, features delivered, metrics block, testimonial, live site link
 - [ ] **SIDE-02**: `/prosjekter/blom-company` exists as a dedicated page with all table-stakes sections: opening summary paragraph, challenge, solution, tech stack (Next.js 15 / Shopify / Sanity / Tailwind 4 / Vercel), dual-collection story, Lighthouse scores, testimonial, live site link
-- [ ] **SIDE-03**: Both pages have GEO-optimized copy — standalone summary paragraph visible within opening 200 words, concrete verifiable numbers (scores, load times, specific tech versions) as a distinct visual metrics block
+- [x] **SIDE-03**: Both pages have GEO-optimized copy — standalone summary paragraph visible within opening 200 words, concrete verifiable numbers (scores, load times, specific tech versions) as a distinct visual metrics block
 
 ### SEO
 
@@ -62,7 +62,7 @@
 | INFR-04 | Phase 21 | Complete |
 | SIDE-01 | Phase 22 | Pending |
 | SIDE-02 | Phase 22 | Pending |
-| SIDE-03 | Phase 22 | Pending |
+| SIDE-03 | Phase 22 | Complete |
 | SEO-01 | Phase 23 | Pending |
 | SEO-02 | Phase 23 | Pending |
 | SEO-03 | Phase 23 | Pending |
