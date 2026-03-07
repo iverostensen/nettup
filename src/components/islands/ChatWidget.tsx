@@ -234,10 +234,10 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     return () => clearTimeout(hideTimer);
   }, [showTeaser]);
 
-  // Auto-scroll to bottom on new messages
+  // Auto-scroll to bottom on new messages or when suggestions appear
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, suggestions]);
 
   // Focus input when chat opens
   useEffect(() => {

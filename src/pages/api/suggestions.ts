@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import Anthropic from '@anthropic-ai/sdk';
+import { buildSystemPrompt } from '@/config/chatbot';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -49,9 +50,17 @@ setInterval(() => {
   }
 }, RATE_LIMIT_WINDOW_MS);
 
-const SUGGESTIONS_SYSTEM_PROMPT = `Du er en hjelper som genererer oppfølgingsspørsmål for en chatbot på nettup.no.
+function buildSuggestionsPrompt(currentPage: string): string {
+  return `Du er en hjelper som genererer oppfølgingsspørsmål for en chatbot på nettup.no.
+
+Chatboten opererer under følgende system-prompt — generer KUN spørsmål den kan svare på:
+---
+${buildSystemPrompt(currentPage)}
+---
+
 Basert på samtalehistorikken, generer 3 korte oppfølgingsspørsmål på norsk som brukeren kan stille.
 Svar KUN med en JSON-array med 3 strenger. Ingen annen tekst. Eksempel: ["Spørsmål 1?","Spørsmål 2?","Spørsmål 3?"]`;
+}
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
@@ -89,7 +98,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 256,
-      system: SUGGESTIONS_SYSTEM_PROMPT,
+      system: buildSuggestionsPrompt(body.currentPage ?? '/'),
       messages,
     });
 
