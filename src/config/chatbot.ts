@@ -30,6 +30,14 @@ function getPageContext(currentPage: string): string {
       return 'Brukeren er allerede på kontaktsiden. Hjelp dem med å fylle ut skjemaet.';
     case '/':
       return 'Brukeren er på forsiden. Introduser tjenestene våre om det er relevant.';
+    case '/om-oss':
+      return 'Brukeren leser om Nettup som byrå. Du kan fremheve vår arbeidsmetode og erfaring, og oppfordre til å ta kontakt.';
+    case '/prosjekter':
+      return 'Brukeren ser på prosjektene vi har levert. Fremhev at vi kan lage noe lignende for dem, og oppfordre til å ta kontakt.';
+    case '/blogg':
+      return 'Brukeren leser bloggen vår. Hjelp dem om de har spørsmål om webutvikling eller tjenestene våre.';
+    case '/nettside-for-bedrift':
+      return 'Brukeren vurderer å få laget nettside for bedriften sin. Fokuser på fordelene med en profesjonell nettside og tjenestene våre.';
     default:
       return 'Hjelp brukeren med det de lurer på om Nettup sine tjenester.';
   }
