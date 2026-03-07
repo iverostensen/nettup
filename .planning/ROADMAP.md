@@ -55,7 +55,11 @@ Plans:
   3. Both pages open with a standalone summary paragraph within the first 200 words that a reader (or AI assistant) can cite without additional context
   4. Concrete verifiable numbers (Lighthouse scores, load times, specific tech versions) appear in a distinct visual metrics block on each page
   5. `npm run build` passes with all screenshots imported via `astro:assets` `<Image>`
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 22-01-PLAN.md — Extend projects.ts data layer (featuresImage, testimonials, Blom Company content)
+- [ ] 22-02-PLAN.md — Build [slug].astro dynamic route with all 10 sections
 
 ### Phase 23: SEO/GEO-pass
 **Goal**: Both case study pages have correct structured data, unique SEO metadata, and appear in the sitemap
@@ -74,7 +78,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 20. Innholdsforutsetninger | 3/3 | Complete    | 2026-03-07 | - |
 | 21. Konfig og indeks | 2/2 | Complete    | 2026-03-07 | - |
-| 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
+| 22. Kasusstudie-sider | v1.4 | 0/2 | Not started | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
 
 ---
