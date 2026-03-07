@@ -182,7 +182,15 @@ export default function FloatingNav() {
       {/* Mobile Menu Overlay */}
       <MobileMenu
         isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
+        onClose={() => {
+          setMobileMenuOpen(false);
+          // Blur the active element so focus doesn't snap back to the hamburger
+          // button when the menu closes during navigation — prevents a focus-state
+          // flash on the button during the VTA crossfade.
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+        }}
         navItems={displayNavItems}
         currentPath={currentPath}
       />
