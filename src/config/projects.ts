@@ -1,5 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import iGiveImage from '@/assets/images/salg.igive.no.png';
+import iGiveImage from '@/assets/images/igive-hero.png';
 
 export interface Project {
   id: string;

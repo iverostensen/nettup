@@ -6,10 +6,10 @@ Source of truth for all screenshot filenames and Lighthouse scores. Consumed by 
 
 | Filename | Project | Section | Dimensions | Crop Guide | Status |
 |----------|---------|---------|------------|------------|--------|
-| igive-hero.png | iGive | Above-fold hero | 1600×900 | Open salg.igive.no at 1600px viewport width, scroll to top, capture full viewport | [ ] |
-| igive-features.png | iGive | Features/benefits section | 1600×900 max 1600px wide | Scroll to the feature grid/benefits list section, capture the section | [ ] |
-| blom-hero.png | Blom Company | Above-fold hero | 1600×900 | Open blomcompany.com (fallback: blom-no.vercel.app) at 1600px viewport width, scroll to top, capture full viewport | [ ] |
-| blom-features.png | Blom Company | Product/collection section | 1600×900 max 1600px wide | Scroll to the product collection section, capture the section | [ ] |
+| igive-hero.png | iGive | Above-fold hero | 1600×900 | Open salg.igive.no at 1600px viewport width, scroll to top, capture full viewport | [x] |
+| igive-features.png | iGive | Features/benefits section | 1600×900 max 1600px wide | Scroll to the feature grid/benefits list section, capture the section | [x] |
+| blom-hero.png | Blom Company | Above-fold hero | 1600×900 | Open blomcompany.com (fallback: blom-no.vercel.app) at 1600px viewport width, scroll to top, capture full viewport | [x] |
+| blom-features.png | Blom Company | Product/collection section | 1600×900 max 1600px wide | Scroll to the product collection section, capture the section | [x] |
 
 ## Lighthouse Scores
 
