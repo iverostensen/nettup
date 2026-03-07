@@ -17,8 +17,8 @@ Measured via pagespeed.web.dev. Run after screenshots are captured.
 
 | Project | URL | Performance | Accessibility | Best Practices | SEO | Measured |
 |---------|-----|-------------|---------------|----------------|-----|----------|
-| iGive | salg.igive.no | — | — | — | — | pending |
-| Blom Company | blomcompany.com | — | — | — | — | pending |
+| iGive | salg.igive.no | 96 | 96 | 100 | 100 | 2026-03-07 |
+| Blom Company | blomcompany.com | 99 | 96 | 100 | 100 | 2026-03-07 |
 
 ## Notes
 
