@@ -5,6 +5,8 @@
  * Shows actual iGive project with performance metrics
  * Replaces generic Results section for better credibility
  */
+import { Image } from 'astro:assets';
+import iGiveImage from '@/assets/images/salg.igive.no.png';
 ---
 
 <section class="py-16 md:py-24 bg-surface">
@@ -41,9 +43,11 @@
 
         <!-- Screenshot -->
         <div class="relative rounded-lg overflow-hidden border border-white/10">
-          <img
-            src="/images/salg.igive.no.png"
+          <Image
+            src={iGiveImage}
             alt="iGive salgsside - profesjonell nettside laget av Nettup"
+            width={1200}
+            quality={85}
             class="w-full h-auto"
             loading="lazy"
           />

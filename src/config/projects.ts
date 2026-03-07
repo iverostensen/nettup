@@ -1,3 +1,6 @@
+import type { ImageMetadata } from 'astro';
+import iGiveImage from '@/assets/images/salg.igive.no.png';
+
 export interface Project {
   id: string;
   name: string;
@@ -5,7 +8,7 @@ export interface Project {
   type: string;
   tagline: string;
   description: string;
-  image: string;
+  image: ImageMetadata;
   imageAlt: string;
   url?: string;
   caseStudySection?: boolean;
@@ -26,7 +29,7 @@ export const projects: Project[] = [
     tagline: 'Profesjonell salgsside for Norges ledende gavekortplattform',
     description:
       'En dedikert salgsside som hjelper Norges ledende gavekortplattform med å nå bedriftskunder.',
-    image: '/images/salg.igive.no.png',
+    image: iGiveImage,
     imageAlt: 'Skjermbilde av salg.igive.no',
     url: 'https://salg.igive.no',
     caseStudySection: true,

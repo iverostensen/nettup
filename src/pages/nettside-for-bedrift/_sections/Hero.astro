@@ -10,8 +10,12 @@
  * - Inline micro-form for immediate conversion
  * - Animated code-to-website transformation
  */
+import { getImage } from 'astro:assets';
+import iGiveImage from '@/assets/images/salg.igive.no.png';
 import LandingHeroAnimation from '@/components/islands/LandingHeroAnimation';
 import HeroMicroForm from '@/components/islands/HeroMicroForm';
+
+const optimizedPreview = await getImage({ src: iGiveImage, width: 600, quality: 80, format: 'webp' });
 ---
 
 <section class="relative overflow-hidden py-12 md:py-20">
@@ -128,7 +132,7 @@ import HeroMicroForm from '@/components/islands/HeroMicroForm';
 
       <!-- Animation -->
       <div class="reveal-on-scroll delay-2 hidden lg:block">
-        <LandingHeroAnimation client:load />
+        <LandingHeroAnimation previewImageSrc={optimizedPreview.src} client:load />
       </div>
     </div>
 

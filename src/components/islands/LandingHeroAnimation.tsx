@@ -113,7 +113,7 @@ function TypedCode({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-function WebsitePreview() {
+function WebsitePreview({ src }: { src: string }) {
   return (
     <div className="rounded-lg overflow-hidden shadow-xl">
       {/* Browser chrome */}
@@ -131,7 +131,7 @@ function WebsitePreview() {
 
       {/* Website screenshot */}
       <img
-        src="/images/salg.igive.no.png"
+        src={src}
         alt="iGive nettside - et eksempel på vårt arbeid"
         className="w-full h-auto"
         loading="eager"
@@ -140,7 +140,7 @@ function WebsitePreview() {
   );
 }
 
-export default function LandingHeroAnimation() {
+export default function LandingHeroAnimation({ previewImageSrc }: { previewImageSrc: string }) {
   const [showWebsite, setShowWebsite] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const reducedMotion = useReducedMotion();
@@ -172,7 +172,7 @@ export default function LandingHeroAnimation() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
               >
-                <WebsitePreview />
+                <WebsitePreview src={previewImageSrc} />
               </motion.div>
             )}
           </AnimatePresence>

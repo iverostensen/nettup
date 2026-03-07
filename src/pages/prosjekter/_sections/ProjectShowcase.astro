@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Card from '@/components/ui/Card.astro';
 import { projects } from '@/config/projects';
@@ -53,11 +54,13 @@ const additionalProjects = projects.filter((p) => p.caseStudySection !== true);
 
           {/* Hero Screenshot */}
           <div class="reveal-on-scroll delay-1 overflow-hidden rounded-xl border border-white/10">
-            <img
+            <Image
               src={caseStudyProject.image}
               alt={caseStudyProject.imageAlt}
+              width={1600}
+              quality={85}
               class="w-full"
-              loading="lazy"
+              loading="eager"
             />
           </div>
 
