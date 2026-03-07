@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import { projects } from '@/config/projects';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Card from '@/components/ui/Card.astro';
+---
+
+<Section>
+  <SectionHeader title="Våre prosjekter" />
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+    {projects.map((project, i) => (
+      <div class={`reveal-on-scroll delay-${i + 1}`}>
+        <Card href={`/prosjekter/${project.slug}`} hover={true} padding="none" class="group block">
+          <div class="aspect-video overflow-hidden">
+            <Image
+              src={project.image}
+              alt={project.imageAlt}
+              width={800}
+              quality={85}
+              class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-3">
+              <span class="rounded-full bg-brand/10 px-3 py-1 text-sm text-brand">
+                {project.category}
+              </span>
+              <span class="text-sm text-text-muted">{project.type}</span>
+            </div>
+            <h3 class="mt-4 text-xl font-semibold transition-colors group-hover:text-brand">
+              {project.name}
+            </h3>
+            <p class="mt-2 text-text-muted">{project.tagline}</p>
+            <span class="mt-4 inline-flex items-center gap-2 font-medium text-brand">
+              Se prosjektet
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="h-4 w-4 transition-transform group-hover:translate-x-1"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </span>
+          </div>
+        </Card>
+      </div>
+    ))}
+  </div>
+</Section>
