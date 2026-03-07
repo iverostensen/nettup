@@ -22,7 +22,12 @@ This milestone transforms `/prosjekter` from a single-page showcase into a scala
   2. iGive Lighthouse/PageSpeed scores for `salg.igive.no` are recorded (Performance, Accessibility, Best Practices, SEO) — numbers are real and current, not from the existing hardcoded `Results.astro`
   3. Blom Company screenshots are captured from `blom-no.vercel.app` and committed to `src/assets/images/` following the visual content plan filenames
   4. `npm run build` passes with the committed screenshot files present (no `ENOENT` errors)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 20-01-PLAN.md — Create VISUAL-CONTENT-PLAN.md (screenshot specs + Lighthouse score table)
+- [ ] 20-02-PLAN.md — Measure PageSpeed scores for both projects, record in plan doc
+- [ ] 20-03-PLAN.md — Capture screenshots, rename igive image, update imports, validate build
 
 ### Phase 21: Konfig og indeks
 **Goal**: `projects.ts` interface is extended and all consumers updated atomically; `/prosjekter` renders as a peer card grid linking to slug-based URLs
@@ -63,7 +68,7 @@ This milestone transforms `/prosjekter` from a single-page showcase into a scala
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 20. Innholdsforutsetninger | v1.4 | 0/TBD | Not started | - |
+| 20. Innholdsforutsetninger | v1.4 | 0/3 | Not started | - |
 | 21. Konfig og indeks | v1.4 | 0/TBD | Not started | - |
 | 22. Kasusstudie-sider | v1.4 | 0/TBD | Not started | - |
 | 23. SEO/GEO-pass | v1.4 | 0/TBD | Not started | - |
