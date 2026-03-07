@@ -10,7 +10,7 @@ const articles = (await getCollection('blogg'))
 ---
 
 <BaseLayout title="Blogg — Nettup" description="Tips og innsikt om nettsider, SEO og netthandel for norske småbedrifter.">
-  <Section>
+  <Section class="pt-32 md:pt-40">
     <SectionHeader title="Blogg" subtitle="Tips og innsikt om nettsider, SEO og netthandel." />
     {articles.length === 0 ? (
       <p class="text-center text-text-muted">Artikler kommer snart.</p>
