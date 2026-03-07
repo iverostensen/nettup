@@ -1,6 +1,8 @@
 import type { ImageMetadata } from 'astro';
 import iGiveImage from '@/assets/images/igive-hero.png';
 import blomImage from '@/assets/images/blom-hero.png';
+import iGiveFeaturesImage from '@/assets/images/igive-features.png';
+import blomFeaturesImage from '@/assets/images/blom-features.png';
 
 export interface Project {
   id: string;
@@ -31,6 +33,16 @@ export interface Project {
   solution?: string;
   features?: string[];
   photoUrl?: string;
+  featuresImage?: { src: ImageMetadata; alt: string };
+  summary?: string; // GEO-optimized opening paragraph, ≤200 words, self-contained
+  testimonial?: {
+    quote: string;
+    result: string;
+    name: string;
+    title: string;
+    company: string;
+    photoUrl?: string;
+  };
 }
 
 export const projects: Project[] = [
@@ -64,6 +76,16 @@ export const projects: Project[] = [
       'Synlig i Google',
       'Profesjonelt design',
     ],
+    featuresImage: { src: iGiveFeaturesImage, alt: 'Skjermbilde av iGive-plattformens funksjoner og produktoversikt' },
+    summary: 'iGive er Norges ledende gavekortplattform for bedrifter, med løsninger for digitale gavekort, QR-kort og fysiske plastkort. Nettup bygget en dedikert salgsside — salg.igive.no — som hjelper iGive med å nå bedriftskunder direkte. Siden lastes inn på under ett sekund og scorer 96/100 på Google PageSpeed for Performance og Accessibility, med perfekte 100/100 på Best Practices og SEO. Bygget med Astro og Tailwind CSS, driftet på Vercel.',
+    testimonial: {
+      quote: 'Vi hadde et godt produkt for bedrifter, men ingen god måte å presentere det på nett. Nå sender vi bare linken til bedrifter som er nysgjerrige, siden forklarer resten.',
+      result: 'Bedriftskunder finner oss nå via Google, siden forklarer produktene våre tydelig og konverterer til salg',
+      name: 'Stein Eriksen',
+      title: 'Daglig leder',
+      company: 'iGive',
+      photoUrl: '/images/stein_eriksen_profile_picture.jpg',
+    },
   },
   {
     id: 'blom-company',
@@ -83,5 +105,6 @@ export const projects: Project[] = [
     metaDescription:
       'Nettup bygget en eksklusiv nettbutikk for Blom Company med Next.js 15, Shopify og Sanity. Rask, visuell og klar for vekst.',
     metrics: { performance: 99, accessibility: 96, bestPractices: 100, seo: 100 },
+    featuresImage: { src: blomFeaturesImage, alt: 'Skjermbilde av Blom Company nettbutikk med produktkolleksjon' },
   },
 ];
