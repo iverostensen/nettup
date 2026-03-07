@@ -2,7 +2,7 @@
 title: "Hva påvirker prisen på webdesign? De 7 viktigste kostnadsfaktorene"
 seoTitle: "Webdesign pris: 7 kostnadsfaktorer forklart | Nettup"
 category: "Priser"
-date: 2026-03-06
+date: 2026-02-13
 readTime: 8
 description: "Forstå hva som styrer prisen på webdesign – fra antall sider og skreddersøm til SEO og vedlikehold. Konkrete prisspenn for norske SMB-er."
 relatedSlugs:

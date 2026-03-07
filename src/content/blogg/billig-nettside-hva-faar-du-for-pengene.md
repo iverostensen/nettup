@@ -2,7 +2,7 @@
 title: "Billig nettside: Hva får du egentlig for pengene?"
 seoTitle: "Billig nettside: Hva får du for pengene? | Nettup"
 category: "Priser"
-date: 2026-03-06
+date: 2026-02-20
 readTime: 8
 description: "En billig nettside koster 0–8 000 kr, men skjulte kostnader og tapt synlighet kan bli dyrt. Her er hva du faktisk får – og ikke får – for pengene."
 relatedSlugs:

@@ -2,7 +2,7 @@
 title: "Hva koster en nettside i 2026?"
 seoTitle: "Hva koster en nettside? Priser og oversikt 2026"
 category: "Priser"
-date: 2026-03-06
+date: 2026-02-06
 readTime: 4
 description: "En norsk nettside kan koste fra 2 500 til 100 000 kr. Her er en ærlig oversikt over hva du faktisk betaler for — og hva du bør unngå."
 relatedSlugs:

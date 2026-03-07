@@ -1,8 +1,8 @@
 ---
 title: "Nettbutikk eller nettside — hva trenger bedriften din?"
 seoTitle: "Nettbutikk vs nettside: Hva bør du velge? (2026)"
-category: "Netthandel"
-date: 2026-03-06
+category: "SMB-tips"
+date: 2026-02-27
 readTime: 4
 description: "Mange bedrifter er usikre på om de trenger en nettbutikk eller en vanlig nettside. Her er en ærlig gjennomgang av forskjellene, kostnadene og hva som passer for deg."
 relatedSlugs:
