@@ -1,20 +1,17 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-
 import Hero from './_sections/Hero.astro';
-import ProjectShowcase from './_sections/ProjectShowcase.astro';
-import Results from './_sections/Results.astro';
+import ProjectGrid from './_sections/ProjectGrid.astro';
 import ProsjekterCTA from './_sections/ProsjekterCTA.astro';
 ---
 
 <BaseLayout
-  title="Prosjekter | Se Resultater fra Norske Bedrifter | Nettup"
-  description="Se nettsider vi har bygget for norske bedrifter. Raske leveranser, synlige resultater. iGive-casen viser hva vi leverer i praksis."
+  title="Prosjekter | Se hva vi har bygget | Nettup"
+  description="Se nettsider og nettbutikker vi har bygget for norske bedrifter. Raske leveranser, synlige resultater."
 >
   <main>
     <Hero />
-    <ProjectShowcase />
-    <Results />
+    <ProjectGrid />
     <ProsjekterCTA />
   </main>
 </BaseLayout>
