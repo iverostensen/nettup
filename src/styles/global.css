@@ -176,14 +176,27 @@ html[data-astro-transition] {
   scroll-behavior: auto !important;
 }
 
-/* Hide page content during the DOM swap + React hydration window.
-   astro:before-swap sets data-loading; astro:page-load removes it.
-   Body content is invisible but html background (#020617) still shows,
-   so the user sees a clean dark flash instead of raw SSR HTML. */
-html[data-loading] body {
-  visibility: hidden;
+/* ============================================
+   FLOATING NAV (Astro component)
+   ============================================ */
+
+.floating-nav {
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
 }
 
+.floating-nav.nav-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+}
+
+@keyframes nav-slide-in {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.floating-nav.nav-entrance {
+  animation: nav-slide-in 0.4s ease-out forwards;
+}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
@@ -212,6 +225,13 @@ html[data-loading] body {
   }
 
   .card-featured-glow {
+    animation: none;
+  }
+
+  .floating-nav {
+    transition: none;
+  }
+  .floating-nav.nav-entrance {
     animation: none;
   }
 }

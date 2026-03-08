@@ -1,0 +1,150 @@
+---
+import { services } from '@/config/services';
+import MobileMenu from '../islands/MobileMenu';
+
+const navItems = [
+  { name: 'Hjem', href: '/' },
+  { name: 'Tjenester', href: '/tjenester' },
+  { name: 'Om oss', href: '/om-oss' },
+  { name: 'Prosjekter', href: '/prosjekter' },
+];
+
+const currentPath = Astro.url.pathname;
+
+// Tjenester sub-page label logic (mirrors FloatingNav.tsx)
+const tjenesterActive = currentPath.startsWith('/tjenester');
+const currentServiceSlug = currentPath.split('/')[2];
+const currentService = services.find(s => s.slug === currentServiceSlug);
+const tjenesterLabel =
+  tjenesterActive && currentPath !== '/tjenester' && currentService
+    ? currentService.name
+    : 'Tjenester';
+
+function isActive(href: string): boolean {
+  if (href === '/tjenester') return tjenesterActive;
+  return currentPath === href;
+}
+
+const displayNavItems = navItems.map(item =>
+  item.href === '/tjenester' ? { ...item, name: tjenesterLabel } : item
+);
+---
+
+<nav
+  id="floating-nav"
+  transition:persist
+  class="floating-nav fixed inset-x-0 z-50 mx-auto flex max-w-fit items-center gap-1 rounded-full border border-white/10 bg-surface-raised/80 px-2 py-2 pl-3 shadow-lg shadow-black/20 backdrop-blur-md md:gap-2 top-6"
+  aria-label="Hovednavigasjon"
+>
+  <a href="/" class="mr-2 flex min-h-11 shrink-0 items-center transition-opacity hover:opacity-80">
+    <img src="/images/nettup-logo.svg" alt="Nettup" width={58} height={24} class="h-6 w-auto" />
+  </a>
+
+  <div class="hidden items-center gap-1 md:flex">
+    {displayNavItems.map(item => (
+      <a
+        href={item.href}
+        data-nav-href={item.href}
+        aria-current={isActive(item.href) ? 'page' : undefined}
+        class:list={[
+          'rounded-full px-3 py-1.5 text-sm font-medium transition-colors duration-200',
+          isActive(item.href) ? 'text-brand' : 'text-text-muted hover:text-text',
+        ]}
+      >
+        {item.name}
+      </a>
+    ))}
+  </div>
+
+  <a
+    href="/kontakt"
+    class="hidden rounded-full bg-brand px-4 py-1.5 text-sm font-semibold text-surface transition-colors duration-200 hover:bg-brand-light md:block"
+  >
+    Ta kontakt
+  </a>
+
+  <button
+    id="hamburger-btn"
+    class="flex h-11 w-11 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/10 hover:text-text md:hidden"
+    aria-label="Åpne meny"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+    </svg>
+  </button>
+</nav>
+
+<MobileMenu client:load navItems={navItems} initialCurrentPath={currentPath} />
+
+<script>
+  let lastScrollY = 0;
+
+  function initScrollBehavior() {
+    const nav = document.getElementById('floating-nav');
+    if (!nav) return;
+    lastScrollY = window.scrollY;
+
+    function onScroll() {
+      const current = window.scrollY;
+      if (current < 80) {
+        nav!.classList.remove('nav-hidden');
+      } else if (current > lastScrollY) {
+        nav!.classList.add('nav-hidden');
+      } else {
+        nav!.classList.remove('nav-hidden');
+      }
+      lastScrollY = current;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  function initEntranceAnimation() {
+    const nav = document.getElementById('floating-nav');
+    if (!nav) return;
+    if (!sessionStorage.getItem('nav-animated')) {
+      nav.classList.add('nav-entrance');
+      sessionStorage.setItem('nav-animated', '1');
+      nav.addEventListener('animationend', () => {
+        nav.classList.remove('nav-entrance');
+      }, { once: true });
+    }
+  }
+
+  function updateActiveLinks() {
+    const path = window.location.pathname;
+    const tjenesterActive = path.startsWith('/tjenester');
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-nav-href]').forEach(link => {
+      const href = link.dataset.navHref!;
+      const active = href === '/tjenester' ? tjenesterActive : path === href;
+      link.classList.toggle('text-brand', active);
+      link.classList.toggle('text-text-muted', !active);
+      link.classList.toggle('hover:text-text', !active);
+      if (active) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  function initHamburger() {
+    const btn = document.getElementById('hamburger-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('open-mobile-menu'));
+    });
+  }
+
+  // First load
+  initScrollBehavior();
+  initEntranceAnimation();
+  initHamburger();
+
+  // After each SPA navigation — update active links only.
+  // Scroll and hamburger listeners are attached to window/btn which persist.
+  document.addEventListener('astro:after-swap', updateActiveLinks);
+</script>
