@@ -6,6 +6,7 @@ import {
 } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { duration } from '@/lib/animation';
+import { trackChatbotOpened, trackChatbotSuggestionClicked } from '@/lib/analytics';
 
 interface ChatWidgetProps {
   currentPage: string;
@@ -324,7 +325,10 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
   const handleBubbleClick = useCallback(() => {
     setShowTeaser(false);
     setHasUnread(false);
-    setIsOpen((prev) => !prev);
+    setIsOpen((prev) => {
+      if (!prev) trackChatbotOpened();
+      return !prev;
+    });
   }, []);
 
   const sendMessage = useCallback(async (overrideText?: string) => {
@@ -703,6 +707,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                       key={s}
                       onClick={() => {
                         setSuggestions([]);
+                        trackChatbotSuggestionClicked(s);
                         sendMessage(s);
                       }}
                       className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-text-muted transition-colors hover:border-brand/40 hover:bg-brand/10 hover:text-text"
