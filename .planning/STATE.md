@@ -1,12 +1,12 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.5
-milestone_name: Lokale SEO-sider
-status: in_progress
-last_updated: "2026-03-08T02:35:00.000Z"
+milestone_name: milestone
+status: unknown
+last_updated: "2026-03-08T01:33:26.519Z"
 progress:
-  total_phases: 3
-  completed_phases: 0
+  total_phases: 1
+  completed_phases: 1
   total_plans: 1
   completed_plans: 1
 ---
