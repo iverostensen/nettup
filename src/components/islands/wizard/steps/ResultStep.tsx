@@ -72,7 +72,7 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       estimate.discounted.max,
       estimate.serviceType
     );
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps — intentionally fire once on mount
+  }, []);
 
   const contactParams = new URLSearchParams({
     tjeneste: estimate.serviceType,
