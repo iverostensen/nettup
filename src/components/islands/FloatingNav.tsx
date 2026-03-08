@@ -17,62 +17,57 @@ const navItems = [
   { name: 'Prosjekter', href: '/prosjekter' },
 ];
 
+// Only animate the nav entrance on the very first page load.
+// On subsequent navigations the component remounts but should appear instantly.
+let hasHydrated = false;
+
 export default function FloatingNav() {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/');
   const shouldReduceMotion = useReducedMotion();
 
+  // Lazy initializer: reads window.location on the client, falls back to '/' during SSR.
+  // Component remounts on every navigation (no transition:persist) so this is always fresh.
+  const [currentPath] = useState(() =>
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
+  const shouldAnimate = !hasHydrated;
+
+  useEffect(() => {
+    hasHydrated = true;
+  }, []);
+
   const tjenesterActive = currentPath.startsWith('/tjenester');
-  const currentServiceSlug = currentPath.split('/')[2]; // e.g. 'nettside' from '/tjenester/nettside'
+  const currentServiceSlug = currentPath.split('/')[2];
   const currentService = services.find(s => s.slug === currentServiceSlug);
   const tjenesterLabel =
     tjenesterActive && currentPath !== '/tjenester' && currentService
       ? currentService.name
       : 'Tjenester';
 
-  // Derive display navItems with dynamic Tjenester label
   const displayNavItems = navItems.map(item =>
     item.href === '/tjenester' ? { ...item, name: tjenesterLabel } : item
   );
 
-  // Active state helper — only Tjenester uses startsWith, others use exact match
   function isNavItemActive(itemHref: string): boolean {
     if (itemHref === '/tjenester') return tjenesterActive;
     return currentPath === itemHref;
   }
 
-  useEffect(() => {
-    const updatePath = () => setCurrentPath(window.location.pathname);
-    updatePath();
-    // Use astro:after-swap so the active link reflects the new page
-    // before the VTA crossfade plays, not after it ends.
-    document.addEventListener('astro:after-swap', updatePath);
-
-    return () => {
-      document.removeEventListener('astro:after-swap', updatePath);
-    };
-  }, []);
-
   useMotionValueEvent(scrollYProgress, 'change', (current) => {
     if (typeof current === 'number') {
       const direction = current - (scrollYProgress.getPrevious() ?? 0);
-
       if (scrollYProgress.get() < 0.05) {
-        // At very top of page - show navbar
         setVisible(true);
       } else if (direction < 0) {
-        // Scrolling UP - show navbar
         setVisible(true);
       } else {
-        // Scrolling DOWN - hide navbar
         setVisible(false);
       }
     }
   });
 
-  // Close mobile menu on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setMobileMenuOpen(false);
@@ -81,7 +76,6 @@ export default function FloatingNav() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       const originalOverflow = document.body.style.overflow;
@@ -95,7 +89,7 @@ export default function FloatingNav() {
   return (
     <>
       <motion.nav
-          initial={{ y: shouldReduceMotion ? 0 : -100, opacity: 0 }}
+          initial={shouldAnimate && !shouldReduceMotion ? { y: -100, opacity: 0 } : false}
           animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
           transition={{
             duration: shouldReduceMotion ? 0 : duration.fast,
@@ -183,9 +177,6 @@ export default function FloatingNav() {
         isOpen={mobileMenuOpen}
         onClose={() => {
           setMobileMenuOpen(false);
-          // Blur the active element so focus doesn't snap back to the hamburger
-          // button when the menu closes during navigation — prevents a focus-state
-          // flash on the button during the VTA crossfade.
           if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
           }

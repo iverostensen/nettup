@@ -175,10 +175,6 @@ html[data-astro-transition] {
   scroll-behavior: auto !important;
 }
 
-/* Hide mobile menu during swap so it doesn't flash on the new page. */
-[data-astro-transition] #mobile-menu {
-  display: none !important;
-}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
