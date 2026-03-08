@@ -1,5 +1,21 @@
 import { services } from './services';
 
+export const NAVIGATION_TOOL = {
+  name: "navigate_to_page",
+  description: "Suggest navigating the user to a relevant page on nettup.no. Only call this when the user asks about something best shown on another page, or explicitly asks to go somewhere. Never navigate away from the current page without suggesting it first.",
+  input_schema: {
+    type: "object" as const,
+    properties: {
+      path: {
+        type: "string" as const,
+        enum: ["/", "/tjenester", "/tjenester/nettside", "/tjenester/nettbutikk", "/tjenester/vedlikehold", "/om-oss", "/prosjekter", "/kontakt"]
+      },
+      label: { type: "string" as const, description: "Short Norwegian label for the confirm chip, e.g. 'Se nettsidepakker'" }
+    },
+    required: ["path", "label"]
+  }
+};
+
 function buildServiceInfo(): string {
   return services
     .map((s) => {

@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import Anthropic from '@anthropic-ai/sdk';
-import { buildSystemPrompt } from '../../config/chatbot';
+import { buildSystemPrompt, NAVIGATION_TOOL } from '../../config/chatbot';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -91,6 +91,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       max_tokens: 1024,
       system: systemPrompt,
       messages,
+      tools: [NAVIGATION_TOOL],
     });
 
     const encoder = new TextEncoder();
@@ -113,6 +114,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         try {
           stream.on('text', (text) => {
             enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
+          });
+
+          stream.on('contentBlock', (block) => {
+            if (block.type === 'tool_use' && block.name === 'navigate_to_page') {
+              const input = block.input as { path: string; label: string };
+              enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({ tool: 'navigate_to_page', path: input.path, label: input.label })}\n\n`
+                )
+              );
+            }
           });
 
           stream.on('end', () => {
