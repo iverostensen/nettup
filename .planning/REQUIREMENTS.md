@@ -19,7 +19,7 @@
 
 ### Schema & Metadata
 
-- [ ] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
+- [x] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
 - [x] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
 
 ### Linking & Verification
@@ -72,7 +72,7 @@
 | INFRA-04 | Phase 24 | Complete |
 | CONTENT-01 | Phase 25 | Complete |
 | CONTENT-02 | Phase 25 | Complete |
-| SEO-01 | Phase 25 | Pending |
+| SEO-01 | Phase 25 | Complete |
 | SEO-02 | Phase 25 | Complete |
 | LINK-01 | Phase 25 | Complete |
 | LINK-02 | Phase 25 | Complete |

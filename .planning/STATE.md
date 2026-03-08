@@ -94,5 +94,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 25-03-PLAN.md — footer Områder vi dekker column + /kontakt regional sentence. LINK-01, LINK-02 satisfied. Phase 25 complete.
+Stopped at: Completed 25-02-PLAN.md — Service + FAQPage JSON-LD on city pages. SEO-01 satisfied. (25-03 also complete — Phase 25 done.)
 Resume file: None

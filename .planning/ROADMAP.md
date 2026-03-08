@@ -7,7 +7,7 @@ Build a scalable local SEO landing page system targeting Norwegian city search q
 ## Phases
 
 - [x] **Phase 24: Infrastruktur** - `locations.ts` config with V1/V2/V3-ready data model + dynamic `[location].astro` route — unblocks all city content (completed 2026-03-08)
-- [ ] **Phase 25: Tier 1 innhold** - 6–8 Tier 1 city entries with unique hand-written copy (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss)
+- [x] **Phase 25: Tier 1 innhold** - 6–8 Tier 1 city entries with unique hand-written copy (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss) (completed 2026-03-08)
 - [ ] **Phase 26: SEO og intern lenking** - `LocalBusiness` JSON-LD with `areaServed` per city, per-city metadata, footer/contact internal linking, sitemap coverage
 
 ## Phase Details
@@ -61,7 +61,7 @@ Plans:
 | Phase | Milestone | Status | Completed |
 |-------|-----------|--------|-----------|
 | 24. Infrastruktur | 1/1 | Complete    | 2026-03-08 |
-| 25. Tier 1 innhold | 2/3 | In Progress|  |
+| 25. Tier 1 innhold | 3/3 | Complete   | 2026-03-08 |
 | 26. SEO og intern lenking | v1.5 | Not started | - |
 
 ---
