@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404 – Side ikke funnet | Nettup"
+  description="Siden du leter etter finnes ikke. Gå tilbake til forsiden eller ta kontakt med oss."
+>
+  <main>
+    <div class="flex min-h-[60vh] items-center justify-center px-4 py-24">
+      <div class="text-center">
+        <p class="font-display text-9xl font-bold text-brand">404</p>
+        <h1 class="font-display mt-4 text-3xl font-bold tracking-tight text-text md:text-4xl">
+          Denne siden finnes ikke
+        </h1>
+        <p class="mx-auto mt-4 max-w-md text-text-muted">
+          Siden du leter etter er flyttet, slettet eller har aldri eksistert.
+        </p>
+        <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <a
+            href="/"
+            class="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-medium text-surface transition-colors hover:bg-brand-light"
+          >
+            Til forsiden
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-4 w-4"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+          <a
+            href="/kontakt"
+            class="text-text-muted transition-colors hover:text-text"
+          >
+            Kontakt oss
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
