@@ -1,9 +1,14 @@
 ---
 import { cities, ACTIVE_TIER, type City } from '@/config/locations';
+import { services } from '@/config/services';
+import { remainingSlots } from '@/config/launchOffer';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Testimonials from '@/pages/_home/Testimonials.astro';
 
 export function getStaticPaths() {
   return cities
@@ -19,6 +24,31 @@ interface Props {
 }
 
 const { city } = Astro.props;
+
+const allServices = ['nettside', 'nettbutikk', 'landingsside']
+  .map((slug) => services.find((s) => s.slug === slug))
+  .filter(Boolean);
+
+const nettside = services.find((s) => s.slug === 'nettside')!;
+const hasOffer = remainingSlots > 0;
+
+const steps = [
+  {
+    step: '1',
+    title: 'Samtale',
+    desc: 'Vi tar en uforpliktende prat om hva du trenger. Ingen salgspress — bare ærlige råd.',
+  },
+  {
+    step: '2',
+    title: 'Vi bygger',
+    desc: 'Du godkjenner design og vi bygger nettsiden. Du følger prosessen underveis.',
+  },
+  {
+    step: '3',
+    title: 'Lansering',
+    desc: 'Nettsiden går live. Vi sørger for at alt fungerer og at du er klar til å ta imot kunder.',
+  },
+];
 ---
 
 <BaseLayout title={city.metaTitle} description={city.metaDescription}>
@@ -66,8 +96,61 @@ const { city } = Astro.props;
         <p class="reveal-on-scroll reveal-stagger-2 mt-4 text-lg text-text-muted">
           {city.intro}
         </p>
+        <div class="reveal-on-scroll reveal-stagger-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Button href={`/kontakt?sted=${city.slug}`} size="lg">Få et gratis tilbud</Button>
+          <span class="text-sm text-text-muted">
+            {hasOffer ? (
+              <>
+                <span class="font-semibold text-brand">{nettside.launchPriceRange}</span>
+                {' '}
+                <span class="line-through">{nettside.priceRange}</span>
+                {' · '}
+                <span>{remainingSlots} plasser igjen</span>
+              </>
+            ) : (
+              <>{nettside.priceRange} · Klar på 2–4 uker</>
+            )}
+          </span>
+        </div>
       </div>
     </Section>
+
+    <Section background="raised">
+      <SectionHeader
+        title="Tjenester vi tilbyr"
+        subtitle={`Vi hjelper bedrifter i ${city.name} med alt fra enkle nettsider til nettbutikker`}
+      />
+      <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          allServices.map((service) => (
+            <Card as="a" href={`/tjenester/${service!.slug}`} hover padding="lg" class="flex flex-col">
+              <h3 class="mb-1 font-semibold text-text">{service!.name}</h3>
+              <p class="mb-3 text-sm text-brand">{service!.tagline}</p>
+              <p class="mt-auto text-sm font-semibold text-text-muted">{service!.priceRange}</p>
+            </Card>
+          ))
+        }
+      </div>
+    </Section>
+
+    <Section>
+      <SectionHeader title="Slik jobber vi" subtitle="Enkelt, digitalt og uten unødvendig venting" />
+      <div class="mt-10 grid gap-8 md:grid-cols-3">
+        {
+          steps.map((item) => (
+            <div class="reveal-on-scroll flex flex-col items-start gap-4">
+              <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand/20 text-xl font-bold text-brand">
+                {item.step}
+              </div>
+              <h3 class="text-lg font-semibold">{item.title}</h3>
+              <p class="text-text-muted">{item.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+
+    <Testimonials />
 
     <Section background="raised">
       <SectionHeader
