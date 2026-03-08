@@ -23,6 +23,33 @@ const { city } = Astro.props;
 ---
 
 <BaseLayout title={city.metaTitle} description={city.metaDescription}>
+  <script
+    is:inline
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": `Nettside for bedrift i ${city.name}`,
+      "provider": { "@id": "https://nettup.no/#business" },
+      "areaServed": { "@type": "City", "name": city.name },
+      "url": `https://nettup.no/steder/${city.slug}`
+    })}
+  />
+  <script
+    is:inline
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": city.faq.map((item) => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+      }))
+    })}
+  />
   <main>
     <div class="container pt-8">
       <Breadcrumbs
