@@ -26,6 +26,19 @@ const steps = [
 ];
 ---
 
+<script is:inline type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Slik jobber vi – fra samtale til lansering",
+  "description": "Nettups 4-stegs prosess for å levere nettside til norske bedrifter.",
+  "step": steps.map((s, i) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "name": s.title,
+    "text": s.description,
+  })),
+})} />
+
 <Section background="raised">
   <SectionHeader title="Slik jobber vi" />
   <div class="mx-auto max-w-4xl">
