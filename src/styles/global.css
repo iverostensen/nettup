@@ -168,6 +168,7 @@ body {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
+  mix-blend-mode: normal;
 }
 
 /* Prevent smooth scroll from animating the scroll-reset between pages. */
