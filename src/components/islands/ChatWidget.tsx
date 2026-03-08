@@ -573,11 +573,13 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                       message.role === 'assistant'
                         ? renderMarkdown(message.content)
                         : message.content
-                    ) : (
-                      isStreaming && index === messages.length - 1 && (
-                        <TypingIndicator />
-                      )
-                    )}
+                    ) : index === messages.length - 1 ? (
+                      isStreaming
+                        ? <TypingIndicator />
+                        : pendingNavigation
+                          ? renderMarkdown('Her finner du mer informasjon:')
+                          : null
+                    ) : null}
                   </div>
                 </div>
               ))}
