@@ -23,10 +23,19 @@ React and animations are allowed here. This is our portfolio piece.
 | Route | Purpose | Status |
 |-------|---------|--------|
 | `/` | Homepage - hero, services overview, testimonials, CTA | ✅ Complete |
-| `/tjenester` | What we offer, pricing tiers | ✅ Complete |
+| `/tjenester` | Service catalog overview | ✅ Complete |
+| `/tjenester/nettside` | Website service detail + FAQ | ✅ Complete |
+| `/tjenester/nettbutikk` | E-commerce service detail + FAQ | ✅ Complete |
+| `/tjenester/landingsside` | Landing page service detail + FAQ | ✅ Complete |
 | `/om-oss` | About Nettup, values, how we work | ✅ Complete |
-| `/prosjekter` | Portfolio with iGive case study | ✅ Complete |
+| `/prosjekter` | Portfolio card grid | ✅ Complete |
+| `/prosjekter/[slug]` | Dynamic case study pages (iGive, Blom Company) | ✅ Complete |
 | `/kontakt` | Contact form, response time | ✅ Complete |
+| `/priskalkulator` | 6-step additive pricing wizard | ✅ Complete |
+| `/blogg` | Blog index | ✅ Complete |
+| `/blogg/[slug]` | Auto-generated blog articles (6 published) | ✅ Complete |
+| `/nettside-for-bedrift` | B2B landing page | ✅ Complete |
+| `/personvern` | Privacy policy | ✅ Complete |
 
 ## Structure
 
@@ -34,20 +43,25 @@ React and animations are allowed here. This is our portfolio piece.
 src/
 ├── components/
 │   ├── sections/      → Shared sections (CTA, Testimonials)
-│   ├── islands/       → React components (FloatingNav, MobileMenu, forms)
+│   ├── islands/       → React components (22 islands: FloatingNav, ChatWidget, SmartPrisKalkulator, wizard steps, etc.)
 │   ├── layout/        → Footer
-│   └── ui/            → Button, Card, Section, SectionHeader, LinkWithArrow
+│   └── ui/            → Button, Card, Section, SectionHeader, LinkWithArrow, Breadcrumbs
+├── config/            → Single source of truth files (services.ts, projects.ts, pricing-config.ts, chatbot.ts, launchOffer.ts, brand.ts)
+├── content/
+│   └── blogg/         → Astro Content Collection (6 published articles)
 ├── layouts/
 │   └── BaseLayout.astro
+├── lib/               → calculateEstimate(), utils, animation helpers + Vitest tests
 ├── pages/
-│   ├── index.astro           → Homepage
-│   ├── _home/                → Homepage sections
-│   ├── tjenester/
-│   │   ├── index.astro
-│   │   └── _sections/        → Tjenester sections
-│   └── [other pages]/
-│       ├── index.astro
-│       └── _sections/        → Page-specific sections
+│   ├── index.astro
+│   ├── _home/
+│   ├── tjenester/     → index + nettside/, nettbutikk/, landingsside/ (each with _sections/)
+│   ├── prosjekter/    → index + [slug].astro (iGive, Blom Company)
+│   ├── blogg/         → index + [slug].astro
+│   ├── priskalkulator/
+│   └── api/           → chat.ts (SSE streaming), suggestions.ts (rate-limited)
+├── scripts/
+│   └── blog/          → Automated generation pipeline (8 files, Claude API + GitHub)
 └── styles/
     └── global.css
 ```
@@ -77,6 +91,10 @@ npm run build    # Production build
 npm run preview  # Preview build
 ```
 
+## Conventions
+
+- **First section top padding:** Use `pt-32 md:pt-40` on the first content block of any page to clear the fixed navbar. The `Section` component's `hero` padding preset already handles this for hero sections.
+
 ## Rules for This Project
 
 1. **Norwegian content** - all text in Norwegian (bokmål)
@@ -98,35 +116,34 @@ This is our showcase, so animations should be polished:
 
 ### Completed
 
-- [x] All 5 pages built and working
+- [x] 14 pages built and working (5 core + tjenester sub-pages + blogg + priskalkulator + case studies + personvern)
 - [x] Formspree ID configured (`xnjnzybj`)
-- [x] Build passes cleanly (1.1s, 5 pages)
+- [x] Build passes cleanly
 - [x] Mobile-responsive design
 - [x] Accessibility: focus states, reduced motion, semantic HTML
 - [x] Form validation with honeypot spam protection
 - [x] `robots.txt` created
-- [x] `@astrojs/sitemap` integration (auto-generates sitemap)
-- [x] JSON-LD Organization schema in BaseLayout
+- [x] `@astrojs/sitemap` integration (all 14 routes included)
+- [x] JSON-LD Organization schema in BaseLayout; CreativeWork + BreadcrumbList on case study pages
 - [x] ESLint with TypeScript parser (0 errors)
 - [x] `og-image.jpg` created (1200x630px, 35KB)
-
-### Before Launch (Critical)
-
-- [x] **Test form submission** end-to-end with Formspree
-
-### High Priority (Launch or Soon After)
-
-- [x] Optimize `salg.igive.no.png` (resized 2940px → 1600px, 1.1MB → 562KB)
-- [x] Add `aria-live="polite"` to form success/error messages (already implemented)
+- [x] Test form submission end-to-end with Formspree
+- [x] Optimize images (salg.igive.no.png: 1.1MB → 562KB)
 - [x] Add preload hints for fonts and critical assets
-- [x] Run Lighthouse audit and fix any issues
-
-### Medium Priority (Post-Launch)
-
-- [x] Convert logo to SVG (currently 95KB PNG)
+- [x] Run Lighthouse audit (CI via GitHub Actions)
+- [x] Convert logo to SVG
 - [x] Create `manifest.json` for PWA support
 - [x] Add Vercel Analytics
-- [ ] Add more projects to `/prosjekter`
+- [x] AI chatbot widget with SSE streaming, page context, navigation chips, suggestion chips
+- [x] 6-step additive pricing wizard with Vitest-tested calculation engine
+- [x] Automated blog pipeline (GitHub Actions, Claude API, Monday 08:00 UTC)
+- [x] Dynamic case study pages for iGive and Blom Company
+
+### Ongoing
+
+- [ ] Replace placeholder testimonials with real client quotes
+- [ ] Add more projects to `/prosjekter` (currently iGive + Blom Company)
+- [ ] Local SEO city pages (v1.5 — in progress)
 
 ## Build Info
 
