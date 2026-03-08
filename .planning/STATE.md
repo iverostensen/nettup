@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-08T15:05:00.000Z"
+last_updated: "2026-03-08T17:52:19.505Z"
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 10
+  completed_plans: 9
 ---
 
 # Project State
@@ -46,6 +46,7 @@ Progress: [██████████] 100%
 | Phase 25 P03 | 52s | 2 tasks | 2 files |
 | Phase 26 P01 | ~1 min | 2 tasks | 3 files |
 | Phase 26 P02 | 2 | 1 tasks | 0 files |
+| Phase 28-floatingnav-rewrite P01 | 20 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Key decisions from v1.5 research to carry into planning:
 - [v1.5 research]: `@astrojs/sitemap` has known regression in hybrid mode (issue #7015) — verify sitemap coverage immediately after first deploy; have custom endpoint ready as fallback
 - [Phase 25]: lg:grid-cols-4 in footer (not md:) prevents 4 cols being too narrow at 768px; logo uses md:col-span-2 lg:col-span-1
 - [Phase 26]: LINK-03 verified 2026-03-08: 8 /steder/* URLs confirmed in sitemap at priority 0.8
+- [Phase 28-01]: FloatingNav converted from client:only React island to Astro component + transition:persist — eliminates hydration gap that caused raw HTML flash
+- [Phase 28-01]: MobileMenu stays React island but self-manages open state via CustomEvent('open-mobile-menu') dispatched by Astro hamburger button
+- [Phase 28-01]: Tjenester sub-page label reverts to 'Tjenester' after SPA navigation — accepted tradeoff, active color state is always correct
 
 ### Pending Todos
 
