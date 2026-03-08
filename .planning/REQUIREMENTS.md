@@ -24,8 +24,8 @@
 
 ### Linking & Verification
 
-- [ ] **LINK-01**: Footer has an "Omrader vi dekker" section listing all Tier 1 cities — ships in the same deploy as city pages (no orphan pages)
-- [ ] **LINK-02**: `/kontakt` page mentions Oslo-region and nearby areas coverage
+- [x] **LINK-01**: Footer has an "Omrader vi dekker" section listing all Tier 1 cities — ships in the same deploy as city pages (no orphan pages)
+- [x] **LINK-02**: `/kontakt` page mentions Oslo-region and nearby areas coverage
 - [ ] **LINK-03**: All city pages appear in `sitemap-index.xml` after first deploy (verified manually)
 - [ ] **LINK-04**: V2 promotion criteria documented as measurable thresholds before V2 work begins (e.g. all V1 pages indexed in Search Console + ≥3 pages with organic impressions)
 
@@ -74,8 +74,8 @@
 | CONTENT-02 | Phase 25 | Complete |
 | SEO-01 | Phase 25 | Pending |
 | SEO-02 | Phase 25 | Complete |
-| LINK-01 | Phase 25 | Pending |
-| LINK-02 | Phase 25 | Pending |
+| LINK-01 | Phase 25 | Complete |
+| LINK-02 | Phase 25 | Complete |
 | LINK-03 | Phase 26 | Pending |
 | LINK-04 | Phase 26 | Pending |
 
