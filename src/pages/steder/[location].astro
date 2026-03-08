@@ -51,7 +51,7 @@ const { city } = Astro.props;
     />
   </Fragment>
   <main>
-    <div class="container pt-8">
+    <Section class="pt-32 md:pt-40">
       <Breadcrumbs
         items={[
           { label: 'Hjem', href: '/' },
@@ -59,10 +59,7 @@ const { city } = Astro.props;
           { label: city.name },
         ]}
       />
-    </div>
-
-    <Section>
-      <div class="max-w-3xl">
+      <div class="mt-6 max-w-3xl">
         <h1 class="reveal-on-scroll reveal-stagger-1 text-4xl font-bold md:text-5xl">
           Nettside for bedrift i {city.name}
         </h1>
@@ -96,7 +93,7 @@ const { city } = Astro.props;
         title="Områder vi dekker i nærheten"
         subtitle={`Vi hjelper bedrifter i ${city.name} og nærliggende kommuner`}
       />
-      <div class="mt-8 flex flex-wrap gap-3">
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
         {
           city.nearbyAreas.map((area) => {
             const nearbyCity = cities.find((c) => c.slug === area);
