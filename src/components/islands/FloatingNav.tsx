@@ -20,6 +20,7 @@ const navItems = [
 export default function FloatingNav() {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState('/');
   const shouldReduceMotion = useReducedMotion();
@@ -50,6 +51,17 @@ export default function FloatingNav() {
 
     return () => {
       document.removeEventListener('astro:page-load', updatePath);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onStart = () => setIsTransitioning(true);
+    const onEnd = () => setIsTransitioning(false);
+    document.addEventListener('astro:before-swap', onStart);
+    document.addEventListener('astro:page-load', onEnd);
+    return () => {
+      document.removeEventListener('astro:before-swap', onStart);
+      document.removeEventListener('astro:page-load', onEnd);
     };
   }, []);
 
@@ -94,10 +106,10 @@ export default function FloatingNav() {
     <>
       <motion.nav
           initial={{ y: shouldReduceMotion ? 0 : -100, opacity: 0 }}
-          animate={{
-            y: visible ? 0 : -100,
-            opacity: visible ? 1 : 0,
-          }}
+          animate={isTransitioning
+            ? { y: 0, opacity: 1 }
+            : { y: visible ? 0 : -100, opacity: visible ? 1 : 0 }
+          }
           transition={{
             duration: shouldReduceMotion ? 0 : duration.fast,
             ease: 'easeOut',
