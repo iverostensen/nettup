@@ -175,11 +175,11 @@ body {
 }
 
 ::view-transition-old(root) {
-  animation: 80ms ease-in both vt-fade-out;
+  animation: 150ms ease-in both vt-fade-out;
 }
 
 ::view-transition-new(root) {
-  animation: 120ms ease-out both vt-fade-in;
+  animation: 250ms ease-out both vt-fade-in;
 }
 
 /* During page navigation, suppress reveal-on-scroll CSS transitions so elements
