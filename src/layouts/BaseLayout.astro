@@ -6,6 +6,7 @@ import FloatingNav from '../components/islands/FloatingNav';
 import ChatWidget from '../components/islands/ChatWidget';
 import Footer from '../components/layout/Footer.astro';
 import Analytics from '@vercel/analytics/astro';
+import { cities, ACTIVE_TIER } from '@/config/locations';
 
 interface Props {
   title: string;
@@ -20,6 +21,15 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const areaServedCities = cities
+  .filter(c => c.tier <= ACTIVE_TIER)
+  .map(c => ({ "@type": "City" as const, "name": c.name }));
+
+const areaServed = [
+  ...areaServedCities,
+  { "@type": "Country" as const, "name": "Norway" },
+];
 
 const pageLabels: Record<string, string> = {
   '/': 'Hjem',
@@ -139,20 +149,7 @@ const breadcrumbSchema = {
       "priceRange": "2500-10000 NOK",
       "paymentAccepted": ["Faktura", "Bankoverføring"],
       "currenciesAccepted": "NOK",
-      "areaServed": [
-        {
-          "@type": "City",
-          "name": "Oslo"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Oslo-området"
-        },
-        {
-          "@type": "Country",
-          "name": "Norway"
-        }
-      ],
+      "areaServed": areaServed,
       "serviceType": ["Webdesign", "Webutvikling", "SEO"],
       "knowsLanguage": "nb",
       "sameAs": [

@@ -3,6 +3,14 @@
 // Eksempler: Bærum → baerum, Lillestrøm → lillestrom, Ås → as
 // Bruk alltid ASCII-slugs i slug-feltet. Visningsnavn med norske tegn i name-feltet.
 
+/**
+ * V2-promoteringskriterier:
+ * En by promoteres fra tier 1 til tier 2 når:
+ * - Bysiden har ≥10 organiske inntrykk per måned i Google Search Console
+ * - Vurderes individuelt — Oslo kan promoteres uavhengig av andre byer
+ *
+ * Øk ACTIVE_TIER til 2 for å aktivere tier-2-byer.
+ */
 export const ACTIVE_TIER = 1;
 
 export interface City {
