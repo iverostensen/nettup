@@ -49,7 +49,7 @@ Plans:
 
 **Requirements:** LINK-03, LINK-04
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 26-01-PLAN.md — Dynamic areaServed in BaseLayout + sitemap priority rules + V2 JSDoc
@@ -68,7 +68,7 @@ Plans:
 |-------|-----------|--------|-----------|
 | 24. Infrastruktur | 1/1 | Complete    | 2026-03-08 |
 | 25. Tier 1 innhold | 3/3 | Complete    | 2026-03-08 |
-| 26. SEO og intern lenking | v1.5 | Not started | - |
+| 26. SEO og intern lenking | 1/2 | In Progress|  |
 
 ---
 *Roadmap updated: 2026-03-08*

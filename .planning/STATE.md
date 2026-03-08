@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-08T02:14:27.842Z"
+last_updated: "2026-03-08T14:00:00.000Z"
 progress:
   total_phases: 2
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.5 Lokale SEO-sider — Phase 25: Tier 1 innhold
+**Current focus:** v1.5 Lokale SEO-sider — Phase 26: SEO og intern lenking (complete)
 
 ## Current Position
 
-Phase: 25 of 26 (Tier 1 innhold)
-Plan: 3 of 3 complete
-Status: Phase 25 complete — all 3 plans executed (city content, JSON-LD, footer + kontakt links)
-Last activity: 2026-03-08 — Executed 25-03 footer city column + /kontakt regional sentence
+Phase: 26 of 26 (SEO og intern lenking)
+Plan: 1 of 1 complete
+Status: Phase 26 complete — v1.5 milestone complete. All LINK requirements satisfied.
+Last activity: 2026-03-08 — Executed 26-01: dynamic areaServed + sitemap steder rules + V2 JSDoc
 
 Progress: [██████████] 100%
 
@@ -44,10 +44,16 @@ Progress: [██████████] 100%
 | 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
 | 19. GitHub Actions | 1/1 | 15 min | 15 min |
 | Phase 25 P03 | 52s | 2 tasks | 2 files |
+| Phase 26 P01 | ~1 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
 ### Decisions
+
+Key decisions from Phase 26-01 execution:
+- [26-01]: areaServed computed from cities.filter(c => c.tier <= ACTIVE_TIER) — self-maintaining as new city configs are added
+- [26-01]: AdministrativeArea Oslo-området entry dropped — redundant once actual city entries cover Oslo
+- [26-01]: steder index rule (priority 0.9) added as future-safe — harmless until v2 index page is added
 
 Key decisions from Phase 25-01 execution:
 - [25-01]: City intro copy differentiated via local neighborhood references — not generic bynavn-swap pattern
@@ -94,5 +100,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 25-02-PLAN.md — Service + FAQPage JSON-LD on city pages. SEO-01 satisfied. (25-03 also complete — Phase 25 done.)
+Stopped at: Completed 26-01-PLAN.md — dynamic areaServed, sitemap steder rules, V2 JSDoc. LINK-03 + LINK-04 satisfied. v1.5 milestone complete.
 Resume file: None
