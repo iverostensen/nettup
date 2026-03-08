@@ -1,8 +1,8 @@
 # Architecture Research
 
-**Domain:** Multi-page portfolio system integrated into existing Astro 5 marketing site
-**Researched:** 2026-03-07
-**Confidence:** HIGH (based on direct codebase analysis — no external sources needed)
+**Domain:** Local SEO landing pages integrated into existing Astro 5 SSG marketing site
+**Researched:** 2026-03-08
+**Confidence:** HIGH (based on direct codebase analysis — no external sources needed for integration questions)
 
 ## Standard Architecture
 
@@ -10,365 +10,445 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        src/config/ (data layer)                      │
-│  ┌──────────────┐  ┌────────────────┐  ┌───────────────────────┐    │
-│  │  projects.ts │  │ testimonials.ts│  │      services.ts      │    │
-│  │  (extended)  │  │  (unchanged)   │  │      (unchanged)      │    │
-│  └──────┬───────┘  └───────┬────────┘  └───────────────────────┘    │
-└─────────┼──────────────────┼──────────────────────────────────────── ┘
+│                     src/config/ (data layer)                         │
+│  ┌──────────────┐  ┌────────────────┐  ┌──────────────────────────┐  │
+│  │ locations.ts │  │  services.ts   │  │  testimonials.ts         │  │
+│  │  (NEW)       │  │  (unchanged)   │  │  (unchanged)             │  │
+│  └──────┬───────┘  └───────┬────────┘  └──────────────────────────┘  │
+└─────────┼──────────────────┼───────────────────────────────────────── ┘
           │                  │
-┌─────────▼──────────────────▼──────────────────────────────────────── ┐
-│                        src/pages/prosjekter/                          │
-│  ┌──────────────┐  ┌──────────────────┐  ┌──────────────────────┐    │
-│  │  index.astro │  │ igive/index.astro│  │blom-company/         │    │
-│  │  (redesigned)│  │  (case study)    │  │index.astro (new)     │    │
-│  └──────┬───────┘  └────────┬─────────┘  └──────────┬───────────┘    │
-│         │                   │                        │               │
-│  _sections/             _shared/ (reused by both case study pages)  │
-│  Hero.astro             CaseStudyHero.astro                         │
-│  ProjectGrid.astro      ChallengeAndSolution.astro                  │
-│  ProsjekterCTA.astro    TechStack.astro                             │
-│                         MetricsGrid.astro                           │
-│                         VisualGallery.astro                         │
-│                         CaseStudyTestimonial.astro                  │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────▼──────────────────▼───────────────────────────────────────── ┐
+│                     src/pages/steder/                                   │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  [location].astro (NEW dynamic route)                            │   │
+│  │  getStaticPaths() → locations.map(l => ({ params: { location:   │   │
+│  │    l.slug }, props: { city: l } }))                              │   │
+│  └──────────────────────┬───────────────────────────────────────────┘   │
+│                         │ imports and composes                           │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │                   _sections/                                     │    │
+│  │  CityHero.astro   CityServices.astro   CityFAQ.astro            │    │
+│  │  CityTestimonials.astro  CityCTA.astro  NearbyAreas.astro        │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────── ┘
           │
-┌─────────▼──────────────────────────────────────────────────────────┐
-│                     src/components/ (shared UI)                     │
-│  ui/Card.astro, ui/Section.astro — unchanged                        │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────▼────────────────────────────────────────────────────────────┐
+│         BaseLayout.astro (MODIFIED — accepts city?: CityMeta)         │
+│         Footer.astro    (MODIFIED — dynamic city links)               │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Component Responsibilities
 
 | Component | Responsibility | Lives In |
 |-----------|----------------|----------|
-| `projects.ts` | Single source of truth for all project metadata — drives both index grid and case study pages | `src/config/` |
-| `index.astro` (prosjekter) | Redesigned: imports ProjectGrid, renders all projects as cards with links | `src/pages/prosjekter/` |
-| `ProjectGrid.astro` | Replaces ProjectShowcase — renders all `projects[]` as card grid, each linking to `/prosjekter/[slug]` | `src/pages/prosjekter/_sections/` |
-| `igive/index.astro` | Full iGive case study page — assembles page-specific sections, owns JSON-LD, owns `<title>` | `src/pages/prosjekter/igive/` |
-| `CaseStudyHero.astro` | Title, category badge, tagline, live URL link — reusable across all case study pages | `src/pages/prosjekter/_shared/` |
-| `TechStack.astro` | Renders `techStack[]` array as badge grid — reusable | `src/pages/prosjekter/_shared/` |
-| `MetricsGrid.astro` | Renders `metrics[]` as stat cards (Lighthouse, perf numbers) — reusable | `src/pages/prosjekter/_shared/` |
-| `VisualGallery.astro` | 1–N screenshots using Astro `<Image>` — reusable | `src/pages/prosjekter/_shared/` |
-| `ChallengeAndSolution.astro` | Two-column challenge/solution card grid — reusable | `src/pages/prosjekter/_shared/` |
-| `CaseStudyTestimonial.astro` | Pull quote block with photo, name, title — reusable | `src/pages/prosjekter/_shared/` |
-| `blom-company/index.astro` | Full Blom Company case study page — different section ordering than iGive is fine | `src/pages/prosjekter/blom-company/` |
+| `locations.ts` | Single source of truth for all city data — drives `getStaticPaths()`, SEO metadata, JSON-LD, internal linking | `src/config/` |
+| `[location].astro` | Dynamic route — resolves city from config, composes sections, owns JSON-LD, delegates title/description to BaseLayout | `src/pages/steder/` |
+| `CityHero.astro` | City-specific H1, intro paragraph, primary CTA — receives `city: City` prop | `src/pages/steder/_sections/` |
+| `CityServices.astro` | Which services are relevant for this city (drawn from services.ts) — static or city-specific list | `src/pages/steder/_sections/` |
+| `CityFAQ.astro` | City-specific FAQ items (from `city.faq[]`) rendered with FAQPage JSON-LD | `src/pages/steder/_sections/` |
+| `CityTestimonials.astro` | Shared testimonials component — same content across cities in V1 | `src/pages/steder/_sections/` |
+| `CityCTA.astro` | Contact CTA section with city name interpolated | `src/pages/steder/_sections/` |
+| `NearbyAreas.astro` | Internal link list to nearby city pages (from `city.nearbyAreas[]`) | `src/pages/steder/_sections/` |
+| `BaseLayout.astro` | Modified: accepts optional `city?: CityMeta` prop to emit city-scoped LocalBusiness JSON-LD via head slot | `src/layouts/` |
+| `Footer.astro` | Modified: imports `locations.ts`, renders dynamic "Vi dekker" link section capped at Tier 1 | `src/components/layout/` |
 
 ## Recommended Project Structure
 
 ```
 src/
 ├── config/
-│   └── projects.ts               # MODIFIED: extended data model (see below)
+│   └── locations.ts               # NEW: city data model (see interface below)
+│
+├── layouts/
+│   └── BaseLayout.astro           # MODIFIED: add city?: CityMeta prop
+│
+├── components/
+│   └── layout/
+│       └── Footer.astro           # MODIFIED: add dynamic city coverage links
 │
 └── pages/
-    └── prosjekter/
-        ├── index.astro            # MODIFIED: redesigned as grid index
-        ├── _sections/             # Index page sections only
-        │   ├── Hero.astro         # UNCHANGED
-        │   ├── ProjectGrid.astro  # NEW: replaces ProjectShowcase.astro
-        │   └── ProsjekterCTA.astro # UNCHANGED
-        │
-        ├── _shared/               # NEW: shared case study components
-        │   ├── CaseStudyHero.astro
-        │   ├── ChallengeAndSolution.astro
-        │   ├── TechStack.astro
-        │   ├── MetricsGrid.astro
-        │   ├── VisualGallery.astro
-        │   └── CaseStudyTestimonial.astro
-        │
-        ├── igive/
-        │   └── index.astro        # NEW: full iGive case study page
-        │
-        └── blom-company/
-            └── index.astro        # NEW: full Blom Company case study page
+    └── steder/                    # NEW: city landing pages folder
+        ├── [location].astro       # NEW: dynamic route
+        └── _sections/
+            ├── CityHero.astro     # NEW
+            ├── CityServices.astro # NEW
+            ├── CityFAQ.astro      # NEW
+            ├── CityTestimonials.astro # NEW
+            ├── CityCTA.astro      # NEW
+            └── NearbyAreas.astro  # NEW
 ```
 
 ### Structure Rationale
 
-- **`_shared/` inside `prosjekter/`:** Keeps case study components co-located with the feature, not polluting the global `src/components/ui/`. These components are only meaningful in a project/case study context. Follows the same co-location pattern as `_sections/` directories already in the codebase.
-- **Individual `igive/index.astro` vs `[slug].astro`:** See routing decision section below.
-- **`_sections/` stays for index page only:** Preserves the existing pattern. Hero, new ProjectGrid, ProsjekterCTA.
-- **No `Results.astro` on index:** That section's data belongs on individual case study pages. Remove from index during the redesign; fold any aggregate stats into the index Hero if needed.
+- **`src/pages/steder/[location].astro`:** Route segment is `steder` ("places" in Norwegian), giving clean URLs `/steder/oslo`, `/steder/drammen`. Avoids collision with any existing route. Does not use `/[location].astro` at root level — root-level dynamic routes conflict with the static pages (`/om-oss`, `/kontakt`) in Astro unless filtered explicitly; `steder/` avoids that entirely.
+- **`_sections/` inside `steder/`:** Follows the co-location convention established by every other page in the codebase. City section components are meaningful only in a city context — they do not belong in `src/components/ui/`.
+- **`locations.ts` in `src/config/`:** Consistent with the `services.ts` / `projects.ts` / `testimonials.ts` pattern. All data lives in `config/`.
 
-## Routing Decision: Individual Files vs `[slug].astro`
+## Architectural Patterns
 
-**Recommendation: Individual files (`igive/index.astro`, `blom-company/index.astro`)**
+### Pattern 1: Config-Driven `getStaticPaths()`
 
-This matches the established pattern from the service pages (`tjenester/nettside/index.astro`, `tjenester/nettbutikk/index.astro`). The project documented this decision in PROJECT.md as a confirmed good outcome:
+**What:** `[location].astro` calls `getStaticPaths()` which maps over `locations` array and returns `{ params: { location: city.slug }, props: { city } }`. The page receives the full `City` object as a typed prop. No data fetching, no runtime.
 
-> "Individual index.astro per service (not [slug].astro) — Services need structurally different sections" — outcome: Good
+**When to use:** Any time the number of pages is determined by a config file. Already used by `blogg/[slug].astro` via Astro content collections. Same pattern, different data source.
 
-The same rationale applies to case studies with even more force:
+**Trade-offs:** Requires full build to add a new city. At 300 cities build time stays under 30 seconds for pure SSG — acceptable. Runtime cannot be used to dynamically add pages without a deploy.
 
-| Factor | Individual files | `[slug].astro` |
-|--------|------------------|----------------|
-| Section ordering per project | Freely different per page | Constrained to one template |
-| Blom (Shopify) may need unique sections | Yes, easy to add | Requires conditional rendering |
-| iGive-specific content | Directly in file | Embedded in config or conditionals |
-| Adding project N | Copy a page, fill sections | No new file needed |
-| TypeScript safety | Config validates shared fields; page content typed locally | Config must model all possible sections for all projects |
-| Build complexity | Simple; one static file per project | Needs `getStaticPaths()` |
-| Incremental rework risk | Low — pages are isolated | Medium — template change affects all projects |
-
-**Verdict:** Use individual files. At 2–5 projects there is no scale benefit from dynamic routing that outweighs the flexibility cost. If the portfolio ever exceeds ~15 structurally identical projects, reconsider.
-
-## `projects.ts` Data Model
-
-**Recommended extended interface:**
-
+**Example:**
 ```typescript
-import type { ImageMetadata } from 'astro';
-
-export interface ProjectMetric {
-  label: string;        // e.g. "Lighthouse ytelse"
-  value: string;        // e.g. "98/100"
-  description?: string; // e.g. "Målt desember 2024"
+// src/pages/steder/[location].astro
+export async function getStaticPaths() {
+  return locations.map((city) => ({
+    params: { location: city.slug },
+    props: { city },
+  }));
 }
 
-export interface Project {
-  // --- Index grid fields (required for all projects) ---
-  id: string;                  // keep for backward compat
-  slug: string;                // URL segment: "igive", "blom-company"
-  name: string;
-  category: string;            // e.g. "B2B", "Nettbutikk"
-  type: string;                // e.g. "Gavekort-plattform", "Shopify"
-  tagline: string;             // Short — shown on index card
-  description: string;         // 1-2 sentences — shown on index card
-  coverImage: ImageMetadata;   // renamed from image (hero + card image)
-  coverImageAlt: string;       // renamed from imageAlt
-  url?: string;                // live site link
+interface Props {
+  city: City;
+}
 
-  // --- Case study page fields ---
-  techStack?: string[];        // e.g. ["Astro", "Tailwind", "Shopify Headless"]
-  challenge?: string;          // paragraph text
-  solution?: string;           // paragraph text
-  deliverables?: string[];     // renamed from features (more accurate)
-  metrics?: ProjectMetric[];   // Lighthouse scores, perf numbers, outcomes
-  gallery?: ImageMetadata[];   // additional screenshots beyond coverImage
-  testimonialCompany?: string; // joins testimonials.ts by company field
+const { city } = Astro.props;
+```
 
-  // --- SEO / structured data fields ---
-  metaTitle?: string;          // <title> override for case study page
-  metaDescription?: string;    // meta description for case study page
-  publishedAt?: string;        // ISO date string for CreativeWork schema
+### Pattern 2: Head Slot Injection for City-Scoped JSON-LD
 
-  // --- Index behavior ---
-  comingSoon?: boolean;
+**What:** The city page does NOT modify BaseLayout. Instead it passes city-scoped `LocalBusiness` JSON-LD via the existing `<slot name="head" />` that BaseLayout already exposes. BaseLayout emits its own global `LocalBusiness` (areaServed: Norway) every page. The city page injects an additional, more specific `LocalBusiness` block scoped to that city.
+
+**When to use:** Any time a page needs structured data that overrides or supplements BaseLayout's defaults without modifying BaseLayout itself.
+
+**Trade-offs:** Two `LocalBusiness` blocks on city pages. Google handles multiple JSON-LD blocks on a single page correctly — the more specific block (city-scoped) will be picked up for local search alongside the country-level block. This is the correct SEO approach: do not remove the country-level block.
+
+**Why not modify BaseLayout to accept a `city` prop instead:** BaseLayout already receives `title`, `description`, `image` — adding a `city?: CityMeta` prop is a valid option, but it means BaseLayout must know about the City interface. The head slot injection keeps BaseLayout ignorant of the locations domain. Given that blog articles already inject their own `BreadcrumbList` via `<Fragment slot="head">` overriding BaseLayout's auto-generated one, this pattern is established and consistent.
+
+**Recommendation: use the head slot pattern.** It keeps BaseLayout's interface stable. The city page owns its own JSON-LD.
+
+**Example:**
+```typescript
+// In [location].astro frontmatter
+const cityLocalBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `https://nettup.no/steder/${city.slug}#business`,
+  "name": "Nettup",
+  "description": `Webdesign og webutvikling i ${city.name}. Moderne, raske nettsider for lokale bedrifter.`,
+  "url": `https://nettup.no/steder/${city.slug}`,
+  "telephone": "+47 413 27 136",
+  "email": "post@nettup.no",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": city.name,
+    "addressRegion": city.county,
+    "addressCountry": "NO"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": city.name
+  },
+  "sameAs": ["https://nettup.no/#business"],
+};
+```
+
+```astro
+<BaseLayout title={city.seoTitle} description={city.seoDescription}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(cityLocalBusinessSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    {city.faq.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    )}
+  </Fragment>
+  ...
+</BaseLayout>
+```
+
+### Pattern 3: Tier-Based Footer Linking
+
+**What:** `Footer.astro` imports `locations` from `locations.ts` and filters to `tier === 1` to render a "Vi dekker" section with ~8 city links. At V2 (30+ cities), filter still applies — only Tier 1 cities appear in the footer. The footer never lists 300 cities.
+
+**When to use:** Internal linking at a scale that doesn't bloat the footer. Footer links also help Google discover city pages via crawl.
+
+**Trade-offs:** Tier 1 cities get footer link equity. Tier 2/3 cities rely on sitemap and internal links from nearby city pages (`NearbyAreas.astro`).
+
+**Example:**
+```typescript
+// Footer.astro
+import { locations } from '@/config/locations';
+const tier1Cities = locations.filter((c) => c.tier === 1);
+```
+
+```astro
+<div>
+  <h3>Vi dekker blant annet</h3>
+  <ul>
+    {tier1Cities.map((city) => (
+      <li>
+        <a href={`/steder/${city.slug}`}>{city.name}</a>
+      </li>
+    ))}
+  </ul>
+</div>
+```
+
+## `locations.ts` Data Model
+
+The interface must support V1 (hand-crafted), V2 (AI-assisted), and V3 (full coverage) without structural changes. The key principle: all V1 fields remain required; V2/V3 fields use `?` optional and are populated progressively.
+
+```typescript
+// src/config/locations.ts
+
+export type CityTier = 1 | 2 | 3;
+
+export interface CityFAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface City {
+  // --- Required for all tiers ---
+  slug: string;             // URL segment: "oslo", "drammen", "barum"
+  name: string;             // Display name: "Oslo", "Drammen", "Bærum"
+  county: string;           // For address schema: "Oslo", "Viken", "Akershus"
+  tier: CityTier;           // 1 = Tier 1 (hand-crafted), 2 = AI-assisted, 3 = programmatic
+  region: string;           // Human grouping label: "Oslofjord-regionen"
+
+  // --- SEO metadata (required for all tiers — V2/V3 may be AI-generated) ---
+  seoTitle: string;         // <title>: "Nettside for bedrifter i Oslo | Nettup"
+  seoDescription: string;   // meta description: ≤160 chars, city-specific
+
+  // --- Page content ---
+  intro: string;            // 2-3 sentences, hand-written for Tier 1, AI for Tier 2/3
+  faq: CityFAQItem[];       // 3-5 items for Tier 1; can be [] for Tier 3 initially
+
+  // --- Internal linking ---
+  nearbyAreas: string[];    // Slugs of nearby city pages: ["drammen", "asker"]
+
+  // --- V2/V3 extension fields (optional in V1) ---
+  industries?: string[];    // Regional industries: ["bygg", "handel", "helse"] — drives V2 copy variation
+  population?: number;      // Used by V3 for programmatic relevance scoring
+}
+
+export const locations: City[] = [
+  {
+    slug: 'oslo',
+    name: 'Oslo',
+    county: 'Oslo',
+    tier: 1,
+    region: 'Oslofjord-regionen',
+    seoTitle: 'Nettside for bedrifter i Oslo | Nettup',
+    seoDescription: 'Nettup lager moderne, raske nettsider for bedrifter i Oslo. Profesjonelt webdesign fra 4 800 kr. Svar innen 24 timer.',
+    intro: '...',
+    faq: [],
+    nearbyAreas: ['drammen', 'asker', 'barum', 'lillestrøm'],
+  },
+  // ... other Tier 1 cities
+];
+```
+
+**V1/V2/V3 expansion strategy:**
+
+- **V1 (6–8 Tier 1 cities):** All fields populated by hand. `industries` optional, skip.
+- **V2 (30–50 cities, AI-assisted):** Script reads `locations.ts`, calls Claude API with city + `industries[]` context to generate `intro` and `faq[]`. Writes back to file. `tier: 2`.
+- **V3 (full Norway):** Programmatic. `intro` and `faq` templated from `industries[]` + `population`. `tier: 3`. No structural change to interface or route.
+
+**What does NOT go in `locations.ts`:**
+
+- Section composition or ordering — that belongs in `[location].astro`
+- Service prices — those come from `services.ts` imported in the page
+- Testimonials — drawn from `testimonials.ts` directly (same testimonials across all cities in V1)
+
+## `[location].astro` Section Composition
+
+The page imports section components and passes the `city` prop. Section ordering for V1:
+
+1. `CityHero` — `city.name`, `city.intro`, primary CTA to `/kontakt`
+2. `CityServices` — static services list (from `services.ts`) with city name in copy
+3. `CityTestimonials` — shared testimonials (city-agnostic in V1)
+4. `CityFAQ` — `city.faq[]` items + FAQPage JSON-LD
+5. `NearbyAreas` — links to `city.nearbyAreas[]` slugs
+6. `CityCTA` — contact CTA with city name interpolated
+
+**Every section receives `city: City` as a prop** even if it only uses `city.name`. This avoids prop drilling complexity and makes future V2 customization straightforward — any section can read any city field without changing the parent page's prop passing.
+
+## BaseLayout SEO Props — Exact Change
+
+BaseLayout's current `Props` interface:
+```typescript
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
 }
 ```
 
-**Key decisions in this model:**
+**Recommended: no change to this interface.** City pages pass `city.seoTitle` as `title` and `city.seoDescription` as `description`. The canonical URL is derived from `Astro.url.pathname` which is already correct for `/steder/oslo`.
 
-- `slug` is new and explicit. `id` was used for internal lookups; `slug` is the URL path segment. They can differ (e.g., `id: 'blomco'`, `slug: 'blom-company'`).
-- `coverImage` replaces `image` — a one-line rename. Prevents ambiguity when `gallery` is also `ImageMetadata[]`.
-- `testimonialCompany` formalizes the join that `ProjectShowcase.astro` already does informally (`testimonials.find(t => t.company === 'iGive')`).
-- `caseStudySection: boolean` is removed — all projects with a slug get a dedicated page. The index card links to the page regardless.
-- `metrics` is `{ label, value, description? }[]` rather than hardcoded Lighthouse fields — accommodates different metric types per project (perf scores, load time, client-reported revenue outcomes).
-- `deliverables` replaces `features` — the current `features` array contains delivered work items, not product features. Renaming improves clarity.
-- `gallery[]` image imports must be static imports at the top of `projects.ts`. Astro's image pipeline requires static imports; dynamic `import()` in config is not supported.
+The city-scoped `LocalBusiness` JSON-LD goes through `<slot name="head" />`, not through BaseLayout props. BaseLayout's global `LocalBusiness` block (areaServed: Country Norway) stays in place — it serves non-city pages correctly.
 
-## Shared Components
+**The only addition to consider:** `pageLabels` inside BaseLayout currently hardcodes labels for breadcrumb generation. City pages at `/steder/oslo` will fall back to `seg` (the raw slug, e.g. "oslo") for the third breadcrumb item, which is acceptable. If you want "Oslo" (display name) instead of "oslo" (slug) in the breadcrumb, the cleanest approach is to inject a custom `BreadcrumbList` via the head slot (overriding BaseLayout's auto-generated one) — the same approach blog articles already use.
 
-### Build as shared (`_shared/`) — used by 2+ case study pages
+## Footer Linking at Scale
 
-| Component | Props | Notes |
-|-----------|-------|-------|
-| `CaseStudyHero.astro` | `name`, `category`, `type`, `tagline`, `url?` | Replaces the current inline header in ProjectShowcase |
-| `ChallengeAndSolution.astro` | `challenge: string`, `solution: string` | Direct lift from ProjectShowcase challenge/solution grid |
-| `TechStack.astro` | `techStack: string[]` | New — renders badge grid |
-| `MetricsGrid.astro` | `metrics: ProjectMetric[]` | New — stat cards with label/value/description |
-| `VisualGallery.astro` | `images: ImageMetadata[]`, `alts: string[]` | New — 1-N screenshots, lazy loaded via Astro `<Image>` |
-| `CaseStudyTestimonial.astro` | `testimonial: Testimonial` | Lifted from ProjectShowcase quote block |
+**V1:** Filter `locations.filter(c => c.tier === 1)` — renders 6–8 links. Add a "Se alle byer" link to a future `/steder` index page (that page can be built in V2).
 
-### Keep page-specific
+**V2 (30+ cities):** Footer still shows only Tier 1. No change to Footer component. Tier 2 cities are discovered via sitemap and `NearbyAreas` cross-links.
 
-Anything only one project needs, or content that is prose rather than structured data, stays inline in the case study page or in a project-specific `_sections/` subfolder.
+**V3 (300 cities):** Same. Footer cap stays at Tier 1. A `/steder` index page grouped by region becomes the discovery path for Tier 2/3 cities.
 
-Examples:
-- Blom Company may need a "Dual collections architecture" explanation — page-specific
-- iGive may want a "How it works" step section — page-specific
-- JSON-LD structured data — always in the page's `index.astro`, not in a shared component (same pattern as service pages: `FAQPage` JSON-LD is co-located in `FAQ.astro`)
-
-## Index Page Redesign
-
-**Current:** `ProjectShowcase.astro` hardcodes the single `caseStudySection: true` project as a featured layout, then renders additional projects as cards.
-
-**New:** `ProjectGrid.astro` renders all `projects[]` as equal cards, each linking to `/prosjekter/[project.slug]`.
-
-**What ProjectGrid needs from `projects.ts` (per card):**
-
-```typescript
-{ slug, name, category, type, tagline, description, coverImage, coverImageAlt, comingSoon? }
-```
-
-**What changes on the index page (`index.astro`):**
-
-- Import `ProjectGrid.astro` instead of `ProjectShowcase.astro`
-- Remove `Results.astro` import (metrics belong on case study pages)
-- `Hero.astro` and `ProsjekterCTA.astro` stay unchanged
-- `<title>` and `description` props may need copy update for GEO-optimized phrasing
-
-**Card design:** Cover image, category badge, project name, tagline, "Se case study" link with arrow. `comingSoon` cards show a "Kommer snart" badge and no link.
+**Contact page:** Add a paragraph mentioning coverage area with links to 4–5 key cities. Hard-code this for V1 — it is a content paragraph, not a dynamic list. Do not iterate over `locations` on the contact page. The maintenance cost of updating it as cities are added is low.
 
 ## Data Flow
 
-### Index Page Flow
+### Build-Time Flow
 
 ```
-projects.ts (all projects)
+locations.ts (City[] array)
     ↓
-prosjekter/index.astro
-    ↓
-ProjectGrid.astro — renders one card per project
-    ↓ (each card)
-href="/prosjekter/[slug]"
+steder/[location].astro — getStaticPaths()
+    ↓ generates one static page per city slug
+/steder/oslo, /steder/drammen, /steder/asker ...
+    ↓ each page
+BaseLayout(title=city.seoTitle, description=city.seoDescription)
+    + <Fragment slot="head"> — city LocalBusiness + BreadcrumbList + FAQPage JSON-LD
+    + CityHero(city)
+    + CityServices(city)
+    + CityTestimonials
+    + CityFAQ(city)
+    + NearbyAreas(city)
+    + CityCTA(city)
 ```
 
-### Case Study Page Flow
+### Sitemap Flow
+
+`@astrojs/sitemap` auto-discovers all pages including `/steder/*` because Astro writes them as static HTML. No sitemap config change needed — the integration crawls `output: 'static'` pages automatically. City pages inherit the default priority. If you want to customize, add a `steder/` case to the `serialize()` function in `astro.config.mjs`.
+
+### Internal Link Graph
 
 ```
-projects.ts (.find(p => p.slug === 'igive'))    testimonials.ts (.find(t => t.company === project.testimonialCompany))
-    ↓                                                ↓
-igive/index.astro ───────────────────────────────────┘
-    ↓ (passes typed props)
-CaseStudyHero, TechStack, MetricsGrid, VisualGallery,
-ChallengeAndSolution, CaseStudyTestimonial
-    ↓
-Static HTML (Astro build-time render)
+Footer (Tier 1 cities)  →  /steder/oslo, /steder/drammen, ...
+/steder/oslo NearbyAreas →  /steder/drammen, /steder/asker, /steder/barum
+/steder/drammen NearbyAreas →  /steder/oslo, /steder/sandvika, ...
+/kontakt (static paragraph) →  /steder/oslo, /steder/drammen (4–5 key cities)
 ```
 
-### No Runtime State
-
-All data is static — `projects.ts` is imported at build time. No client-side data fetching. No React islands needed for case study pages. Scroll reveal animations use the existing CSS `reveal-on-scroll` pattern (no Framer Motion required on these pages).
+This graph ensures Google can reach all Tier 1 cities from the footer, and can crawl from city to city via NearbyAreas. Tier 2/3 cities are reachable via NearbyAreas from Tier 1 cities they adjoin.
 
 ## Build Order
 
-Each step unlocks the next. Do not skip ahead.
+Each step has explicit dependencies. Do not reorder.
 
-### Step 1: Extend `projects.ts`
+### Step 1: Define `locations.ts` with V1 interface
 
-Do this first. Everything else imports types and data from it.
+Define the `City` interface and `CityTier` type first. Populate 1–2 city entries (Oslo + one other) to validate the model before writing sections.
 
-- Add `slug` field, rename `image` to `coverImage` / `imageAlt` to `coverImageAlt`
-- Add `techStack`, `metrics`, `gallery`, `testimonialCompany`, `metaTitle`, `metaDescription`, `publishedAt`
-- Remove `caseStudySection` flag
-- Populate iGive entry fully
-- Add Blom Company entry (can be partial data at first)
+**Why first:** Everything else depends on the `City` type. Getting the interface right before building sections avoids rework.
 
-**Dependency:** Nothing imports this yet. Safe to do in isolation.
+**Dependency:** Nothing. Standalone.
 
-### Step 2: Build `_shared/` components
+### Step 2: Build `[location].astro` skeleton with `getStaticPaths()`
 
-Build while no pages use them yet — easier to develop and test in isolation.
+Write the dynamic route with only a placeholder `<h1>{city.name}</h1>`. Verify the build generates the correct pages and canonical URLs. Fix any routing issues at this step before section complexity is added.
 
-Order within Step 2:
-1. `CaseStudyHero.astro` — simplest, no data complexity
-2. `ChallengeAndSolution.astro` — lift directly from ProjectShowcase
-3. `CaseStudyTestimonial.astro` — lift directly from ProjectShowcase
-4. `TechStack.astro` — new, simple badge grid
-5. `MetricsGrid.astro` — new, stat cards
-6. `VisualGallery.astro` — handle 1-N images with Astro `<Image>`
+**Why second:** Confirms the route works before investing in sections.
 
-**Dependency:** Needs Step 1 for type imports.
+**Dependency:** Needs Step 1 for the `City` type.
 
-### Step 3: Build `igive/index.astro`
+### Step 3: Build city sections
 
-First case study page. Validates component API before building the second page.
+Build in this order (each is independent once the `City` type is available):
 
-- Wire up all `_shared/` components
-- Add `CreativeWork` JSON-LD schema in `<Fragment slot="head">`
-- Add `BreadcrumbList` JSON-LD
-- Verify Astro image pipeline works with `gallery[]`
+1. `CityHero.astro` — renders `city.name` and `city.intro`
+2. `CityFAQ.astro` — renders `city.faq[]` and FAQPage JSON-LD
+3. `NearbyAreas.astro` — renders `city.nearbyAreas[]` as links to `/steder/[slug]`
+4. `CityServices.astro` — static services list, city name in heading
+5. `CityTestimonials.astro` — lifted from existing Testimonials section pattern
+6. `CityCTA.astro` — contact CTA with city name
+
+**Why this order:** Hero and FAQ are the highest SEO priority sections. NearbyAreas is simple and validates the cross-link model early. Services and testimonials are secondary.
 
 **Dependency:** Needs Steps 1 and 2.
 
-### Step 4: Redesign `prosjekter/index.astro`
+### Step 4: Add JSON-LD to `[location].astro`
 
-Now that `igive/` exists, update the index to link to it.
+Add city-scoped `LocalBusiness`, city-specific `BreadcrumbList`, and FAQPage schemas in `<Fragment slot="head">`. Verify with Google Rich Results Test on the built output.
 
-- Create `ProjectGrid.astro` in `_sections/`
-- Replace `ProjectShowcase` import with `ProjectGrid` in `index.astro`
-- Remove `Results.astro` import and usage
-- Delete `ProjectShowcase.astro`
-- Decide where Results stats go (Hero strip or dropped)
+**Why fourth:** JSON-LD depends on the `city` data being available, and it is easier to verify once the page content is rendering correctly.
 
-**Dependency:** Needs Step 1 (for grid data). Can be done in parallel with Step 3 if you stub the igive link.
+**Dependency:** Needs Steps 1 and 2.
 
-### Step 5: Build `blom-company/index.astro`
+### Step 5: Populate all 6–8 Tier 1 cities in `locations.ts`
 
-Pattern validated by iGive — building the second page is mechanical.
+Write hand-crafted `intro` and `faq[]` for each city. This is a content task, not a code task — do it after the template is confirmed working.
 
-- Add Blom Company assets to `src/assets/images/`
-- Populate Blom entry in `projects.ts` fully
-- Assemble page using `_shared/` components
-- Add any Blom-specific sections inline or in `blom-company/_sections/`
+**Dependency:** Needs Steps 2, 3, and 4 so you can preview each city page.
 
-**Dependency:** Needs Steps 2 and 3 (pattern validated).
+### Step 6: Footer + contact page internal linking
 
-### Step 6: SEO and GEO copy pass
+Modify `Footer.astro` to render Tier 1 city links. Add static coverage paragraph to `/kontakt/index.astro`.
 
-Final pass across both case study pages and the index.
+**Why last:** Internal linking is mechanical and depends on the city pages existing (Step 5) so links can be spot-checked.
 
-- Verify `metaTitle` and `metaDescription` in projects.ts for both projects
-- Confirm `CreativeWork` and `BreadcrumbList` JSON-LD on both pages
-- Update prosjekter index `<title>` / `description` if needed for GEO
-- Review copy for GEO-readiness (structured, citable, factual)
+**Dependency:** Needs Step 5.
 
-**Dependency:** Needs Steps 3 and 5.
-
-## Files: New vs Modified vs Deleted
+## Files: New vs Modified
 
 | File | Action | Notes |
 |------|--------|-------|
-| `src/config/projects.ts` | MODIFIED | Extend interface, populate iGive, add Blom |
-| `src/pages/prosjekter/index.astro` | MODIFIED | Swap ProjectShowcase for ProjectGrid, remove Results |
-| `src/pages/prosjekter/_sections/ProjectShowcase.astro` | DELETED | Replaced by ProjectGrid |
-| `src/pages/prosjekter/_sections/Results.astro` | DELETED (content moved) | Metrics belong on case study pages |
-| `src/pages/prosjekter/_sections/ProjectGrid.astro` | NEW | Card grid, all projects, linked by slug |
-| `src/pages/prosjekter/_shared/CaseStudyHero.astro` | NEW | Shared header |
-| `src/pages/prosjekter/_shared/ChallengeAndSolution.astro` | NEW | Lifted from ProjectShowcase |
-| `src/pages/prosjekter/_shared/TechStack.astro` | NEW | Badge grid |
-| `src/pages/prosjekter/_shared/MetricsGrid.astro` | NEW | Stat cards |
-| `src/pages/prosjekter/_shared/VisualGallery.astro` | NEW | Screenshot grid |
-| `src/pages/prosjekter/_shared/CaseStudyTestimonial.astro` | NEW | Pull quote block |
-| `src/pages/prosjekter/igive/index.astro` | NEW | Full iGive case study page |
-| `src/pages/prosjekter/blom-company/index.astro` | NEW | Full Blom Company case study page |
+| `src/config/locations.ts` | NEW | City data model and V1 city entries |
+| `src/pages/steder/[location].astro` | NEW | Dynamic route with getStaticPaths() |
+| `src/pages/steder/_sections/CityHero.astro` | NEW | City-specific hero |
+| `src/pages/steder/_sections/CityServices.astro` | NEW | Services with city context |
+| `src/pages/steder/_sections/CityFAQ.astro` | NEW | FAQ with JSON-LD |
+| `src/pages/steder/_sections/CityTestimonials.astro` | NEW | Testimonials (shared content) |
+| `src/pages/steder/_sections/CityCTA.astro` | NEW | Contact CTA |
+| `src/pages/steder/_sections/NearbyAreas.astro` | NEW | Cross-city internal links |
+| `src/layouts/BaseLayout.astro` | NOT MODIFIED | Props interface unchanged; city JSON-LD injected via head slot |
+| `src/components/layout/Footer.astro` | MODIFIED | Add "Vi dekker" section with Tier 1 city links |
+| `src/pages/kontakt/index.astro` | MODIFIED | Add static coverage paragraph with 4–5 city links |
+| `astro.config.mjs` | NOT MODIFIED | Sitemap auto-discovers /steder/* without config changes |
 
 ## Anti-Patterns
 
-### Anti-Pattern 1: Putting all case study content in `projects.ts`
+### Anti-Pattern 1: Root-Level Dynamic Route `src/pages/[location].astro`
 
-**What people do:** Try to make `projects.ts` drive section ordering and content using conditional flags or union types for each section variant.
+**What people do:** Place the dynamic route at `src/pages/[location].astro` instead of `src/pages/steder/[location].astro`.
 
-**Why it's wrong:** Config files are for data. Section composition is layout. Mixing them makes both worse — config becomes a layout DSL, pages lose flexibility to order and customize sections.
+**Why it's wrong:** Astro processes root-level dynamic routes after static routes, but any future static page (`/priser`, `/garantier`) would need to be explicitly excluded from the dynamic route's `getStaticPaths()` return value. This creates a fragile coupling — forgetting to exclude a slug could silently override a static page. The `steder/` namespace gives city pages a clean, isolated URL segment with zero collision risk.
 
-**Do this instead:** `projects.ts` holds structured data (strings, arrays, image imports). Pages own section composition. `blom-company/index.astro` can reorder sections freely without touching config.
+**Do this instead:** `src/pages/steder/[location].astro`. URLs `/steder/oslo` are also SEO-friendly — city name is in the slug, the segment "steder" is readable Norwegian.
 
-### Anti-Pattern 2: Using `[slug].astro` with `getStaticPaths()`
+### Anti-Pattern 2: Storing Copy in `locations.ts` Config
 
-**What people do:** Create a single dynamic route to avoid repeating the page setup across two files.
+**What people do:** Put full page copy (hero body text, service descriptions, testimonial text) as long strings in the config file.
 
-**Why it's wrong:** With 2 projects of different visual structures (iGive is a B2B landing page case study; Blom Company is a Shopify headless case study), a shared template accumulates `if project.type === 'shopify'` conditional rendering. The template grows brittle over time. This is the exact pattern the services pages avoided — with a documented good outcome in PROJECT.md.
+**Why it's wrong:** Long prose in TypeScript config is hard to edit, does not support multiline formatting, and conflates data with content. The `intro` field is the correct scope limit for config — 2–3 sentences. Anything longer belongs in the section component as a prop or as static copy inside the component.
 
-**Do this instead:** Individual `index.astro` per project. Copy the structure from iGive for Blom, adjust section order, add Blom-specific sections. The duplication is ~10 lines of imports and BaseLayout wiring.
+**Do this instead:** Keep `locations.ts` fields short and structured. The `intro` prop is passed to `CityHero` which renders it as a `<p>`. The FAQ items are 1-2 sentence pairs — fine for config. Full service descriptions come from `services.ts`. Testimonials come from `testimonials.ts`.
 
-### Anti-Pattern 3: Dynamic image imports in `projects.ts`
+### Anti-Pattern 3: Per-City Individual Static Files
 
-**What people do:** Store image paths as strings in config and attempt `import()` at runtime or in a helper function.
+**What people do:** Create `src/pages/steder/oslo/index.astro`, `src/pages/steder/drammen/index.astro` etc. — one file per city.
 
-**Why it's wrong:** Astro's `<Image>` component requires static imports at build time for image optimization (width/height extraction, format conversion, responsive srcsets). Dynamic imports bypass the pipeline.
+**Why it's wrong:** This was the right call for services (structurally different per page) and case studies (bespoke content). City landing pages are structurally identical — same sections, same composition, only data differs. At 8 cities it is annoying. At 50 it is unmaintainable. At 300 it is not a real option.
 
-**Do this instead:** Import images statically at the top of `projects.ts` and reference them in the object. This is already how `iGiveImage` is imported today. For `gallery[]`, import each screenshot at the top of the file.
+**Do this instead:** `[location].astro` with `getStaticPaths()`. The uniformity of city pages is precisely the use case dynamic routes exist for. Structural differences (a city needing an extra section) are handled by conditional rendering on a per-section prop: `{city.industries && city.industries.length > 0 && <CityIndustries city={city} />}`.
 
-### Anti-Pattern 4: Deleting `Results.astro` without moving its content
+### Anti-Pattern 4: Modifying BaseLayout's Global `LocalBusiness` Block
 
-**What people do:** Remove `Results.astro` from the index page (correct action) without deciding where the aggregate metrics go.
+**What people do:** Change the `areaServed` in BaseLayout's `LocalBusiness` to match the current city on city pages.
 
-**Why it's wrong:** Those aggregate stats (load time, project count, etc.) are trust signals. Dropping them entirely loses conversion value.
+**Why it's wrong:** BaseLayout's `LocalBusiness` block is emitted on every page — including `/`, `/tjenester`, `/kontakt`. Changing it dynamically would require passing city context through every page, most of which are not city pages. It also replaces the country-level block (areaServed: Norway) which is correct for non-city pages.
 
-**Do this instead:** Decide before deleting — either move them to the index `Hero.astro` as a stat strip, or distribute per-project metrics to individual `MetricsGrid` sections on case study pages.
+**Do this instead:** Keep BaseLayout's block untouched. City pages add a second, city-scoped `LocalBusiness` block via `<Fragment slot="head">`. Google handles multiple JSON-LD blocks correctly. The city-specific block uses a different `@id` (`/steder/oslo#business`) from the global one (`/nettup.no/#business`).
+
+### Anti-Pattern 5: Putting All Cities in the Footer
+
+**What people do:** Render `locations.map(...)` in the footer as the city pages grow.
+
+**Why it's wrong:** A footer with 300 city links is a spam signal, not a trust signal. It will harm UX and may trigger Google soft penalties for thin/doorway page patterns.
+
+**Do this instead:** Filter `tier === 1` in the footer (8 cities max). Build a `/steder` index page grouped by region for V2. Let the sitemap and NearbyAreas cross-links handle discovery of Tier 2/3 cities.
 
 ## Integration Points
 
@@ -376,50 +456,33 @@ Final pass across both case study pages and the index.
 
 | Boundary | Communication | Notes |
 |----------|---------------|-------|
-| `projects.ts` → `prosjekter/index.astro` | Direct TypeScript import | All projects for grid rendering |
-| `projects.ts` → `igive/index.astro` | Import + `.find(p => p.slug === 'igive')` | Typed via `Project` interface |
-| `projects.ts` → `blom-company/index.astro` | Import + `.find(p => p.slug === 'blom-company')` | Typed via `Project` interface |
-| `testimonials.ts` → case study pages | Import + `.find(t => t.company === project.testimonialCompany)` | Indirect string-key join |
-| `_shared/` components → case study pages | Astro component props | Types derived from `Project` interface fields |
-| Case study pages → `BaseLayout.astro` | `title`, `description` props + `head` slot for JSON-LD | Same pattern as all other pages in the codebase |
+| `locations.ts` → `[location].astro` | Direct TypeScript import in `getStaticPaths()` | Typed `City[]` |
+| `[location].astro` → section components | Astro component props `city: City` | All sections receive the full city object |
+| `[location].astro` → `BaseLayout.astro` | `title`, `description` props + `head` slot | Interface unchanged; city JSON-LD via slot |
+| `locations.ts` → `Footer.astro` | Direct TypeScript import, filter `tier === 1` | Only Tier 1 cities in footer |
+| `services.ts` → `CityServices.astro` | Direct import | Static services list with city name in copy |
+| `testimonials.ts` → `CityTestimonials.astro` | Direct import | Same testimonials across all cities in V1 |
+| `city.nearbyAreas[]` → `NearbyAreas.astro` | String slugs → `/steder/[slug]` links | No lookup needed; slugs are the URL |
 
-### JSON-LD Schema for Case Study Pages
+### JSON-LD Schema Architecture for City Pages
 
-Each case study page adds both `CreativeWork` and `BreadcrumbList` in the `<Fragment slot="head">` — the same injection pattern used by service pages.
+Each city page emits three JSON-LD blocks (all injected via `<Fragment slot="head">`):
 
-```typescript
-// In igive/index.astro frontmatter
-const projectSchema = {
-  "@context": "https://schema.org",
-  "@type": "CreativeWork",
-  "name": project.name,
-  "description": project.description,
-  "creator": { "@type": "Organization", "name": "Nettup", "url": "https://nettup.no" },
-  "url": project.url,
-  "datePublished": project.publishedAt,
-  "keywords": project.techStack?.join(", "),
-};
+1. **City-scoped `LocalBusiness`** — `areaServed: { "@type": "City", "name": city.name }`, `@id` is city-specific. This is the primary local SEO signal.
+2. **City-specific `BreadcrumbList`** — overrides BaseLayout's auto-generated breadcrumb. Items: Hjem → Steder → [City Name].
+3. **`FAQPage`** — conditional on `city.faq.length > 0`. Emitted directly; same pattern as service FAQ pages.
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://nettup.no" },
-    { "@type": "ListItem", "position": 2, "name": "Prosjekter", "item": "https://nettup.no/prosjekter" },
-    { "@type": "ListItem", "position": 3, "name": project.name, "item": `https://nettup.no/prosjekter/${project.slug}` },
-  ],
-};
-```
+BaseLayout continues to emit `Organization`, global `LocalBusiness` (areaServed: Norway), `Offer`, and auto-breadcrumb for all pages. City pages layer on top without touching those.
 
 ## Sources
 
-- Direct codebase analysis: `src/config/projects.ts` — current interface and iGive data
-- Direct codebase analysis: `src/config/services.ts` — reference pattern for config-driven pages
-- Direct codebase analysis: `src/config/testimonials.ts` — join key pattern
-- Direct codebase analysis: `src/pages/prosjekter/index.astro` and `_sections/ProjectShowcase.astro`
-- Direct codebase analysis: `src/pages/tjenester/nettside/index.astro` — individual file pattern
-- Project decision log: `.planning/PROJECT.md` — "Individual index.astro per service" decision and outcome
+- Direct codebase analysis: `src/layouts/BaseLayout.astro` — existing JSON-LD structure and head slot
+- Direct codebase analysis: `src/config/services.ts`, `projects.ts` — established config interface patterns
+- Direct codebase analysis: `src/pages/blogg/[slug].astro` — getStaticPaths() pattern in this codebase
+- Direct codebase analysis: `src/components/layout/Footer.astro` — current structure and extension point
+- Direct codebase analysis: `astro.config.mjs` — sitemap serialization, `output: 'static'`
+- Project decision log: `.planning/PROJECT.md` — individual files vs [slug].astro trade-off analysis
 
 ---
-*Architecture research for: nettup.no v1.4 — Portefølje 2.0 multi-page portfolio system*
-*Researched: 2026-03-07*
+*Architecture research for: nettup.no v1.5 — Local SEO landing pages*
+*Researched: 2026-03-08*

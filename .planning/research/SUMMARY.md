@@ -1,17 +1,17 @@
 # Project Research Summary
 
-**Project:** Nettup v1.4 — Portefolje 2.0
-**Domain:** Multi-page portfolio / case study system on an existing Astro 5 marketing site
-**Researched:** 2026-03-07
+**Project:** Nettup v1.5 — Lokale SEO-sider (city landing pages)
+**Domain:** Local SEO landing pages — service-area web agency, Norwegian market
+**Researched:** 2026-03-08
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This milestone transforms the existing single-page `/prosjekter` section into a scalable multi-page portfolio system with two dedicated case study pages: `/prosjekter/igive` and `/prosjekter/blom-company`. The existing stack (Astro 5, Tailwind 4, Framer Motion, Vercel) handles everything; zero new dependencies are required. The architectural pattern is already proven by the tjenester pages — individual `index.astro` files per project rather than a `[slug].astro` template — and applies here with even more justification given the structural differences between a B2B landing page case study (iGive) and a headless Shopify storefront case study (Blom Company).
+Nettup v1.5 adds city-targeted landing pages to the existing Astro 5 marketing site. The approach is config-driven static generation: a single `src/pages/steder/[location].astro` dynamic route driven by a `src/config/locations.ts` data file, mirroring the established `[slug].astro` + `projects.ts` pattern already in production. Zero new dependencies are required. The architecture supports V1 (6–8 hand-crafted cities), V2 (30–50 AI-assisted), and V3 (300+ programmatic) without structural changes — expansion is a data-only operation at every stage.
 
-The recommended approach is config-first: extend `projects.ts` before touching any page files, then build shared `_shared/` components, then assemble the individual case study pages, then update the index. This order eliminates the main class of build failures and ensures no page is built against an unstable data model. GEO optimization — structuring copy for AI citation (ChatGPT, Perplexity, Google AI Overviews) — is the single highest-ROI differentiator at minimal implementation cost: specific metrics, factual writing, structured headings, and `CreativeWork` JSON-LD schema.
+The central constraint is Google's doorway page policy, which is actively enforced (March 2024 and August 2025 core updates). City pages that share more than ~40% of their body content — or that are orphaned from site navigation — are treated as spam and quietly deindexed. Every V1 page must pass the intent test: it must contain genuinely differentiated content that references real local context (industry clusters, geography, nearby areas), not merely city-name substitution into boilerplate. This is not optional and is the dominant design constraint for every phase of the milestone.
 
-The critical risk is the screenshot dependency: Astro's image pipeline fails at build time if a referenced image file is missing. Visual assets for both projects must be captured and committed before case study page files import them. A secondary risk is a cluster of schema issues that are invisible to `npm run build` but silently degrade SEO: BreadcrumbList showing raw slugs instead of human-readable labels, and duplicate Organization entities in JSON-LD. Both are preventable with a specific checklist at page authoring time.
+The recommended execution is strictly phased: build the infrastructure foundation first (data model + route template + JSON-LD architecture), then write hand-crafted content for 6–8 Tier 1 cities, then ship with mandatory internal linking simultaneously. V2 and V3 expansion must wait for V1 indexing confirmation in Google Search Console. Publishing thin pages prematurely can suppress the entire site's ranking, including existing service pages and the blog. The technical architecture is simple and low-risk; the content and SEO discipline is where this project succeeds or fails.
 
 ---
 
@@ -19,113 +19,128 @@ The critical risk is the screenshot dependency: Astro's image pipeline fails at 
 
 ### Recommended Stack
 
-The existing stack requires no additions for v1.4. All patterns needed — `<Fragment slot="head">` for JSON-LD, Astro `<Image>` for screenshot optimization, individual page files without `getStaticPaths`, the `image` prop on BaseLayout for per-page OG images — are already in the codebase and proven. The only extension is the `projects.ts` TypeScript interface.
+The existing stack handles everything. No new packages are required. The `src/config/locations.ts` pattern mirrors `src/config/projects.ts` exactly. The `getStaticPaths()` pattern mirrors `src/pages/prosjekter/[slug].astro`. City-scoped JSON-LD is injected via the `<slot name="head" />` mechanism already used by blog articles. The sitemap integration auto-discovers all static routes including city pages. BaseLayout's `Props` interface does not need to change.
 
-**Core technologies:**
-- **Astro 5 individual page files** — `/prosjekter/igive/index.astro`, `/prosjekter/blom-company/index.astro`; same routing decision as service pages, documented good outcome in PROJECT.md
-- **`src/config/projects.ts` (extended)** — single source of truth for all project data; drives index grid cards and case study page metadata; add `slug`, `techStack[]`, `metrics[]`, `gallery[]`, `testimonialCompany`, `metaTitle`, `metaDescription`, `publishedAt`; remove `caseStudySection`
-- **`astro:assets` Image** — build-time optimized screenshots; requires static imports at top of `projects.ts`, not dynamic paths
-- **Static OG images in `public/images/og/`** — no Satori needed at 2 projects; justified once portfolio exceeds ~10 projects
-- **`CreativeWork` JSON-LD** — correct schema.org type for "agency built X for client Y"; paired with `BreadcrumbList`; `creator` must reference `@id` of the existing LocalBusiness entity in BaseLayout, not re-declare an inline Organization node
+**Core technologies (all existing):**
+- **Astro 5 `getStaticPaths()`** — static generation of all city pages at build time; synchronous, no I/O; ~127 pages/sec throughput handles 300 cities in under 3s
+- **`src/config/locations.ts`** — typed `City` interface as single source of truth for all city data, SEO metadata, schema, and internal links
+- **`<Fragment slot="head">`** — city-scoped JSON-LD injection without modifying BaseLayout; established by `blogg/[slug].astro`
+- **`@astrojs/sitemap`** — auto-includes all `/steder/*` static routes; no config changes needed for V1
+- **TypeScript strict mode** — enforces required fields on all `City` entries at build time; catches missing content before deploy
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Project hero section — client name, category, tagline, hero screenshot above the fold
-- Challenge and solution sections — decision-makers recognize their own problem before trusting the solution
-- Tech stack display — labeled badge chips with one rationale sentence per major technology choice
-- Outcomes / metrics section — Lighthouse scores and Core Web Vitals (real, verified numbers only; do not publish unverified claims)
-- Client testimonial — real Blom testimonial is available from the brief; iGive testimonial is a known gap (placeholder acceptable at launch)
-- Live site link — prospects verify the work is real
-- Breadcrumb navigation — consistent with service page pattern; drives BreadcrumbList JSON-LD
-- Per-project SEO metadata — title pattern: `[Client] — [Project type] | Nettup`; meta description < 155 characters, outcome-first in Norwegian
-- Updated `/prosjekter` index with peer card grid linking to dedicated pages via slug
+- Unique city intro paragraph (200+ words with local industry and geography reference) — doorway page prevention; the 60% unique content threshold starts here
+- City-specific `<title>` and `<meta description>` — primary on-page local ranking signals
+- `ProfessionalService` JSON-LD with `areaServed` per city — machine-readable geo-targeting (use `ProfessionalService` subtype, not generic `LocalBusiness`)
+- `FAQPage` JSON-LD from city-specific FAQ questions — rich result eligibility and AI citability
+- `BreadcrumbList` JSON-LD — site hierarchy signal; existing pattern from service pages
+- Footer "Områder vi dekker" section with Tier 1 city links — orphan page prevention (must ship with city pages, not after)
+- Internal links from `/kontakt` and `/om-oss` — second and third link equity sources
+- Self-referencing canonical URL per city — prevents duplicate content consolidation
+- City-specific FAQ (3–4 questions, minimum 2 genuinely local) — passes doorway intent test
+- Nearby areas on-page and in schema `areaServed` — longtail geographic relevance
+- Industry mention per city (1–2 sentences, dominant local sector) — signals genuine local knowledge
 
-**Should have (differentiators):**
-- Lighthouse score card displayed as a visual element — most Norwegian agencies do not publish scores; publishing Blom's 98/100 desktop is a credibility signal that prose cannot match
-- GEO-optimized copy — direct-answer intro in first 200 words, specific verifiable facts, named deliverables ("Next.js 15" not "Next.js"), factual peer-developer tone
-- Multiple contextual screenshots (3-5 per project) — desktop hero, detail section, mobile viewport
-- Technology rationale — one sentence per major tech choice explaining why it was selected
-- Internal cross-links from service pages to relevant portfolio pages
+**Should have (competitive advantage):**
+- Chatbot city context injection — intelligent local responses via existing page-context infrastructure
+- Blog lokal-seo cluster articles linking to city pages — editorial internal link equity
+- Real testimonials per city — highest-trust local signal; field reserved in data model, not displayed until real quotes exist
 
 **Defer (v2+):**
-- Category filtering on index — only relevant at 6+ projects
-- Satori dynamic OG image generation — justified at ~10+ projects
-- `[slug].astro` dynamic routing — reconsider at ~15 structurally identical projects
-- Video walkthroughs — separate production workflow
-- Before/after comparisons — only valid for redesign projects (none exist yet)
-- FAQ sections with FAQPage JSON-LD — Google deprecated FAQPage rich results for most sites in 2023; do not add FAQPage schema to portfolio pages
+- 30–50 Tier 2 AI-assisted city pages — separate milestone; requires V1 indexing confirmation
+- `serviceArea` with `GeoCircle` coordinates — marginal gain, not needed for named cities
+- Per-service city pages (`/steder/oslo/nettbutikk`) — high complexity, only if Tier 1 converts
+- Regional hub pages (`/oslofjord`) — only valuable at V3 scale; a standalone `/steder` index with no content is itself a doorway pattern
 
 ### Architecture Approach
 
-The architecture follows a strict separation between the data layer (`projects.ts` config), shared UI components (`_shared/`), and page assembly (`igive/index.astro`, `blom-company/index.astro`). Config holds structured data only; pages own section composition; shared components handle presentational logic. The entire build is static — no React islands, no client-side data fetching on case study pages. This mirrors `src/config/services.ts` → `tjenester/` pages.
+The architecture is a hub-and-spoke data model. `locations.ts` is the hub — it drives `getStaticPaths()`, supplies all per-page SEO metadata, provides data to all section components, and feeds the footer's dynamic city link section. The route template `steder/[location].astro` is the page skeleton, composing six section components that each receive the full `City` object as a prop. JSON-LD is assembled in the route template and injected via `<Fragment slot="head">`. BaseLayout remains unmodified. The URL structure `/steder/[slug]` (using the Norwegian word "steder") avoids collision with existing static pages entirely.
 
 **Major components:**
-1. **`projects.ts` (extended)** — extended interface; populated iGive and Blom entries; `caseStudySection` flag removed
-2. **`_sections/ProjectGrid.astro`** — replaces `ProjectShowcase.astro` on the index; renders all projects as equal peer cards with slug-derived links; `comingSoon` projects show a badge with no link
-3. **`_shared/` components** — `CaseStudyHero`, `ChallengeAndSolution`, `TechStack`, `MetricsGrid`, `VisualGallery`, `CaseStudyTestimonial` — built once, reused by all case study pages
-4. **`igive/index.astro` and `blom-company/index.astro`** — page assemblies that own section ordering, JSON-LD, and `<title>`; section ordering can differ between projects
-5. **BaseLayout integration** — `pageLabels` map updated with new sub-routes; `image` prop passes project-specific OG image path
+1. **`src/config/locations.ts`** — city data model; single source of truth; V1/V2/V3 expansion is adding entries, not changing the interface
+2. **`src/pages/steder/[location].astro`** — dynamic route; owns page composition and all JSON-LD blocks
+3. **`src/pages/steder/_sections/`** — six section components: `CityHero`, `CityServices`, `CityFAQ`, `CityTestimonials`, `CityCTA`, `NearbyAreas`
+4. **`src/components/layout/Footer.astro` (modified)** — Tier 1 city links via `locations.ts` import filtered by `tier === 1`
+5. **`src/pages/kontakt/index.astro` (modified)** — static coverage paragraph with 4–5 key city links
 
 ### Critical Pitfalls
 
-1. **`ProjectShowcase.astro` breaks silently when `caseStudySection` flag is removed** — `projects.find(p => p.caseStudySection === true)` returns `undefined`; the hero section renders nothing; `npm run build` succeeds but the page is visually blank. Prevention: treat config restructuring and index redesign as one atomic task; never add Blom to the old schema without simultaneously replacing the dependent section.
+1. **Doorway page pattern** — Swapping only the city name while keeping identical copy triggers Google's spam detection. Text diff between any two city pages must show >60% unique content. The intro paragraph and FAQ are the non-negotiable differentiation points. Enforce at authoring time; cannot be fixed post-penalty without rewriting every affected page.
 
-2. **Screenshot assets are hard build-time dependencies** — Astro's `<Image>` fails the build (`ENOENT`) if a referenced file is missing. Prevention: capture and commit all screenshots before writing any image imports; make `gallery?: ImageMetadata[]` optional with placeholder rendering as a fallback.
+2. **Premature V2/V3 scaling causing site-level thin content penalty** — Google's helpful content system evaluates sites holistically. Thin V3 pages can drag down existing service pages and blog rankings. Gate V2 on V1 indexing confirmation in Search Console. Build the `tier` filter into `getStaticPaths()` from day one and never deploy beyond the current tier.
 
-3. **BreadcrumbList schema shows raw URL slugs as labels** — `BaseLayout.astro` `pageLabels` map has no entry for new sub-routes; the fallback returns `"igive"` and `"blom-company"` instead of `"iGive"` and `"Blom Company"`. This is silent at build time but wrong in rich results. Prevention: add both routes to `pageLabels` before each page goes live; verify via schema validator.
+3. **Canonical misconfiguration** — If `[location].astro` does not explicitly pass `canonical` to BaseLayout, it may default incorrectly. Each city page must self-reference: `canonical="https://nettup.no/steder/[slug]"`. Never combine `noindex` and canonical on the same page. Verify in post-build HTML check before first deploy.
 
-4. **Duplicate Organization entity in structured data** — Case study pages that inline a new Organization node instead of referencing the existing `@id` create two separate Organization entities for the same domain. Prevention: use `"creator": {"@id": "https://nettup.no/#business"}` — never re-declare the Organization fields from BaseLayout. Note: the existing tjenester pages use the weaker inline pattern; do not copy it.
+4. **Schema entity duplication from multiple LocalBusiness blocks** — Two `LocalBusiness` blocks with different `@id` values create two separate business entities in Google's Knowledge Graph. City pages should either use a `Service` type referencing the root entity via `"provider": {"@id": "https://nettup.no/#business"}`, or inject a city-scoped `LocalBusiness` that shares the same `@id` as the global one with a narrowed `areaServed`. The root `BaseLayout` schema's `areaServed` should also be derived from `locations.ts` at build time.
 
-5. **`ProjectTeaser.astro` on homepage is hardcoded** — bypasses `projects.ts` entirely; links to `/prosjekter` not `/prosjekter/igive`. Prevention: update the teaser during Phase 1 config restructuring, not as an afterthought.
+5. **Sitemap enumeration failure in Vercel hybrid mode** — `@astrojs/sitemap` has a known regression in hybrid mode (GitHub issue #7015). Nettup uses Vercel hybrid for `/api/chat`. Verify sitemap coverage immediately after first deploy. Have a custom `src/pages/sitemap-locations.xml.ts` endpoint ready as a fallback.
 
 ---
 
 ## Implications for Roadmap
 
-Based on combined research, a 4-phase structure is appropriate. Each phase unlocks the next; no phase should begin before its predecessor is verified.
+Based on combined research, three sequential phases are the correct structure. Each phase has a hard dependency on the previous one. Reordering creates rework or SEO risk.
 
-### Phase 0: Prerequisites
-**Rationale:** Visual assets are hard build-time dependencies and unverified metrics cannot appear in copy. Both must be resolved before any page files are created — otherwise the build fails and copy requires a full rewrite cycle.
-**Delivers:** Committed screenshots for both projects; verified Lighthouse scores for iGive; Blom Company staging screenshots from `blom-no.vercel.app`
-**Addresses:** Pitfall 5 (missing screenshots block build), GEO accuracy (no fake metrics)
-**Tasks:** Run PageSpeed Insights on `salg.igive.no` and document scores; capture Blom Company screenshots (hero, product listing, product detail, mobile viewport); commit assets to `src/assets/images/`
-**Research flag:** None — operational task, no research questions
+### Phase 1: Infrastructure Foundation
 
-### Phase 1: Config and Infrastructure Restructuring
-**Rationale:** `projects.ts` is imported by every consumer in this milestone. It must be correct and stable before any component is built against it. The index redesign is bundled here because `ProjectShowcase.astro` breaks silently the moment `caseStudySection` is removed — treating them as separate tasks creates a window where the prosjekter index is visually broken.
-**Delivers:** Extended `Project` interface with `slug`, `techStack`, `metrics`, `gallery`, etc.; `caseStudySection` removed; iGive and Blom entries populated; `/prosjekter` index redesigned as a peer card grid; `ProjectTeaser.astro` updated to use `project.slug` and link to the direct case study URL
-**Addresses:** Pitfall 1 (ProjectShowcase breaks), Pitfall 2 (ProjectTeaser hardcoded), Pitfall 7 (slug/ID mismatch — use `slug` field as the URL key, not `id`)
-**Research flag:** None — direct codebase extension following the `services.ts` pattern
+**Rationale:** Everything depends on `locations.ts` being correctly typed and `[location].astro` routing correctly. The TypeScript interface, URL structure, JSON-LD schema architecture, and canonical URL pattern must all be locked before content is written. Getting these wrong causes rework across all section components and all city entries.
 
-### Phase 2: Individual Case Study Pages
-**Rationale:** Build iGive first to validate the `_shared/` component API and JSON-LD patterns with known data before replicating for Blom Company. Schema decisions must be locked before the first page is committed — the `@id` reference pattern cannot be retrofitted without a schema audit of both pages.
-**Delivers:** Full `_shared/` component library; `igive/index.astro` complete case study; `blom-company/index.astro` complete case study; `CreativeWork` + `BreadcrumbList` JSON-LD on both pages; `pageLabels` updated in BaseLayout; per-project OG images in `public/images/og/`; GEO-optimized Norwegian copy with specific metrics and factual tone
-**Addresses:** Pitfall 3 (BreadcrumbList labels), Pitfall 4 (duplicate Organization entity), Pitfall 6 (meta description < 155 characters)
-**Research flag:** None — architecture fully specified; schema patterns confirmed against schema.org and Google documentation
+**Delivers:** `locations.ts` with V1/V2/V3-ready `City` interface and 1–2 stub entries to validate the build; `[location].astro` dynamic route skeleton verified building and routing correctly; all 6 section components scaffolded; JSON-LD schema architecture resolved (`Service` + `@id` reference vs city-scoped `LocalBusiness`); canonical URL pattern confirmed in rendered HTML; `tier` filter gate in `getStaticPaths()`.
 
-### Phase 3: Cross-Linking and SEO Pass
-**Rationale:** Internal links from service pages to portfolio pages cannot be written until the destination pages exist and their canonical URLs are confirmed. This is a deliberate final pass across the whole site, not an afterthought.
-**Delivers:** Link from `/tjenester/nettbutikk` to Blom Company case study; link from `/tjenester/nettside` to iGive case study; GEO copy review across both case study pages; sitemap verification confirming new routes appear after first deploy
-**Addresses:** Pitfall 8 (no internal cross-links from tjenester pages)
-**Research flag:** None — content editing task with clear targets
+**Addresses:** Canonical misconfiguration (Pitfall 3), schema entity duplication (Pitfall 4), anti-pattern of root-level dynamic route collision, `areaServed` in root BaseLayout derived from `locations.ts`.
+
+**Avoids:** Structural rework forced by late interface changes; canonical errors propagating to all city pages; schema architecture debt.
+
+**Research flag:** Standard patterns — no phase research needed. Config-driven `getStaticPaths()` is a direct mirror of the production `prosjekter/[slug].astro` pattern.
+
+---
+
+### Phase 2: V1 Content and City Pages
+
+**Rationale:** Content is the hardest and highest-risk part of this milestone. The doorway page test depends entirely on content quality, not code quality. Content must be written after the template is confirmed working (Phase 1) so each city can be previewed while being authored. Internal linking must ship simultaneously with city pages in the same deploy — orphaned pages at launch is a meaningful penalty risk.
+
+**Delivers:** 6–8 fully authored Tier 1 city pages (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss) with hand-crafted intro paragraphs, city-specific FAQ (3–4 questions, 2+ genuinely local), industry mentions, and nearby area lists; complete JSON-LD for each page; Footer "Områder vi dekker" section; `/kontakt` coverage paragraph; all V1 pages linked from at least 2 existing pages.
+
+**Addresses:** Unique intro per city (doorway test), city-specific FAQ, `ProfessionalService` JSON-LD with `areaServed`, footer internal linking, contact page linking, `BreadcrumbList`, per-city `<title>` and `<meta description>`, nearby areas on-page text.
+
+**Avoids:** Doorway page pattern (Pitfall 1), thin content (Pitfall 2), orphaned pages, city name keyword stuffing (city name should appear 3–5 times naturally, not 15+ times).
+
+**Research flag:** Content quality — no technical research needed, but each city intro requires individual authoring effort. Do not batch-generate V1 intros.
+
+---
+
+### Phase 3: Verification and V1 Monitoring Gate
+
+**Rationale:** Before any V2 work begins, V1 pages must be verified technically and monitored for indexing signals. This phase is a mandatory pause, not optional cleanup. Skipping it and proceeding directly to V2 is the documented path to site-level suppression.
+
+**Delivers:** Post-deploy sitemap verification (entry count vs `locations.ts` active count); Google Rich Results Test validation for all V1 pages (zero errors, not just zero warnings); Search Console sitemap submission; "Looks Done But Isn't" checklist completed; V2 promotion criteria defined with concrete metrics (V1 pages must show "Indexed" status, not just "Discovered", before V2 starts); Vercel hybrid sitemap fallback confirmed working or custom endpoint deployed.
+
+**Addresses:** Sitemap coverage gaps in hybrid mode (Pitfall 5), premature V3 scaling prevention (Pitfall 6), schema validation, canonical verification across all 8 cities.
+
+**Research flag:** None — mechanical verification against documented checklists.
+
+---
 
 ### Phase Ordering Rationale
 
-- Phase 0 before Phase 1: screenshots and verified metrics are prerequisites for writing content; capturing them up front eliminates rebuild cycles
-- Phase 1 before Phase 2: the `projects.ts` types and index redesign must be stable before any component imports from them; the `caseStudySection` silent breakage would corrupt staging reviews if left unresolved
-- iGive before Blom within Phase 2: iGive data already exists and is partially written; validates the shared component API with known-good data before applying it to the new Blom entry
-- Phase 3 last: cross-links reference final canonical URLs; linking before pages exist risks dead links in production
+- Phase 1 must precede Phase 2 because the `City` interface drives all section component prop types. Writing section components before the interface is final causes TypeScript rework across every component.
+- Phase 2 internal linking (footer + contact page) must ship with city pages in the same deploy. Orphaned pages at any point in their index lifecycle are treated as doorway pages.
+- Phase 3 is a mandatory pause before any V2 content. V2 expansion must be gated on V1 indexing confirmation — this is a documented risk (Pitfall 2) with real-world precedent in confirmed site penalties.
+- V2 (30–50 cities, AI-assisted) is explicitly out of scope for v1.5 and must be a separate milestone with its own research into the AI generation pipeline and human review workflow.
 
 ### Research Flags
 
-No phases require `/gsd:research-phase` during planning. All four research files are HIGH confidence based on direct codebase analysis and authoritative documentation. The architecture is pre-resolved.
+Phases needing deeper research during planning:
+- **None for v1.5.** All three phases use patterns proven in the existing codebase. The only domain requiring ongoing judgment is content quality per city — that is an authoring task, not a research task.
 
-Phases with standard patterns:
-- **Phase 0:** Screenshot capture is operational
-- **Phase 1:** Config extension mirrors the proven `services.ts` pattern
-- **Phase 2:** Architecture fully specified; schema patterns validated
-- **Phase 3:** Internal linking is content editing
+Phases with standard patterns (skip research-phase):
+- **Phase 1:** Config + dynamic route is a direct mirror of `projects.ts` + `prosjekter/[slug].astro`.
+- **Phase 2:** Section component patterns follow the established `_sections/` co-location convention.
+- **Phase 3:** Verification is checklist-driven.
+
+**Future milestone flag:** Before starting V2 (30–50 cities), research the AI content generation pipeline. The two-call Claude generation pattern (intro generation + FAQ generation as separate calls, with city data seed objects) needs architecture work. Human review gate workflow needs definition. Do not start V2 without that research.
 
 ---
 
@@ -133,49 +148,55 @@ Phases with standard patterns:
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero new dependencies — all patterns already in the codebase and confirmed working; direct code inspection |
-| Features | HIGH | Table stakes grounded in case study content standards; GEO patterns from peer-reviewed academic source plus 2026 practitioner guides; anti-features identified with clear rationale |
-| Architecture | HIGH | Based entirely on direct codebase analysis; mirrors the tjenester pattern with a documented good outcome in PROJECT.md |
-| Pitfalls | HIGH | All critical pitfalls derived from reading actual source files — `ProjectShowcase.astro`, `ProjectTeaser.astro`, `BaseLayout.astro`; confirmed behavior, not speculation |
+| Stack | HIGH | Zero new dependencies. All patterns verified in existing production codebase via direct code inspection. |
+| Features | HIGH | Table stakes confirmed from Google spam policies (official), schema.org (authoritative), and Norwegian competitor analysis (direct observation). The 60% unique content threshold is industry consensus — MEDIUM on exact number, HIGH on the principle. |
+| Architecture | HIGH | Based on direct codebase analysis. `/steder/[slug]` URL structure avoids documented root-level dynamic route pitfall. All patterns exist in the repo. |
+| Pitfalls | HIGH | Critical pitfalls sourced from Google official spam policies and canonical docs. Schema entity duplication (Pitfall 4) is MEDIUM confidence on Google's exact handling of two `LocalBusiness` blocks; the `Service` + `@id` referencing approach is the safer mitigation. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **iGive Lighthouse scores are unverified:** The existing `Results.astro` shows hardcoded "95" but this has not been measured against the current live site. Run PageSpeed Insights on `salg.igive.no` before writing the metrics section. If the score has changed, update both the case study copy and `Results.astro`.
+- **Schema architecture decision: two `LocalBusiness` blocks vs. `Service` + `@id` reference.** ARCHITECTURE.md recommends injecting a full city-scoped `LocalBusiness` via the head slot. PITFALLS.md recommends using a `Service` type referencing the root entity instead, to avoid Knowledge Graph entity dilution. These have different trade-offs. Resolve in Phase 1 before building the JSON-LD template — pick one and apply consistently to all cities. Recommendation: use `Service` + `@id` reference; it is the more conservative and technically correct pattern for a service-area business.
 
-- **Blom Company live domain timing:** All visual assets come from `blom-no.vercel.app` staging. If `blomcompany.com` is not live before the case study publishes, the live site link and `url` field should point to staging with a note, and be updated at launch.
+- **Vercel hybrid mode + sitemap enumeration.** Whether `@astrojs/sitemap` correctly enumerates `/steder/*` routes under Vercel's hybrid adapter cannot be confirmed without a test deploy. Plan to verify in Phase 3 immediately after first deploy. Have the custom sitemap endpoint (`src/pages/sitemap-locations.xml.ts`) ready as a pre-built fallback before launch.
 
-- **iGive testimonial is placeholder:** No real client quote exists for iGive. Launch with a placeholder and treat the real quote as a post-launch update. The Blom testimonial is real and available — use it immediately.
+- **`areaServed` in root BaseLayout `LocalBusiness` schema.** Currently hardcoded. As cities are added to `locations.ts`, this goes stale. Derive it from `locations.ts` at build time (filtered to active tiers) in Phase 1. This is a minor change but prevents a silent schema drift problem at V2 scale.
+
+- **Google Business Profile gap.** City pages without a verified GBP listing rank below competitors who have one. GBP is the strongest single local SEO signal and is independent of website structured data. Prioritize GBP verification for Nettup's primary service area before scaling to V2 — the website alone cannot fully compensate for missing GBP citations.
+
+- **URL slugs for Norwegian city names.** ASCII-only slugs are required (`lillestrom`, `baerum`, not `lillestrøm`, `bærum`). Display names in `locations.ts` use the correct Norwegian characters. URL slugs must not. Establish and enforce this convention in Phase 1.
 
 ---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- `src/config/projects.ts` — existing interface and iGive data
-- `src/config/services.ts` — reference pattern for config-driven pages
-- `src/layouts/BaseLayout.astro` — `pageLabels` map, BreadcrumbList generation, `image` prop behavior
-- `src/pages/prosjekter/_sections/ProjectShowcase.astro` — `caseStudySection` discriminator pattern confirmed
-- `src/pages/_home/ProjectTeaser.astro` — hardcoded iGive content confirmed, no `projects.ts` usage
-- `src/pages/tjenester/nettside/index.astro` — individual file pattern and JSON-LD injection confirmed
-- `.planning/PROJECT.md` — milestone scope and routing decision log
-- `nettup-case-study-brief.md` — Blom Company data: real testimonial, tech stack, Lighthouse scores, staging URL
-- [schema.org/CreativeWork](https://schema.org/CreativeWork) — property definitions
-- [Astro Routing Docs](https://docs.astro.build/en/guides/routing/) — individual files vs `[slug].astro` decision criteria
-- [Google Structured Data Docs — BreadcrumbList](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb) — item name must be human-readable
-- [Google FAQPage deprecation (Aug 2023)](https://developers.google.com/search/blog/2023/08/howto-faq-changes) — FAQPage rich results deprecated for most sites
+- `src/pages/prosjekter/[slug].astro` + `src/config/projects.ts` — config-driven dynamic route pattern in production
+- `src/pages/blogg/[slug].astro` — head slot JSON-LD injection pattern in production
+- `src/layouts/BaseLayout.astro` — existing LocalBusiness schema, head slot, breadcrumb generation
+- `astro.config.mjs` — sitemap serialization, static/hybrid output configuration
+- [Astro Routing Reference](https://docs.astro.build/en/reference/routing-reference/) — `getStaticPaths()` return format, props alongside params
+- [Astro Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/) — auto-inclusion of dynamic routes, serialize callback
+- [Google Spam Policies](https://developers.google.com/search/docs/essentials/spam-policies) — doorway abuse definition and criteria
+- [Google Search Central Blog March 2024](https://developers.google.com/search/blog/2024/03/core-update-spam-policies) — updated spam enforcement
+- [Google Canonicalization Docs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls) — canonical vs noindex guidance
+- [schema.org/LocalBusiness](https://schema.org/LocalBusiness) — areaServed property specification
+- [schema.org/ProfessionalService](https://schema.org/ProfessionalService) — correct subtype for a web agency
 
 ### Secondary (MEDIUM confidence)
-- [Search Engine Land: Mastering GEO in 2026](https://searchengineland.com/mastering-generative-engine-optimization-in-2026-full-guide-469142) — GEO structural patterns
-- [GEO academic paper — Princeton/Georgia Tech/IIT Delhi](https://arxiv.org/pdf/2311.09735) — 30-40% AI visibility improvement with structured content (peer-reviewed)
-- [Static OG images in Astro](https://arne.me/blog/static-og-images-in-astro/) — static file vs Satori tradeoffs
-- [Webflow: How to write the perfect case study](https://webflow.com/blog/write-the-perfect-case-study) — case study content section standards
+- [RicketyRoo: Location Page Spam](https://ricketyroo.com/blog/location-page-spam/) — doorway page patterns and detection (2026)
+- [Sterling Sky: Service Area Pages](https://www.sterlingsky.ca/how-to-create-unique-and-helpful-service-area-pages-for-local-businesses/) — uniqueness requirements and thin content patterns
+- [RankMath: areaServed Cities](https://rankmath.com/kb/add-multiple-areaserved-cities-to-localbusiness-schema/) — City type with Wikipedia @id format
+- [AuthorityNW: Service-Area Schema](https://authoritynw.com/blog/service-area-businesses-gmb-schema-setup/) — areaServed vs serviceArea distinction
+- [Search Engine Journal: Hub and Spoke Internal Links](https://www.searchenginejournal.com/hub-spoke-internal-links/442005/) — internal link strategy for city pages
+- [Journey Agency: Webbyrå Oslo](https://journeyagency.com/tjenester/nettside-og-brukeropplevelse/webbyra-oslo/) — Norwegian competitor local page analysis
+- [Astro sitemap regression GitHub #7015](https://github.com/withastro/astro/issues/7015) — hybrid mode sitemap gap
 
-### Tertiary (LOW confidence)
-- GEO practitioner reports — "300% LLM accuracy with structured data" stat; consistent with academic finding but single-source
+### Tertiary (LOW confidence — single source or inference)
+- Tailride.so case study — 22,000 AI pages penalty; principle is sound, extrapolation to Nettup's scale is inferential
+- Astro build throughput ~127 pages/sec — single source; sufficient for planning estimates at V1/V2 scale
 
 ---
-
-*Research completed: 2026-03-07*
+*Research completed: 2026-03-08*
 *Ready for roadmap: yes*

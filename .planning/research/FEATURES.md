@@ -1,23 +1,44 @@
 # Feature Research
 
-**Domain:** Web agency case study / portfolio pages — SEO + GEO optimized
-**Milestone:** v1.4 Portefolje 2.0 (nettup.no)
-**Researched:** 2026-03-07
-**Confidence:** HIGH (GEO patterns from 2025-2026 sources; case study content standards from multiple credible sources)
+**Domain:** Local SEO landing pages — Norwegian city-targeted pages for a service-area web agency
+**Milestone:** v1.5 Lokale SEO-sider (nettup.no)
+**Researched:** 2026-03-08
+**Confidence:** HIGH (multiple current sources cross-validated; Norwegian competitor analysis performed)
 
 ---
 
 ## Context: What Already Exists
 
-The current `/prosjekter` page has a single inline case study (iGive) with: challenge/solution card pair, feature checklist (6 bullets), testimonial block, and one hero screenshot. There is no dedicated per-project URL, no per-project SEO metadata, and no scalable architecture for adding more projects.
+The site has 5 core pages, 7 service pages, a price calculator, AI chatbot, and an automated blog pipeline. There is no city-specific content anywhere. The homepage and service pages target national Norwegian queries ("webbyrå", "nettside for bedrift") but have zero explicit coverage for local queries like "webbyrå Oslo" or "nettside bedrift Drammen".
 
 This milestone adds:
-- A project grid index at `/prosjekter` (cards linking to dedicated pages)
-- `/prosjekter/igive` — expanded iGive case study
-- `/prosjekter/blom-company` — new Blom Company case study
-- Scalable `projects.ts` config driving both index cards and per-page metadata
+- `src/config/locations.ts` — city data model with V1/V2/V3 expansion fields
+- `src/pages/[location].astro` — static routes via `getStaticPaths()`
+- 6–8 Tier 1 city pages with hand-written, genuinely differentiated copy
+- `LocalBusiness` JSON-LD with `areaServed` per page
+- Per-city SEO metadata + canonical URLs
+- Internal linking updates (footer, contact page)
 
-Existing tech: Astro 5 + Tailwind 4 + React islands + Framer Motion. No new dependencies required for this milestone.
+No new dependencies. All features use existing Astro 5 + Tailwind 4 + existing schema patterns.
+
+---
+
+## The Doorway Page Problem
+
+This is the central design constraint for the entire feature set. Google's spam policies explicitly list location pages as a doorway page risk. The penalty is quiet (pages get "currently not indexed" status) but fatal.
+
+**Doorway page definition:** A page that exists primarily for search engines, not users. The test: "Would this page exist if Google didn't exist?" If no — it's a doorway page.
+
+**How agencies get penalized:**
+- Identical page copied 40 times with only the city name swapped
+- Pages orphaned from navigation (no internal links in or out)
+- City name mentioned repeatedly in keyword-stuffed paragraphs with no genuine local content
+- Footer crammed with 40+ city names as plain text links
+- Thin FAQ sections that ask/answer nothing users actually want to know
+
+**The 60% rule (MEDIUM confidence):** Industry consensus holds that at least 60% of content per city page must be genuinely unique — not shared boilerplate. This is the threshold that separates legitimate from thin.
+
+**The intent test:** If you can swap the city name and nothing else changes, it needs more depth.
 
 ---
 
@@ -25,379 +46,293 @@ Existing tech: Astro 5 + Tailwind 4 + React islands + Framer Motion. No new depe
 
 ### Table Stakes (Users and Crawlers Expect These)
 
-Features that a professional web agency case study page must have. Missing any of these makes the page feel incomplete or unprofessional to prospects who are evaluating whether to hire the agency.
+Features that a legitimate local SEO landing page must have. Missing these = page won't rank or will be penalized.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| **Project hero section** | Prospects form their first judgment from the hero. A headline, one-sentence project description, client name, category tag, and the hero screenshot must all be visible above the fold. | LOW | For Blom: editorial product grid image. For iGive: current `salg.igive.no.png`. Desktop-first crop as hero is typically wider than tall. |
-| **Challenge section** | Decision-makers need to recognize their own problem before they trust the solution. Without this, the page reads as self-promotion rather than problem-solving evidence. | LOW | 3-5 concise sentences. The existing iGive challenge text is good — expand it. For Blom: the brief already has the framing ("no template would do"). |
-| **Solution section** | Explains what was built and how it solved the challenge. Must explain reasoning, not just list outputs. 31.82% of B2B tech buyers rank challenge-solution framing as their top priority in a case study (2025 Tech Buyer Preferences survey). | LOW | Each solution section should mention the specific technical decisions that are non-obvious. For Blom: why headless, why Sanity for CMS, why two collections. |
-| **Tech stack display** | Prospects need to verify that the agency uses the technologies they care about. A scannable tech stack (logos or chips) is expected on any professional portfolio page. | LOW | For Blom: Next.js 15 / Shopify Storefront API / Sanity / Tailwind 4 / TypeScript / Vercel. For iGive: Astro 5 / Tailwind. Display as labeled icon chips. |
-| **Outcomes / metrics section** | The single most credible section. Real numbers outperform any copy. Prospects share metrics internally when advocating for hiring an agency. | MEDIUM | For Blom: Lighthouse scores are available and strong (Desktop perf 98, SEO 100, LCP 1.1s). For iGive: performance claims ("under ett sekund") need an actual Lighthouse score or PageSpeed screenshot. Do not make up metrics. |
-| **Client testimonial** | Social proof from the actual client. Expected on any agency portfolio page. Its absence signals that no real client could be found to endorse the work. | LOW | Blom testimonial is real and available in the brief. iGive testimonial is currently placeholder — this is a known gap in PROJECT.md. Use Blom's real one as the model. |
-| **Live site link** | Prospects want to verify the work is real and live. A "Se live-siden" link (opens in new tab) is expected on every project. | LOW | Blom: `blomcompany.com`. iGive: `salg.igive.no`. For Blom, note that staging screenshots (`blom-no.vercel.app`) may precede the live domain — update when launched. |
-| **Breadcrumb navigation** | Users navigating from `/prosjekter` index need a clear path back. Breadcrumbs also drive BreadcrumbList JSON-LD which is a GEO signal. | LOW | `Nettup > Prosjekter > [Project Name]` — consistent with the pattern established in v1.1 service pages. |
-| **Project index card linking to dedicated page** | The `/prosjekter` index must show project cards with a clear CTA ("Les case study") linking to the dedicated URL. This is how the portfolio becomes discoverable. | LOW | Card fields: project name, category tag, tagline, hero thumbnail, CTA button. Cards are already partially defined in `projects.ts` — extend the schema. |
-| **Per-project SEO metadata** | Each case study page needs its own `<title>`, `<meta description>`, and OG tags. A shared generic title for all projects wastes ranking potential for "[agency] [client]" queries. | LOW | Pattern: `<title>Blom Company — Headless Shopify-nettbutikk | Nettup</title>`. Meta description: outcome-first in Norwegian, 120-155 characters. |
+| **City-specific `<title>` tag** | Google's primary ranking signal for location queries. `Webbyrå [By] — Nettup` is the canonical pattern. | LOW | Under 60 characters. Include city name near the start. Pattern confirmed by top-ranking Norwegian web agency pages. |
+| **City-specific `<meta description>`** | CTR signal. Users scanning search results need to instantly see their city name and a relevant service claim. | LOW | 120–155 characters. City name in first 10 words. Outcome-first: "Profesjonell nettside for bedrifter i [By]. Rask levering og moderne teknologi." |
+| **Canonical URL per city** | Prevents duplicate content signals when V2/V3 generates many similar pages. | LOW | `https://nettup.no/[city-slug]` — consistent with existing Astro canonical pattern. |
+| **Unique H1 incorporating city** | On-page geo-relevance signal. Generic H1s shared across pages are a thin content red flag. | LOW | "Webbyrå i [By] — Profesjonelle nettsider for lokale bedrifter" is the table stakes pattern. Must be unique per city, not a template with swapped slug. |
+| **City-specific introductory paragraph** | The 60% unique content threshold starts here. First 200 words are evaluated by both Google and AI systems. Boilerplate here is the #1 doorway page red flag. | MEDIUM | Must reference something specific to the city — business culture, local industries, geographic context, nearby areas served. Not just "Vi leverer webtjenester til bedrifter i [By]." |
+| **Service offering section** | Users landing on a city page need to understand what's available in their area. This can be shared content presented consistently, as long as the intro and FAQ are unique. | LOW | Can reuse existing service summaries from `services.ts` with per-city CTA links. This is the shared 40% — acceptable. |
+| **Clear contact CTA with city context** | Users must be able to take action immediately. A generic "Kontakt oss" CTA is weaker than "Kontakt oss for et uforpliktende møte om din [By]-bedrift." | LOW | Pre-fill `?by=[city]` or `?tjeneste=lokal-nettside` to carry city context into the contact form (pattern already exists in codebase). |
+| **NAP consistency** | Name, Address, Phone must match the `LocalBusiness` JSON-LD exactly. Mismatches between on-page text and schema are a local ranking signal loss. | LOW | Nettup has no physical address per city — service-area business model. This changes the implementation: use `areaServed` + `serviceArea`, not `address` per city. |
+| **`LocalBusiness` JSON-LD with `areaServed`** | Structured data is Google's machine-readable confirmation that you serve this city. Without it, city-targeted ranking relies on on-page signals alone — weaker. | MEDIUM | Use `ProfessionalService` subtype (more precise than `LocalBusiness` for a web agency). `areaServed` as array of city names is sufficient; `GeoCircle`/`GeoPolygon` adds minimal value for this use case. |
+| **Sitemap inclusion** | City pages must be in `sitemap.xml` for discovery and crawl prioritisation. | LOW | Astro sitemap integration already auto-includes all static routes — confirmed in existing PROJECT.md setup. No additional work needed beyond ensuring routes are generated. |
+| **Internal links from existing pages** | Orphaned pages are a doorway page red flag. City pages must receive links from at least 2–3 existing pages. | LOW | Footer "Områder vi dekker" section + `/kontakt` page "Vi betjener hele Viken og Oslofjordregionen" text. See Internal Linking section below. |
+| **City-specific FAQ section** | FAQ serves two purposes: genuine user value (passes the doorway test) and `FAQPage` JSON-LD (schema signal). Questions must be specific to the city, not generic service FAQs. | MEDIUM | 3–4 questions. At least 2 must reference something specific to the city or region. "Leverer dere nettsider til bedrifter utenfor [By] sentrum?" is acceptable. "Hva er en nettside?" is not. |
 
 ### Differentiators (Competitive Advantage)
 
-Features that elevate these case studies above what a typical Norwegian web agency publishes. Aligned with Nettup's positioning: modern technology, fast delivery, measurable results.
+Features that elevate Nettup's local pages above the doorway-page-adjacent content published by most Norwegian agencies. Most competitors either skip city pages entirely or publish thin boilerplate.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Lighthouse / Core Web Vitals display** | Most Norwegian web agencies don't publish their performance scores. Publishing real scores (especially Blom's desktop 98 / SEO 100 / LCP 1.1s) signals technical credibility in a way text cannot. | LOW | Render as a visual score card (circular gauge or score chips). Blom scores are ready from the brief. iGive: run PageSpeed on `salg.igive.no` and document before writing the page. Flag: Blom mobile perf is 75 (LCP 6.6s hero image issue) — acknowledge this honestly, state it's a pre-launch staging score, re-run post-launch. |
-| **GEO-optimized project copy** | AI assistants (ChatGPT, Perplexity, Google AI Overviews) are increasingly the first touchpoint when a prospect searches "best norsk webbyrå" or "headless Shopify Norge". Case study pages with structured, factual, citable content surface in these answers. | MEDIUM | See the GEO Patterns section below for specific implementation rules. This is the single highest-ROI differentiator relative to implementation cost. |
-| **CreativeWork + WebSite JSON-LD schema** | Structured data helps Google understand the page as a documented project, not just marketing copy. LLMs achieve 300% higher accuracy with structured data vs unstructured content. CreativeWork schema maps cleanly to case study content. | LOW | `@type: "WebSite"` for the client's site as the output (`url: "https://blomcompany.com"`, `name: "Blom Company"`, `creator: { @type: "Organization", name: "Nettup" }`). Wrap in a CreativeWork for the case study page itself. See the Structured Data section below. |
-| **Multiple contextual screenshots** | A single hero image doesn't demonstrate breadth of work. 3-5 screenshots at key sections (homepage, product page, mobile view, CMS or admin interface) give prospects a fuller picture. | MEDIUM | Requires a documented visual content brief per project. See the Visual Content section below. For Blom: editorial homepage, product listing, product detail, mobile viewport. For iGive: homepage, one product block, contact form section. |
-| **"Slik gikk det" (How it went) narrative** | A short process narrative (2-3 sentences on timeline and collaboration style) answers the unspoken question: "What is it like to work with Nettup?" Most agency portfolio pages skip this. | LOW | Integrate into solution section or as its own brief paragraph. For Blom: "Blom kom med klar retning — vi leverte uten unødvendige runder." This is already in their testimonial, which supports it. |
-| **Mobile/desktop viewport pair** | Showing both desktop and mobile views demonstrates that responsive design is actually implemented, not assumed. Prospects with mobile-heavy traffic care about this. | MEDIUM | For each project: one full desktop viewport screenshot + one mobile viewport screenshot. Can be displayed as a paired mockup (browser frame + phone frame side by side). |
-| **Technology rationale (one-liner per tech choice)** | Listing "Next.js, Shopify, Sanity" is table stakes. Explaining *why* each was chosen ("Shopify handles inventory so we don't reinvent checkout security") builds trust and demonstrates expertise. | LOW | 1 sentence per major technology decision in the tech stack section. Blom brief has this context — translate to Norwegian for the page. |
+| **Local industry mention per city** | Every Norwegian city has a dominant industry cluster. Referencing it signals genuine local knowledge and creates content that cannot be replicated by a template. Oslo: finance/tech/startup, Drammen: industri/logistikk, Asker/Bærum: it-konsulenter og liberale yrker, Lillestrøm: industri og offentlig sektor. | MEDIUM | Must be accurate and specific. 1–2 sentences. Not "many businesses in [city] need websites" — that's useless. "Askers mange IT-konsulentfirmaer trenger profesjonelle nettsider som demonstrerer fagkompetanse til bedriftskunder" is useful. |
+| **Nearby areas served (explicit)** | For each Tier 1 city, explicitly naming nearby towns signals service-area coverage and creates longtail relevance ("webbyrå Nesbyen" can surface from a Drammen page if Numedal is mentioned). Feeds `areaServed` array in schema. | LOW | 2–4 nearby areas per city. Stored in `locations.ts` as `nearbyAreas[]`. Rendered as "Vi betjener også [Nedre Eiker], [Røyken] og [Hurum]." |
+| **Unique testimonial reference per city (future)** | When real client testimonials are collected, displaying a testimonial from a client in the target city is the highest-trust local signal possible. Currently a known gap (placeholder testimonials site-wide). | LOW now, HIGH later | Add a `testimonialCity` field to `locations.ts` schema now so it's ready when real testimonials exist. Don't display fake/generic testimonials — worse than no testimonial. |
+| **`FAQPage` JSON-LD co-located with FAQ** | Consistent with the pattern established in v1.1 service pages and v1.3 blog articles. City-specific FAQ with structured data is more citable by AI systems and more likely to generate rich results. | LOW | Implementation pattern already exists in codebase. Adapt from service page FAQ components. |
+| **Chatbot context injection per city** | The existing AI chatbot (Claude Haiku) already receives page context. Injecting city name and local industries into the system prompt means the chatbot answers "Kan dere hjelpe en bedrift i Drammen?" intelligently without needing separate chatbot configs. | MEDIUM | Requires passing `city` and `region` from page frontmatter to chatbot context. The chatbot infrastructure supports this via existing page-context patterns. |
+| **Blog cross-links from city-relevant articles** | The automated blog pipeline already generates articles with a "lokal-seo" topic cluster. Articles about "lokal SEO i Oslo" can link to `/oslo` city page, creating editorial internal link equity. | LOW | Update blog generation config to include city page links when relevant. No structural changes needed — just config update. |
+| **`BreadcrumbList` JSON-LD** | Consistent with existing site-wide pattern. Establishes page position in site hierarchy for both Google and AI systems. | LOW | Pattern: `Nettup (/) > Webbyrå i [By] (/[city-slug])`. Simple 2-level breadcrumb. |
 
 ### Anti-Features (Explicitly Avoid)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| **Process timeline / Gantt chart** | Looks thorough and professional | For a small web agency, publishing specific sprint lengths or delivery timelines creates pressure to match them for future clients. It also signals to competitors how long projects take. | "Rask levering" as a value claim, backed by a concrete delivery window in the hero or CTA ("fra brief til lansering på 4 uker"). |
-| **Budget / price disclosure per project** | Prospects want to know cost | Specific project budgets anchor price expectations in the wrong direction — either too high (scares SMBs) or too low (devalues premium work). | Link from case study CTAs to `/priskalkulator` — the price calculator already handles this correctly. |
-| **Before/after website comparison** | Compelling visual contrast | iGive and Blom are new-build projects with no predecessor. Before/after only makes sense for redesign projects. Showing a bad "before" that doesn't exist damages the client's brand (even older screenshots look unprofessional). | For redesigns (future projects): use before/after. For greenfield: use "problem statement" + "outcome" framing instead. |
-| **Case study PDF download** | B2B lead gen tactic | PDFs leave the indexed web, skip tracking, and require maintenance (version drift). On a portfolio page for an SMB-focused agency, nobody downloads PDFs — they want to see the work and contact. | The case study page itself is the asset. Contact CTA at the bottom. |
-| **Video walkthrough of the project** | High engagement, shows the work in motion | Requires a separate production workflow (recording, editing, hosting, embedding) that doesn't exist yet. Video adds page weight and introduces autoplay accessibility issues. | Device mockup images with hover animations (Framer Motion on the mockup card) achieve similar effect with zero video infrastructure. |
-| **Client logo wall without attribution** | Looks impressive at a glance | Without a linked case study or at least a testimonial, logos are unverifiable name-dropping. Norwegian SMB clients are suspicious of "we've worked with 50 companies" claims. | Only display logos for clients with a live case study page. 2 real ones > 20 unattributed logos. |
-| **Infinite scroll / lazy-loaded projects grid** | Scales as projects are added | At 2 projects, any pagination or infinite scroll is over-engineering. The grid should be simple — cards in a CSS grid, no JavaScript required for the index page. | Simple static grid. Add pagination only at 8+ projects (years away at current growth rate). |
+| **City-name-only differentiation** | Feels like scaling quickly | This is the textbook doorway page pattern. "Vi leverer nettsider i Oslo" and "Vi leverer nettsider i Drammen" are the same page with a swapped noun. Triggers the quiet deindexing penalty. | Write a unique intro paragraph per city that references real local context — industries, geography, or specific nearby areas. Even 2–3 unique sentences anchored in local reality pass the intent test. |
+| **40+ city footer links** | Looks comprehensive | Google's webmaster guidelines cite this specific pattern as spammy. A wall of city links is a "doorway network" red flag. | Link to 6–8 Tier 1 cities in a clean "Områder vi dekker" footer section. The rest become relevant organically as V2/V3 pages get created and linked contextually. |
+| **Fake "local office" address per city** | Boosts `address` schema trust | This is fraud. Using a virtual office address or co-working space address purely for schema is a violation of Google's local guidelines and will eventually trigger a manual penalty. | Be honest: Nettup is a service-area business. Use `areaServed` to declare coverage. This is the correct schema pattern and Google respects it. |
+| **Identical service section per page** | Reduces copy effort | If services are described in identical language across all city pages, the similarity ratio across pages rises above the 60% unique threshold. | Share service section structure (same component), but vary service descriptions slightly per city, or accept that this is the "shared 40%" and ensure intro + FAQ + industry sections carry the uniqueness. |
+| **Auto-generated city pages at launch** | Scales coverage fast | At V1, AI-generated copy for city pages produces thin content. Google is highly effective at detecting machine-generated local page content in 2026 — particularly the kind that rephrases "local businesses in [city] benefit from professional websites." | Hand-craft V1 (6–8 cities). Build the automation pipeline for V2 (30–50 towns) using AI + human review, not AI-only. |
+| **Geo-targeted redirects based on visitor IP** | Feels personalized | Serves different content to Googlebot vs real users — this is cloaking, a spam policy violation. | Serve the same content to everyone. City pages are static, canonical, and crawlable. Let users choose their city explicitly. |
+| **Generic keyword stuffing ("webbyrå Oslo webbyrå oslo webdesign Oslo")** | Old SEO tactic | Triggers spam detection. City name should appear naturally 3–5 times on the page — in the H1, the intro paragraph, the FAQ, and the schema. Not 15+ times in the body copy. | Use city name where it reads naturally. The schema does the machine-readable geo-targeting work. |
 
 ---
 
-## GEO Patterns for Case Study Pages
+## Content Categories
 
-GEO (Generative Engine Optimization) is the practice of structuring content so AI systems — ChatGPT, Perplexity, Claude, Google AI Overviews — cite it when answering user queries. This section translates GEO research into specific implementation patterns for Nettup's case study pages.
+The downstream consumer requested categories: Content, Schema, Internal Linking, City Data, Copy Strategy.
 
-**Why GEO matters for these pages:** When a prospect asks ChatGPT "beste norsk webbyrå for headless Shopify" or Perplexity "norsk webbyrå nettbutikk Next.js", a well-structured case study is citable evidence. The 2023 Princeton/Georgia Tech/IIT Delhi GEO study found that adding citations, statistics, and structured content to pages improved AI search visibility by 30-40%.
+### Content
 
-### Pattern 1: Direct Answer in First 200 Words
+| Element | Unique per city? | Required | Notes |
+|---------|-----------------|----------|-------|
+| `<title>` tag | YES — must be | Table stakes | "Webbyrå [By] — Nettup" |
+| `<meta description>` | YES | Table stakes | City name in first 10 words |
+| H1 | YES | Table stakes | Includes city name naturally |
+| Intro paragraph (200 words) | YES — critical | Table stakes | References local industries, geography, or character |
+| Service section | NO — shared structure, slightly varied | Table stakes | Reuse `services.ts` data, vary CTA anchor text |
+| FAQ section (3–4 questions) | YES (≥2 questions unique to city) | Table stakes | One question about nearby areas, one about local businesses |
+| Industry mention | YES | Differentiator | 1–2 sentences on dominant local industries |
+| Nearby areas list | YES (per city data) | Table stakes | Feeds schema `areaServed` and on-page text |
+| Contact CTA | NO — shared, with city context | Table stakes | City name in CTA button or label |
+| Testimonial | FUTURE (when real ones exist) | Differentiator | Field reserved in `locations.ts` |
 
-AI systems using RAG (Retrieval-Augmented Generation) evaluate page relevance primarily from opening content. The case study intro must answer the core question directly.
+### Schema
 
-**Do:** "Blom Company er en norsk golf- og streetwear-merkevare. Nettup bygde et fullt tilpasset headless Shopify-utstillingsvindu med Next.js 15, Sanity CMS og Tailwind CSS 4 — lansert med Lighthouse-score 98 på desktop og LCP 1,1 sekund."
+| Schema Type | Property | Purpose | Notes |
+|------------|----------|---------|-------|
+| `ProfessionalService` | `@type` | More precise than `LocalBusiness` for a web agency | Use this subtype, not generic `LocalBusiness` |
+| `ProfessionalService` | `name` | "Nettup" | Consistent across all pages |
+| `ProfessionalService` | `url` | Canonical city page URL | Per-city canonical, not homepage |
+| `ProfessionalService` | `areaServed` | Array of city + nearby area names | Drives city-query relevance. Text strings, not GeoShape |
+| `ProfessionalService` | `serviceArea` | `GeoCircle` centered on city (optional) | Optional enhancement for V2; not needed for V1 with named cities |
+| `ProfessionalService` | `description` | City-specific service description | Must match the on-page intro — no mismatch between schema and body |
+| `FAQPage` | FAQ questions and answers | Rich result eligibility + AI citability | Co-located with FAQ section (existing pattern from v1.1) |
+| `BreadcrumbList` | 2-level breadcrumb | Site hierarchy signal | `Nettup > Webbyrå i [By]` |
+| `Organization` (existing) | `sameAs` | Brand authority signal | Already in BaseLayout — no changes needed for city pages |
 
-**Don't:** Begin with "Da Blom Company tok kontakt med oss, visste vi at dette skulle bli et spennende prosjekt..."
+**What NOT to add:** `address` per city (Nettup has no per-city physical address), `openingHours` variations per city (same hours everywhere), `geo` coordinates per city (misleading for a service-area business).
 
-### Pattern 2: Specific, Verifiable Facts
+### Internal Linking
 
-AI engines prefer citable facts over general claims. Every case study must contain:
-- Specific technology versions (Next.js 15, not "Next.js")
-- Concrete metrics (LCP 1.1s, Lighthouse 98, not "rask")
-- Named deliverables (Lifestyle-kolleksjon og Sport-kolleksjon, not "to produktlinjer")
-- Timeline indicators if verifiable ("lansert [month year]")
+| Link Source | Link Target | Anchor Text | Notes |
+|------------|-------------|-------------|-------|
+| Footer — "Områder vi dekker" section | All V1 city pages | "[By]" (plain city name) | Max 8 links. Clean section, not a dump of 40+ cities. |
+| `/kontakt` page | City pages collection or hub | "Se alle byene vi dekker" | Or specific top 3 cities in body text |
+| `/om-oss` page | Oslo page (most relevant) | "Vi er basert i Drammen og betjener hele Oslofjordregionen" | Natural, contextual mention |
+| Blog articles (lokal-seo cluster) | Relevant city pages | City name in context | Update blog generation config to include city page links |
+| City pages → each other | Regional neighbors | "Jobber du i [Asker]? Se vår side for [Bærum]" | Adds relevance for clusters; 1 link max per page to avoid spam signals |
+| City pages → service pages | All 7 service pages | Service name | City pages are entry points — they must link to conversion pages |
+| Service pages → city hub or top cities | Top 2–3 city pages | "Vi leverer [tjeneste] i Oslo, Drammen og omegn" | Reverse link equity flow |
 
-Avoid vague phrases: "moderne teknologi", "rask levering", "stor forbedring". Replace each with a specific claim.
+**Do not:** Create a standalone `/steder` or `/byer` index page as the only entry point to city pages. That pattern (hub page with no content, only links) is itself a doorway pattern. Link from content-rich pages instead.
 
-### Pattern 3: Structured Heading Hierarchy
+### City Data (`locations.ts` schema)
 
-AI systems parse content using heading structure. Case study pages must use:
-- `<h1>`: Project name + one-line description (e.g., "Blom Company — Headless Shopify for norsk golf- og streetwear-merkevare")
-- `<h2>`: Section labels that read as standalone statements ("Utfordringen: en butikk som matchet merkevaren", "Resultater: 98 i ytelse på desktop")
-- `<h3>`: Subsections within major sections if needed
+Each city entry in `locations.ts` must support V1/V2/V3 expansion without structural changes:
 
-Do not use generic headings like "Om prosjektet" or "Løsningen" — AI systems can't distinguish these from any other agency's boilerplate.
+| Field | Type | V1 | V2 | V3 | Notes |
+|-------|------|----|----|-----|-------|
+| `slug` | `string` | required | required | required | URL segment: `oslo`, `drammen`, `asker` |
+| `name` | `string` | required | required | required | Display name: "Oslo", "Drammen" |
+| `region` | `string` | required | required | required | "Akershus", "Viken", "Oslo" |
+| `intro` | `string` | hand-written | AI-assisted + human review | AI-generated | The unique paragraph. V1: full craft. |
+| `industries` | `string[]` | hand-written | AI-assisted | AI-generated | Local industry clusters for the city |
+| `nearbyAreas` | `string[]` | hand-written | hand-written | config | Towns served from this city page |
+| `faq` | `FAQ[]` | hand-written | AI-assisted | AI-generated | `{question: string, answer: string}[]` |
+| `areaServed` | `string[]` | derived from `nearbyAreas` + `name` | same | same | Feeds schema directly |
+| `tier` | `1 \| 2 \| 3` | 1 | 2 | 3 | Content quality tier, informs generation pipeline |
+| `testimonialSlug` | `string?` | null | null | null | Reserved for real testimonial cross-reference |
+| `metaTitle` | `string?` | optional override | optional | optional | If default pattern needs override |
+| `metaDescription` | `string?` | optional override | optional | optional | If default pattern needs override |
 
-### Pattern 4: Schema Markup as Machine-Readable Summary
+### Copy Strategy
 
-Structured data is the highest-confidence signal for AI systems. A LLM cited in a study achieves 300% higher accuracy when processing structured data vs unstructured text. The CreativeWork schema for each case study should include:
+**The city intro is the hardest and most important part.** It determines whether a page passes or fails the doorway test. Each Tier 1 intro must:
 
-```json
-{
-  "@type": "WebSite",
-  "name": "Blom Company",
-  "url": "https://blomcompany.com",
-  "description": "Headless Shopify-nettbutikk for norsk golf- og streetwear-merkevare. Bygget med Next.js 15, Sanity CMS og Tailwind CSS 4.",
-  "creator": {
-    "@type": "Organization",
-    "name": "Nettup",
-    "url": "https://nettup.no"
-  },
-  "keywords": ["headless shopify", "Next.js nettbutikk", "Sanity CMS", "norsk webbyrå"],
-  "inLanguage": "nb"
-}
-```
+1. Open with a direct, specific claim that references the city (not just names it)
+2. Mention 1–2 dominant local industries or business characteristics
+3. Explain what Nettup does for those businesses specifically
+4. Include geographic context (nearby areas, region, commuter belt)
+5. Be written as a person, not a machine
 
-### Pattern 5: FAQ Section ("Vanlige spørsmål")
+**Good example (Drammen):**
+> "Drammen er Norges femte største by og en voksende næringsregion med sterk industri-, logistikk- og teknologibase. Bedrifter her konkurrerer i et marked som strekker seg fra Kongsberg i sør til Sandvika i nord. Nettup hjelper Drammens-bedrifter med profesjonelle nettsider og nettbutikker som er raske, synlige i Google og bygget for å konvertere besøkende til kunder — fra vår base rett over fjorden."
 
-AI systems disproportionately cite FAQ sections because they map directly to query patterns. Adding a 3-4 question FAQ at the bottom of each case study creates high-citation-potential content.
+**Bad example (doorway):**
+> "Leter du etter et webbyrå i Drammen? Vi i Nettup leverer nettsider til bedrifter i Drammen og omegn. Kontakt oss for nettside i Drammen i dag."
 
-Recommended FAQ questions for Blom:
-- "Hva er headless Shopify og hvorfor valgte dere det for Blom Company?"
-- "Hvordan håndterer nettstedet to ulike produktlinjer?"
-- "Hva oppnådde dere på Lighthouse-testen?"
-
-Recommended FAQ questions for iGive:
-- "Hva var utfordringen Nettup løste for iGive?"
-- "Hvorfor ble det bygget som en egen salgsside i stedet for å bruke nettbutikken?"
-- "Hva er ytelsen på salg.igive.no?"
-
-This FAQ section also feeds `FAQPage` JSON-LD, consistent with the blog pipeline's pattern.
-
-### Pattern 6: Cross-References and Internal Links
-
-Perplexity AI shows preference for content with internal cross-references. Each case study should link to:
-- The relevant Nettup service page (Blom → `/tjenester/nettbutikk`, iGive → `/tjenester/nettside`)
-- The `/prosjekter` index
-- The other case study (cross-link between iGive and Blom at the bottom: "Se også:")
-
-This network of links signals topical authority and increases the probability of multi-page citation chains.
-
----
-
-## SEO Patterns for Case Study Pages
-
-### Title and Meta Description Patterns
-
-Google and AI Overviews give high weight to `<title>` tags. For agency portfolio pages targeting "[agency name] [client]" and "[service] [location]" queries:
-
-**Title pattern:** `[Client Name] — [Project type] | Nettup`
-- "Blom Company — Headless Shopify-nettbutikk | Nettup"
-- "iGive — B2B salgsside for gavekortplattform | Nettup"
-
-**Meta description pattern:** Outcome-first, specific metric, 120-155 characters.
-- "Custom headless nettbutikk for Blom Company. Next.js 15, Sanity CMS og Tailwind CSS 4 — Lighthouse 98 på desktop, LCP 1,1s."
-- "Dedikert B2B-salgsside for iGive. Presenterer tre gavekortprodukter klart for bedriftskunder — under ett sekund lastestid."
-
-### URL Structure
-
-- `/prosjekter/igive` — matches client slug, not a generic `/prosjekter/1`
-- `/prosjekter/blom-company` — hyphenated, Norwegian-friendly
-- Consistent with `id` field in `projects.ts`
-
-### BreadcrumbList JSON-LD
-
-Consistent with v1.1 service pages pattern:
-```
-Nettup (/) > Prosjekter (/prosjekter) > Blom Company (/prosjekter/blom-company)
-```
-
-This is a confirmed ranking signal and already established as a pattern in this codebase.
-
----
-
-## Visual Content Requirements
-
-The visual content brief defines exactly which screenshots and assets are needed per project. This is a dependency: the page cannot be built (or built well) without the assets first.
-
-### Visual Content Checklist — Per Project
-
-**Hero image** (required, 1 per project)
-- [ ] Full-width desktop viewport screenshot of the most visually impressive page (homepage or product listing)
-- [ ] Crop: 1600 x 900px (16:9) or 1600 x 1000px
-- [ ] Format: WebP via Astro `<Image>` pipeline
-- [ ] Alt text: "[Client name] — [page name] screenshot" in Norwegian
-- [ ] File size target: < 300KB after Astro optimization
-
-**Section screenshots** (recommended, 2-4 per project)
-- [ ] One screenshot per major section that demonstrates a distinct deliverable
-- [ ] For e-commerce: product listing page + product detail page
-- [ ] For marketing sites: hero section + one content section
-- [ ] Crop: consistent width (1440px desktop or 390px mobile), height flexible
-- [ ] Labelled with caption text in the page component
-
-**Mobile viewport screenshot** (recommended, 1 per project)
-- [ ] iPhone or Android viewport width (390px)
-- [ ] Shows the same hero or product page at mobile breakpoint
-- [ ] Demonstrates that responsive design is real, not assumed
-- [ ] Display in a phone frame mockup (CSS or SVG frame, no third-party service)
-
-**Desktop browser frame** (optional, 1 per project)
-- [ ] Hero screenshot wrapped in a browser chrome mockup
-- [ ] Adds visual professionalism to section screenshots
-- [ ] Implemented as a CSS component, not a Figma export (keeps it maintainable)
-
-**Lighthouse score card** (required for Blom, required for iGive after measurement)
-- [ ] Screenshot or designed card showing: Performance, Accessibility, Best Practices, SEO scores
-- [ ] For Blom desktop: 98 / 96 / 96 / 100
-- [ ] For Blom mobile: 75 / 96 / 96 / 100 — include with a note ("mobilscoren er trukket ned av hero-bildet, alle andre målinger er grønne")
-- [ ] For iGive: run PageSpeed Insights on `salg.igive.no` and document before writing the section
-
-**Visual content NOT needed for this milestone:**
-- Before/after comparisons (both projects are greenfield builds — see Anti-Features)
-- Video walkthroughs (see Anti-Features)
-- Process diagrams or wireframes (adds scope without proportional value at this stage)
-
-### Per-Project Visual Brief
-
-**Blom Company visual brief:**
-1. Hero: Editorial homepage screenshot — cream/gold design, full product grid, Cormorant Garamond headings visible
-2. Product listing: Lifestyle or Sport collection grid
-3. Product detail: Single product page with variant selector, size guide, image gallery
-4. Mobile: Homepage or product listing at 390px viewport
-5. Lighthouse card: Desktop scores (designed card, not raw screenshot)
-
-Source for all Blom screenshots: `blom-no.vercel.app` (staging) until `blomcompany.com` is live.
-
-**iGive visual brief:**
-1. Hero: `salg.igive.no` homepage — full viewport at 1440px desktop
-2. Product block: One of the three product cards (Digitalt / QR / Fysisk) in detail
-3. CTA/contact section: The "Ta kontakt" section to demonstrate conversion path
-4. Mobile: Homepage at 390px viewport
-5. Performance: Run PageSpeed Insights, design score card with actual numbers
+**Scaling strategy for V2 (30–50 towns):** Use a two-call Claude generation pattern (same as blog pipeline) with a city data seed object. First call generates the body, second call generates metadata (title, description, FAQ). Human review gate before publish. The `tier: 2` field in `locations.ts` signals which pages went through AI generation vs hand-crafting.
 
 ---
 
 ## Feature Dependencies
 
 ```
-[projects.ts config schema — extended]
-    +-- required by --> [/prosjekter index page]
-    +-- required by --> [/prosjekter/[slug] page routing]
-    +-- required by --> [per-project SEO metadata]
-    +-- drives --> [project card display on index]
-    +-- drives --> [case study page content]
+[locations.ts config]
+    +-- required by --> [getStaticPaths() in [location].astro]
+    +-- drives --> [per-city SEO metadata]
+    +-- drives --> [LocalBusiness/ProfessionalService JSON-LD]
+    +-- drives --> [areaServed values in schema]
+    +-- drives --> [nearbyAreas on-page text]
+    +-- feeds --> [FAQPage JSON-LD (via faq[] field)]
 
-[Visual assets — screenshots per project]
-    +-- required by --> [Hero section on case study page]
-    +-- required by --> [Section screenshots component]
-    +-- required by --> [Mobile viewport display]
-    +-- MUST EXIST BEFORE page content is written
-
-[/prosjekter index redesign]
-    +-- required by --> [user discovery path to case study pages]
-    +-- links to --> [/prosjekter/igive]
-    +-- links to --> [/prosjekter/blom-company]
-
-[Case study page template / layout]
-    +-- required by --> [/prosjekter/igive]
-    +-- required by --> [/prosjekter/blom-company]
-    +-- includes --> [CreativeWork JSON-LD]
-    +-- includes --> [BreadcrumbList JSON-LD]
+[[location].astro dynamic route]
+    +-- required by --> [all city pages]
+    +-- reads from --> [locations.ts config]
+    +-- includes --> [ProfessionalService JSON-LD]
     +-- includes --> [FAQPage JSON-LD]
-    +-- includes --> [per-project <title> + meta description]
+    +-- includes --> [BreadcrumbList JSON-LD]
+    +-- links to --> [service pages (conversion path)]
+    +-- links to --> [contact page with pre-fill]
+
+[Footer "Områder vi dekker" section]
+    +-- links to --> [all V1 city pages]
+    +-- prevents --> [orphaned pages (doorway red flag)]
+    +-- requires --> [city pages to exist first]
+
+[Contact page internal link update]
+    +-- links to --> [city pages]
+    +-- provides --> [2nd source of internal link equity]
 
 [FAQPage JSON-LD]
-    +-- requires --> [FAQ section written in page content first]
-    +-- consistent with --> [blog pipeline FAQPage pattern]
+    +-- requires --> [faq[] content in locations.ts]
+    +-- pattern already exists in --> [v1.1 service pages]
 
-[GEO-optimized copy]
-    +-- requires --> [specific metrics verified (Lighthouse, performance)]
-    +-- requires --> [tech stack confirmed with client / brief]
-    +-- enhances --> [structured data (more citable = more cited)]
+[Blog lokal-seo cluster articles]
+    +-- enhances --> [city pages via inbound editorial links]
+    +-- requires --> [city pages to exist and be indexed first]
+
+[Chatbot city context injection]
+    +-- enhances --> [city pages UX]
+    +-- requires --> [city page frontmatter passing city/region to ChatWidget]
+    +-- existing infrastructure supports this --> [no new dependencies]
 ```
 
 ### Dependency Notes
 
-- **Visual assets are the critical path blocker.** Do not write the case study pages without screenshots in hand. Placeholder images lead to text-and-layout iterations that must be redone when real images arrive. Capture screenshots first, then write content around what the images show.
-- **iGive metrics are unverified.** The current copy says "under ett sekund" but there is no Lighthouse score in the existing project config. Run PageSpeed Insights on `salg.igive.no` before writing the metrics section. If the score is disappointing, reframe honestly.
-- **Blom Company is staging-only.** All visual assets come from `blom-no.vercel.app` until `blomcompany.com` is live. Note this in the page at launch if needed; update live URL when available.
-- **`projects.ts` schema extension.** The current schema has `challenge`, `solution`, `features` as strings and string arrays. The new schema needs: `techStack[]`, `metrics{}`, `screenshots[]`, `faq[]`, `liveUrl`, `slug`. The index page and case study pages both read from this config — changes to the schema affect both consumers.
+- **`locations.ts` is the critical path.** Everything else depends on it being correctly structured. Get the data model right before writing any page component — it must support V1/V2/V3 without structural changes.
+- **Orphan prevention is mandatory at launch.** City pages without internal links will fail Google's doorway page test. Footer update and `/kontakt` link update must ship with the city pages, not after.
+- **FAQ content is a blocker for `FAQPage` JSON-LD.** The schema cannot be written until FAQ questions and answers exist in `locations.ts`. This means city data must be complete before the route template is finalized.
+- **V2 AI generation pipeline is a separate milestone.** The `tier` field and AI generation workflow are future scope. V1 is hand-crafted only — resist the temptation to generate V1 content programmatically.
 
 ---
 
 ## MVP Definition
 
-### Launch With (v1.4 core)
+### Launch With (v1.5 core)
 
-This is the full milestone — all items are required for a meaningful v1.4 release.
+All items required for the milestone to be meaningful. A partial release (pages without internal links, or schema without unique copy) is worse than no release.
 
 **Infrastructure:**
-- [ ] `projects.ts` schema extended with new fields (techStack, metrics, screenshots, slug, faq)
-- [ ] `/prosjekter` index rebuilt as project grid (Astro, static, no React needed)
-- [ ] `[slug].astro` routing for `/prosjekter/[slug]` (or individual `igive/index.astro` + `blom-company/index.astro` files if sections diverge significantly)
-- [ ] Case study page template with all standard sections
+- [ ] `locations.ts` with V1/V2/V3-ready schema — 6–8 Tier 1 entries with all fields populated
+- [ ] `[location].astro` dynamic route with `getStaticPaths()` driven by `locations.ts`
+- [ ] Per-city `<title>`, `<meta description>`, canonical URL
+- [ ] `ProfessionalService` JSON-LD with `areaServed` per city
+- [ ] `FAQPage` JSON-LD from `faq[]` field
+- [ ] `BreadcrumbList` JSON-LD
+- [ ] Sitemap auto-includes generated city pages (already handled by existing Astro integration)
 
-**iGive case study (`/prosjekter/igive`):**
-- [ ] Visual assets captured (PageSpeed run, screenshots taken)
-- [ ] Metrics section with verified Lighthouse scores
-- [ ] Tech stack section (Astro 5 / Tailwind 4 / Vercel)
-- [ ] GEO-optimized copy (direct answer intro, specific metrics, named deliverables)
-- [ ] FAQ section (3-4 questions, feeds FAQPage JSON-LD)
-- [ ] Per-project SEO metadata (title, description, OG tags)
-- [ ] CreativeWork + BreadcrumbList JSON-LD
+**Content (per city):**
+- [ ] Unique intro paragraph (200+ words, references local industries and geography)
+- [ ] Industry mention (1–2 sentences, specific to city)
+- [ ] Nearby areas list (2–4 towns per city, rendered on-page and in schema)
+- [ ] City-specific FAQ (3–4 questions, ≥2 genuinely local)
+- [ ] Service section (shared structure, city-aware CTA links)
+- [ ] Contact CTA with city context
 
-**Blom Company case study (`/prosjekter/blom-company`):**
-- [ ] Visual assets captured from staging (`blom-no.vercel.app`)
-- [ ] Hero screenshot (editorial homepage)
-- [ ] 3-4 section screenshots
-- [ ] Mobile viewport screenshot
-- [ ] Lighthouse score card (desktop 98 / 96 / 96 / 100)
-- [ ] Tech stack section (Next.js 15 / Shopify Storefront API / Sanity / Tailwind 4 / TypeScript / Vercel)
-- [ ] GEO-optimized copy
-- [ ] Real testimonial from brief (or editorial rewrite in same voice)
-- [ ] FAQ section (3-4 questions, feeds FAQPage JSON-LD)
-- [ ] Per-project SEO metadata
-- [ ] CreativeWork + BreadcrumbList JSON-LD
+**Internal linking (ship with pages, not after):**
+- [ ] Footer "Områder vi dekker" section linking to all V1 city pages
+- [ ] `/kontakt` page mentions coverage area with city links
+- [ ] City pages link to relevant service pages
 
-### Add After Validation
+### Add After Validation (v1.5.x)
 
-- [ ] Device mockup frames (phone/browser CSS frames) — if visual quality warrants it
-- [ ] iGive testimonial replacement (real quote) — currently placeholder, unblock when client provides one
-- [ ] Third project card on index (placeholder or "snart" state) — when project #3 exists
+- [ ] Real testimonials per city — when actual client quotes from each area are available
+- [ ] Blog articles linking to city pages — update lokal-seo cluster config
+- [ ] Chatbot city context injection — once city pages are indexed and converting
+- [ ] `/om-oss` page geographic mention — minor, but adds contextual internal link
 
-### Future Consideration (v1.5+)
+### Future Consideration (v2+)
 
-- [ ] Category filtering on `/prosjekter` index — only relevant at 6+ projects
-- [ ] Case study search or filtering by tech stack — only relevant at 10+ projects
-- [ ] Video walkthrough — if a high-impact project justifies the production workflow
-- [ ] Before/after comparisons — for the first redesign project (when it exists)
+- [ ] 30–50 Tier 2 city pages — requires AI generation pipeline with human review gate
+- [ ] `serviceArea` with `GeoCircle` coordinates — marginal gain, only relevant at V3 scale
+- [ ] City-specific landing page for each service type (e.g., `/oslo/nettbutikk`) — high complexity, only if Tier 1 city pages are ranking and converting
+- [ ] Regional hub pages (e.g., `/oslofjord`) — aggregates nearby city pages, only useful at V3 scale
 
 ---
 
 ## Feature Prioritization Matrix
 
-| Feature | User/SEO Value | Implementation Cost | Priority |
+| Feature | SEO/User Value | Implementation Cost | Priority |
 |---------|----------------|---------------------|----------|
-| `projects.ts` schema extension | HIGH | LOW | P1 |
-| `/prosjekter` index grid rebuild | HIGH | LOW | P1 |
-| Case study page template | HIGH | MEDIUM | P1 |
-| Visual assets — Blom screenshots | HIGH | LOW (capture work) | P1 |
-| Visual assets — iGive metrics | HIGH | LOW (run PageSpeed) | P1 |
-| GEO-optimized copy (both projects) | HIGH | LOW | P1 |
-| FAQ section + FAQPage JSON-LD | HIGH | LOW | P1 |
-| CreativeWork JSON-LD | MEDIUM | LOW | P1 |
+| `locations.ts` V1/V2/V3-ready schema | HIGH | LOW | P1 |
+| `[location].astro` with `getStaticPaths()` | HIGH | LOW | P1 |
+| Unique city intro paragraphs (6–8 cities) | HIGH (doorway test) | MEDIUM (writing time) | P1 |
+| `ProfessionalService` JSON-LD + `areaServed` | HIGH | LOW | P1 |
+| `FAQPage` JSON-LD (city-specific questions) | HIGH | LOW | P1 |
+| Footer "Områder vi dekker" section | HIGH (orphan prevention) | LOW | P1 |
+| Per-city `<title>` + `<meta description>` | HIGH | LOW | P1 |
+| Industry mentions per city | MEDIUM–HIGH | LOW (1–2 sentences) | P1 |
+| Nearby areas on-page text | MEDIUM | LOW | P1 |
 | BreadcrumbList JSON-LD | MEDIUM | LOW | P1 |
-| Per-project SEO metadata | HIGH | LOW | P1 |
-| Lighthouse score card display | HIGH | LOW | P1 |
-| Tech stack section with rationale | MEDIUM | LOW | P1 |
-| Multiple section screenshots | MEDIUM | MEDIUM | P2 |
-| Mobile viewport screenshot | MEDIUM | LOW | P2 |
-| Desktop browser frame mockup | LOW | LOW | P2 |
-| Device mockup CSS frames | LOW | MEDIUM | P3 |
-| Real iGive testimonial | HIGH | EXTERNAL (client) | P2 (blocked) |
-
-**Priority key:**
-- P1: Required for v1.4 launch
-- P2: Improve quality, add when P1 scope is stable
-- P3: Future milestone
+| `/kontakt` internal link update | MEDIUM | LOW | P1 |
+| Service section with city-aware CTA | MEDIUM | LOW | P1 |
+| Chatbot city context injection | MEDIUM | MEDIUM | P2 |
+| Blog cross-links from lokal-seo articles | MEDIUM | LOW | P2 |
+| Real testimonials per city | HIGH (when available) | EXTERNAL (client) | P2 (blocked) |
+| `serviceArea` GeoCircle coordinates | LOW | LOW | P3 |
+| Per-service city pages (`/oslo/nettbutikk`) | HIGH (long term) | HIGH | P3 |
 
 ---
 
-## Competitor Feature Analysis
+## Norwegian Market Specifics
 
-Context: Norwegian web agencies with portfolio pages — observed patterns as of early 2026.
+These points apply specifically to the Norwegian context and are not covered in generic local SEO guides.
 
-| Feature | Typical Norwegian agency portfolio | Our approach |
-|---------|-----------------------------------|--------------|
-| Challenge/solution | Generic ("kunden trengte ny nettside") | Specific ("Blom hadde to ulike målgrupper i én merkevare") |
-| Metrics | Absent or vague ("stor økning i trafikk") | Specific Lighthouse scores, named Core Web Vitals |
-| Tech stack | Listed without rationale | Each technology choice explained in one sentence |
-| Testimonials | Often placeholder or absent | Real Blom testimonial available; iGive deferred until real quote |
-| GEO / AI-ready content | Not addressed | Direct-answer intro, FAQ section, CreativeWork schema |
-| Visual depth | Single screenshot or no screenshots | 3-5 screenshots per project, mobile + desktop |
-| Per-project SEO | Generic `/prosjekter` page title | Individual `<title>` and meta per case study URL |
+**Language:** All content in Norwegian bokmål. `hreflang="nb"` in schema. Query patterns use "webbyrå" (not "webbyrå"), "nettside for bedrift", "nettside Drammen". Norwegian users search in Norwegian — no need for English variants.
+
+**Geographic clusters:** The Tier 1 cities are not random — they follow the Oslo commuter belt (Oslofjordregionen/Viken). This is Nettup's actual operational market. Asker, Bærum, Sandvika, and Ski are effectively greater-Oslo suburbs. Lillestrøm and Moss are regional centres with distinct business communities. The city pages should acknowledge this regional coherence, not pretend each city is an isolated market.
+
+**No Google Business Profile at launch:** The PROJECT.md lists Google Business Profile as deferred. This means city pages carry all the local SEO weight at launch — schema and on-page content must work without GBP citation support. This increases the importance of `areaServed` completeness and on-page geographic specificity.
+
+**Org number trust signal:** Norwegian B2B buyers verify org numbers on Proff.no or Brønnøysundregistrene. The existing `Organization` schema in BaseLayout already includes this. No change needed for city pages — they inherit from `BaseLayout`.
+
+**Vipps:** Not relevant for a web agency landing page (no e-commerce on the marketing site).
+
+**Competitor landscape:** Norwegian web agencies with local pages (Mediseo, Journey Agency, A2N) generally use a pattern of: service page with city name in title + a brief geographic paragraph. They do not typically include: city-specific FAQ, industry mentions, nearby areas, or `areaServed` in schema. This means Tier 1 pages built to the standard above will be technically superior to most current competitors' local pages.
 
 ---
 
 ## Sources
 
-- PROJECT.md (`/Users/iverostensen/nettup/.planning/PROJECT.md`) — milestone scope and existing architecture (HIGH confidence, primary source)
-- `nettup-case-study-brief.md` — Blom Company project facts, tech stack, Lighthouse scores, testimonial (HIGH confidence)
-- `src/config/projects.ts` — existing iGive project schema and data (HIGH confidence)
-- [Webflow: How to write the perfect case study](https://webflow.com/blog/write-the-perfect-case-study) — content section standards (MEDIUM confidence)
-- [New Media Campaigns: Agency website case study guide](https://www.newmediacampaigns.com/blog/tips-for-writing-agency-website-case-studies) — challenge-solution framing, 31.82% stat (MEDIUM confidence, survey-sourced)
-- [Search Engine Land: Mastering GEO in 2026](https://searchengineland.com/mastering-generative-engine-optimization-in-2026-full-guide-469142) — GEO structural patterns (HIGH confidence, 2026 source)
-- [Enrich Labs: GEO Complete Guide 2026](https://www.enrichlabs.ai/blog/generative-engine-optimization-geo-complete-guide-2026) — RAG citation patterns, platform preferences (MEDIUM confidence)
-- [GEO academic paper — Princeton/Georgia Tech/IIT Delhi](https://arxiv.org/pdf/2311.09735) — 30-40% visibility improvement with structured content (HIGH confidence, peer-reviewed)
-- [Averi.ai: GEO Playbook 2026](https://www.averi.ai/blog/the-geo-playbook-2026-getting-cited-by-llms-(not-just-ranked-by-google)) — 300% LLM accuracy with structured data stat, case study citation patterns (MEDIUM confidence)
-- [Schema.org: CreativeWork type](https://schema.org/CreativeWork) — property definitions for structured data (HIGH confidence, authoritative)
-- [IxDF: Visuals for UX case studies](https://www.interaction-design.org/literature/article/how-to-create-visuals-for-your-ux-case-study) — visual content types and roles (MEDIUM confidence)
-- [UXfol.io: UX Case Study Template 2026](https://blog.uxfol.io/ux-case-study-template/) — visual content checklist patterns (MEDIUM confidence)
+- PROJECT.md (`/Users/iverostensen/nettup/.planning/PROJECT.md`) — milestone scope and existing architecture (HIGH confidence)
+- [RicketyRoo: Location Page Spam — What Crosses the Line?](https://ricketyroo.com/blog/location-page-spam/) — doorway page definition and detection patterns (HIGH confidence, 2026)
+- [Sterling Sky: How to Create Unique and Helpful Service Area Pages](https://www.sterlingsky.ca/how-to-create-unique-and-helpful-service-area-pages-for-local-businesses/) — uniqueness requirements, thin content patterns (HIGH confidence)
+- [Search Engine Land: Service Area Pages](https://searchengineland.com/guide/service-area-pages) — hub/spoke structure, orphan page risks (HIGH confidence)
+- [Dalton Luka: How to Create Local Landing Pages That Rank (2026)](https://daltonluka.com/blog/local-landing-pages) — content structure, schema, internal linking (MEDIUM confidence)
+- [Arc4: Local Landing Pages (2026)](https://arc4.com/local-landing-pages/) — table stakes content elements (MEDIUM confidence)
+- [Schema.org: LocalBusiness](https://schema.org/LocalBusiness) — `areaServed`, `serviceArea` property definitions (HIGH confidence, authoritative)
+- [Schema.org: ProfessionalService](https://schema.org/ProfessionalService) — correct subtype for web agency (HIGH confidence, authoritative)
+- [AuthorityNW: Service-Area Businesses Schema Setup](https://authoritynw.com/blog/service-area-businesses-gmb-schema-setup/) — `areaServed` vs `serviceArea` distinction (MEDIUM confidence)
+- [Search Engine Journal: Hub & Spoke Internal Links](https://www.searchenginejournal.com/hub-spoke-internal-links/442005/) — internal link strategy for city pages (MEDIUM confidence)
+- [Journey Agency: Webbyrå Oslo](https://journeyagency.com/tjenester/nettside-og-brukeropplevelse/webbyra-oslo/) — Norwegian competitor local page analysis (HIGH confidence, direct observation)
+- [Google Search Central Community: Landing pages turn into doorway pages](https://support.google.com/webmasters/thread/135300269/landing-pages-turn-into-doorway-pages?hl=en) — Google's stated position on location page patterns (HIGH confidence)
+- [First Page Sage: Local SEO 2026](https://firstpagesage.com/seo-blog/local-seo-guide/) — 2026 local ranking factors (MEDIUM confidence)
 
 ---
-*Feature research for: Nettup v1.4 — Portefolje 2.0 (dedicated case study pages)*
-*Researched: 2026-03-07*
+*Feature research for: Nettup v1.5 — Lokale SEO-sider (city landing pages)*
+*Researched: 2026-03-08*

@@ -1,343 +1,266 @@
 # Stack Research
 
-**Domain:** Portfolio/case study pages — Astro 5 marketing site (v1.4 Portefølje 2.0)
-**Researched:** 2026-03-07
+**Domain:** Local SEO landing pages — Astro 5 dynamic routes, config-driven location data
+**Researched:** 2026-03-08
 **Confidence:** HIGH
 
 ## Scope
 
-This file covers ONLY stack decisions for the v1.4 dedicated case study pages milestone. The existing
-validated stack (Astro 5, Tailwind 4, React, Framer Motion, Vercel hybrid, TypeScript, @anthropic-ai/sdk,
-@astrojs/sitemap) is NOT re-researched here. Existing patterns (JSON-LD in `<Fragment slot="head">`,
-`services.ts` config, `getStaticPaths` for blog, `image` prop on BaseLayout) apply directly.
+This file covers ONLY what is NEW or CHANGED for the v1.5 Local SEO landing pages milestone. The existing validated stack (Astro 5, Tailwind 4, React islands, Framer Motion, `@astrojs/sitemap`, Vercel adapter, TypeScript strict, `src/config/` data pattern) is NOT re-researched here.
 
 **Bottom line: zero new packages required.**
 
 ---
 
-## Recommended Stack
+## What Already Exists (No Changes Needed)
 
-### Core Technologies (existing — no changes)
-
-| Technology | Version | Purpose | Why Confirmed |
-|------------|---------|---------|---------------|
-| Astro 5 static pages | ^5.0.0 | Individual `.astro` page files per project | No dynamic data source — two known projects with structurally different content. Same reasoning as service pages. |
-| `src/config/projects.ts` | — | Extended project config as single source of truth | Already exists. Needs new fields (`slug`, `ogImage`, `metrics`, `techStack`, `dateDelivered`). Same pattern as `services.ts`. |
-| `astro:assets` Image | built-in | Optimized screenshots per project page | Already used in ProjectShowcase.astro. Continue pattern. |
-| BaseLayout `image` prop | — | Per-project OG image via static file in `public/` | BaseLayout already accepts `image?: string`. No changes to layout needed. |
-
-### No New Dependencies
-
-All functionality for v1.4 is achievable with existing tooling:
-
-| What's Needed | How | Why Not a New Package |
-|---------------|-----|----------------------|
-| Dynamic OG images (Satori) | Static images in `public/images/og/` | 2 projects → 2 static files. Satori adds `satori` + `sharp` (~8MB) for a problem that doesn't exist at this scale. Add when portfolio reaches 10+ projects. |
-| JSON-LD schema | Inline in page frontmatter, `<Fragment slot="head">` | Identical to blogg/[slug].astro and service pages. Already proven. |
-| Breadcrumbs | `Breadcrumbs.astro` component, already exists | Used by blog pages — same component, new items array. |
-| Project routing | Individual files (`/prosjekter/igive/index.astro`) | Same decision as service pages — each project has structurally different sections. |
+| Capability | How It Works in Codebase | Status |
+|------------|--------------------------|--------|
+| Dynamic routes with `getStaticPaths()` | `src/pages/prosjekter/[slug].astro` — config array → `params + props` | Production-proven |
+| Config-driven data model | `src/config/projects.ts` — typed interface + exported array | Exact pattern to replicate |
+| Sitemap auto-inclusion of dynamic routes | `@astrojs/sitemap` crawls all prerendered routes in static mode | Confirmed in Astro docs |
+| LocalBusiness JSON-LD | BaseLayout already emits `LocalBusiness` with `areaServed` array | Extend per-page, do not replace |
+| Per-page JSON-LD injection | `<slot name="head" />` in BaseLayout — used by `blogg/[slug].astro` | Established pattern |
+| Canonical URL | `new URL(Astro.url.pathname, Astro.site)` computed automatically in BaseLayout | Automatic |
+| BreadcrumbList | Auto-generated from `pageLabels` map in BaseLayout | Needs city label entries |
+| Per-page `<title>` and `<meta description>` | BaseLayout `title` and `description` props | Standard |
 
 ---
 
-## Routing Decision: Individual Files vs `[slug].astro`
+## New Capabilities Required
 
-**Use individual files (`/prosjekter/igive/index.astro`, `/prosjekter/blom-company/index.astro`).**
+### 1. `src/config/locations.ts` — Location Data Model
 
-Rationale — consistent with the existing tjenester decision (documented in PROJECT.md Key Decisions):
+**Pattern:** Mirror `src/config/projects.ts` exactly. Export typed `Location` interface and a `locations` array. `getStaticPaths()` in `[location].astro` imports and maps the array.
 
-> "Individual index.astro per service (not [slug].astro) — Services need structurally different sections"
-
-The same logic applies to projects. iGive is a B2B landing page; Blom Company is a headless Shopify
-storefront. Their case studies will have different visual sections, different metrics to highlight,
-and different screenshot layouts. A `[slug].astro` template would force a uniform structure that
-flattens that differentiation.
-
-Use `[slug].astro` only when:
-- Content is uniform (all pages have identical sections, only copy differs)
-- Volume exceeds ~5 projects (at which point repetition outweighs structural flexibility)
-- Data comes from an external source (CMS, API) that drives `getStaticPaths()`
-
-Neither condition is met for v1.4.
-
-**File structure:**
-```
-src/pages/prosjekter/
-├── index.astro               ← redesigned grid, links to dedicated pages
-├── igive/
-│   ├── index.astro           ← full case study
-│   └── _sections/
-│       ├── Hero.astro
-│       ├── Challenge.astro
-│       ├── Solution.astro
-│       ├── Results.astro
-│       └── TechStack.astro
-└── blom-company/
-    ├── index.astro
-    └── _sections/
-        ├── Hero.astro
-        ├── Challenge.astro
-        ├── Solution.astro
-        ├── Results.astro
-        └── TechStack.astro
-```
-
-**BaseLayout breadcrumb auto-generation** will handle `/prosjekter/igive` correctly only if the
-`pageLabels` record in `BaseLayout.astro` is updated with readable names for each project path:
+**V1/V2/V3-ready interface design:**
 
 ```typescript
-'/prosjekter/igive': 'iGive',
-'/prosjekter/blom-company': 'Blom Company',
-```
+export interface Location {
+  // Routing
+  slug: string;                    // URL segment: 'oslo' → /oslo
+  city: string;                    // Display name: 'Oslo'
+  region: string;                  // 'Oslo' | 'Viken' | 'Akershus' — for schema/copy
 
-Alternatively, each project page can emit its own `BreadcrumbList` JSON-LD via `Fragment slot="head"`,
-overriding the auto-generated one — the same pattern used by `blogg/[slug].astro`.
+  // SEO metadata (unique per page — required for all tiers)
+  metaTitle: string;               // <60 chars, e.g. "Nettside for bedrifter i Oslo | Nettup"
+  metaDescription: string;         // <160 chars, localized pitch
 
----
+  // Page copy (hand-written V1, AI-assisted V2+)
+  intro: string;                   // 2–3 sentences, genuinely unique per city
+  whyCity?: string;                // Optional: why Nettup suits THIS city specifically
+  nearbyAreas?: string[];          // Internal linking: ['Asker', 'Bærum', 'Lillestrøm']
+  regionalIndustries?: string[];   // Localized social proof hooks: ['restaurant', 'rørlegger']
 
-## JSON-LD Schema Decision: Which Types to Use
+  // FAQ (optional — V1 can omit, V2+ expands)
+  faq?: { question: string; answer: string }[];
 
-### Primary type: `CreativeWork`
+  // Schema.org
+  schemaCity: string;              // Canonical name for areaServed City.name
+  schemaWikipediaId: string;       // Wikipedia URL for @id — see table below
 
-Use `CreativeWork` as the root `@type` for each project page case study.
-
-**Why CreativeWork over alternatives:**
-
-| Type | What It Describes | Verdict for a Web Agency Portfolio |
-|------|------------------|-----------------------------------|
-| `CreativeWork` | The generic creative output — websites, designs, applications | **Use this.** Most accurate for "we built X for client Y." Covers all project types. |
-| `WebSite` | A specific website entity (the site itself, not a description of building it) | Wrong layer. `WebSite` describes salg.igive.no, not Nettup's case study about building it. |
-| `SoftwareApplication` | A software application with install-specific properties (OS, applicationCategory) | Too narrow. iGive's salg page is not a downloadable app. Valid for a web app case study if it emphasizes the software itself. |
-| `WebApplication` | Subtype of SoftwareApplication, browser-based software | Only appropriate if the deliverable is a web app with explicit app-like functionality (user accounts, CRUD). Not a marketing site or Shopify store. |
-| `Article` | Editorial/written content | Wrong — the case study page is not an article. Use Article/BlogPosting only for the blogg. |
-
-**Recommended JSON-LD shape for a project page:**
-
-```typescript
-const caseStudySchema = {
-  '@context': 'https://schema.org',
-  '@type': 'CreativeWork',
-  name: 'iGive Salgsside',
-  description: 'Dedikert salgsside for Norges ledende gavekortplattform. Bygget av Nettup.',
-  url: 'https://salg.igive.no',
-  dateCreated: '2024-01-15',         // ISO date, when the project was delivered
-  creator: {
-    '@type': 'Organization',
-    name: 'Nettup',
-    url: 'https://nettup.no',
-  },
-  client: {                          // Non-standard but AI-parseable — include it
-    '@type': 'Organization',
-    name: 'iGive AS',
-    url: 'https://igive.no',
-  },
-  about: {
-    '@type': 'WebSite',
-    name: 'salg.igive.no',
-    url: 'https://salg.igive.no',
-  },
-  thumbnailUrl: 'https://nettup.no/images/projects/igive-thumbnail.jpg',
-  inLanguage: 'nb',
-  keywords: 'gavekort, B2B, Astro, norsk nettside',
-};
-```
-
-Note: `client` is not an official schema.org property, but it is a widely-used extension in agency
-portfolios and LLMs will read it. Do not worry about validation warnings on this field — Google
-ignores unknown properties rather than penalizing them (HIGH confidence, official Google documentation).
-
-### Secondary schemas to co-emit on the same page
-
-| Schema | Why | Co-locate with |
-|--------|-----|----------------|
-| `BreadcrumbList` | Already auto-generated by BaseLayout. Override only if the auto slug-splitting produces wrong names. | `Fragment slot="head"` on the project index.astro |
-| `Organization` (Nettup) | Already emitted globally by BaseLayout — no duplication needed. | Already handled |
-| `Review` (optional) | If a real client testimonial with a star rating is added — connects the case study to a review entity. Defer until testimonials are real. | — |
-
-### What NOT to add
-
-Do not add `ItemList` schema to `/prosjekter/index.astro` for the grid of project cards. Google's
-ItemList rich result only benefits recipe/product/event lists. For a portfolio grid, it adds markup
-overhead with no confirmed rich result benefit.
-
----
-
-## OG Image Decision: Static Files vs Generated
-
-**Use static pre-made OG images per project. No Satori, no build-time endpoint.**
-
-**Decision matrix:**
-
-| Approach | Packages Needed | Build Time | Maintenance | Right for v1.4? |
-|----------|----------------|------------|-------------|-----------------|
-| Static PNG in `public/images/og/` | None | 0s | Add one file per project | Yes |
-| Satori endpoint with `prerender: true` | `satori` + `sharp` | +5-15s | Template code shared | No — overkill at 2 projects |
-| Vercel Edge OG (runtime) | `@vercel/og` | 0s | Server function per req | No — unnecessary server cost |
-
-For 2 projects, the cost of Satori infrastructure (two new packages, ~8MB, build-time SVG rendering,
-font loading) is not justified. A manually crafted `og-igive.jpg` and `og-blom-company.jpg` placed in
-`public/images/og/` and referenced via the existing `image` prop on BaseLayout is the correct approach.
-
-**OG image spec (to brief designer/creator):**
-- Size: 1200×630px
-- Format: JPEG at ~80% quality (target < 100KB each)
-- Content: project screenshot + project name + Nettup logo
-
-**Passing per-project OG image:**
-
-```astro
-<BaseLayout
-  title="iGive Case Study | Nettup"
-  description="..."
-  image="/images/og/og-igive.jpg"
->
-```
-
-BaseLayout already renders `<meta property="og:image" content={new URL(image, Astro.site)} />` — no
-layout changes needed.
-
-Revisit Satori when: portfolio exceeds 8-10 projects and manual OG creation becomes a maintenance burden.
-
----
-
-## GEO-Optimized Content Structure for Portfolio Pages
-
-GEO (Generative Engine Optimization) is the practice of structuring content so LLMs (ChatGPT,
-Perplexity, Google AI Overviews) can extract, cite, and surface it in generated answers.
-
-Research from 2025-2026 shows that content with clear verifiable data points earns 30-40% more
-visibility in LLM-generated answers than qualitative content alone (source: GEO industry reports).
-
-### What markup and content patterns LLMs index best
-
-**Schema markup that helps AI parsing:**
-- `CreativeWork` with `name`, `description`, `dateCreated`, `url`, `creator` — gives LLMs the
-  "who built what for whom and when" frame they need to cite an agency
-- `keywords` property — direct signal for topical relevance
-- `thumbnailUrl` — image reference makes the entity more concrete
-
-**Content structure on the page itself (independent of schema):**
-- Lead with a one-paragraph summary that is independently meaningful — LLMs extract passages,
-  not full pages. A 60-100 word summary paragraph that answers "what did Nettup build, for whom,
-  and with what outcome?" is citable without surrounding context.
-- Include concrete metrics as a distinct visual element (numbers: load time, conversion rate,
-  Lighthouse score) — AI systems strongly prefer verifiable data points over prose assertions
-- Use `<h2>` / `<h3>` headings that name the concept without pronoun references ("Utfordringen"
-  is good — "Hva vi løste" needs context; "Teknisk løsning" is self-contained)
-- Client name, industry, and location in plain text — LLMs build entity graphs; explicit
-  "iGive AS, gavekort, Oslo" is more citable than "vår kunde"
-
-**What does NOT help:**
-- FAQ schema on project pages — FAQ is for question-answer content. Case studies are not Q&A.
-  Only add if you add a literal FAQ section to the page.
-- HowTo schema — reserved for step-by-step instructional content.
-- Excessive keyword density — LLMs penalize keyword stuffing the same way modern NLP does.
-
----
-
-## Projects Config Extension
-
-The existing `projects.ts` Project interface needs new fields to support dedicated pages.
-No package changes — pure TypeScript additions.
-
-**Fields to add:**
-
-```typescript
-export interface Project {
-  // Existing fields
-  id: string;
-  name: string;
-  category: string;
-  type: string;
-  tagline: string;
-  description: string;
-  image: ImageMetadata;
-  imageAlt: string;
-  url?: string;
-  caseStudySection?: boolean;  // DEPRECATE — replaced by slug
-  comingSoon?: boolean;
-  challenge?: string;
-  solution?: string;
-  features?: string[];
-
-  // New fields for v1.4
-  slug?: string;               // e.g. 'igive', 'blom-company' — enables /prosjekter/[slug]
-  ogImage?: string;            // e.g. '/images/og/og-igive.jpg' — for BaseLayout image prop
-  dateDelivered?: string;      // ISO date string — for CreativeWork.dateCreated
-  techStack?: string[];        // e.g. ['Astro', 'Tailwind', 'Vercel'] — displayed + schema keywords
-  metrics?: Array<{            // Quantitative results — citable by LLMs
-    label: string;             // e.g. 'Lastetid'
-    value: string;             // e.g. '< 1 sekund'
-  }>;
-  clientOrg?: string;          // e.g. 'iGive AS' — for CreativeWork client field
+  // Expansion control
+  tier: 1 | 2 | 3;                // 1=hand-crafted, 2=AI-assisted, 3=stub
 }
 ```
 
-The `/prosjekter/index.astro` grid can use `slug` to generate card hrefs:
-`href={project.slug ? `/prosjekter/${project.slug}` : undefined}`.
+**Why this shape:**
+- `slug` separate from `city` lets the URL be `/oslo` while city name is `'Oslo'` — no runtime mapping
+- `schemaWikipediaId` enables proper `@id` on schema.org City objects; field name is explicit so whoever writes V2 entries knows what to put
+- `tier` makes V2/V3 expansion a data change only — no structural or template change
+- All optional fields (`faq`, `whyCity`, `nearbyAreas`, `regionalIndustries`) mean V1 entries stay minimal; V3 stubs need only required fields
+- TypeScript strict mode ensures all V1 required fields are present at build time
+
+**Confidence:** HIGH — directly mirrors the `projects.ts` pattern validated in production
+
+---
+
+### 2. Dynamic Route — `src/pages/[location].astro`
+
+**Pattern:** Identical to `src/pages/prosjekter/[slug].astro`.
+
+```typescript
+export function getStaticPaths() {
+  return locations.map((loc) => ({
+    params: { location: loc.slug },
+    props: { location: loc },
+  }));
+}
+
+interface Props {
+  location: Location;
+}
+
+const { location } = Astro.props;
+```
+
+**Key decisions:**
+- Pass full `Location` object via `props`, not just `params` — avoids re-importing config inside the component body; consistent with `[slug].astro` pattern
+- `params.location` is a string (slug is `string`) — Astro requires params to be strings
+- No `async` on `getStaticPaths()` — data is a local TS array with no I/O, fastest possible
+
+**Build-time behaviour:** Astro executes `getStaticPaths()` once at build start, then renders each returned path in parallel. For 300 cities, the function call itself is synchronous and near-instant; rendering 300 static pages takes roughly 2–3 seconds at Astro's ~127 pages/sec throughput.
+
+**Confidence:** HIGH — production-proven pattern, verified against Astro routing reference docs
+
+---
+
+### 3. LocalBusiness JSON-LD with `areaServed` per Page
+
+**Approach:** The BaseLayout already emits a global `LocalBusiness` with broad `areaServed` (Oslo, Oslo-området, Norway). For city pages, inject an additional page-scoped `LocalBusiness` block via `<slot name="head" />`. Do NOT modify BaseLayout's global schema — the global one remains correct for all non-city pages.
+
+**Correct `areaServed` format — schema.org `City` type with Wikipedia `@id`:**
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://nettup.no/#business",
+  "name": "Nettup",
+  "url": "https://nettup.no",
+  "areaServed": {
+    "@type": "City",
+    "name": "Oslo",
+    "@id": "https://en.wikipedia.org/wiki/Oslo"
+  }
+}
+```
+
+**Wikipedia `@id` values for V1 cities:**
+
+| City | `schemaWikipediaId` value |
+|------|--------------------------|
+| Oslo | `https://en.wikipedia.org/wiki/Oslo` |
+| Drammen | `https://en.wikipedia.org/wiki/Drammen` |
+| Asker | `https://en.wikipedia.org/wiki/Asker` |
+| Bærum | `https://en.wikipedia.org/wiki/B%C3%A6rum` |
+| Lillestrøm | `https://en.wikipedia.org/wiki/Lillstr%C3%B8m` |
+| Sandvika | `https://en.wikipedia.org/wiki/Sandvika` |
+| Ski | `https://en.wikipedia.org/wiki/Ski,_Norway` |
+| Moss | `https://en.wikipedia.org/wiki/Moss,_Norway` |
+
+**Why Wikipedia `@id`:** Schema.org recommends using a URL as the `@id` for named place entities. Wikipedia is the most widely recognized knowledge base reference for Norwegian city names. The `@id` helps Google connect the schema City entity to its Knowledge Graph entry for that municipality.
+
+**Simpler valid alternative:** Omit `@id` and use `{ "@type": "City", "name": "Oslo" }` — this is what BaseLayout already uses for the global schema and it validates. Add `@id` on city pages for the Knowledge Graph alignment benefit.
+
+**Confidence:** MEDIUM — `@type: City` with Wikipedia `@id` confirmed from schema.org spec and RankMath documentation. Google's exact handling of Norwegian city entities not independently verified; pattern is consistent with documented best practices.
+
+---
+
+### 4. Sitemap — No Code Changes Required
+
+The existing `@astrojs/sitemap` in `astro.config.mjs` automatically discovers and includes all pages generated by `getStaticPaths()` when `output: 'static'` is set. City pages at `/oslo`, `/drammen` etc. will appear in the sitemap after the route file is added — no config changes needed.
+
+**Optional: extend `serialize` to set priority for city pages.** The existing callback already handles blog pages. Adding city pages follows the same pattern:
+
+```javascript
+sitemap({
+  serialize(item) {
+    if (item.url.startsWith('https://nettup.no/blogg/')) {
+      return { ...item, changefreq: 'monthly', priority: 0.7 };
+    }
+    // City landing pages
+    if (/^https:\/\/nettup\.no\/[a-z-]+\/$/.test(item.url) &&
+        !['tjenester', 'om-oss', 'prosjekter', 'kontakt', 'blogg', 'priskalkulator', 'personvern'].includes(
+          item.url.replace('https://nettup.no/', '').replace('/', '')
+        )) {
+      return { ...item, changefreq: 'monthly', priority: 0.8 };
+    }
+    return item;
+  },
+}),
+```
+
+Note: Google ignores `priority` and `changefreq`. The serialization is for other crawlers and is optional for V1.
+
+**Confidence:** HIGH — verified against Astro sitemap integration official docs. Static mode is already configured.
+
+---
+
+### 5. BaseLayout `pageLabels` Map — Minor Update
+
+The `pageLabels` map in `BaseLayout.astro` drives auto-breadcrumb generation. City pages will fall through to the raw slug (e.g. `'oslo'`) if not present in the map, which produces an acceptable breadcrumb.
+
+For better breadcrumb display names (`"Nettside i Oslo"` instead of `"oslo"`), add entries. For V1 (8 cities) this is acceptable as manual entries. For V3 (300+), generate the map programmatically from the `locations` array — BaseLayout's frontmatter can import from `locations.ts` directly.
+
+```typescript
+// In BaseLayout.astro — V3-safe approach:
+import { locations } from '@/config/locations';
+const cityPageLabels = Object.fromEntries(
+  locations.map((loc) => [`/${loc.slug}`, `Nettside i ${loc.city}`])
+);
+const pageLabels: Record<string, string> = {
+  '/': 'Hjem',
+  // ... existing entries
+  ...cityPageLabels,
+};
+```
+
+This change is purely additive — no risk to existing breadcrumbs.
+
+---
+
+## No New Dependencies
+
+| Considered | Decision | Reason |
+|------------|----------|--------|
+| External CMS (Contentful, Sanity) for city data | Rejected | `src/config/locations.ts` matches existing patterns, TypeScript type safety, zero new deps, data doesn't change frequently enough to need a CMS |
+| `astro-seo` package | Rejected | BaseLayout already handles all meta tags; adding a package creates duplication |
+| Separate sitemap plugin | Rejected | Existing `@astrojs/sitemap` handles dynamic routes natively in static mode |
+| Separate `LocalBusiness` schema Astro component | Deferred | Inline in `[location].astro` for V1; extract to a component only if schema diverges across multiple templates |
+| Zod validation for `locations.ts` | Rejected for V1 | TypeScript strict mode catches required field omissions at build time; Zod adds runtime overhead for a static config |
+
+---
+
+## Scalability: V1 to V3 with Zero Structural Changes
+
+| Stage | Cities | Data Approach | Build Impact |
+|-------|--------|---------------|--------------|
+| V1 | 6–8 | Hand-written entries, `tier: 1` | ~1s additional |
+| V2 | 30–50 | AI-assisted copy appended to same array, `tier: 2` | ~1–2s additional |
+| V3 | 300+ | Script-generated stubs, `tier: 3`, `intro` as minimal placeholder | ~2–3s additional |
+
+**Key insight:** `getStaticPaths()` returns the array synchronously from a local TypeScript module — no filesystem I/O, no network. At 300 entries Astro renders ~300 static HTML files in 2–3 seconds. The build will still complete in well under 30 seconds total.
+
+If V3 introduces performance concerns (unlikely with Astro SSG), the mitigation is to filter by `tier` in `getStaticPaths()` and deploy Tier 3 stubs as a separate build — not an architectural change needed now.
+
+---
+
+## Integration Points with Existing Stack
+
+| Existing File | Change for v1.5 | Impact |
+|---------------|-----------------|--------|
+| `src/config/locations.ts` | New file | None on existing pages |
+| `src/pages/[location].astro` | New file | None on existing routes |
+| `astro.config.mjs` | Optional `serialize` extension | Non-breaking additive |
+| `src/layouts/BaseLayout.astro` | Optional `pageLabels` extension | Non-breaking additive |
+| `src/components/layout/Footer.astro` | Add city links section | Additive — no current functionality changes |
+| `src/pages/kontakt/index.astro` | Add coverage area mention | Content change only |
 
 ---
 
 ## Installation
 
 ```bash
-# No new packages required for v1.4.
-# All functionality uses existing stack.
+# No new packages required.
+# All capabilities exist in the current stack.
 ```
-
----
-
-## Alternatives Considered
-
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|-------------------------|
-| Individual page files per project | `[slug].astro` with getStaticPaths | When projects share identical section structure OR volume exceeds ~5-8 projects |
-| Static OG images in `public/` | Satori build-time generation | When portfolio exceeds ~10 projects and manual image creation becomes maintenance burden |
-| `CreativeWork` schema | `WebApplication` / `SoftwareApplication` | Only if the deliverable is explicitly a browser-based application with user accounts and app-like functionality |
-| `client` as schema extension property | `funder` or `sponsor` (schema.org properties) | `funder`/`sponsor` have specific financial connotations — `client` is semantically clearer and LLMs parse non-standard properties |
-| Extend `projects.ts` interface | Astro Content Collection for projects | Content Collections add `src/content/` + frontmatter overhead. Projects data is already TypeScript-config-driven. Only move to Content Collections if project descriptions become long-form Markdown. |
-
----
-
-## What NOT to Use
-
-| Avoid | Why | Use Instead |
-|-------|-----|-------------|
-| `satori` + `sharp` for OG images | Adds ~8MB of devDependencies, ~10s build time, for a problem that doesn't exist at 2 projects | Static JPEG files in `public/images/og/` |
-| `WebSite` as root schema type for the case study page | `WebSite` describes the client's website itself, not the agency's work on it | `CreativeWork` with an `about: { '@type': 'WebSite' }` property pointing to the client URL |
-| `ItemList` on `/prosjekter/index.astro` | No confirmed rich result for portfolio grids; adds markup noise | Plain HTML grid — Google indexes it fine without ItemList |
-| FAQPage schema on case study pages | FAQPage requires actual question-answer content structure. Adding it without a FAQ section triggers validation warnings and provides no benefit. | Add FAQPage only if a FAQ section is added to the page |
-| `@astrojs/mdx` for case study body content | Case study content is component-based (Hero, Results, TechStack sections) not long-form prose | Astro component sections with props from `projects.ts` |
-
----
-
-## Version Compatibility
-
-All existing versions confirmed compatible. No new packages, no compatibility surface to check.
-
-| Package | Compatible With | Notes |
-|---------|-----------------|-------|
-| Astro ^5.0.0 | Individual page files, static output, Fragment slot="head" | All patterns used here are Astro 5 native. No breaking changes vs current usage. |
-| @astrojs/sitemap ^3.6.0 | New `/prosjekter/igive` and `/prosjekter/blom-company` routes | Auto-included in sitemap — no config changes needed. |
-| @astrojs/vercel ^9.0.4 | Static page output | New project pages are static — no serverless needed. Hybrid output config unchanged. |
 
 ---
 
 ## Sources
 
-- [Astro Routing Docs](https://docs.astro.build/en/guides/routing/) — individual files vs `[slug].astro` decision criteria (HIGH confidence — official docs)
-- [schema.org/CreativeWork](https://schema.org/CreativeWork) — type definition, properties list (HIGH confidence — authoritative)
-- [schema.org/WebSite](https://schema.org/WebSite) — confirms WebSite describes the site entity, not work on it (HIGH confidence — authoritative)
-- [Google: Unknown properties in JSON-LD](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data) — Google ignores unknown properties, no penalty (HIGH confidence — official docs)
-- [GEO content structure research](https://totheweb.com/blog/beyond-seo-your-geo-checklist-mastering-content-creation-for-ai-search-engines/) — data-driven content 30-40% more citable (MEDIUM confidence — single source, consistent with broader GEO research)
-- [GEO 2026 full guide](https://searchengineland.com/mastering-generative-engine-optimization-in-2026-full-guide-469142) — structured data as translator between content and AI search engines (MEDIUM confidence — Search Engine Land)
-- [Structured data for SEO and GEO 2026](https://www.digidop.com/blog/structured-data-secret-weapon-seo) — schema.org types for AI discoverability (MEDIUM confidence)
-- [Static OG images in Astro](https://arne.me/blog/static-og-images-in-astro/) — static file approach vs Satori tradeoffs (MEDIUM confidence)
-- Project `src/config/projects.ts` — existing interface confirmed, extension plan based on current shape (HIGH confidence — direct code read)
-- Project `src/layouts/BaseLayout.astro` — `image` prop exists, OG meta already handled (HIGH confidence — direct code read)
-- Project `src/pages/blogg/[slug].astro` — JSON-LD pattern via `Fragment slot="head"` confirmed working (HIGH confidence — direct code read)
-- Project `src/pages/tjenester/nettside/index.astro` — Service JSON-LD co-located pattern confirmed (HIGH confidence — direct code read)
+- [Astro Routing Reference](https://docs.astro.build/en/reference/routing-reference/) — `getStaticPaths()` return format, `props` alongside `params` (HIGH confidence — official docs)
+- [Astro Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/) — auto-inclusion of dynamic routes, `serialize` callback, static mode requirement (HIGH confidence — official docs)
+- [RankMath: Multiple areaServed Cities](https://rankmath.com/kb/add-multiple-areaserved-cities-to-localbusiness-schema/) — `@type: City` with Wikipedia `@id` format (MEDIUM confidence — SEO tool documentation)
+- [schema.org/LocalBusiness](https://schema.org/LocalBusiness) — `areaServed` property spec (HIGH confidence — authoritative)
+- [Astro build performance](https://www.bitdoze.com/astro-ssg-build-optimization/) — ~127 pages/sec throughput reference (MEDIUM confidence — single source)
+- Codebase `src/pages/prosjekter/[slug].astro` + `src/config/projects.ts` — config-driven `getStaticPaths()` pattern validated in production (HIGH confidence — direct code read)
+- Codebase `src/pages/blogg/[slug].astro` — per-page JSON-LD via `<slot name="head" />` confirmed working (HIGH confidence — direct code read)
+- Codebase `src/layouts/BaseLayout.astro` — existing `LocalBusiness` schema, `pageLabels` map, `<slot name="head" />` (HIGH confidence — direct code read)
+- Codebase `astro.config.mjs` — existing `serialize` callback, `output: 'static'` confirmed (HIGH confidence — direct code read)
 
 ---
 
-*Stack research for: Nettup v1.4 Portefølje 2.0 — dedicated case study pages*
-*Researched: 2026-03-07*
+*Stack research for: Nettup v1.5 Local SEO landing pages*
+*Researched: 2026-03-08*

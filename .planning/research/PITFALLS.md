@@ -1,218 +1,202 @@
 # Pitfalls Research
 
-**Domain:** Restructuring an existing Astro 5 portfolio page into multi-page case study system
-**Project:** Nettup.no v1.4 Portefolje 2.0
-**Researched:** 2026-03-07
-**Confidence:** HIGH (based on direct codebase analysis + Astro 5 docs + schema.org spec)
+**Domain:** Local SEO landing pages — adding city/location pages to an existing agency site
+**Project:** Nettup.no v1.5 Lokale SEO-sider
+**Researched:** 2026-03-08
+**Confidence:** HIGH (Google official spam policies + multiple verified sources + Astro-specific technical checks)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: `ProjectShowcase.astro` Breaks When `caseStudySection` Is Removed
+### Pitfall 1: Triggering the Doorway Page Penalty With Swapped-City Boilerplate
 
 **What goes wrong:**
-`ProjectShowcase.astro` currently uses `projects.find((p) => p.caseStudySection === true)` to determine which project gets the full "hero" treatment and which get cards. When moving to dedicated sub-pages, the `caseStudySection` flag becomes meaningless — all projects are peers with equal status and link to their own pages. If this flag is removed from `projects.ts` (correct) without simultaneously rewriting `ProjectShowcase.astro` (which depends on it), the prosjekter index renders as empty: `caseStudyProject` is `undefined`, the hero section renders nothing, and `additionalProjects` is every project (none with `caseStudySection: true`).
+Google's spam policies define doorway abuse as pages "created to rank for specific, similar search queries" that "lead users to intermediate pages that are not as useful as the final destination." City landing pages are the canonical example Google uses in their own documentation: "multiple domain names or pages targeted at specific regions or cities that funnel users to one page."
 
-The section is silently blank, not a build error — easy to miss if only checking `npm run build`.
+If every location page uses the same template with only the city name swapped — identical intro, identical FAQ, identical CTA — Google's pattern detection flags the cluster. The March 2024 Core Update and the August 2025 spam update both showed aggressive enforcement against this pattern. A regional HVAC site lost 80% of doorway-page rankings within 30 days of the March 2024 update.
 
 **Why it happens:**
-The current architecture was designed for exactly one featured project. The flag is a discriminator, not a content field. When adding the second project (Blom Company), the temptation is to set `caseStudySection: false` on Blom while keeping `true` on iGive — which preserves the old layout but doesn't scale. The right move is to delete the flag and redesign the section, but that's a bigger scope than it initially appears.
+The temptation is to build a Handlebars-style template: `Vi leverer nettsider i {{by}}.` and push 50 cities through it. It ships fast, but the pages are functionally identical from Google's perspective.
 
 **How to avoid:**
-Do the config restructuring and page redesign in a single atomic step. Do not add Blom to `projects.ts` using the old schema without simultaneously replacing `ProjectShowcase.astro`. The phase plan should treat "update projects.ts schema" and "rewrite prosjekter index" as a single task, not two sequential ones.
+Each V1 city page (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss) must have genuinely differentiated copy. Concrete signals that differentiate a legitimate location page from a doorway page:
+- Unique intro paragraph that names real local context (industry, local landmarks, competitor landscape)
+- City-specific FAQ questions that reflect what businesses in that area actually ask
+- At least one local proof point (client reference, mention of local area served)
+- The page should be "an integral part of the site's user experience" — linked from navigation, footer, and contact page — not orphaned
+
+For V2/V3, use AI-assisted generation with a per-city data model (population, regional industries, nearby municipalities) that forces meaningful variation. Do not batch-generate without human review of each batch.
 
 **Warning signs:**
-- The `/prosjekter` page renders with no project hero section after adding a second project
-- `npm run build` succeeds but visual inspection shows blank sections
-- TypeScript still compiles because `caseStudySection` is `boolean | undefined` in the interface
+- Two city pages have near-identical `<p>` text with only the city name changed
+- City pages are not linked from any navigation element (orphan pages)
+- The page's `<h1>` and intro contain the city name 3+ times in the first 100 words
+- Google Search Console shows impressions but zero clicks on city pages after 4+ weeks indexed
 
 **Phase to address:**
-Phase 1 (config restructuring). Must resolve before any new project content is added.
+V1 (hand-crafted pages) — enforce differentiation at authoring time. V2 — define the data model in `locations.ts` to force per-city unique fields before generating any content.
 
 ---
 
-### Pitfall 2: `ProjectTeaser.astro` on the Homepage Has Hardcoded iGive Content
+### Pitfall 2: Thin Content on City Pages — Failing Google's Helpful Content Threshold
 
 **What goes wrong:**
-`src/pages/_home/ProjectTeaser.astro` imports `iGiveImage` directly and hardcodes all iGive content inline — it does not read from `projects.ts` at all. When the portfolio grows to two projects, the homepage teaser still only shows iGive. This is acceptable initially, but it's invisible technical debt: developers assume `projects.ts` is the source of truth for all project display, but this component bypasses it entirely.
+Thin content for local pages is not purely a word count problem (Google has repeatedly stated word count is not a ranking factor). The real threshold is whether the page "answers the user's question based on their location, need, or search pattern." A 600-word page that only restates generic service descriptions with the city name inserted is thin. A 300-word page with a specific client reference, a local FAQ, and a contact form may not be.
 
-More specifically: the `<a href="/prosjekter">` link points to the index, not to `/prosjekter/igive`. Once dedicated pages exist, the homepage teaser should link directly to the iGive case study page — not the index — for a better user journey.
+For agency local pages, the specific risk is that pages answer the implicit query ("webdesign [by]") but contain no information a user couldn't get from any other web design agency page. Google's helpful content system penalizes this at the site level — not just the individual page — which means thin V2/V3 pages can drag down the ranking of well-crafted V1 pages.
 
 **Why it happens:**
-The teaser was built before `projects.ts` existed, or at least before the config was intended to drive homepage content. It was never refactored to use the config because it "worked."
+Agencies know their service offering doesn't change city to city. The honest answer is "we do the same work in Oslo and in Moss." The mistake is letting that bleed into the copy.
 
 **How to avoid:**
-When creating the project sub-pages, also update `ProjectTeaser.astro` to: (1) read from `projects.ts` so the featured project can be changed by config, and (2) link to `/prosjekter/igive` (the direct case study URL) instead of the index. This is a small change but prevents the homepage from becoming stale.
+Define a minimum content spec per city page in `locations.ts`. Required fields that force differentiation:
+- `intro`: 2-3 sentences specific to that city's business environment (min 80 words)
+- `faq`: minimum 3 Q&A pairs, at least 2 must be city-specific (not generic service FAQ)
+- `nearbyAreas`: surrounding municipalities — adds geographic relevance without boilerplate
+- `regionalIndustries`: 2-3 dominant business sectors in that municipality — supports industry-specific framing
+
+Do not publish a V2/V3 city page if the `intro` field is a city-name swap of another page's intro. Add a lint step or pre-publish checklist that checks field length thresholds.
 
 **Warning signs:**
-- `projects.ts` has two projects but the homepage still shows one project with a hardcoded link
-- `href="/prosjekter"` in the teaser card instead of `href="/prosjekter/igive"`
+- `locations.ts` has a city entry where `intro` is under 60 words
+- `faq` entries are identical across more than 2 cities
+- A city page's unique word percentage (comparing to other city pages via diffing) is below 40%
+- Google Search Console shows city pages in "Crawled, not indexed" status persistently
 
 **Phase to address:**
-Phase 1 (config restructuring). Caught at the same time as Pitfall 1 if the team traces all usages of `projects.ts` before restructuring the schema.
+V1 — define the content spec upfront. V2 — add a data quality check before generating content. V3 — automate uniqueness validation (diff against existing pages) as a pre-publish gate.
 
 ---
 
-### Pitfall 3: BreadcrumbList Schema Breaks for New Sub-Routes
+### Pitfall 3: Duplicate Content Across City Pages — Wrong Use of Canonical and noindex
 
 **What goes wrong:**
-`BaseLayout.astro` auto-generates `BreadcrumbList` JSON-LD using `pageLabels` — a hardcoded `Record<string, string>` mapping paths to human-readable names. `/prosjekter` is in the map. `/prosjekter/igive` and `/prosjekter/blom-company` are not.
+Two distinct failure modes:
 
-For any unlisted path, the label falls back to the raw path segment: `pageLabels[fullPath] ?? seg` returns `"igive"` and `"blom-company"` instead of `"iGive"` and `"Blom Company"`. This is an incorrect breadcrumb that Google will use as-is in rich results: the third breadcrumb item reads "igive" (lowercase, no capital I).
+**Mode A — Canonical collision:** If canonical tags on city pages point to each other (or to the service index page at `/tjenester`), Google consolidates them into one URL. The other city pages become invisible in search. This happens when developers add a blanket `canonical` to the location template pointing to the "main" version.
 
-This is NOT a build error. TypeScript compiles fine. The breadcrumb renders correctly visually (if the page has its own breadcrumb UI component) but the structured data is wrong.
+**Mode B — noindex + canonical conflict:** Some developers add both `<meta name="robots" content="noindex">` and a `<link rel="canonical">` on thin city pages as a hedge. Google's official guidance: these signals directly contradict each other ("don't index this" vs. "index the canonical version"). In worst case Google ignores both. Never apply both simultaneously.
+
+The correct model: each city page is its own canonical URL. Set `<link rel="canonical" href="https://nettup.no/[city-slug]">` pointing to itself. No `noindex`. Pages that are genuinely too thin to index should either be improved or not published.
 
 **Why it happens:**
-The `pageLabels` map was built for a flat site (5 top-level pages). Sub-routes under `/prosjekter/` were not anticipated. The fallback behavior silently degrades quality instead of failing.
+Developers copy a generic `BaseLayout.astro` pattern without realizing the `canonical` prop defaults to the current URL only if explicitly passed. In Astro, if the canonical tag is conditionally generated and a prop is forgotten, it may default to a wrong URL.
 
 **How to avoid:**
-Add the new routes to `pageLabels` in `BaseLayout.astro` before the pages go live:
-```typescript
-'/prosjekter/igive': 'iGive',
-'/prosjekter/blom-company': 'Blom Company',
+In `[location].astro`, always explicitly pass the canonical URL derived from the page slug:
+```astro
+<BaseLayout canonical={`https://nettup.no/${location.slug}`} />
 ```
-This is a one-line change per project, but easy to forget. Include it in the definition-of-done checklist for each new case study page.
+Never let canonical default to a catch-all. Add a build-time assertion or post-build audit that checks every city page's canonical URL equals its own URL.
+
+For near-duplicate pages where content quality is borderline, the correct answer is to improve content — not to noindex or canonicalize away. Google's documentation explicitly states: "Google doesn't recommend using noindex to prevent selection of a canonical page within a single site."
 
 **Warning signs:**
-- Google Search Console shows breadcrumb rich result with lowercase project slug as the label
-- Schema validation at `https://validator.schema.org` shows breadcrumb item name matching the slug instead of the project name
+- Two city pages have the same `<link rel="canonical">` value in the rendered HTML
+- Google Search Console shows "Duplicate, Google chose different canonical than user" for city pages
+- `<meta name="robots" content="noindex">` appears on any city page that also has a canonical pointing elsewhere
+- Screaming Frog or similar crawl tool shows canonical chains (A → B → A) between city pages
 
 **Phase to address:**
-Phase 2 (individual case study pages). Add the `pageLabels` entry when each page is created.
+V1 — establish the canonical pattern correctly in `[location].astro` before the first deploy. Verify with a post-build HTML check on the rendered output.
 
 ---
 
-### Pitfall 4: CreativeWork Schema Conflicts with Organization Schema IDs
+### Pitfall 4: Schema Errors on LocalBusiness areaServed
 
 **What goes wrong:**
-`BaseLayout.astro` outputs an Organization schema and a LocalBusiness schema with `"@id": "https://nettup.no/#business"`. If a case study page also emits a `CreativeWork` or `WebSite` schema with an `@id` pointing to the same organization (e.g., `"author": {"@id": "https://nettup.no/#business"}`), the IDs must match exactly — not just in value but in `@type`. If the referencing schema uses `"@type": "Organization"` but the declared entity uses `"@type": "LocalBusiness"`, Google may not resolve the reference correctly because `LocalBusiness` is a subtype of `Organization`, not the same type.
+Four common errors in this specific context:
 
-More commonly: if a case study page inlines a new Organization node without an `@id` (just `{"@type": "Organization", "name": "Nettup"}`), Google's Knowledge Graph sees two separate Organization entities for the same domain — one with a full description and one anonymous inline. This dilutes entity recognition.
+**Error 1 — areaServed typed as a string instead of a Place object:** Using `"areaServed": "Oslo"` is technically valid per schema.org but weaker than using a typed `Place` entity. Google's implementation prefers `{"@type": "City", "name": "Oslo"}` or `{"@type": "AdministrativeArea", "name": "Akershus"}`.
 
-**Why it happens:**
-Developers copy the Service schema pattern (which uses `"provider": {"@type": "Organization", "name": "Nettup", "url": "..."}`) into the CreativeWork schema without referencing the `@id`. The tjenester pages use this pattern — it works for Service schemas but is weaker for entity graphs.
+**Error 2 — Conflicting address + areaServed signals:** Google's structured data validator has a known discrepancy: schema.org allows `areaServed` without a physical `address`, but Google's Rich Results Test requires an `address` field. For a service-area business like Nettup (no physical storefront), the correct approach is to include the physical address (or a PO Box / registered address) even if the business is service-area-only. Omitting `address` causes a validation warning.
+
+**Error 3 — Per-page LocalBusiness declarations that conflict with BaseLayout:** If `BaseLayout.astro` already declares a `LocalBusiness` schema with `"@id": "https://nettup.no/#business"` and a city page re-declares a new `LocalBusiness` with a different `@id` or no `@id`, Google sees two separate business entities. This dilutes the Knowledge Graph entity for Nettup.
+
+**Error 4 — areaServed array not updated as cities scale:** The root `LocalBusiness` schema in `BaseLayout.astro` may have a hardcoded or empty `areaServed`. As cities are added to `locations.ts`, the `areaServed` on the root schema should be dynamically derived from the config — not manually maintained.
 
 **How to avoid:**
-For the `creator`/`author` property on CreativeWork schemas, reference the existing entity by `@id`:
+- For each city page, emit a minimal schema that references the root entity by `@id` rather than re-declaring the full LocalBusiness:
 ```json
-"creator": {
-  "@id": "https://nettup.no/#business"
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "provider": { "@id": "https://nettup.no/#business" },
+  "areaServed": { "@type": "City", "name": "Oslo" },
+  "name": "Webdesign i Oslo"
 }
 ```
-This is the correct approach when the entity is already declared elsewhere in the page (via BaseLayout). No need to re-declare the Organization fields. This is what Google's documentation calls "entity referencing."
-
-Do NOT declare a new `@id` for the Organization on the case study page. The LocalBusiness `@id` in BaseLayout is the canonical entity identifier.
+- Keep the full `LocalBusiness` declaration exclusively in `BaseLayout.astro`
+- Drive `areaServed` on the root `LocalBusiness` from `locations.ts` at build time so it stays in sync
+- Validate every new page through `https://validator.schema.org` and Google's Rich Results Test before publishing
 
 **Warning signs:**
-- Schema validator shows "Warning: duplicate entity for domain"
-- Google Search Console shows Organization entity but with incomplete data (because the inline copy is being used instead of the full BaseLayout declaration)
+- Rich Results Test shows "Missing field: address" on any city page
+- Schema validator at `schema.org/validator` shows two `LocalBusiness` entities for the same domain
+- `areaServed` in `BaseLayout.astro` is a hardcoded list that doesn't match `locations.ts`
+- City pages have `"@type": "LocalBusiness"` in their own JSON-LD rather than a `@id` reference
 
 **Phase to address:**
-Phase 2 (CreativeWork structured data). Define the schema template before building the first case study page.
+V1 — design the schema architecture before building pages. The `LocalBusiness` + `Service` + `@id` referencing pattern must be established in Phase 1 and reused for all subsequent cities.
 
 ---
 
-### Pitfall 5: Building Pages That Depend on Screenshots Before Screenshots Exist
+### Pitfall 5: Premature Scaling — Publishing V3 Pages Before V1 and V2 Signal Quality
 
 **What goes wrong:**
-Case study pages need hero screenshots, detail screenshots, and possibly mobile screenshots. If the page is built with real `<Image>` components referencing `@/assets/images/blom-company-hero.png` before that file exists, `npm run build` fails with: `ENOENT: no such file or directory`. Development builds fail too. The page is completely unusable until the asset exists.
+Scaling to 300+ pages before the V1 pages have established quality signals causes two problems:
 
-Unlike content (which can be placeholder text), images are hard dependencies in Astro's build pipeline — the `Image` component processes them at build time, not runtime.
+**Problem A — Site-level thin content penalty:** Google's helpful content system evaluates the site holistically. If a large proportion of pages are thin (V3 coverage of Leirfjord, Tvedestrand, and Åmot with 200-word stubs), the entire site's ranking can be suppressed — including the core service pages and the blog. The August 2025 spam update showed this cross-page contamination in multiple documented cases.
+
+**Problem B — Index budget dilution:** A new subdomain or a site with 8 pages suddenly publishing 300 new pages in one sprint confuses Google's crawl budget allocation. Pages may not be indexed for weeks. Importantly, Nettup.no is not a high-authority domain — crawl budget matters.
+
+The documented case study: a site scaled from 300 to 22,000 AI-generated pages in a few months, without human review, and lost all rankings. The pages were removed but recovery was not confirmed.
 
 **Why it happens:**
-Developers start building the component layout with the final image path in mind, planning to add the actual screenshot "later." In a waterfall workflow this is fine — visuals arrive before shipping. But in an iterative workflow where you want to commit, deploy, and review in production, you're blocked until the screenshots arrive.
+The V3 architecture is already built into the dynamic route. Once `[location].astro` and `getStaticPaths()` work, it's technically trivial to add 300 entries to `locations.ts` and deploy. The technical ease creates a false sense that the content is "ready."
 
 **How to avoid:**
-Separate the page architecture from the visual assets. Build the page with a placeholder pattern: an `image?: ImageMetadata` field in the project config, with a conditional render — if `image` is undefined, render a placeholder div with the correct aspect ratio and a "Skjermbilde kommer" label. This allows:
-1. Full page deployed and indexed before screenshots are captured
-2. Screenshot slot clearly visible in staging review
-3. Zero rebuild errors
+Enforce a staged publication gate:
+- **V1 (6-8 cities):** Hand-written. Ship. Monitor for 6-8 weeks. Check Google Search Console for indexing status, click-through rate, and "Crawled, not indexed" signals.
+- **V2 (30-50 cities):** Only start when V1 pages show indexing confirmation (not just "Discovered") and at least some organic impressions. Use `locations.ts` quality fields to enforce differentiation before batch-generating.
+- **V3 (300+):** Only when V2 shows healthy click-through rates and no site-level suppression signals. Publish in batches of 30-50 per sprint, not all at once.
 
-For the Blom Company page specifically: staging screenshots from `blom-no.vercel.app` are available per the brief. Capture them before the page build phase begins. This is a content prerequisite, not a code task.
+Add a `tier` field to `locations.ts` (`'V1' | 'V2' | 'V3'`) and only include locations where `tier` matches the current release phase in `getStaticPaths()`.
 
 **Warning signs:**
-- `@/assets/images/blom-company-hero.png` referenced in code before the file is in `src/assets/images/`
-- `npm run dev` shows `Failed to load resource` for a project image
-- `npm run build` fails with `ENOENT` on any image import
+- V1 pages are in "Discovered, not indexed" in Search Console after 4+ weeks
+- V1 pages have impressions but 0 clicks (signals content isn't satisfying intent)
+- Temptation to "just add the remaining cities since the code is ready" before V1 shows results
+- `locations.ts` has 50+ entries before V1 has been live for more than 2 weeks
 
 **Phase to address:**
-Phase 0 / prerequisites. Capture and commit all required screenshots before building individual case study pages. Document required screenshots as a pre-task.
+V1 — build the tier gate into `getStaticPaths()` from day one. V2 — define promotion criteria (concrete metrics) before starting V2 content. V3 — treat as a separate milestone with its own research and quality threshold.
 
 ---
 
-### Pitfall 6: Meta Description Length Violations on Case Study Pages
+### Pitfall 6: Broken Sitemap Coverage for Dynamically Generated City Pages
 
 **What goes wrong:**
-Meta descriptions over ~155 characters get truncated in Google SERPs. For Norwegian, this is stricter in practice because Norwegian words average longer than English. A description like "Vi bygget en headless Shopify-nettbutikk for Blom Company — et norsk golf- og streetwear-merke med Scandinavisk premium-posisjonering — med Next.js 15, Sanity CMS og Tailwind CSS 4." is 183 characters and will be truncated to "Vi bygget en headless Shopify-nettbutikk for Blom Company — et norsk golf- og streetwear-merke med Scandinavisk premium-posisjonering…"
+`@astrojs/sitemap` works correctly for static-build dynamic routes (i.e., `getStaticPaths()` in static mode). However, there are two known failure conditions:
 
-More specifically for this site: descriptions that read well as case study summaries tend to be too long. Developers write them as prose ("what we built, for whom, why it mattered") when Google needs them short and scannable.
+**Condition A — SSR mode:** If any page in the project uses `output: 'server'` or `output: 'hybrid'` Astro config, the sitemap integration cannot enumerate dynamic routes. Nettup uses Vercel hybrid mode for the `/api/chat` endpoint. If this changes how `[location].astro` is processed, city pages may not appear in the sitemap. This was a documented regression in `@astrojs/sitemap` 1.3.0 (GitHub issue #7015).
 
-**Why it happens:**
-Case study content is narrative. The natural summary of a project is a paragraph, not a 150-character pitch. Developers copy-edit the description without checking pixel width or character count.
-
-**How to avoid:**
-Formula for portfolio page meta descriptions: `[Client] — [one-line outcome]. [One specific differentiator]. [Under 155 characters total.]`
-
-Example: "Blom Company nettbutikk — headless Shopify med Next.js 15 og Sanity CMS. Fullt tilpasset design for golf- og streetwear-merket." (128 characters).
-
-Add character count validation to the `Project` interface as a comment, and verify against Google's Rich Results Test before each case study page goes live.
-
-**Warning signs:**
-- Description field in `projects.ts` or in the page frontmatter exceeds 155 characters
-- Google Search Console shows "Description too long" in page experience signals
-- SERP preview tools show truncation with `…` mid-sentence
-
-**Phase to address:**
-Phase 2 (individual case study pages). Check length at authoring time, not after deployment.
-
----
-
-### Pitfall 7: Slug Naming Inconsistency Between URL and Config ID
-
-**What goes wrong:**
-The `Project` interface has an `id` field (`'igive'`). When creating sub-pages, the URL slug must match the page file location: `src/pages/prosjekter/igive/index.astro` → `/prosjekter/igive`. If the config `id` is `'igive'` but the slug used in links, OpenGraph URLs, and structured data is `'i-give'` or `'igive-gavekort'`, the canonical URL in schema.org and in `<link rel="canonical">` will mismatch.
-
-For Blom Company: the brief names it "blom-company" but the brand name is "Blom Company" (two words). A slug of `blom` is too short (ambiguous), `blomcompany` misses the hyphen, `blom-company` is correct. The `id` in `projects.ts` must equal the URL slug exactly — no discrepancy.
-
-**Why it happens:**
-The `id` field was used as an internal identifier, not as a routing key. The connection between `id` and URL slug is implicit, not enforced by TypeScript. It's easy for the page file location to drift from the config id.
+**Condition B — `site` config not set:** The sitemap integration requires `site` in `astro.config.mjs` to be set to `https://nettup.no` (including protocol). Without it, sitemap entries may have relative URLs that Google rejects.
 
 **How to avoid:**
-Rename the `id` field to `slug` in the `Project` interface. This makes the routing intent explicit. Use the slug field to construct all internal links (from the index page to the case study page): `href={`/prosjekter/${project.slug}`}`. This way there is one source of truth for the URL structure.
+- After the first V1 deploy, immediately verify `https://nettup.no/sitemap-index.xml` lists all city pages
+- Cross-check `sitemap.xml` entries count against the number of entries in `locations.ts` filtered to the active tier
+- Confirm `site: 'https://nettup.no'` is set in `astro.config.mjs`
+- If city pages are missing from the sitemap, add a custom sitemap endpoint (`src/pages/sitemap-locations.xml.ts`) that programmatically generates location entries from `locations.ts`
 
 **Warning signs:**
-- `href="/prosjekter/igive"` hardcoded in the index page instead of derived from `project.slug`
-- `@id` in CreativeWork schema uses a different URL than the page's canonical href
-- `sitemap.xml` shows `/prosjekter/igive` but the config `id` is `'i-give'`
+- `sitemap.xml` line count is lower than `locations.ts` active entry count after deploy
+- Google Search Console's "Submitted but not indexed" report shows city URLs that are in the sitemap
+- `/api/chat` route appearing in the sitemap (signals sitemap enumeration may be misconfigured)
 
 **Phase to address:**
-Phase 1 (config restructuring). Change `id` to `slug` when redesigning the `Project` interface.
-
----
-
-### Pitfall 8: Internal Linking From Other Pages Is Forgotten
-
-**What goes wrong:**
-The `/tjenester/nettbutikk` page describes Shopify development. After building the Blom Company case study (a headless Shopify project), there is no link from `/tjenester/nettbutikk` to `/prosjekter/blom-company`. Similarly, the `/tjenester/nettside` page could reference iGive as a proof point. These internal links are high-value for both SEO (passes authority from established tjenester pages to new portfolio pages) and for conversion (prospects reading about a service see real proof).
-
-This pitfall is invisible at build time — the pages build and deploy correctly. The SEO value is simply never realized.
-
-**Why it happens:**
-Case study pages are built in isolation. Developers complete the portfolio section and close the milestone without auditing cross-links from the rest of the site. The connection between service pages and portfolio pages is conceptual, not structural.
-
-**How to avoid:**
-Add an explicit task to the milestone: after all case study pages are built, do a cross-linking audit. For each project, identify which service page(s) it exemplifies and add a "Se eksempel: [Client]" link or a "Se relaterte prosjekter" section. This is a content task, not a code task — 15 minutes of editing, but it must be scheduled.
-
-For the homepage `ProjectTeaser.astro`: once both projects exist, decide whether the teaser should show two cards or continue to feature one. Either is fine, but the decision should be conscious.
-
-**Warning signs:**
-- `/tjenester/nettbutikk` has no link to `/prosjekter/blom-company` after the portfolio launch
-- `/prosjekter` index page is the only internal link pointing to case study pages (no lateral links from service pages)
-- Google Search Console shows case study pages with low internal PageRank relative to tjenester pages
-
-**Phase to address:**
-Phase 3 (cross-linking and internal SEO pass). Scheduled explicitly as a task after page content is complete.
+V1 — verify sitemap coverage immediately after first deploy, before any additional cities are added.
 
 ---
 
@@ -220,12 +204,11 @@ Phase 3 (cross-linking and internal SEO pass). Scheduled explicitly as a task af
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Keep `caseStudySection: true` on iGive and add Blom with `caseStudySection: false` | No need to rewrite ProjectShowcase.astro | Third project breaks the layout; iGive is always "featured" by accident | Never — restructure the schema properly in Phase 1 |
-| Hardcode case study content in `.astro` files instead of `projects.ts` | Easier to write rich markup | Adding a third project requires copying and editing an entire page file | Acceptable if each project is structurally unique; risky if content is mostly parallel |
-| Build case study pages before capturing screenshots | Start building immediately | Build fails if image is imported but file is missing; cannot deploy to staging | Never — resolve screenshot dependency before writing image imports |
-| Use inline Organization node in CreativeWork schema instead of `@id` reference | Copy-paste from Service schema pattern | Duplicate entity declarations; weaker entity association in Google's Knowledge Graph | Never — use `@id` reference to the existing LocalBusiness entity |
-| Skip `pageLabels` update for new sub-routes | Save one line of config | BreadcrumbList schema shows raw slugs as labels in rich results | Never — two lines per project, must be done |
-| Write meta description as narrative prose without character count check | Reads naturally | Truncated in SERPs; last clause cut off looks unprofessional | Never — check character count at authoring time |
+| Reuse identical intro template with only city name swapped for V2/V3 | Fast content generation | Doorway page pattern — Google flags the cluster, may penalize entire site | Never — use per-city unique fields in the data model |
+| Keep `areaServed` as a static string in BaseLayout instead of deriving from `locations.ts` | Simpler initial implementation | `areaServed` on root schema goes stale when new cities are added | Only acceptable for V1 if a TODO comment marks it for refactoring before V2 |
+| Publish all 300 V3 cities at once when the `[location].astro` template is ready | Single deploy, minimal ops overhead | Index budget dilution, thin content penalty risk at site level | Never — phased rollout with quality gates is non-negotiable |
+| Use `noindex` on thin city pages to "hide" them temporarily | Prevents penalization of bad pages | `noindex` pages don't count toward topical authority; fix or don't publish | Never — if the page isn't ready to index, it isn't ready to publish |
+| Skip Google Rich Results Test for V2+ cities ("template was validated for V1") | Save time on validation | Schema errors propagate to all new cities; `areaServed` type errors uncaught | Never — validate at least one page per batch |
 
 ---
 
@@ -233,12 +216,11 @@ Phase 3 (cross-linking and internal SEO pass). Scheduled explicitly as a task af
 
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| Astro `<Image>` component | Importing an image path that doesn't exist yet | Keep image field optional in Project interface; render placeholder div when `image` is undefined |
-| BaseLayout BreadcrumbList | Not adding new sub-routes to `pageLabels` | Add `/prosjekter/igive: 'iGive'` etc. to the map when creating each page |
-| schema.org CreativeWork | Inlining Organization node instead of referencing by `@id` | Use `"creator": {"@id": "https://nettup.no/#business"}` — the `@id` declared in BaseLayout is the canonical entity |
-| `@astrojs/sitemap` | Assuming sub-pages auto-appear in sitemap | They do — but only if the static build generates them. Verify `sitemap-index.xml` after first deploy includes `/prosjekter/igive` |
-| Astro `<ClientRouter>` transitions | Scroll reveal observer fires on mount but case study page images haven't lazy-loaded | The `reveal-on-scroll` pattern in BaseLayout uses `astro:page-load` event — verify this fires correctly on sub-page navigation |
-| Vercel OG image path | Using page-specific OG image path in `BaseLayout` `image` prop | `BaseLayout` accepts `image?: string` — pass a project-specific OG image path or ensure the fallback `/images/og-image.jpg` works acceptably for portfolio pages |
+| `@astrojs/sitemap` + Vercel hybrid | Assuming hybrid mode doesn't affect static route enumeration | Verify city pages appear in sitemap after first hybrid-mode deploy; add custom sitemap endpoint if missing |
+| `BaseLayout.astro` canonical | Forgetting to pass explicit canonical to `[location].astro` | Always pass `canonical={`https://nettup.no/${location.slug}`}` explicitly — never let it default |
+| `LocalBusiness` JSON-LD in `BaseLayout` | `areaServed` hardcoded while `locations.ts` grows independently | Drive `areaServed` array from `locations.ts` at build time using `import.meta.glob` or direct import |
+| Google Search Console | Submitting the sitemap but never checking "Discovered, not indexed" vs "Indexed" status | Check coverage report 2 weeks after V1 deploy — "Crawled, not indexed" on multiple city pages is an early warning sign |
+| schema.org Rich Results Test | Testing only the V1 template once | Re-test when adding new city data to `locations.ts` — field values may cause validation errors the template didn't expose |
 
 ---
 
@@ -246,9 +228,15 @@ Phase 3 (cross-linking and internal SEO pass). Scheduled explicitly as a task af
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| Multiple full-size screenshots per case study without Astro image optimization | Page weight > 2MB; LCP degrades below 2s threshold | Always use `<Image>` component, not raw `<img>`; set `width` to display size (not original), `quality={85}` | Immediately — even one unoptimized 1MB screenshot hurts mobile LCP |
-| Loading all case study screenshots on the `/prosjekter` index grid | Index page makes 6-8 image requests for thumbnails | Use `loading="lazy"` on all card images; `loading="eager"` only for the above-the-fold first card | Any portfolio with 3+ projects |
-| Video embeds (e.g., Blom Company drone video section) added to case study without facade | Third-party video embed loads full player JS on page load; kills LCP | Use `loading="lazy"` iframe or a click-to-play facade pattern | Immediately if embed is above the fold |
+| 300 city pages each including large Framer Motion bundle | First load of any city page triggers full React hydration | City pages should be pure Astro (no React islands unless contact form is embedded); defer hydration | Immediately at V3 scale — 300 static pages with React hydration overhead hurts LCP across the board |
+| Sitemap grows to include all 300+ city pages in a single XML file | No direct user symptoms; Google may deprioritize parsing | Keep sitemap under 50,000 URLs; consider splitting by tier (sitemap-v1.xml, sitemap-v2.xml) if approaching limits | At V3 with 300+ pages, approaching sitemap size limits |
+| `locations.ts` loaded entirely on every city page build | Slow build times at V3 scale | The config is imported at build time by `getStaticPaths()` — this is fine. But do not load the entire config on the client side | No user impact; build time degrades beyond ~500 entries |
+
+---
+
+## Security Mistakes
+
+Not applicable to this domain — local SEO pages are static content with no authentication surface. Standard site security inherited from existing Nettup.no setup applies.
 
 ---
 
@@ -256,73 +244,50 @@ Phase 3 (cross-linking and internal SEO pass). Scheduled explicitly as a task af
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| Case study pages with no CTA connecting back to the funnel | Prospect reads iGive case study and has no obvious next step | Add a contextual CTA at the bottom: "Vil du ha noe lignende? Ta kontakt." with a link to `/kontakt?tjeneste=nettside` pre-fill |
-| `/prosjekter` index that lists projects but has no differentiation between them | Prospect can't quickly understand which client/project is most relevant to their situation | Show category badge and one-line outcome on each card (already in the `tagline` field) — use it |
-| Placeholder testimonials still showing when real Blom testimonial is available | Reduces credibility of the entire portfolio section | The Blom brief includes a real testimonial. Use it for the Blom case study immediately instead of deferring all testimonials |
-| Case study page with only a hero screenshot and no detail/mobile views | Single screenshot doesn't demonstrate responsive design capability | Plan for 2-3 screenshots per project minimum: desktop hero, mobile view or detail shot |
+| City page has no contact CTA or links to service pages | User confirms Nettup covers their city but has no next step | Every city page must end with a contact CTA pre-filled with the city context: `/kontakt?by=oslo` or similar |
+| City pages are orphaned from navigation | Google treats them as low-authority; users can't browse to them | Link all active city pages from the footer "Tjenesteområder" section and from the `/kontakt` page |
+| Listing 300 cities in the footer when V3 ships | Footer becomes cluttered; pages load excessive HTML | Group by region (Østlandet, Vestlandet, etc.) or show only top-tier cities in footer with a "Se alle steder" page |
+| City page claims to serve a city with no local proof | Undermines credibility — users in that city can tell if copy is generic | For V1/V2 cities, include at least one local-specific reference; for V3 cities where proof is absent, be explicit that service is available nationwide |
 
 ---
 
-## GEO (Generative Engine Optimization) Pitfalls
+## Norway-Specific Pitfalls
 
-AI assistants (ChatGPT, Perplexity, Claude, Google SGE) pull citations from structured, confident, specific content. These are the traps specific to getting portfolio pages cited.
+### hreflang — Not Needed, But Watch the Edge Case
 
-### Over-Optimization Trap: Keyword-Stuffed Case Study Copy
+Nettup.no is single-language Norwegian (Bokmål). hreflang tags are irrelevant for a monolingual site with no regional language variants. Do not add them.
 
-**What goes wrong:**
-Writing copy like "Nettup er det beste webbyrået i Oslo for headless Shopify-utvikling og Next.js-nettsider for norske bedrifter" — a sentence that reads like it was written for a crawler. AI assistants are specifically tuned to ignore marketing-speak and promotional language. They prefer neutral, factual statements that could appear in a Wikipedia article or a technical review.
+One edge case: if blog articles are ever translated to English for GEO purposes, hreflang becomes relevant. As of v1.5 this is out of scope, but adding hreflang for `nb` on Norwegian city pages without a corresponding `en` page will produce orphaned hreflang references that Search Console flags as errors. The safe rule: if no bilingual structure exists, use no hreflang tags.
 
-The Blom brief is already written correctly: "Clean, fast, no unnecessary noise." That tone is citable. "We are Norway's leading agency for X" is not.
+### nb-NO vs. no Language Code
 
-**How to avoid:**
-Write case study copy as if explaining the project to a peer developer, not selling it to a client. State facts: what was built, with what technology, what specific problem it solved, what the measured outcome was. Numbers and specific technical details are highly citable ("Mobile Performance: 75, Desktop: 98"). Vague superlatives are not.
+The site's `<html lang>` attribute should be `lang="nb"` (Bokmål) not `lang="no"` (generic Norwegian). Google recognizes both, but `nb` is more specific. Ensure `BaseLayout.astro` uses `lang="nb"` consistently on city pages. Mixed signals (some pages `no`, some `nb`) create unnecessary ambiguity.
 
-**Phase to address:**
-Phase 2 (copy writing for individual case study pages).
+### Norwegian Municipality Name Collisions
 
----
+Several Norwegian municipalities share similar names or have names that differ from common usage. Examples relevant to the target city list:
+- "Bærum" and "Bærum kommune" — use the municipality-branded name, not "Barum" (wrong), not "Bærum kommune" (overly formal)
+- "Lillestrøm" became a municipality name in 2020 (merger of Skedsmo, Sørum, Fet). Some residents still use "Skedsmo" or "Kjeller" colloquially. The slug should be `lillestrom` (ASCII-safe) and the displayed name should be "Lillestrøm"
+- URL slugs must be ASCII — use `lillestrom`, `baerum`, `ski` (Ski is already ASCII). Do not use `bærum` in URLs — it breaks on some HTTP clients and complicates sitemap XML encoding
 
-### Over-Optimization Trap: FAQPage Schema on Every Case Study Page
+### Google Business Profile Gap
 
-**What goes wrong:**
-Adding `FAQPage` JSON-LD to case study pages with questions like "Hva er headless Shopify?" — generic questions not specific to the case study. AI assistants are beginning to penalize sites that spray FAQPage schemas across content where the FAQ is clearly fabricated for SEO purposes rather than genuinely answering user questions. Google has also deprecated rich result eligibility for FAQPage on most sites (only high-authority sites qualify).
-
-**How to avoid:**
-Do NOT add `FAQPage` schema to case study pages. Use `CreativeWork` or `WebSite` schema to describe the project. If a genuine FAQ is needed (e.g., "Kan jeg bestille en lignende side?"), add it as an inline visible Q&A section, not as a JSON-LD schema block.
-
-**Phase to address:**
-Phase 2 (structured data design). Decide schema types before building pages — CreativeWork for the deliverable, no FAQPage.
-
----
-
-### Over-Optimization Trap: Fake or Inflated Metrics
-
-**What goes wrong:**
-Writing "Lighthouse score: 100/100 performance" when the actual score is 95 (iGive) or 75 mobile (Blom Company). AI assistants that verify claims against other sources will flag inconsistencies. Once an inconsistency is found, the entire page's credibility drops. The existing `Results.astro` on the prosjekter page already shows "95" for iGive — this is fine and honest.
-
-For Blom Company: the brief is explicit that mobile is 75 dragged by hero image LCP. Use the real numbers. "Desktop performance: 98. Mobile: 75 (hero image LCP 6.6s — re-measuring after production launch)" is more credible than a rounded-up "98" everywhere.
-
-**How to avoid:**
-Only publish metrics you have measured and can reproduce. Stage the Blom case study page with "Lighthouse-resultater oppdateres etter lansering" if production numbers aren't available yet. Use staging numbers (explicitly labeled) in the interim — the brief already does this correctly.
-
-**Phase to address:**
-Phase 2 (content for Blom case study page). Resolve before the page goes live with metrics shown.
+The existing PROJECT.md notes "Google Business Profile" as deferred. Google Business Profile (GBP) is the single strongest local SEO signal for Norwegian businesses and is separate from website structured data. City landing pages without a verified GBP will rank below competitors who have one. This is not a technical pitfall but a strategy gap: city pages alone will not displace a verified GBP listing. Prioritize GBP verification for Nettup's primary service area before scaling to V2.
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **`pageLabels` updated:** Both `/prosjekter/igive` and `/prosjekter/blom-company` added to the map in `BaseLayout.astro` — verify BreadcrumbList schema at `https://validator.schema.org` shows correct human-readable labels
-- [ ] **`ProjectTeaser.astro` links to sub-page:** `href` in the homepage teaser card points to `/prosjekter/igive`, not `/prosjekter`
-- [ ] **Screenshots committed before Image import:** Run `npm run dev` from a clean state — no `Failed to load resource` errors for project images
-- [ ] **`npm run build` passes with all new pages:** Static build succeeds; all new routes appear in build output
-- [ ] **Sitemap includes sub-pages:** After first deploy, `https://nettup.no/sitemap-index.xml` includes `/prosjekter/igive` and `/prosjekter/blom-company`
-- [ ] **CreativeWork schema uses `@id` reference:** Schema validator shows no duplicate Organization entities — project page references `https://nettup.no/#business` by ID, not re-declaring
-- [ ] **Meta descriptions are < 155 characters:** Character count checked for every new page — not just the index
-- [ ] **Blom testimonial is real, not placeholder:** The `nettup-case-study-brief.md` provides a real quote — it should be used, not a placeholder
-- [ ] **Cross-links from tjenester pages:** `/tjenester/nettbutikk` links to the Blom case study; at minimum a "Se et eksempel" link exists
-- [ ] **`caseStudySection` flag removed from schema:** TypeScript interface does not contain `caseStudySection` after migration — search codebase to confirm no remnants
-- [ ] **iGive Results metrics still accurate:** `Results.astro` hardcodes "95", "<1s", "100" for iGive — confirm these match the current live Lighthouse scores before expanding portfolio attention to the page
+- [ ] **Each V1 city page has unique intro copy:** Run a text diff between any two city pages — unique content should be > 60% of total words
+- [ ] **Canonical self-references correctly:** Check rendered HTML source of each city page — `<link rel="canonical">` must equal that page's own URL
+- [ ] **No city page has both `noindex` and `canonical`:** Automated check in CI or post-build HTML lint
+- [ ] **`areaServed` in root LocalBusiness schema reflects all published cities:** Compare `areaServed` array count against `locations.ts` active entries count
+- [ ] **Schema validates with no errors:** Every new city page passes `https://validator.schema.org` with zero errors (warnings are acceptable)
+- [ ] **All city pages appear in `sitemap.xml`:** Count sitemap entries and compare against `locations.ts` active entry count post-deploy
+- [ ] **City pages are linked from footer:** Inspect footer HTML in browser — each V1 city should have a visible link
+- [ ] **V1 pages indexed before V2 work starts:** Google Search Console shows V1 pages as "Indexed" (not just "Discovered") before any V2 entry is added to `locations.ts`
+- [ ] **URL slugs are ASCII-only:** No non-ASCII characters in any city slug — verify in `locations.ts` by inspection
+- [ ] **`<html lang="nb">` on all city pages:** Inspect rendered HTML — not `lang="no"`, not omitted
 
 ---
 
@@ -330,14 +295,13 @@ Phase 2 (content for Blom case study page). Resolve before the page goes live wi
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| ProjectShowcase blank after config change (Pitfall 1) | MEDIUM | Rewrite ProjectShowcase.astro to use slug-based card grid instead of caseStudySection discriminator; delete caseStudySection from interface |
-| ProjectTeaser still hardcoded (Pitfall 2) | LOW | Update ProjectTeaser.astro to read from projects.ts and link to slug-based URL |
-| BreadcrumbList shows slugs in schema (Pitfall 3) | LOW | Add two lines to pageLabels in BaseLayout.astro; redeploy |
-| Duplicate Organization entity in structured data (Pitfall 4) | LOW | Replace inline Organization node with @id reference in CreativeWork schema; redeploy |
-| Build fails on missing screenshot (Pitfall 5) | LOW | Add the missing image file to src/assets/images/; or make the image field optional with conditional render |
-| Meta description truncated in SERPs (Pitfall 6) | LOW | Edit description in page props; redeploy |
-| Slug mismatch between config and URL (Pitfall 7) | MEDIUM | Rename id to slug in Project interface; update all usages; add 301 redirect if page was already indexed |
-| No internal links from tjenester pages (Pitfall 8) | LOW | Edit tjenester sub-pages to add case study references; one line per relevant tjeneste page |
+| Doorway page penalty on city page cluster | HIGH | Remove or substantially rewrite every flagged page; wait for re-crawl; may require Google Search Console reconsideration request if manual action |
+| Thin content site-level suppression from V3 premature scaling | HIGH | Remove or noindex all V3 thin pages; wait for Googlebot to re-process (weeks to months); re-establish site quality with V1/V2 content |
+| Canonical pointing to wrong URL | LOW | Fix canonical prop in `[location].astro`; redeploy; submit affected URLs for recrawl in Search Console |
+| areaServed schema errors | LOW | Fix schema template; redeploy; re-validate; errors clear on next Googlebot crawl |
+| City pages missing from sitemap | LOW | Fix sitemap config or add custom sitemap endpoint; resubmit sitemap in Search Console |
+| noindex + canonical conflict | LOW | Remove noindex from affected pages; redeploy; submit for recrawl |
+| Duplicate city pages (canonical confusion) | MEDIUM | Audit all city page canonicals; fix self-referencing; set 301 redirects if duplicate URLs exist with different slugs |
 
 ---
 
@@ -345,32 +309,31 @@ Phase 2 (content for Blom case study page). Resolve before the page goes live wi
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| ProjectShowcase breaks on config change (1) | Phase 1: Config restructuring | `npm run dev` shows project grid on /prosjekter with both projects as peer cards |
-| ProjectTeaser hardcoded (2) | Phase 1: Config restructuring | Homepage teaser `href` derives from `project.slug`, not hardcoded |
-| BreadcrumbList raw slugs (3) | Phase 2: Each case study page | Schema validator confirms human-readable breadcrumb labels |
-| Duplicate Organization entity (4) | Phase 2: Structured data design | Schema validator shows one Organization entity per page |
-| Missing screenshots block build (5) | Phase 0: Prerequisites | Screenshots committed; `npm run build` passes clean before page work begins |
-| Meta description too long (6) | Phase 2: Each case study page | Character count < 155 for every new page description |
-| Slug/ID mismatch (7) | Phase 1: Config restructuring | All internal links use `project.slug` field; no hardcoded paths |
-| No cross-links from tjenester (8) | Phase 3: Cross-linking audit | `/tjenester/nettbutikk` contains link to Blom case study after Phase 3 |
-| GEO over-optimization traps | Phase 2: Copy writing | Case study copy reads as factual technical description, not promotional; no FAQPage schema on portfolio pages |
+| Doorway page pattern (Pitfall 1) | V1 authoring — enforce content spec in `locations.ts` | Text diff between any two city pages shows > 60% unique content |
+| Thin content (Pitfall 2) | V1 — define required field lengths; V2 — add pre-publish quality check | No city page has `intro` under 60 words; `faq` has city-specific questions |
+| Canonical / noindex errors (Pitfall 3) | V1 — establish pattern in `[location].astro` before first page | Post-build HTML check confirms each city page self-references in canonical |
+| areaServed schema errors (Pitfall 4) | V1 — schema architecture decision before any pages built | Rich Results Test passes for all V1 pages; no duplicate LocalBusiness entities |
+| Premature V3 scaling (Pitfall 5) | V1/V2 gates — `tier` field in `locations.ts`; promotion criteria defined | V1 pages indexed + showing organic impressions before V2 starts |
+| Sitemap coverage gaps (Pitfall 6) | V1 — verify immediately after first deploy | Sitemap entry count matches `locations.ts` active count post-deploy |
+| Norway-specific (language code, slug encoding) | V1 — establish conventions in `locations.ts` schema | `<html lang="nb">` confirmed; all slugs ASCII-safe in config |
 
 ---
 
 ## Sources
 
-- Codebase: `src/pages/prosjekter/_sections/ProjectShowcase.astro` — confirmed `caseStudySection` discriminator pattern
-- Codebase: `src/pages/_home/ProjectTeaser.astro` — confirmed hardcoded iGive content, no projects.ts usage
-- Codebase: `src/layouts/BaseLayout.astro` — confirmed `pageLabels` map and BreadcrumbList fallback behavior
-- Codebase: `src/config/projects.ts` — confirmed current interface shape and `caseStudySection: true` on iGive
-- Codebase: `src/pages/tjenester/nettside/index.astro` — confirmed Service schema pattern (inline Organization, not @id reference)
-- Codebase: `nettup-case-study-brief.md` — Blom Company data: real testimonial available, mobile LCP caveat, staging screenshots on blom-no.vercel.app
-- schema.org CreativeWork spec: https://schema.org/CreativeWork — `creator` property accepts @id references
-- schema.org identifier spec: https://schema.org/identifier — entity referencing via @id
-- Google Structured Data docs: https://developers.google.com/search/docs/appearance/structured-data/breadcrumb — BreadcrumbList item name must be human-readable, not raw URL segment
-- Google FAQPage deprecation: https://developers.google.com/search/blog/2023/08/howto-faq-changes — FAQPage rich results deprecated for most sites (August 2023)
-- Astro Image component: https://docs.astro.build/en/guides/images/ — image processed at build time; missing file = build failure
+- Google Spam Policies (official): https://developers.google.com/search/docs/essentials/spam-policies — doorway abuse definition and criteria
+- Google Search Central Blog, March 2024: https://developers.google.com/search/blog/2024/03/core-update-spam-policies — updated enforcement
+- Google canonicalization documentation: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls — canonical vs noindex guidance
+- RicketyRoo: Location Page Spam analysis (MEDIUM confidence — WebSearch verified): https://ricketyroo.com/blog/location-page-spam/
+- Tailride.so case study — 22,000 AI pages penalty (MEDIUM confidence — single source): https://tailride.so/blog/google-penalty-22000-ai-pages
+- Astro sitemap integration docs: https://docs.astro.build/en/guides/integrations-guide/sitemap/
+- Astro sitemap regression, GitHub issue #7015: https://github.com/withastro/astro/issues/7015
+- schema.org areaServed property: https://schema.org/areaServed
+- schema.org LocalBusiness address/areaServed conflict, GitHub issue #4643: https://github.com/schemaorg/schemaorg/issues/4643
+- Google Crawl Budget documentation: https://developers.google.com/search/docs/crawling-indexing/large-site-managing-crawl-budget
+- Manning Search Marketing — Location Pages vs Doorway Pages: https://www.manningmarketing.com/articles/location-pages-vs-doorway-pages-seo-best-practices-and-pitfalls/
+- seroundtable.com — Google city landing pages warning: https://www.seroundtable.com/google-city-landing-pages-doorway-pages-28670.html
 
 ---
-*Pitfalls research for: Portfolio 2.0 multi-page case study system on existing Astro 5 site (v1.4)*
-*Researched: 2026-03-07*
+*Pitfalls research for: Local SEO landing pages — adding city/location pages to Nettup.no (v1.5)*
+*Researched: 2026-03-08*
