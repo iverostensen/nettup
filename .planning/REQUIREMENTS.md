@@ -1,78 +1,91 @@
-# Requirements: Nettup v1.4 Portefølje 2.0
+# Requirements: Nettup v1.5 Lokale SEO-sider
 
-**Defined:** 2026-03-07
-**Core Value:** En potensiell kunde som lander på siden skal umiddelbart forstå at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
+**Defined:** 2026-03-08
+**Core Value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt — og at kvaliteten beviser det.
 
 ## v1 Requirements
 
-### Infrastruktur
+### Infrastructure
 
-- [x] **INFR-01**: `projects.ts` interface extended with `slug`, `techStack[]`, `metrics{}`, `gallery[]`, `testimonialId`, `metaTitle`, `metaDescription`, `publishedAt`; `caseStudySection` flag removed and all consumers updated atomically
-- [x] **INFR-02**: `/prosjekter` index redesigned as project card grid — each card shows cover image, category, name, tagline, and links to `/prosjekter/[slug]`
-- [x] **INFR-03**: `ProjectShowcase.astro` and `Results.astro` removed from prosjekter index, replaced by project grid section
-- [x] **INFR-04**: `BaseLayout` `pageLabels` updated with explicit entries for `/prosjekter/igive` and `/prosjekter/blom-company` so BreadcrumbList structured data renders correctly
+- [ ] **INFRA-01**: URL slug pattern is decided and documented before any page is built
+- [ ] **INFRA-02**: `locations.ts` exposes a TypeScript interface with `tier`, city data, `intro`, `faq`, `nearbyAreas`, and `industries` fields — designed to scale from V1 (8 cities) through V2 (50) to V3 (300+) without structural changes
+- [ ] **INFRA-03**: Dynamic `[location].astro` route generates one static page per `locations.ts` entry via `getStaticPaths()`
+- [ ] **INFRA-04**: Every city page has a canonical self-referencing URL tag and no conflicting `noindex`
 
-### Innhold
+### Content & Copy
 
-- [x] **INNHOLD-01**: Visual content plan document exists at `.planning/VISUAL-CONTENT-PLAN.md` listing all required screenshots per project (filename, section, dimensions, crop guide)
-- [x] **INNHOLD-02**: iGive Lighthouse/PageSpeed scores measured against `salg.igive.no` production URL and recorded (Performance, Accessibility, Best Practices, SEO, plus Core Web Vitals where available)
-- [x] **INNHOLD-03**: Blom Company screenshots captured from `blom-no.vercel.app` staging and committed to `src/assets/images/` per the visual content plan
+- [ ] **CONTENT-01**: 6–8 Tier 1 city entries exist with genuinely differentiated intro copy (not city-name-swapped boilerplate — ≥60% unique per page)
+- [ ] **CONTENT-02**: Every city page has a city-specific FAQ section (e.g., "Holder dere til i Drammen?")
 
-### Sider
+### Schema & Metadata
 
-- [x] **SIDE-01**: `/prosjekter/igive` exists as a dedicated page with all table-stakes sections: opening summary paragraph, challenge, solution, tech stack, features delivered, metrics block, testimonial, live site link
-- [x] **SIDE-02**: `/prosjekter/blom-company` exists as a dedicated page with all table-stakes sections: opening summary paragraph, challenge, solution, tech stack (Next.js 15 / Shopify / Sanity / Tailwind 4 / Vercel), dual-collection story, Lighthouse scores, testimonial, live site link
-- [x] **SIDE-03**: Both pages have GEO-optimized copy — standalone summary paragraph visible within opening 200 words, concrete verifiable numbers (scores, load times, specific tech versions) as a distinct visual metrics block
+- [ ] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
+- [ ] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
 
-### SEO
+### Linking & Verification
 
-- [ ] **SEO-01**: Both case study pages emit `CreativeWork` JSON-LD with `creator: { @type: Organization, name: Nettup }` and `about: { @type: WebSite, url: [client URL] }`
-- [ ] **SEO-02**: Both case study pages emit `BreadcrumbList` JSON-LD consistent with the pattern on tjenester and blogg pages
-- [ ] **SEO-03**: Both case study pages have unique `<title>` tags (50–60 chars) and meta descriptions (150–160 chars) following the `seoTitle` pattern
-- [ ] **SEO-04**: Both pages appear in the auto-generated sitemap via `@astrojs/sitemap` (verified after `npm run build`)
+- [ ] **LINK-01**: Footer has an "Omrader vi dekker" section listing all Tier 1 cities — ships in the same deploy as city pages (no orphan pages)
+- [ ] **LINK-02**: `/kontakt` page mentions Oslo-region and nearby areas coverage
+- [ ] **LINK-03**: All city pages appear in `sitemap-index.xml` after first deploy (verified manually)
+- [ ] **LINK-04**: V2 promotion criteria documented as measurable thresholds before V2 work begins (e.g. all V1 pages indexed in Search Console + ≥3 pages with organic impressions)
 
 ## v2 Requirements
 
-### Utvidelser
+*To be defined once V1 is live and indexing signals are confirmed.*
 
-- **EXT-01**: Cross-links from relevant service pages to case studies (e.g. `/tjenester/nettbutikk` → Blom Company) — deferred, no service page refactor in v1.4
-- **EXT-02**: Per-project OG images (static or generated) — deferred, global OG image fallback sufficient for v1.4
-- **EXT-03**: Prosjekt #3 og fremover — arkitektur er klar, innhold mangler
+### Expansion
+
+- **EXPAND-01**: 30–50 additional Norwegian towns with AI-assisted copy, reviewed before publish
+- **EXPAND-02**: AI generation pipeline for city copy (similar pattern to blog pipeline)
+- **EXPAND-03**: Human review gate before any AI-generated city page goes live
+
+### Regional coverage
+
+- **REGION-01**: Bergen, Stavanger, Trondheim, Kristiansand, Tromso city pages
+- **REGION-02**: Industry-angle pages (e.g., "nettside for maritime bedrifter i Alesund")
+
+## v3 Requirements
+
+*Deferred. Requires V2 indexing proof and defined content quality process.*
+
+- Full Norway coverage (300+ municipalities) with structured data pipeline
+- `/steder` index page listing cities by region
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| FAQPage JSON-LD on case study pages | Google deprecated FAQPage rich results for most sites Aug 2023 — adds no value, may confuse structured data audit |
-| Dynamic `[slug].astro` routing | 2–5 projects don't justify the overhead; individual files match tjenester pattern and allow structural differentiation per project |
-| Satori / dynamic OG image generation | Adds ~8 MB devDependencies for a problem that doesn't exist at current scale |
-| iGive testimonial replacement | Placeholder testimonial is a known gap; real quote requires client outreach, out of scope for this milestone |
-| Cross-links from service pages | Excluded from v1.4 scope; no structural change to tjenester pages in this milestone |
+| Per-city address in schema | Nettup has no physical presence in each city — service-area `areaServed` is the correct pattern |
+| `/steder` index page | Not needed in V1; V2+ if coverage grows beyond 8 cities |
+| City-specific pricing | All pricing is transparent and service-based, not location-based |
+| hreflang tags | Single-language site — irrelevant |
+| Auto-publish V2 pages | V2 requires human review gate; never auto-publish city pages |
+| V3 (full Norway) in this milestone | Must validate V1 indexing signals before scaling to 300+ pages |
 
 ## Traceability
 
+*Populated during roadmap creation.*
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INNHOLD-01 | Phase 20 | Complete |
-| INNHOLD-02 | Phase 20 | Complete |
-| INNHOLD-03 | Phase 20 | Complete |
-| INFR-01 | Phase 21 | Complete |
-| INFR-02 | Phase 21 | Complete |
-| INFR-03 | Phase 21 | Complete |
-| INFR-04 | Phase 21 | Complete |
-| SIDE-01 | Phase 22 | Complete |
-| SIDE-02 | Phase 22 | Complete |
-| SIDE-03 | Phase 22 | Complete |
-| SEO-01 | Phase 23 | Pending |
-| SEO-02 | Phase 23 | Pending |
-| SEO-03 | Phase 23 | Pending |
-| SEO-04 | Phase 23 | Pending |
+| INFRA-01 | — | Pending |
+| INFRA-02 | — | Pending |
+| INFRA-03 | — | Pending |
+| INFRA-04 | — | Pending |
+| CONTENT-01 | — | Pending |
+| CONTENT-02 | — | Pending |
+| SEO-01 | — | Pending |
+| SEO-02 | — | Pending |
+| LINK-01 | — | Pending |
+| LINK-02 | — | Pending |
+| LINK-03 | — | Pending |
+| LINK-04 | — | Pending |
 
 **Coverage:**
-- v1 requirements: 14 total
-- Mapped to phases: 14
-- Unmapped: 0 ✓
+- v1 requirements: 12 total
+- Mapped to phases: 0
+- Unmapped: 12 ⚠️
 
 ---
-*Requirements defined: 2026-03-07*
-*Last updated: 2026-03-07 after roadmap creation*
+*Requirements defined: 2026-03-08*
+*Last updated: 2026-03-08 after initial definition*
