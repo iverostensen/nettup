@@ -198,10 +198,8 @@ const breadcrumbSchema = {
   <body class="min-h-screen bg-surface text-text antialiased">
     <FloatingNav />
     <ChatWidget client:load currentPage={Astro.url.pathname} transition:persist />
-    <div id="page-content">
-      <slot />
-      <Footer />
-    </div>
+    <slot />
+    <Footer />
 
     <!-- Scroll reveal observer (Level 1 animations) -->
     <script>
@@ -222,30 +220,15 @@ const breadcrumbSchema = {
         });
       }
 
-      // Hide page content the moment navigation starts (before DOM swap).
-      // The nav (transition:persist) stays visible. The content div goes dark
-      // instantly — so the user never sees the old page bleeding through.
-      document.addEventListener('astro:before-swap', () => {
-        const content = document.getElementById('page-content');
-        if (content) content.style.setProperty('opacity', '0');
-      });
-
-      // After the DOM swap (still inside startViewTransition callback, so the
-      // view-transition overlay is still up):
-      // 1. Reveal all above-fold reveal-on-scroll elements instantly.
-      // 2. Restore content opacity — the screenshot captured at this point
-      //    shows fully-styled content with no transparent holes.
-      document.addEventListener('astro:after-swap', () => {
-        // Reveal only above-fold elements — below-fold elements still animate on scroll.
-        document.querySelectorAll<HTMLElement>('.reveal-on-scroll:not(.revealed)').forEach(el => {
-          if (el.getBoundingClientRect().top < window.innerHeight) {
-            el.style.setProperty('transition', 'none');
-            el.classList.add('revealed');
-            requestAnimationFrame(() => el.style.removeProperty('transition'));
-          }
-        });
-        const content = document.getElementById('page-content');
-        if (content) content.style.removeProperty('opacity');
+      // Pre-reveal all scroll-reveal elements in the incoming document before
+      // the view-transition snapshot is taken. iOS/WebKit ignores
+      // `::view-transition-* { animation: none }` and plays a crossfade anyway —
+      // if elements are opacity:0 in the snapshot, the old page bleeds through
+      // the transparent holes. Pre-revealing eliminates all transparent holes.
+      document.addEventListener('astro:after-preparation', (e) => {
+        (e as any).newDocument
+          .querySelectorAll('.reveal-on-scroll')
+          .forEach((el: Element) => el.classList.add('revealed'));
       });
 
       document.addEventListener('astro:page-load', initScrollObserver);
