@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: milestone
-status: unknown
-last_updated: "2026-03-07T23:15:48.737Z"
+milestone: v1.5
+milestone_name: Lokale SEO-sider
+status: defining_requirements
+last_updated: "2026-03-08T00:00:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 14
-  completed_plans: 14
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -18,16 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.4 Portefølje 2.0 — Phase 20 ready to plan
+**Current focus:** v1.5 Lokale SEO-sider — Defining requirements
 
 ## Current Position
 
-Phase: 22 of 23 (Kasusstudie-sider)
-Plan: 02 complete — Phase 22 complete
-Status: In progress (phase 23 pending)
-Last activity: 2026-03-07 - Completed quick task 6: Add AI-generated contextual suggestions to the chatbot
-
-Progress: [██████████] 100% (14/14 plans complete)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-08 — Milestone v1.5 started
 
 ## Performance Metrics
 

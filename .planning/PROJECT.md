@@ -45,28 +45,28 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ SEO/GEO-optimalisert artikkelmal — Article + FAQPage + BreadcrumbList JSON-LD, seoTitle vs title-mønster — v1.3
 - ✓ Redaksjonelle temakonfigurasjoner — 4 clusters (priser, teknologi, smb-tips, lokal-seo) i config.ts — v1.3
 
-## Current Milestone: v1.4 Portefølje 2.0
+## Current Milestone: v1.5 Lokale SEO-sider
 
-**Goal:** Restructure `/prosjekter` into a scalable, SEO/GEO-optimized portfolio with dedicated case study pages, adding Blom Company alongside iGive.
+**Goal:** Build a scalable local SEO landing page system targeting Norwegian city search queries — architected from day one to expand from V1 (6–8 hand-crafted Tier 1 cities) through V2 (30–50 AI-assisted towns) to V3 (full Norway coverage) without structural changes.
 
 **Target features:**
-- `/prosjekter` index redesigned as project grid with cards linking to dedicated pages
-- `/prosjekter/igive` — expanded iGive case study (screenshots, tech stack, metrics, testimonial)
-- `/prosjekter/blom-company` — new Blom Company case study (headless Shopify, dual collections, performance scores)
-- Scalable project architecture: adding project #3 = one new page file, no structural changes
-- Per-project SEO: dedicated `<title>`, meta description, structured data (CreativeWork schema)
-- GEO-ready content: structured, citable copy that AI assistants can discover and surface
-- Visual content plan: documented brief of which screenshots/visuals are needed per project
+- `src/config/locations.ts` — city data model structured for V1/V2/V3 expansion (city, slug, intro, FAQ, nearby areas, regional industries, areaServed schema field)
+- Dynamic route `src/pages/[location].astro` with `getStaticPaths()` driven entirely by locations config
+- 6–8 Tier 1 cities with hand-written, genuinely differentiated copy (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss)
+- `LocalBusiness` JSON-LD with `areaServed` per page
+- Unique `<title>`, `<meta description>`, canonical URL per city
+- Internal linking from footer/contact page mentioning coverage area
+- Sitemap inclusion of all generated city pages
 
 ### Active
 
-- [ ] `/prosjekter` index redesigned as project grid (cards → dedicated pages)
-- [ ] Dedicated `/prosjekter/igive` case study page
-- [ ] Dedicated `/prosjekter/blom-company` case study page
-- [ ] Scalable project config architecture (slug-based, easy to extend)
-- [ ] Per-project SEO metadata + structured data (CreativeWork/WebSite schemas)
-- [ ] GEO-optimized project copy
-- [ ] Visual content plan document (which screenshots needed per project)
+- [ ] `locations.ts` config with V1/V2/V3-ready data model
+- [ ] Dynamic `[location].astro` route with `getStaticPaths()`
+- [ ] 6–8 Tier 1 city entries with unique copy
+- [ ] `LocalBusiness` JSON-LD with `areaServed` per city
+- [ ] Per-city SEO metadata (title, description, canonical)
+- [ ] Internal linking from footer/contact to city pages
+- [ ] Sitemap coverage of all city pages
 
 <!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
 
@@ -139,4 +139,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Manual .prose-article CSS over @tailwindcss/typography | Avoid new dependency for a single use case | ✓ Good — sufficient for article formatting |
 
 ---
-*Last updated: 2026-03-07 after v1.4 milestone start*
+*Last updated: 2026-03-08 after v1.5 milestone start*
