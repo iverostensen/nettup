@@ -176,6 +176,14 @@ html[data-astro-transition] {
   scroll-behavior: auto !important;
 }
 
+/* Hide page content during the DOM swap + React hydration window.
+   astro:before-swap sets data-loading; astro:page-load removes it.
+   Body content is invisible but html background (#020617) still shows,
+   so the user sees a clean dark flash instead of raw SSR HTML. */
+html[data-loading] body {
+  visibility: hidden;
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),

@@ -201,6 +201,16 @@ const breadcrumbSchema = {
     <slot />
     <Footer />
 
+    <!-- Hide body during DOM swap + hydration to prevent raw SSR HTML flash -->
+    <script>
+      document.addEventListener('astro:before-swap', () => {
+        document.documentElement.dataset.loading = '';
+      });
+      document.addEventListener('astro:page-load', () => {
+        delete document.documentElement.dataset.loading;
+      });
+    </script>
+
     <!-- Scroll reveal observer (Level 1 animations) -->
     <script>
       function initScrollObserver() {
