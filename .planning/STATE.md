@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lokale SEO-sider
-status: ready_to_plan
-last_updated: "2026-03-08T00:00:00.000Z"
+status: in_progress
+last_updated: "2026-03-08T02:35:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 ## Current Position
 
 Phase: 24 of 26 (Infrastruktur)
-Plan: — (not started)
-Status: Ready to plan
-Last activity: 2026-03-08 — Roadmap created for v1.5, 12/12 requirements mapped across 3 phases
+Plan: 1 of 1 complete
+Status: In progress — Phase 24 complete, ready for Phase 25
+Last activity: 2026-03-08 — Executed 24-01 infrastructure plan (locations.ts + steder routing)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
@@ -47,6 +47,11 @@ Progress: [░░░░░░░░░░] 0%
 ## Accumulated Context
 
 ### Decisions
+
+Key decisions from Phase 24-01 execution:
+- [24-01]: ACTIVE_TIER = 1 exported as constant — tier-promotion is a one-line change in locations.ts
+- [24-01]: details/summary HTML for FAQ (no animated accordion) — Phase 25 can enhance if needed
+- [24-01]: nearbyAreas stores slugs; display names resolved via cities.find() to avoid duplication
 
 Key decisions from v1.5 research to carry into planning:
 
@@ -82,5 +87,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Roadmap created for v1.5 — 3 phases (24–26), 12/12 requirements mapped. Ready to plan Phase 24.
+Stopped at: Completed 24-01-PLAN.md — locations.ts + steder/[location].astro. INFRA-01–04 complete. Ready for Phase 25.
 Resume file: None

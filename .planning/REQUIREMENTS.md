@@ -7,10 +7,10 @@
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: URL slug pattern is decided and documented before any page is built
-- [ ] **INFRA-02**: `locations.ts` exposes a TypeScript interface with `tier`, city data, `intro`, `faq`, `nearbyAreas`, and `industries` fields — designed to scale from V1 (8 cities) through V2 (50) to V3 (300+) without structural changes
-- [ ] **INFRA-03**: Dynamic `[location].astro` route generates one static page per `locations.ts` entry via `getStaticPaths()`
-- [ ] **INFRA-04**: Every city page has a canonical self-referencing URL tag and no conflicting `noindex`
+- [x] **INFRA-01**: URL slug pattern is decided and documented before any page is built
+- [x] **INFRA-02**: `locations.ts` exposes a TypeScript interface with `tier`, city data, `intro`, `faq`, `nearbyAreas`, and `industries` fields — designed to scale from V1 (8 cities) through V2 (50) to V3 (300+) without structural changes
+- [x] **INFRA-03**: Dynamic `[location].astro` route generates one static page per `locations.ts` entry via `getStaticPaths()`
+- [x] **INFRA-04**: Every city page has a canonical self-referencing URL tag and no conflicting `noindex`
 
 ### Content & Copy
 
@@ -66,10 +66,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 24 | Pending |
-| INFRA-02 | Phase 24 | Pending |
-| INFRA-03 | Phase 24 | Pending |
-| INFRA-04 | Phase 24 | Pending |
+| INFRA-01 | Phase 24 | Complete |
+| INFRA-02 | Phase 24 | Complete |
+| INFRA-03 | Phase 24 | Complete |
+| INFRA-04 | Phase 24 | Complete |
 | CONTENT-01 | Phase 25 | Pending |
 | CONTENT-02 | Phase 25 | Pending |
 | SEO-01 | Phase 25 | Pending |
