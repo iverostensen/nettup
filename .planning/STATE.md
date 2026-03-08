@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 Phase: 26 of 26 (SEO og intern lenking)
 Plan: 2 of 2 complete
 Status: Phase 26 complete — v1.5 milestone complete. All LINK requirements satisfied.
-Last activity: 2026-03-08 — Executed 26-02: sitemap verification gate — 8 /steder/* cities confirmed at priority 0.8. LINK-03 satisfied.
+Last activity: 2026-03-08 - Completed quick task 8: add custom 404 page
 
 Progress: [██████████] 100%
 
@@ -98,6 +98,7 @@ Key decisions from v1.5 research to carry into planning:
 | 5 | Iterate on price calculator UI/UX: animated check icons, hover depth, press states, connector transitions | 2026-03-06 | 2e21e48 | [5-iterate-on-price-calculator-ui-ux-layout](.planning/quick/5-iterate-on-price-calculator-ui-ux-layout/) |
 | 6 | Add AI-generated contextual suggestions to the chatbot | 2026-03-07 | 7f94743 | [5-add-ai-generated-contextual-suggestions-](.planning/quick/5-add-ai-generated-contextual-suggestions-/) |
 | 7 | Add chat-driven page navigation: NAVIGATION_TOOL, SSE tool event, confirm chip, sessionStorage persistence | 2026-03-08 | 6786b4e | [6-add-chat-driven-page-navigation-wire-cla](.planning/quick/6-add-chat-driven-page-navigation-wire-cla/) |
+| 8 | add custom 404 page | 2026-03-08 | debf31b | [7-add-custom-404-page](.planning/quick/7-add-custom-404-page/) |
 
 ## Session Continuity
 
