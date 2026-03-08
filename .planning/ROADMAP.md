@@ -68,7 +68,7 @@ Plans:
 |-------|-----------|--------|-----------|
 | 24. Infrastruktur | 1/1 | Complete    | 2026-03-08 |
 | 25. Tier 1 innhold | 3/3 | Complete    | 2026-03-08 |
-| 26. SEO og intern lenking | 2/2 | Complete   | 2026-03-08 |
+| 26. SEO og intern lenking | 2/2 | Complete    | 2026-03-08 |
 
 ---
 *Roadmap updated: 2026-03-08*
