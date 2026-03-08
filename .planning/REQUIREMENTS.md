@@ -14,13 +14,13 @@
 
 ### Content & Copy
 
-- [ ] **CONTENT-01**: 6–8 Tier 1 city entries exist with genuinely differentiated intro copy (not city-name-swapped boilerplate — ≥60% unique per page)
-- [ ] **CONTENT-02**: Every city page has a city-specific FAQ section (e.g., "Holder dere til i Drammen?")
+- [x] **CONTENT-01**: 6–8 Tier 1 city entries exist with genuinely differentiated intro copy (not city-name-swapped boilerplate — ≥60% unique per page)
+- [x] **CONTENT-02**: Every city page has a city-specific FAQ section (e.g., "Holder dere til i Drammen?")
 
 ### Schema & Metadata
 
 - [ ] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
-- [ ] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
+- [x] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
 
 ### Linking & Verification
 
@@ -70,10 +70,10 @@
 | INFRA-02 | Phase 24 | Complete |
 | INFRA-03 | Phase 24 | Complete |
 | INFRA-04 | Phase 24 | Complete |
-| CONTENT-01 | Phase 25 | Pending |
-| CONTENT-02 | Phase 25 | Pending |
+| CONTENT-01 | Phase 25 | Complete |
+| CONTENT-02 | Phase 25 | Complete |
 | SEO-01 | Phase 25 | Pending |
-| SEO-02 | Phase 25 | Pending |
+| SEO-02 | Phase 25 | Complete |
 | LINK-01 | Phase 25 | Pending |
 | LINK-02 | Phase 25 | Pending |
 | LINK-03 | Phase 26 | Pending |
