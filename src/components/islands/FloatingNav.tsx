@@ -47,10 +47,12 @@ export default function FloatingNav() {
   useEffect(() => {
     const updatePath = () => setCurrentPath(window.location.pathname);
     updatePath();
-    document.addEventListener('astro:page-load', updatePath);
+    // Use astro:after-swap so the active link reflects the new page
+    // before the VTA crossfade plays, not after it ends.
+    document.addEventListener('astro:after-swap', updatePath);
 
     return () => {
-      document.removeEventListener('astro:page-load', updatePath);
+      document.removeEventListener('astro:after-swap', updatePath);
     };
   }, []);
 

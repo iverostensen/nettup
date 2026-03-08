@@ -170,6 +170,14 @@ body {
   transition: none !important;
 }
 
+/* Disable smooth scroll during view transitions. When the browser resets scroll
+   position to 0 for the new page, scroll-behavior: smooth would animate that
+   reset — visibly sliding the old page content during the crossfade. Instant
+   scroll during the transition, smooth scroll resumes normally after. */
+html[data-astro-transition] {
+  scroll-behavior: auto !important;
+}
+
 /* Hide the mobile menu overlay during page transitions so the VTA screenshot
    captures the underlying page content, not the full-screen menu overlay.
    data-astro-transition is set on <html> before startViewTransition fires,
