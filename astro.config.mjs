@@ -19,6 +19,12 @@ export default defineConfig({
         if (item.url.startsWith('https://nettup.no/blogg/')) {
           return { ...item, changefreq: 'monthly', priority: 0.7 };
         }
+        if (item.url === 'https://nettup.no/steder/') {
+          return { ...item, changefreq: 'monthly', priority: 0.9 };
+        }
+        if (item.url.startsWith('https://nettup.no/steder/')) {
+          return { ...item, changefreq: 'monthly', priority: 0.8 };
+        }
         return item;
       },
     }),
