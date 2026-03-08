@@ -42,8 +42,19 @@ export default function MobileMenu({
       setCurrentPath(window.location.pathname);
       setIsOpen(false);
     };
+    // Hide the menu BEFORE Astro takes the view-transition snapshot.
+    // Without this, the browser snapshots the full-screen overlay and crossfades
+    // it with the new page, causing a flash of unstyled content on navigation.
+    const handleBeforePreparation = () => {
+      if (menuRef.current) menuRef.current.style.display = 'none';
+      document.body.style.overflow = '';
+    };
     document.addEventListener('astro:after-swap', handleAfterSwap);
-    return () => document.removeEventListener('astro:after-swap', handleAfterSwap);
+    document.addEventListener('astro:before-preparation', handleBeforePreparation);
+    return () => {
+      document.removeEventListener('astro:after-swap', handleAfterSwap);
+      document.removeEventListener('astro:before-preparation', handleBeforePreparation);
+    };
   }, []);
 
   // Focus close button when menu opens
@@ -178,6 +189,7 @@ export default function MobileMenu({
                 key={item.href}
                 href={item.href}
                 variants={itemVariants}
+                data-astro-prefetch
                 onClick={handleClose}
                 aria-current={isItemActive(item) ? 'page' : undefined}
                 className={cn(

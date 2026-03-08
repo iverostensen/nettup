@@ -45,6 +45,7 @@ const displayNavItems = navItems.map(item =>
       <a
         href={item.href}
         data-nav-href={item.href}
+        data-astro-prefetch
         aria-current={isActive(item.href) ? 'page' : undefined}
         class:list={[
           'rounded-full px-3 py-1.5 text-sm font-medium transition-colors duration-200',

@@ -8,6 +8,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://nettup.no',
   output: 'static',
+  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   adapter: vercel(),
   integrations: [
     react(),
