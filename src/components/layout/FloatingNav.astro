@@ -1,6 +1,6 @@
 ---
 import { services } from '@/config/services';
-import MobileMenu from '../islands/MobileMenu';
+import MobileMenu from './MobileMenu.astro';
 
 const navItems = [
   { name: 'Hjem', href: '/' },
@@ -77,7 +77,7 @@ const displayNavItems = navItems.map(item =>
   </button>
 </nav>
 
-<MobileMenu client:load navItems={navItems} initialCurrentPath={currentPath} />
+<MobileMenu navItems={navItems} currentPath={currentPath} />
 
 <script>
   let lastScrollY = 0;

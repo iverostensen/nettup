@@ -1,0 +1,183 @@
+---
+interface Props {
+  navItems: Array<{ name: string; href: string }>;
+  currentPath: string;
+}
+
+const { navItems, currentPath } = Astro.props;
+
+function isActive(href: string): boolean {
+  if (href === '/tjenester') return currentPath.startsWith('/tjenester');
+  return currentPath === href;
+}
+---
+
+<div
+  id="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigasjonsmeny"
+  aria-hidden="true"
+  class="mobile-menu fixed inset-0 z-50 flex flex-col bg-surface"
+>
+  <div class="flex items-center justify-between px-6 py-4">
+    <a href="/" id="mobile-menu-logo">
+      <img src="/images/nettup-logo.svg" alt="Nettup" width={58} height={24} class="h-6 w-auto" />
+    </a>
+    <button
+      id="mobile-menu-close"
+      class="flex h-10 w-10 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/10 hover:text-text"
+      aria-label="Lukk meny"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex flex-1 flex-col items-center justify-center gap-6">
+    {navItems.map((item, i) => (
+      <a
+        href={item.href}
+        data-nav-href={item.href}
+        data-astro-prefetch="load"
+        aria-current={isActive(item.href) ? 'page' : undefined}
+        class:list={[
+          'menu-item text-3xl font-semibold transition-colors duration-200',
+          isActive(item.href) ? 'text-brand' : 'text-text hover:text-brand',
+        ]}
+        style={`--item-index: ${i}`}
+      >
+        {item.name}
+      </a>
+    ))}
+
+    <a
+      href="/kontakt"
+      data-astro-prefetch="load"
+      class="menu-item mt-4 rounded-full bg-brand px-8 py-3 text-lg font-semibold text-surface transition-colors duration-200 hover:bg-brand-light"
+      style={`--item-index: ${navItems.length}`}
+    >
+      Ta kontakt
+    </a>
+  </nav>
+
+  <div class="h-20" />
+</div>
+
+<style>
+  .mobile-menu {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .mobile-menu.open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: calc(var(--item-index) * 50ms);
+  }
+
+  .mobile-menu.open .menu-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Exit: items snap immediately (delay only on entry) */
+  .mobile-menu:not(.open) .menu-item {
+    transition-delay: 0ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .menu-item {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const menu = document.getElementById('mobile-menu')!;
+  const closeBtn = document.getElementById('mobile-menu-close')!;
+  const hamburger = document.getElementById('hamburger-btn');
+
+  function openMenu() {
+    menu.classList.add('open');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    hamburger?.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => closeBtn.focus());
+  }
+
+  function closeMenu() {
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    hamburger?.setAttribute('aria-expanded', 'false');
+    hamburger?.focus();
+  }
+
+  closeBtn.addEventListener('click', closeMenu);
+  document.addEventListener('open-mobile-menu', openMenu);
+
+  document.getElementById('mobile-menu-logo')?.addEventListener('click', closeMenu);
+
+  menu.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  menu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeMenu(); return; }
+    if (e.key !== 'Tab') return;
+
+    const focusable = Array.from(
+      menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  document.addEventListener('astro:after-swap', () => {
+    const path = window.location.pathname;
+    menu.querySelectorAll<HTMLAnchorElement>('[data-nav-href]').forEach(link => {
+      const href = link.dataset.navHref!;
+      const active = href === '/tjenester' ? path.startsWith('/tjenester') : path === href;
+      link.classList.toggle('text-brand', active);
+      link.classList.toggle('text-text', !active);
+      link.classList.toggle('hover:text-brand', !active);
+      if (active) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+    // Restore display and reset state after swap
+    menu.style.display = '';
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    hamburger?.setAttribute('aria-expanded', 'false');
+  });
+
+  // Hide before view-transition snapshot to prevent overlay flash
+  document.addEventListener('astro:before-preparation', () => {
+    menu.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+</script>
