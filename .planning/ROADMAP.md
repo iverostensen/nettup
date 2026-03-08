@@ -83,6 +83,26 @@ Plans:
 - [ ] 27-03-PLAN.md — City CTA inline script + Plausible dashboard Goal registration
 
 ---
+
+### Phase 28: FloatingNav Rewrite
+
+**Goal:** Eliminate the SPA navigation flash permanently by converting FloatingNav from a React island (`client:only`) to a native Astro component with `transition:persist` — removing the React hydration gap and Astro's hidden iframe overhead that cause raw HTML to flash on every page navigation.
+
+**Requirements:** NAV-01, NAV-02, NAV-03
+
+**Plans:** 1 plan
+
+Plans:
+- [ ] 28-01-PLAN.md — Astro FloatingNav + MobileMenu custom event refactor + BaseLayout cleanup
+
+**Deliverables:**
+- `src/components/layout/FloatingNav.astro` — server-rendered nav with `transition:persist` and inline vanilla JS for scroll hide/show + active link update
+- `src/components/islands/MobileMenu.tsx` — kept as React island (complex animated overlay), used only on user tap
+- `BaseLayout.astro` — removes `client:only` FloatingNav import, removes `visibility:hidden` body hack, removes `astro:before-swap`/`astro:page-load` event listeners
+- `global.css` — removes `html[data-loading]` rule, retains `::view-transition` instant swap rules
+- Zero flash on SPA navigation verified
+
+---
 *Roadmap updated: 2026-03-08*
 *Milestone: v1.5 Lokale SEO-sider*
-*Coverage: 12/12 requirements mapped + 3 analytics requirements added*
+*Coverage: 12/12 requirements mapped + 3 analytics requirements added + 3 nav requirements added*
