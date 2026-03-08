@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { fade } from 'astro:transitions';
 import FloatingNav from '../components/islands/FloatingNav';
 import ChatWidget from '../components/islands/ChatWidget';
 import Footer from '../components/layout/Footer.astro';
@@ -196,7 +195,7 @@ const breadcrumbSchema = {
 
     <slot name="head" />
   </head>
-  <body class="min-h-screen bg-surface text-text antialiased" transition:animate={fade({ duration: '0.15s' })}>
+  <body class="min-h-screen bg-surface text-text antialiased">
     <FloatingNav client:load transition:persist />
     <ChatWidget client:load currentPage={Astro.url.pathname} transition:persist />
     <slot />
