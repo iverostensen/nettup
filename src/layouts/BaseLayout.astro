@@ -196,7 +196,7 @@ const breadcrumbSchema = {
     <slot name="head" />
   </head>
   <body class="min-h-screen bg-surface text-text antialiased">
-    <FloatingNav client:load />
+    <FloatingNav client:only="react" />
     <ChatWidget client:load currentPage={Astro.url.pathname} transition:persist />
     <slot />
     <Footer />
