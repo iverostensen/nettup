@@ -6,8 +6,6 @@ interface PlausibleOptions {
   interactive?: boolean;
 }
 
-declare global {
-  interface Window {
-    plausible?: (eventName: string, options?: PlausibleOptions) => void;
-  }
+interface Window {
+  plausible?: (eventName: string, options?: PlausibleOptions) => void;
 }
