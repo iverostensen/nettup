@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-08T13:06:00.261Z"
+last_updated: "2026-03-08T15:05:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 27: Plausible Analytics — plan 01 complete
+**Current focus:** Phase 27: Plausible Analytics — plan 02 complete
 
 ## Current Position
 
 Phase: 27 of 27 (Plausible Analytics)
-Plan: 1 of 1 complete
-Status: Phase 27 plan 01 complete — analytics foundation in place (script tags + analytics.ts).
-Last activity: 2026-03-08 - Completed 27-01: Plausible analytics foundation
+Plan: 2 of 2 complete
+Status: Phase 27 plan 02 complete — all 6 conversion events wired across ContactForm, ChatWidget, ResultStep.
+Last activity: 2026-03-08 - Completed 27-02: Conversion event wiring
 
 Progress: [██████████] 100%
 
@@ -54,6 +54,11 @@ Progress: [██████████] 100%
 - Phase 27 added: Plausible Analytics
 
 ### Decisions
+
+Key decisions from Phase 27-02 execution:
+- [27-02]: ContactForm uses context prop ('contact' | 'b2b') with default 'contact' to discriminate form origins without duplicating component
+- [27-02]: handleBubbleClick uses functional setState to guard trackChatbotOpened — fires only when prev === false (opening), never on close
+- [27-02]: trackWizardEstimateShown fires in useEffect with empty dep array — no StrictMode guard needed as production does not double-invoke
 
 Key decisions from Phase 27-01 execution:
 - [27-01]: env.d.ts uses direct `interface Window {}` (not `declare global {}`) — file has no imports/exports so it's a global script; the wrapper is only needed in module context
@@ -112,5 +117,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 27-01-PLAN.md — Plausible script tags in both layouts, analytics.ts with 7 tracker functions, env.d.ts Window type declaration.
+Stopped at: Completed 27-02-PLAN.md — 6 conversion events wired in ContactForm (B2B discrimination), ChatWidget (open + suggestion), ResultStep (estimate shown + CTA click).
 Resume file: None

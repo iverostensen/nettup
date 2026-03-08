@@ -75,7 +75,7 @@ Plans:
 **Goal:** Plausible Analytics script i begge layouts, thin analytics.ts wrapper med 7 typed tracker-funksjoner, og konverteringshendelser koblet til ContactForm, ChatWidget, wizard ResultStep og bysidens CTA.
 **Requirements:** ANAL-01, ANAL-02, ANAL-03
 **Depends on:** Phase 26
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 27-01-PLAN.md — Foundation: analytics.ts + env.d.ts + script tag i BaseLayout og LandingPageLayout
