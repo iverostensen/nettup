@@ -49,6 +49,12 @@ Plans:
 
 **Requirements:** LINK-03, LINK-04
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 26-01-PLAN.md — Dynamic areaServed in BaseLayout + sitemap priority rules + V2 JSDoc
+- [ ] 26-02-PLAN.md — Post-deploy sitemap verification checkpoint (LINK-03)
+
 **Deliverables:**
 - `Service` JSON-LD på alle bysider med `areaServed`
 - V2 promotion-kriterier dokumentert
