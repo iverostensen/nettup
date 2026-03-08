@@ -23,33 +23,34 @@ const { city } = Astro.props;
 ---
 
 <BaseLayout title={city.metaTitle} description={city.metaDescription}>
-  <script
-    is:inline
-    slot="head"
-    type="application/ld+json"
-    set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": `Nettside for bedrift i ${city.name}`,
-      "provider": { "@id": "https://nettup.no/#business" },
-      "areaServed": { "@type": "City", "name": city.name },
-      "url": `https://nettup.no/steder/${city.slug}`
-    })}
-  />
-  <script
-    is:inline
-    slot="head"
-    type="application/ld+json"
-    set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": city.faq.map((item) => ({
-        "@type": "Question",
-        "name": item.question,
-        "acceptedAnswer": { "@type": "Answer", "text": item.answer }
-      }))
-    })}
-  />
+  <Fragment slot="head">
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        '@id': `https://nettup.no/steder/${city.slug}#service`,
+        name: `Nettside for bedrift i ${city.name}`,
+        description: `Profesjonelle nettsider for bedrifter i ${city.name}. Moderne design, rask levering og god synlighet i Google. Vi jobber digitalt og leverer raskt.`,
+        provider: { '@id': 'https://nettup.no/#business' },
+        areaServed: [
+          { '@type': 'City', name: city.name },
+          ...cities
+            .filter((c) => city.nearbyAreas.includes(c.slug))
+            .map((c) => ({ '@type': 'City', name: c.name })),
+        ],
+        url: `https://nettup.no/steder/${city.slug}`,
+        potentialAction: {
+          '@type': 'ContactAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://nettup.no/kontakt',
+          },
+        },
+      })}
+    />
+  </Fragment>
   <main>
     <div class="container pt-8">
       <Breadcrumbs

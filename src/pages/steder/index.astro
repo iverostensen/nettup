@@ -1,0 +1,41 @@
+---
+import { cities, ACTIVE_TIER } from '@/config/locations';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const activeCities = cities.filter((c) => c.tier <= ACTIVE_TIER);
+---
+
+<BaseLayout
+  title="Nettside for bedrift på ditt område | Nettup"
+  description="Nettup lager nettsider for bedrifter i Oslo-regionen og Østlandsregionen. Velg din kommune og finn ut hva vi kan gjøre for deg."
+>
+  <main>
+    <Section>
+      <div class="max-w-3xl">
+        <h1 class="text-4xl font-bold md:text-5xl">Nettside for bedrift på ditt område</h1>
+        <p class="mt-4 text-lg text-text-muted">
+          Vi hjelper bedrifter i hele Oslo-regionen og Østlandsregionen. Velg din kommune nedenfor
+          for å se hva vi kan gjøre for deg.
+        </p>
+      </div>
+    </Section>
+
+    <Section background="raised">
+      <SectionHeader title="Steder vi dekker" />
+      <div class="mt-8 flex flex-wrap gap-3">
+        {
+          activeCities.map((city) => (
+            <a
+              href={`/steder/${city.slug}`}
+              class="rounded-full border border-brand/40 bg-brand/10 px-5 py-2 text-sm font-medium text-brand transition hover:border-brand hover:bg-brand/20"
+            >
+              {city.name}
+            </a>
+          ))
+        }
+      </div>
+    </Section>
+  </main>
+</BaseLayout>
