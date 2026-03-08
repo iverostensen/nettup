@@ -1,4 +1,7 @@
 ---
+import { cities, ACTIVE_TIER } from '@/config/locations';
+const tier1Cities = cities.filter((c) => c.tier <= ACTIVE_TIER);
+
 const currentYear = new Date().getFullYear();
 
 const navLinks = [
@@ -14,9 +17,9 @@ const navLinks = [
 <footer class="border-t border-white/5 bg-surface">
   <div class="container mx-auto px-4 py-12 md:py-16">
     <!-- Main footer content -->
-    <div class="grid grid-cols-2 gap-8 md:grid-cols-3">
+    <div class="grid grid-cols-2 gap-8 md:grid-cols-2 lg:grid-cols-4">
       <!-- Logo and tagline -->
-      <div class="col-span-2 space-y-4 md:col-span-1">
+      <div class="col-span-2 space-y-4 md:col-span-2 lg:col-span-1">
         <a href="/" class="inline-block transition-opacity hover:opacity-80">
           <img
             src="/images/nettup-logo.svg"
@@ -98,6 +101,23 @@ const navLinks = [
             Vi svarer innen 24 timer.
           </p>
         </div>
+      </div>
+
+      <!-- Områder vi dekker -->
+      <div>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">
+          Områder vi dekker
+        </h3>
+        <nav class="flex flex-col">
+          {tier1Cities.map((city) => (
+            <a
+              href={`/steder/${city.slug}`}
+              class="link-underline flex min-h-11 w-fit items-center text-sm text-text-muted transition-colors duration-200 hover:text-brand"
+            >
+              {city.name}
+            </a>
+          ))}
+        </nav>
       </div>
     </div>
 
