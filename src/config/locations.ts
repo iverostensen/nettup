@@ -41,7 +41,7 @@ export const cities: City[] = [
           'En profesjonell bedriftsnettside starter fra 15 000 kr. Prisen avhenger av omfang og funksjonalitet. Bruk vår priskalkulator på nettup.no/priskalkulator for et raskt estimat tilpasset dine behov.',
       },
     ],
-    nearbyAreas: ['baerum', 'lillestrom'],
+    nearbyAreas: ['baerum', 'sandvika', 'lillestrom'],
     metaTitle: 'Nettside for bedrift i Oslo | Nettup',
     metaDescription:
       'Nettup lager profesjonelle nettsider for bedrifter i Oslo. Moderne design, rask levering og god synlighet i Google. Få tilbud innen 24 timer.',
