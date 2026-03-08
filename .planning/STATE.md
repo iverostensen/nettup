@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.5 Lokale SEO-sider — Phase 26: SEO og intern lenking (complete)
+**Current focus:** Phase 27: Plausible Analytics — plan 01 complete
 
 ## Current Position
 
-Phase: 26 of 26 (SEO og intern lenking)
-Plan: 2 of 2 complete
-Status: Phase 26 complete — v1.5 milestone complete. All LINK requirements satisfied.
-Last activity: 2026-03-08 - Completed quick task 8: add custom 404 page
+Phase: 27 of 27 (Plausible Analytics)
+Plan: 1 of 1 complete
+Status: Phase 27 plan 01 complete — analytics foundation in place (script tags + analytics.ts).
+Last activity: 2026-03-08 - Completed 27-01: Plausible analytics foundation
 
 Progress: [██████████] 100%
 
@@ -54,6 +54,11 @@ Progress: [██████████] 100%
 - Phase 27 added: Plausible Analytics
 
 ### Decisions
+
+Key decisions from Phase 27-01 execution:
+- [27-01]: env.d.ts uses direct `interface Window {}` (not `declare global {}`) — file has no imports/exports so it's a global script; the wrapper is only needed in module context
+- [27-01]: No transition:persist on Plausible script — Plausible handles SPA routing natively via history.pushState
+- [27-01]: buildEstimateRange() lives in analytics.ts, not exported — wizard callsites pass raw min/max numbers, formatting is centralized
 
 Key decisions from Phase 26-01 execution:
 - [26-01]: areaServed computed from cities.filter(c => c.tier <= ACTIVE_TIER) — self-maintaining as new city configs are added
@@ -107,5 +112,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 26-02-PLAN.md — sitemap verification gate passed. 8 /steder/* cities confirmed at priority 0.8. LINK-03: SATISFIED. v1.5 milestone: COMPLETE.
+Stopped at: Completed 27-01-PLAN.md — Plausible script tags in both layouts, analytics.ts with 7 tracker functions, env.d.ts Window type declaration.
 Resume file: None
