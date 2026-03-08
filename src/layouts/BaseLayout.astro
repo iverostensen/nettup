@@ -221,19 +221,6 @@ const breadcrumbSchema = {
         });
       }
 
-      // On view-transition navigations: immediately reveal elements already in/above
-      // the viewport BEFORE the transition animation plays, so they aren't invisible
-      // during the body fade-in.
-      function preRevealViewportElements() {
-        document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight) {
-            el.classList.add('revealed');
-          }
-        });
-      }
-
-      document.addEventListener('astro:after-swap', preRevealViewportElements);
       document.addEventListener('astro:page-load', initScrollObserver);
     </script>
   </body>

@@ -160,46 +160,22 @@ body {
    REDUCED MOTION
    ============================================ */
 
-/* Controlled page transition via view-transition pseudo-elements.
-   Old page is NOT animated (stays at opacity:1). New page fades in on top.
-   This prevents the backdrop-blur on the persistent FloatingNav from blurring
-   through to the white browser background — which happened when both old and
-   new screenshots were simultaneously semi-transparent during a crossfade. */
-@keyframes vt-fade-in {
-  from { opacity: 0; }
-}
-
-::view-transition-old(root) {
+/* Page transitions: instant swap via ClientRouter (no animation).
+   Any opacity-based transition interacts badly with backdrop-blur on the
+   persistent FloatingNav — the blur bleeds through to the white browser
+   background whenever screenshots are semi-transparent. Instant swap avoids
+   this entirely while keeping SPA benefits (no full reload, persistent nav). */
+::view-transition-old(root),
+::view-transition-new(root) {
   animation: none;
 }
 
-::view-transition-new(root) {
-  animation: 250ms ease-out both vt-fade-in;
-}
-
-/* During page navigation, suppress reveal-on-scroll CSS transitions so elements
-   instantly jump to their revealed state. This prevents the compound-opacity
-   problem where (VTA fade-in opacity) × (element transition opacity) makes
-   content semi-transparent during the crossfade — the "seeing the HTML" flicker.
-   data-astro-transition is set on <html> for the full VTA duration and removed
-   on finished, so scroll-reveal transitions re-enable normally after navigation. */
-[data-astro-transition] .reveal-on-scroll {
-  transition: none !important;
-}
-
-/* Disable smooth scroll during view transitions. When the browser resets scroll
-   position to 0 for the new page, scroll-behavior: smooth would animate that
-   reset — visibly sliding the old page content during the crossfade. Instant
-   scroll during the transition, smooth scroll resumes normally after. */
+/* Prevent smooth scroll from animating the scroll-reset between pages. */
 html[data-astro-transition] {
   scroll-behavior: auto !important;
 }
 
-/* Hide the mobile menu overlay during page transitions so the VTA screenshot
-   captures the underlying page content, not the full-screen menu overlay.
-   data-astro-transition is set on <html> before startViewTransition fires,
-   which is before the screenshot is taken — so the menu is invisible in the
-   old-page snapshot and the crossfade is clean. */
+/* Hide mobile menu during swap so it doesn't flash on the new page. */
 [data-astro-transition] #mobile-menu {
   display: none !important;
 }
