@@ -108,7 +108,7 @@ const navLinks = [
         <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">
           Områder vi dekker
         </h3>
-        <nav class="flex flex-col">
+        <nav class="grid grid-cols-2 gap-x-4">
           {tier1Cities.map((city) => (
             <a
               href={`/steder/${city.slug}`}
