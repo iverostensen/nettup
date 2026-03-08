@@ -160,15 +160,26 @@ body {
    REDUCED MOTION
    ============================================ */
 
-/* Disable the browser's default ::view-transition crossfade on the root element.
-   ClientRouter still uses startViewTransition() for client-side routing and
-   transition:persist, but without this the browser runs its own 0.25s fade on
-   ::view-transition-new(root) — fading the entire new page in from opacity 0,
-   which makes everything look like "raw HTML" for a split second. Instant swap
-   is the correct behaviour here; named elements (persist) stay in place. */
-::view-transition-old(root),
+/* Controlled page transition via view-transition pseudo-elements.
+   Using ::view-transition-* instead of transition:animate on <body> avoids
+   the compound-opacity problem: the browser takes a flat screenshot of the
+   new page AFTER astro:after-swap (so reveal-on-scroll elements are already
+   pre-revealed), then fades that screenshot in as an image — no child opacity
+   stacking. Old page fades out quickly; new page fades in slightly slower. */
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
+::view-transition-old(root) {
+  animation: 80ms ease-in both vt-fade-out;
+}
+
 ::view-transition-new(root) {
-  animation: none;
+  animation: 120ms ease-out both vt-fade-in;
 }
 
 /* During page navigation, suppress reveal-on-scroll CSS transitions so elements
@@ -199,6 +210,11 @@ html[data-astro-transition] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
   .animate-fade-up,
   .animate-fade-in,
   .animate-scale-in,
