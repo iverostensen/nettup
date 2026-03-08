@@ -61,7 +61,7 @@ Plans:
 | Phase | Milestone | Status | Completed |
 |-------|-----------|--------|-----------|
 | 24. Infrastruktur | 1/1 | Complete    | 2026-03-08 |
-| 25. Tier 1 innhold | 3/3 | Complete   | 2026-03-08 |
+| 25. Tier 1 innhold | 3/3 | Complete    | 2026-03-08 |
 | 26. SEO og intern lenking | v1.5 | Not started | - |
 
 ---
