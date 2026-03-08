@@ -168,17 +168,21 @@ function isActive(href: string): boolean {
         link.removeAttribute('aria-current');
       }
     });
-    // Restore display and reset state after swap
-    menu.style.display = '';
+    // Re-enable transitions now that the swap is done
+    menu.style.transition = '';
     menu.classList.remove('open');
     menu.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     hamburger?.setAttribute('aria-expanded', 'false');
   });
 
-  // Hide before view-transition snapshot to prevent overlay flash
+  // Close the menu instantly before navigation starts so it is not
+  // captured in the view-transition snapshot while open.
   document.addEventListener('astro:before-preparation', () => {
-    menu.style.display = 'none';
+    menu.style.transition = 'none'; // bypass CSS transition for instant close
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    hamburger?.setAttribute('aria-expanded', 'false');
   });
 </script>

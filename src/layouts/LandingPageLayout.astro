@@ -10,7 +10,6 @@
  */
 import '../styles/global.css';
 import MinimalFooter from '../components/layout/MinimalFooter.astro';
-import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -101,8 +100,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       />
     </noscript>
 
-    <!-- Analytics -->
-    <Analytics />
     <!-- Privacy-friendly analytics by Plausible -->
     <script is:inline async src="https://plausible.io/js/pa-zcQI8BXyP16x3Uxv8veVj.js"></script>
     <script is:inline>

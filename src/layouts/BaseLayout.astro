@@ -4,7 +4,6 @@ import { ClientRouter } from 'astro:transitions';
 import FloatingNav from '../components/layout/FloatingNav.astro';
 import ChatWidget from '../components/islands/ChatWidget';
 import Footer from '../components/layout/Footer.astro';
-import Analytics from '@vercel/analytics/astro';
 import { cities, ACTIVE_TIER } from '@/config/locations';
 
 interface Props {
@@ -181,8 +180,6 @@ const breadcrumbSchema = {
     <link rel="preload" href="/images/nettup-logo.svg" as="image" type="image/svg+xml" />
 
 
-    <!-- Analytics -->
-    <Analytics />
     <!-- Privacy-friendly analytics by Plausible -->
     <script is:inline async src="https://plausible.io/js/pa-zcQI8BXyP16x3Uxv8veVj.js"></script>
     <script is:inline>
