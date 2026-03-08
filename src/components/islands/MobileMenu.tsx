@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -8,18 +8,16 @@ interface NavItem {
 }
 
 interface MobileMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
   navItems: NavItem[];
-  currentPath: string;
+  initialCurrentPath: string;
 }
 
 export default function MobileMenu({
-  isOpen,
-  onClose,
   navItems,
-  currentPath,
+  initialCurrentPath,
 }: MobileMenuProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState(initialCurrentPath);
   const shouldReduceMotion = useReducedMotion();
 
   function isItemActive(item: NavItem): boolean {
@@ -28,6 +26,25 @@ export default function MobileMenu({
   }
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClose = () => setIsOpen(false);
+
+  // Listen for open-mobile-menu custom event from hamburger button
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    document.addEventListener('open-mobile-menu', handleOpen);
+    return () => document.removeEventListener('open-mobile-menu', handleOpen);
+  }, []);
+
+  // Update current path and close menu on SPA navigation
+  useEffect(() => {
+    const handleAfterSwap = () => {
+      setCurrentPath(window.location.pathname);
+      setIsOpen(false);
+    };
+    document.addEventListener('astro:after-swap', handleAfterSwap);
+    return () => document.removeEventListener('astro:after-swap', handleAfterSwap);
+  }, []);
 
   // Focus close button when menu opens
   useEffect(() => {
@@ -56,6 +73,10 @@ export default function MobileMenu({
           firstElement?.focus();
         }
       }
+
+      if (e.key === 'Escape') {
+        handleClose();
+      }
     },
     [isOpen]
   );
@@ -64,6 +85,17 @@ export default function MobileMenu({
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  // Scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -107,7 +139,7 @@ export default function MobileMenu({
         >
           {/* Header with logo and close button */}
           <div className="flex items-center justify-between px-6 py-4">
-            <a href="/" onClick={onClose}>
+            <a href="/" onClick={handleClose}>
               <img
                 src="/images/nettup-logo.svg"
                 alt="Nettup"
@@ -118,7 +150,7 @@ export default function MobileMenu({
             </a>
             <button
               ref={closeButtonRef}
-              onClick={onClose}
+              onClick={handleClose}
               className="flex h-10 w-10 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/10 hover:text-text"
               aria-label="Lukk meny"
             >
@@ -146,7 +178,7 @@ export default function MobileMenu({
                 key={item.href}
                 href={item.href}
                 variants={itemVariants}
-                onClick={onClose}
+                onClick={handleClose}
                 aria-current={isItemActive(item) ? 'page' : undefined}
                 className={cn(
                   'text-3xl font-semibold transition-colors duration-200',
@@ -163,7 +195,7 @@ export default function MobileMenu({
             <motion.a
               href="/kontakt"
               variants={itemVariants}
-              onClick={onClose}
+              onClick={handleClose}
               className="mt-4 rounded-full bg-brand px-8 py-3 text-lg font-semibold text-surface transition-colors duration-200 hover:bg-brand-light"
             >
               Ta kontakt
