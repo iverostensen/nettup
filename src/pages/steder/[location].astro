@@ -4,7 +4,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import Section from '@/components/ui/Section.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
-import Button from '@/components/ui/Button.astro';
 
 export function getStaticPaths() {
   return cities
@@ -122,9 +121,30 @@ const { city } = Astro.props;
           Ta kontakt for en uforpliktende prat om hva vi kan gjøre for din bedrift i {city.name}.
         </p>
         <div class="mt-8">
-          <Button href="/kontakt" size="lg">Ta kontakt</Button>
+          <a
+            href="/kontakt"
+            id="city-cta"
+            data-city={city.slug}
+            class="inline-flex items-center justify-center rounded-md bg-brand px-6 py-3 text-base font-semibold text-surface transition-colors hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-surface"
+          >
+            Ta kontakt
+          </a>
         </div>
       </div>
     </Section>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('city-cta');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var city = btn.getAttribute('data-city');
+        if (city && window.plausible) {
+          window.plausible('City CTA Clicked', { props: { city: city } });
+        }
+      });
+    }
+  })();
+</script>
