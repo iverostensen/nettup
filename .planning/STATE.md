@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lokale SEO-sider
-status: defining_requirements
+status: ready_to_plan
 last_updated: "2026-03-08T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -15,17 +15,19 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-07 after v1.4 milestone start)
+See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.5 Lokale SEO-sider — Defining requirements
+**Current focus:** v1.5 Lokale SEO-sider — Phase 24: Infrastruktur
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-08 — Milestone v1.5 started
+Phase: 24 of 26 (Infrastruktur)
+Plan: — (not started)
+Status: Ready to plan
+Last activity: 2026-03-08 — Roadmap created for v1.5, 12/12 requirements mapped across 3 phases
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -34,48 +36,25 @@ Last activity: 2026-03-08 — Milestone v1.5 started
 - Average duration: ~7 min
 - Total execution time: ~35 min
 
-**By Phase (v1.3):**
+**By Phase (v1.3–v1.4):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
 | 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
 | 19. GitHub Actions | 1/1 | 15 min | 15 min |
-| Phase 20 P01 | 1 | 1 tasks | 1 files |
-| Phase 20-innholdsforutsetninger P03 | 10 | 3 tasks | 9 files |
-| Phase 21-konfig-og-indeks P01 | 3 | 2 tasks | 3 files |
-| Phase 21-konfig-og-indeks P02 | 15 | 3 tasks | 4 files |
-| Phase 22-kasusstudie-sider P01 | 3 | 2 tasks | 2 files |
-| Phase 22-kasusstudie-sider P02 | 10 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
 ### Decisions
 
-Key decisions from v1.4 research to carry into planning:
+Key decisions from v1.5 research to carry into planning:
 
-- [v1.4 research]: Screenshots must be committed BEFORE any Astro `<Image>` imports on case study pages — hard build-time dependency (ENOENT on missing files)
-- [v1.4 research]: `caseStudySection` flag removal must be atomic with `ProjectShowcase.astro` removal — silent blank page otherwise
-- [v1.4 research]: Use `"creator": {"@id": "https://nettup.no/#business"}` in CreativeWork JSON-LD — never re-declare Organization fields inline
-- [v1.4 research]: `ProjectTeaser.astro` on homepage is hardcoded — must update to use `project.slug` in Phase 21
-- [v1.4 research]: BreadcrumbList shows raw slugs if `pageLabels` not updated — fix in Phase 21 before pages go live
-- [v1.4 research]: iGive Lighthouse scores in existing `Results.astro` are hardcoded "95" — must remeasure against live `salg.igive.no` before writing metrics section
-- [Phase 20]: Filenames locked before capture: igive-hero.png, igive-features.png, blom-hero.png, blom-features.png (1600x900)
-- [Phase 20]: Lighthouse scores left as pending dashes — measured after screenshots, never fabricated
-- [Phase 20-02]: iGive (salg.igive.no) measured 96/96/100/100 (Perf/A11y/BP/SEO) on 2026-03-07
-- [Phase 20-02]: Blom Company (blomcompany.com) measured 99/96/100/100 — blomcompany.com DNS resolved, no fallback needed
-- [Phase 20-innholdsforutsetninger]: salg.igive.no.png renamed to igive-hero.png — four import sites updated atomically (Hero.astro was a missed site not in plan)
-- [Phase 20-innholdsforutsetninger]: blomcompany.com DNS resolved, no fallback URL needed
-- [Phase 21-konfig-og-indeks]: comingSoon field retained in Project interface — harmless and may be useful for future projects
-- [Phase 21-konfig-og-indeks]: Blom Company url set to staging (blom-no.vercel.app) — update to live domain when available
-- [Phase 21-konfig-og-indeks]: Cards render as <a> elements via Card as='a' with group class for hover effects on children
-- [Phase 21-konfig-og-indeks]: reveal-on-scroll applied per card with delay-1 and delay-2 for staggered animation
-- [Phase 22-kasusstudie-sider]: Inline testimonial on project entry — template reads project.testimonial directly, no separate array lookup needed
-- [Phase 22-kasusstudie-sider]: summary field added as GEO-optimized opening paragraph (distinct from short description field)
-- [Phase 22-02]: Breadcrumbs requires explicit items prop — plan assumed auto-reading from pageLabels but component requires items array passed explicitly
-- [Phase 22-02]: LinkWithArrow does not support target/rel props — inline anchor used for CTA external links needing target=_blank
-- [Phase 22-02]: Blom Company URL confirmed as blomcompany.com (live domain) — staging URL blom-no.vercel.app no longer needed
-- [Phase 22-02]: testimonials.ts Blom Company entry removed — homepage shows only iGive testimonial
+- [v1.5 research]: URL slugs must be ASCII-only (`lillestrom`, `baerum`) — display names use Norwegian characters; establish in Phase 24 before any content is written
+- [v1.5 research]: Use `Service` JSON-LD with `"provider": {"@id": "https://nettup.no/#business"}` — never two `LocalBusiness` blocks (Knowledge Graph entity dilution risk)
+- [v1.5 research]: Footer "Omrader vi dekker" and city pages must ship in the same deploy — orphaned pages at any point in their index lifecycle treated as doorway pages
+- [v1.5 research]: V2 expansion gated on V1 indexing confirmation — LINK-04 must be written before V2 starts; not doing this is the documented path to site-level suppression
+- [v1.5 research]: `@astrojs/sitemap` has known regression in hybrid mode (issue #7015) — verify sitemap coverage immediately after first deploy; have custom endpoint ready as fallback
 
 ### Pending Todos
 
@@ -103,5 +82,5 @@ Key decisions from v1.4 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed quick task 7 — chat-driven navigation with NAVIGATION_TOOL, SSE tool events, confirm chip, and sessionStorage persistence.
+Stopped at: Roadmap created for v1.5 — 3 phases (24–26), 12/12 requirements mapped. Ready to plan Phase 24.
 Resume file: None
