@@ -23,6 +23,7 @@ interface FormData {
 
 import { pakker } from '@/config/pricing';
 import { services } from '@/config/services';
+import { trackContactFormSubmit, trackB2BFormSubmit } from '@/lib/analytics';
 
 const FORMSPREE_ID = 'xnjnzybj';
 
@@ -38,7 +39,11 @@ const PAKKE_INFO = Object.fromEntries(
   ])
 );
 
-export default function ContactForm() {
+interface Props {
+  context?: 'contact' | 'b2b';
+}
+
+export default function ContactForm({ context = 'contact' }: Props = {}) {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [formData, setFormData] = useState<FormData>({
     navn: '',
@@ -148,6 +153,12 @@ export default function ContactForm() {
           window.gtag('event', 'conversion', {
             send_to: 'AW-17409050017/EvwaCNm05eFbEKGLpO1A',
           });
+        }
+
+        if (context === 'b2b') {
+          trackB2BFormSubmit();
+        } else {
+          trackContactFormSubmit();
         }
       } else {
         setStatus('error');
