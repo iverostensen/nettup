@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { type LineItem } from '@/config/pricing-config';
 import { calculateEstimate } from '@/lib/calculate-estimate';
 import { fadeUp, staggerContainer, springs } from '@/lib/animation';
 import type { WizardState } from '../wizard-types';
+import { trackWizardEstimateShown, trackWizardCtaClicked } from '@/lib/analytics';
 
 interface ResultStepProps {
   state: WizardState;
@@ -64,6 +65,14 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
       items: estimate.lineItems.filter((item) => item.category === cat),
     }))
     .filter((group) => group.items.length > 0);
+
+  useEffect(() => {
+    trackWizardEstimateShown(
+      estimate.discounted.min,
+      estimate.discounted.max,
+      estimate.serviceType
+    );
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps — intentionally fire once on mount
 
   const contactParams = new URLSearchParams({
     tjeneste: estimate.serviceType,
@@ -156,6 +165,11 @@ export function ResultStep({ state, onReset }: ResultStepProps) {
         <motion.div variants={fadeUp} transition={springs.gentle} className="flex flex-col gap-3 pt-1">
           <a
             href={contactHref}
+            onClick={() => trackWizardCtaClicked(
+              estimate.discounted.min,
+              estimate.discounted.max,
+              estimate.serviceType
+            )}
             className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-surface transition-colors hover:bg-brand-light sm:self-start"
           >
             Kontakt oss for tilbud
