@@ -90,7 +90,7 @@ Plans:
 
 **Requirements:** NAV-01, NAV-02, NAV-03
 
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 28-01-PLAN.md — Astro FloatingNav + MobileMenu custom event refactor + BaseLayout cleanup
