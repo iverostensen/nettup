@@ -191,6 +191,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
   const [leadFormError, setLeadFormError] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<{ path: string; label: string } | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -205,6 +206,30 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     assistantResponseCount >= LEAD_PROMPT_AFTER_RESPONSES &&
     !showLeadForm &&
     !leadSubmitted;
+
+  // Restore chat history from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('nettup_chat');
+      if (stored) {
+        const parsed = JSON.parse(stored) as { messages?: ChatMessage[] };
+        if (Array.isArray(parsed.messages) && parsed.messages.length > 0) {
+          setMessages(parsed.messages);
+        }
+      }
+    } catch {
+      // Corrupt storage — fall back to default state silently
+    }
+  }, []);
+
+  // Persist chat history to sessionStorage on every messages change
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('nettup_chat', JSON.stringify({ messages }));
+    } catch {
+      // Storage quota or unavailable — fail silently
+    }
+  }, [messages]);
 
   // Teaser tooltip timer
   useEffect(() => {
@@ -312,6 +337,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
     setMessages(updatedMessages);
     setInput('');
     setSuggestions([]);
+    setPendingNavigation(null);
     setIsStreaming(true);
 
     // Add empty assistant placeholder
@@ -373,7 +399,7 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
           }
 
           try {
-            const parsed = JSON.parse(data) as { text?: string; error?: string };
+            const parsed = JSON.parse(data) as { text?: string; error?: string; tool?: string; path?: string; label?: string };
             if (parsed.error) {
               setMessages((prev) => {
                 const updated = [...prev];
@@ -398,6 +424,9 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                 }
                 return updated;
               });
+            }
+            if (parsed.tool === 'navigate_to_page' && parsed.path && parsed.label) {
+              setPendingNavigation({ path: parsed.path, label: parsed.label });
             }
           } catch {
             // Skip unparseable lines
@@ -626,6 +655,23 @@ export default function ChatWidget({ currentPage }: ChatWidgetProps) {
                   >
                     Eller gå til kontaktskjemaet
                   </a>
+                </div>
+              )}
+
+              {pendingNavigation && !isStreaming && (
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    onClick={() => { window.location.href = pendingNavigation.path; }}
+                    className="rounded-full border border-brand/40 bg-brand/10 px-4 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand/20"
+                  >
+                    {pendingNavigation.label} →
+                  </button>
+                  <button
+                    onClick={() => setPendingNavigation(null)}
+                    className="text-xs text-text-muted hover:text-text transition-colors"
+                  >
+                    Ikke nå
+                  </button>
                 </div>
               )}
 
