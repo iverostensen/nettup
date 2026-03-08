@@ -226,9 +226,9 @@ const breadcrumbSchema = {
       // if elements are opacity:0 in the snapshot, the old page bleeds through
       // the transparent holes. Pre-revealing eliminates all transparent holes.
       document.addEventListener('astro:after-preparation', (e) => {
-        (e as any).newDocument
+        (e as Event & { newDocument: Document }).newDocument
           .querySelectorAll('.reveal-on-scroll')
-          .forEach((el: Element) => el.classList.add('revealed'));
+          .forEach((el) => el.classList.add('revealed'));
       });
 
       document.addEventListener('astro:page-load', initScrollObserver);
