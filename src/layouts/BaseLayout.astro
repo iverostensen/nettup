@@ -221,6 +221,20 @@ const breadcrumbSchema = {
         });
       }
 
+      // On SPA navigation: synchronously reveal above-fold elements BEFORE the
+      // view-transition overlay lifts. astro:after-swap fires inside the
+      // startViewTransition callback — the overlay is still up — so by the time
+      // the user sees the new page, opacity:0 elements are already revealed.
+      document.addEventListener('astro:after-swap', () => {
+        document.querySelectorAll<HTMLElement>('.reveal-on-scroll:not(.revealed)').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.style.setProperty('transition', 'none');
+            el.classList.add('revealed');
+            requestAnimationFrame(() => el.style.removeProperty('transition'));
+          }
+        });
+      });
+
       document.addEventListener('astro:page-load', initScrollObserver);
     </script>
   </body>
