@@ -16,8 +16,7 @@ Fullføre JSON-LD-dekning (LocalBusiness areaServed + per-by LocalBusiness), sit
 ### LocalBusiness JSON-LD
 - Oppdater `areaServed`-arrayen i BaseLayout.astro til å inkludere alle aktive tier-1 byer dynamisk
 - Importer `cities` og `ACTIVE_TIER` fra `locations.ts` — filtrer på tier, slik at nye byer automatisk inkluderes uten manuell oppdatering
-- I tillegg: legg til en per-by `LocalBusiness`-blokk på hver byside (`[location].astro`) med byspesifikk kontekst
-- Eksisterende `Service` + `FAQPage` JSON-LD per byside beholdes
+- Eksisterende `Service` + `FAQPage` JSON-LD per byside beholdes — ingen per-by LocalBusiness (unødvendig for v1)
 
 ### Sitemap-prioritet
 - `/steder/` oversiktsside: `priority: 0.9`, `changefreq: 'monthly'`
@@ -30,9 +29,8 @@ Fullføre JSON-LD-dekning (LocalBusiness areaServed + per-by LocalBusiness), sit
 - Dokumenteres som JSDoc-kommentar direkte i `locations.ts` over `ACTIVE_TIER`-konstanten
 
 ### Sitemap-verifisering (LINK-03)
-- CI-test: eget step i eksisterende GitHub Actions workflow (ikke ny fil)
-- Etter `npm run build`: grep distmappen for sitemap og sjekk at alle `/steder/*`-URLer er til stede
-- Testen feiler bygget hvis en aktiv byside mangler fra sitemap
+- Manuell engangssjekk etter første deploy: `curl https://nettup.no/sitemap-index.xml` og bekreft at alle `/steder/*`-URLer er til stede
+- Resultatet dokumenteres (screenshot eller notat) — ingen CI-automatisering nødvendig for v1
 
 </decisions>
 
@@ -59,9 +57,7 @@ Fullføre JSON-LD-dekning (LocalBusiness areaServed + per-by LocalBusiness), sit
 
 ### Integration Points
 - `src/layouts/BaseLayout.astro`: oppdater `LocalBusiness.areaServed`
-- `src/pages/steder/[location].astro`: legg til per-by LocalBusiness-blokk
 - `astro.config.mjs`: legg til sitemap-regler for /steder/
-- `.github/workflows/` (eksisterende CI): legg til sitemap-grep-steg
 
 </code_context>
 
