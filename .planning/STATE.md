@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-08T01:33:26.519Z"
+last_updated: "2026-03-08T02:55:00.000Z"
 progress:
   total_phases: 1
   completed_phases: 1
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.5 Lokale SEO-sider — Phase 24: Infrastruktur
+**Current focus:** v1.5 Lokale SEO-sider — Phase 25: Tier 1 innhold
 
 ## Current Position
 
-Phase: 24 of 26 (Infrastruktur)
-Plan: 1 of 1 complete
-Status: In progress — Phase 24 complete, ready for Phase 25
-Last activity: 2026-03-08 — Executed 24-01 infrastructure plan (locations.ts + steder routing)
+Phase: 25 of 26 (Tier 1 innhold)
+Plan: 1 of 3 complete
+Status: In progress — 25-01 content complete, ready for 25-02 JSON-LD
+Last activity: 2026-03-08 — Executed 25-01 city content plan (8 Tier 1 city entries in locations.ts)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -47,6 +47,11 @@ Progress: [██░░░░░░░░] 20%
 ## Accumulated Context
 
 ### Decisions
+
+Key decisions from Phase 25-01 execution:
+- [25-01]: City intro copy differentiated via local neighborhood references — not generic bynavn-swap pattern
+- [25-01]: FAQ price answers use plain-text priskalkulator URL — compatible with both template rendering and FAQPage JSON-LD (plan 25-02)
+- [25-01]: metaDescription varied value props per city to avoid duplicate meta content across 8 pages
 
 Key decisions from Phase 24-01 execution:
 - [24-01]: ACTIVE_TIER = 1 exported as constant — tier-promotion is a one-line change in locations.ts
@@ -87,5 +92,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 24-01-PLAN.md — locations.ts + steder/[location].astro. INFRA-01–04 complete. Ready for Phase 25.
+Stopped at: Completed 25-01-PLAN.md — 8 Tier 1 city entries in locations.ts. CONTENT-01, CONTENT-02, SEO-02 complete. Ready for 25-02 JSON-LD.
 Resume file: None
