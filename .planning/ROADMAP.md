@@ -70,7 +70,19 @@ Plans:
 | 25. Tier 1 innhold | 3/3 | Complete    | 2026-03-08 |
 | 26. SEO og intern lenking | 2/2 | Complete    | 2026-03-08 |
 
+### Phase 27: Plausible Analytics
+
+**Goal:** Plausible Analytics script i begge layouts, thin analytics.ts wrapper med 7 typed tracker-funksjoner, og konverteringshendelser koblet til ContactForm, ChatWidget, wizard ResultStep og bysidens CTA.
+**Requirements:** ANAL-01, ANAL-02, ANAL-03
+**Depends on:** Phase 26
+**Plans:** 3 plans
+
+Plans:
+- [ ] 27-01-PLAN.md — Foundation: analytics.ts + env.d.ts + script tag i BaseLayout og LandingPageLayout
+- [ ] 27-02-PLAN.md — React island events: ContactForm (+ B2B context), ChatWidget, ResultStep
+- [ ] 27-03-PLAN.md — City CTA inline script + Plausible dashboard Goal registration
+
 ---
 *Roadmap updated: 2026-03-08*
 *Milestone: v1.5 Lokale SEO-sider*
-*Coverage: 12/12 requirements mapped*
+*Coverage: 12/12 requirements mapped + 3 analytics requirements added*
