@@ -161,21 +161,16 @@ body {
    ============================================ */
 
 /* Controlled page transition via view-transition pseudo-elements.
-   Using ::view-transition-* instead of transition:animate on <body> avoids
-   the compound-opacity problem: the browser takes a flat screenshot of the
-   new page AFTER astro:after-swap (so reveal-on-scroll elements are already
-   pre-revealed), then fades that screenshot in as an image — no child opacity
-   stacking. Old page fades out quickly; new page fades in slightly slower. */
-@keyframes vt-fade-out {
-  to { opacity: 0; }
-}
-
+   Old page is NOT animated (stays at opacity:1). New page fades in on top.
+   This prevents the backdrop-blur on the persistent FloatingNav from blurring
+   through to the white browser background — which happened when both old and
+   new screenshots were simultaneously semi-transparent during a crossfade. */
 @keyframes vt-fade-in {
   from { opacity: 0; }
 }
 
 ::view-transition-old(root) {
-  animation: 150ms ease-in both vt-fade-out;
+  animation: none;
 }
 
 ::view-transition-new(root) {
