@@ -45,6 +45,13 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ SEO/GEO-optimalisert artikkelmal — Article + FAQPage + BreadcrumbList JSON-LD, seoTitle vs title-mønster — v1.3
 - ✓ Redaksjonelle temakonfigurasjoner — 4 clusters (priser, teknologi, smb-tips, lokal-seo) i config.ts — v1.3
 
+- ✓ Dedikerte kasusstudie-sider for iGive og Blom Company via dynamisk `/prosjekter/[slug].astro` — v1.4
+- ✓ Utvidet `projects.ts` med slug, techStack, metrics, gallery, testimonialId, metaTitle, metaDescription — v1.4
+- ✓ `/prosjekter` redesignet som kortnettverk med lenker til kasusstudie-sider — v1.4
+- ✓ `CreativeWork` + `BreadcrumbList` JSON-LD på begge kasusstudie-sider, sitemap-dekning — v1.4
+- ✓ GEO-optimalisert norsk kopitekst med verifiserte Lighthouse-scorer og betongtall — v1.4
+- ✓ Chat-drevet sidenavigasjon — chatbot kan foreslå sidebytte via navigationChip i chat-tråden — v1.4
+
 ## Current Milestone: v1.5 Lokale SEO-sider
 
 **Goal:** Build a scalable local SEO landing page system targeting Norwegian city search queries — architected from day one to expand from V1 (6–8 hand-crafted Tier 1 cities) through V2 (30–50 AI-assisted towns) to V3 (full Norway coverage) without structural changes.
@@ -86,9 +93,9 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Context
 
-**Current state (post v1.3):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver, og nå fullautomatisert SEO-blogg som publiserer norske fagartikler ukentlig via GitHub Actions + Claude API.
+**Current state (post v1.4):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver med chat-drevet navigasjon, fullautomatisert SEO-blogg (6 artikler publisert), og skalerbart porteføljesystem med dedikerte kasusstudie-sider for iGive og Blom Company.
 - **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions
-- **LOC:** ~10,643 TypeScript/TSX/Astro
+- **LOC:** ~9,900 TypeScript/TSX/Astro (22 React islands, 14 ruter)
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
 - **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi

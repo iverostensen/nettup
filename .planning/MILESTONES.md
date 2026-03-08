@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.4 Portefølje 2.0 (Shipped: 2026-03-08)
+
+**Phases completed:** 4 phases (20–23)
+**Timeline:** 2026-03-07 → 2026-03-08 (1 day)
+**LOC:** ~9,900 TypeScript/TSX/Astro
+**Git range:** `f2efba3` (docs(phase-20)) → `3f4121b` (feat(seo))
+**Files changed:** ~28 files, 2,984 insertions, 301 deletions
+
+**Delivered:** `/prosjekter` transformed from single-page inline showcase into a scalable multi-page portfolio system with slug-based dynamic case study pages, GEO-optimized Norwegian copy, and full structured data coverage.
+
+**Key accomplishments:**
+1. Extended `projects.ts` interface — `slug`, `techStack[]`, `metrics{}`, `gallery[]`, `testimonialId`, `metaTitle`, `metaDescription`, `publishedAt`
+2. `/prosjekter` redesigned as card grid linking to `/prosjekter/[slug]` — both projects as equal peers
+3. Dynamic `[slug].astro` with 10-section case study layout (summary, challenge, solution, tech stack, features, metrics, testimonial, live link)
+4. Full case studies for iGive and Blom Company with verified Lighthouse scores and GEO-optimized opening paragraphs
+5. `CreativeWork` + `BreadcrumbList` JSON-LD on both pages; sitemap coverage confirmed
+6. Chat-driven navigation (quick task): chatbot can suggest page changes via navigationChip in chat thread with sessionStorage persistence
+
+---
+
 ## v1.3 Automatisk Blogg (Shipped: 2026-03-07)
 
 **Phases completed:** 3 phases (17–19), 5 plans

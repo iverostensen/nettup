@@ -182,6 +182,46 @@
 
 ---
 
+## Milestone: v1.4 — Portefølje 2.0
+
+**Shipped:** 2026-03-08
+**Phases:** 4 | **Plans:** TBD | **Timeline:** 1 day (2026-03-07 → 2026-03-08)
+
+### What Was Built
+- Utvidet `projects.ts` med `slug`, `techStack[]`, `metrics{}`, `gallery[]`, `testimonialId`, `metaTitle`, `metaDescription`, `publishedAt`
+- `/prosjekter` redesignet fra inline showcase til kortnettverk med lenker til slug-baserte URLs
+- Dynamisk `/prosjekter/[slug].astro` med 10-seksjons kasustudie-layout (sammendrag, utfordring, løsning, teknologi, leveranser, metrics, testimonial, live-lenke)
+- Fullverdig kasusstudie for iGive og Blom Company med GEO-optimalisert norsk kopitekst og verifiserte Lighthouse-scorer
+- `CreativeWork` + `BreadcrumbList` JSON-LD på begge sider, sitemap-dekning bekreftet
+- Chat-drevet sidenavigasjon: chatbot kan foreslå sidebytte via navigationChip i chat-tråden (quick task, levert i v1.4-perioden)
+
+### What Worked
+- **Config-driven data skalerte til portefølje:** Samme mønster fra services.ts og projects.ts — ett objekt per prosjekt gir full kasusstudie-side uten nye infrastrukturendringer
+- **Dynamisk rute eliminerte kodeduplisering:** `[slug].astro` med `getStaticPaths()` betyr at Blom Company-siden var gratis etter iGive var satt opp
+- **GEO-optimalisert kopitekst med betongtall:** Åpningsavsnitt skrevet slik at en AI-assistent kan sitere det uten kontekst — verifiserte Lighthouse-scorer gir troverdighet
+- **Chat-navigasjon som quick task:** NavigationChip-funksjonen ble levert raskere som quick task enn som formell fase — riktig vurdering gitt scope
+
+### What Was Inefficient
+- Fase-planene ble ikke formelt dokumentert (alle faser merket "Plans: TBD" og fullførte uten PLAN.md-filer) — fungerte, men ingen sporbar plan å referere til i ettertid
+- ROADMAP.md-statusen ble ikke oppdatert løpende — alle faser sto som "Not started" selv etter fullføring
+
+### Patterns Established
+- `projects.ts` med full kasusstudie-interface — slug, techStack, metrics, gallery, testimonialId, metaTitle, metaDescription
+- 10-seksjons kasusstudie-layout som gjenbrukbar mal for fremtidige prosjekter
+- `CreativeWork` JSON-LD med `creator: { "@id": "https://nettup.no/#business" }` — ikke re-deklarer Organization-felt inline
+- NavigationChip-mønster for chatbot-rute-forslag: tool use → chip i chat → sessionStorage-persistering
+
+### Key Lessons
+1. **Oppdater ROADMAP-status løpende.** Alle fire faser ble fullført uten at progress-tabellen ble oppdatert — skapt forvirring ved neste sesjon. Merk "Complete" samme dag som fasen leveres.
+2. **Skriv PLAN.md selv for quick-turnaround faser.** "Plans: TBD" gir ingen sporbarhet. Selv en 10-linjers plan er bedre enn ingenting for fremtidig referanse.
+3. **Dynamiske ruter betaler seg umiddelbart.** iGive-kasusstudie-arbeidet "betalte" for Blom Company nesten gratis — config-first + dynamisk rute er riktig arkitektur for portefølje-innhold.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6, quality profile
+- Levert raskt (~1 dag) takket være veletablert config-infrastruktur fra v1.0–v1.3
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -192,6 +232,7 @@
 | v1.1 | 7 | 18 | 3 days | Config-driven service catalog, AI integration, hybrid hosting |
 | v1.2 | 5 | 7 | ~10 min | TDD-first engine, wizard reducer pattern, urgent phase insert |
 | v1.3 | 3 | 5 | 2 days | Automated blog pipeline, two-call Claude pattern, exit-0 CI discipline |
+| v1.4 | 4 | - | 1 day | Dynamic portfolio with slug-based case studies, GEO-optimized copy, chat navigation |
 
 ### Top Lessons (Verified Across Milestones)
 
