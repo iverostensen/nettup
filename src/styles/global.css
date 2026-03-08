@@ -160,6 +160,17 @@ body {
    REDUCED MOTION
    ============================================ */
 
+/* Disable the browser's default ::view-transition crossfade on the root element.
+   ClientRouter still uses startViewTransition() for client-side routing and
+   transition:persist, but without this the browser runs its own 0.25s fade on
+   ::view-transition-new(root) — fading the entire new page in from opacity 0,
+   which makes everything look like "raw HTML" for a split second. Instant swap
+   is the correct behaviour here; named elements (persist) stay in place. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
 /* During page navigation, suppress reveal-on-scroll CSS transitions so elements
    instantly jump to their revealed state. This prevents the compound-opacity
    problem where (VTA fade-in opacity) × (element transition opacity) makes
