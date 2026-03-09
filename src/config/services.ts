@@ -27,7 +27,7 @@ export const services: Service[] = [
     minPrice: 8000,
     maxPrice: 0,
     ctaParam: 'nettside',
-    description: 'Vi bygger en skreddersydd nettside som presenterer bedriften din profesjonelt og gjør det enkelt for besøkende å ta kontakt.',
+    description: 'Vi bygger en skreddersydd nettside fra grunnen av — ingen maler, ingen WordPress. Garantert 95+ på Google Lighthouse ved levering.',
     monthlyPrice: 350,
     monthlyPriceLabel: 'fra 350 kr/mnd',
     related: ['nettbutikk', 'landingsside'],

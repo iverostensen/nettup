@@ -52,7 +52,7 @@ export const projects: Project[] = [
     name: 'iGive',
     category: 'B2B',
     type: 'Gavekort-plattform',
-    tagline: 'Profesjonell salgsside for Norges ledende gavekortplattform',
+    tagline: '96/100 på Google PageSpeed. Skreddersydd salgsside for iGive.',
     description:
       'En dedikert salgsside som hjelper Norges ledende gavekortplattform med å nå bedriftskunder.',
     image: iGiveImage,
@@ -93,7 +93,7 @@ export const projects: Project[] = [
     name: 'Blom Company',
     category: 'B2C',
     type: 'Nettbutikk',
-    tagline: 'Eksklusiv nettbutikk for livsstil og golfklær',
+    tagline: '99/100 på Google PageSpeed. Skreddersydd nettbutikk for Blom Company.',
     description:
       'En eksklusiv nettbutikk for et norsk livsstils- og golfklesmerke. Bygget med Next.js 15, Shopify og Sanity for rask og fleksibel e-handel.',
     image: blomImage,

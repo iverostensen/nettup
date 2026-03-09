@@ -45,7 +45,7 @@ export default function HeroIsland() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-xl text-lg text-text-muted opacity-100 md:text-xl lg:mx-0">
-                Vi lager moderne, raske nettsider for norske bedrifter. Uten stress, til rett pris.
+                Vi bygger skreddersydde nettsider for norske bedrifter — ingen maler, ingen WordPress. Uten stress, til rett pris.
               </p>
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
@@ -122,7 +122,7 @@ export default function HeroIsland() {
               transition={springs.gentle}
               className="mx-auto mt-6 max-w-xl text-lg text-text-muted md:text-xl lg:mx-0"
             >
-              Vi lager moderne, raske nettsider for norske bedrifter. Uten stress, til rett pris.
+              Vi bygger skreddersydde nettsider for norske bedrifter — ingen maler, ingen WordPress. Uten stress, til rett pris.
             </motion.p>
 
             <motion.div
