@@ -21,6 +21,7 @@
 
 - [x] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
 - [x] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
+- [ ] **SEO-03**: Each city page emits a `FAQPage` JSON-LD block built from `city.faq` — enables FAQ rich results in Google Search
 
 ### Linking & Verification
 
@@ -28,6 +29,18 @@
 - [x] **LINK-02**: `/kontakt` page mentions Oslo-region and nearby areas coverage
 - [x] **LINK-03**: All city pages appear in `sitemap-index.xml` after first deploy (verified manually)
 - [x] **LINK-04**: V2 promotion criteria documented as measurable thresholds before V2 work begins (e.g. all V1 pages indexed in Search Console + ≥3 pages with organic impressions)
+
+### Analytics
+
+- [ ] **ANAL-01**: Plausible Analytics CDN script present in `BaseLayout.astro` and `LandingPageLayout.astro` with queuing stub — cookieless, GDPR-compliant
+- [ ] **ANAL-02**: Conversion events wired in React islands: contact form submit, B2B form submit, chatbot opened, chatbot suggestion clicked, wizard estimate shown, wizard CTA clicked
+- [ ] **ANAL-03**: City CTA click fires `City CTA Clicked` Plausible event with `city` prop — all 7 Goals registered in Plausible dashboard
+
+### Navigation
+
+- [ ] **NAV-01**: FloatingNav is server-rendered from first byte — no React hydration gap, no empty `astro-island` shell on page load
+- [ ] **NAV-02**: FloatingNav persists as a live DOM node across SPA navigations via `transition:persist` — active link reflects current page after every navigation
+- [ ] **NAV-03**: No `visibility:hidden` body hack (`html[data-loading]` rule) masking the hydration flash — root cause eliminated
 
 ## v2 Requirements
 
@@ -78,12 +91,19 @@
 | LINK-02 | Phase 25 | Complete |
 | LINK-03 | Phase 26 | Complete |
 | LINK-04 | Phase 26 | Complete |
+| SEO-03 | Phase 29 | Pending |
+| ANAL-01 | Phase 27 / Phase 30 | Pending |
+| ANAL-02 | Phase 27 / Phase 30 | Pending |
+| ANAL-03 | Phase 27 / Phase 30 | Pending |
+| NAV-01 | Phase 28 / Phase 30 | Pending |
+| NAV-02 | Phase 28 / Phase 30 | Pending |
+| NAV-03 | Phase 28 / Phase 30 | Pending |
 
 **Coverage:**
-- v1 requirements: 12 total
-- Mapped to phases: 12
+- v1 requirements: 19 total (12 original + 1 FAQPage + 3 analytics + 3 nav)
+- Mapped to phases: 19
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-08*
-*Last updated: 2026-03-08 after roadmap creation*
+*Last updated: 2026-03-13 — backfilled ANAL-01/02/03, NAV-01/02/03, SEO-03 from milestone audit*

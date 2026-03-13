@@ -103,6 +103,40 @@ Plans:
 - Zero flash on SPA navigation verified
 
 ---
-*Roadmap updated: 2026-03-08*
+
+### Phase 29: Gap Closure — FAQPage Schema + Phase 27 Verification
+
+**Goal:** Add missing FAQPage JSON-LD to city pages (contradicted by Phase 25 verification), verify Phase 27 (Plausible Analytics) to produce its missing VERIFICATION.md, and remove dead code identified in audit.
+**Requirements:** SEO-03 (FAQPage JSON-LD), ANAL-01, ANAL-02, ANAL-03
+**Gap Closure:** Closes GAP-INT-01 (FAQPage absent), unverified Phase 27
+**Depends on:** Phase 28
+
+Plans:
+- [ ] 29-01-PLAN.md — Add FAQPage JSON-LD to `[location].astro` + delete `FloatingNav.tsx` dead code + remove stranded `trackCityCtaClicked` export
+
+**Deliverables:**
+- `src/pages/steder/[location].astro` with FAQPage JSON-LD block built from `city.faq`
+- `src/components/islands/FloatingNav.tsx` deleted
+- `src/lib/analytics.ts` with `trackCityCtaClicked` removed
+- `27-VERIFICATION.md` produced by gsd-verifier
+
+---
+
+### Phase 30: Traceability Backfill + Phase 28 Human Verification
+
+**Goal:** Backfill ANAL-01/02/03 and NAV-01/02/03 into REQUIREMENTS.md traceability table, and confirm Phase 28 runtime behaviors in browser to upgrade its status from `human_needed` to `passed`.
+**Requirements:** ANAL-01, ANAL-02, ANAL-03, NAV-01, NAV-02, NAV-03
+**Gap Closure:** Traceability completeness for phases 27 and 28
+
+Plans:
+- [ ] 30-01-PLAN.md — REQUIREMENTS.md backfill for 6 analytics + nav requirements
+
+**Deliverables:**
+- `REQUIREMENTS.md` with ANAL-01/02/03 and NAV-01/02/03 entries and traceability rows
+- `28-VERIFICATION.md` updated to `passed` after human runtime confirmation
+
+---
+
+*Roadmap updated: 2026-03-13*
 *Milestone: v1.5 Lokale SEO-sider*
-*Coverage: 12/12 requirements mapped + 3 analytics requirements added + 3 nav requirements added*
+*Coverage: 12/12 core requirements mapped + 3 analytics + 3 nav + 1 faqpage = 19 total*
