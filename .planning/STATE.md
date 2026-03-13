@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 27: Plausible Analytics — plan 02 complete
+**Current focus:** Phase 29: Gap Closure — plan 01 complete
 
 ## Current Position
 
-Phase: 27 of 27 (Plausible Analytics)
-Plan: 2 of 2 complete
-Status: Phase 27 plan 02 complete — all 6 conversion events wired across ContactForm, ChatWidget, ResultStep.
-Last activity: 2026-03-08 - Completed 27-02: Conversion event wiring
+Phase: 29 of 30 (Gap Closure)
+Plan: 1 of 1 complete
+Status: Phase 29 plan 01 complete — FAQPage JSON-LD added, dead code removed, Phase 27 verification report produced.
+Last activity: 2026-03-13 - Completed 29-01: Gap closure (SEO-03 + dead code + Phase 27 verification)
 
 Progress: [██████████] 100%
 
@@ -55,6 +55,11 @@ Progress: [██████████] 100%
 - Phase 27 added: Plausible Analytics
 
 ### Decisions
+
+Key decisions from Phase 29-01 execution:
+- [29-01]: FAQPage JSON-LD uses city.faq && city.faq.length > 0 guard — null-guard required as some cities may have empty FAQ arrays
+- [29-01]: trackCityCtaClicked removed from analytics.ts — city CTA tracking uses is:inline IIFE in [location].astro (ES module imports incompatible with is:inline scripts)
+- [29-01]: FloatingNav.tsx deleted — FloatingNav.astro is the live component since Phase 28 rewrite; the tsx file was orphaned dead code
 
 Key decisions from Phase 27-02 execution:
 - [27-02]: ContactForm uses context prop ('contact' | 'b2b') with default 'contact' to discriminate form origins without duplicating component
@@ -120,6 +125,6 @@ Key decisions from v1.5 research to carry into planning:
 
 ## Session Continuity
 
-Last session: 2026-03-08
-Stopped at: Completed 27-02-PLAN.md — 6 conversion events wired in ContactForm (B2B discrimination), ChatWidget (open + suggestion), ResultStep (estimate shown + CTA click).
+Last session: 2026-03-13
+Stopped at: Completed 29-01-PLAN.md — FAQPage JSON-LD added to city pages (SEO-03), dead code removed (FloatingNav.tsx + trackCityCtaClicked), Phase 27 verification report produced (ANAL-01/02/03).
 Resume file: None

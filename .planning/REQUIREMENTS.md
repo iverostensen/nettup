@@ -21,7 +21,7 @@
 
 - [x] **SEO-01**: Each city page emits a `Service` JSON-LD block with `areaServed` referencing the global `LocalBusiness @id` — no duplicate `LocalBusiness` declarations
 - [x] **SEO-02**: Each city page has a unique `<title>`, `<meta description>`, and `og:title`
-- [ ] **SEO-03**: Each city page emits a `FAQPage` JSON-LD block built from `city.faq` — enables FAQ rich results in Google Search
+- [x] **SEO-03**: Each city page emits a `FAQPage` JSON-LD block built from `city.faq` — enables FAQ rich results in Google Search
 
 ### Linking & Verification
 
@@ -32,9 +32,9 @@
 
 ### Analytics
 
-- [ ] **ANAL-01**: Plausible Analytics CDN script present in `BaseLayout.astro` and `LandingPageLayout.astro` with queuing stub — cookieless, GDPR-compliant
-- [ ] **ANAL-02**: Conversion events wired in React islands: contact form submit, B2B form submit, chatbot opened, chatbot suggestion clicked, wizard estimate shown, wizard CTA clicked
-- [ ] **ANAL-03**: City CTA click fires `City CTA Clicked` Plausible event with `city` prop — all 7 Goals registered in Plausible dashboard
+- [x] **ANAL-01**: Plausible Analytics CDN script present in `BaseLayout.astro` and `LandingPageLayout.astro` with queuing stub — cookieless, GDPR-compliant
+- [x] **ANAL-02**: Conversion events wired in React islands: contact form submit, B2B form submit, chatbot opened, chatbot suggestion clicked, wizard estimate shown, wizard CTA clicked
+- [x] **ANAL-03**: City CTA click fires `City CTA Clicked` Plausible event with `city` prop — all 7 Goals registered in Plausible dashboard
 
 ### Navigation
 
@@ -91,10 +91,10 @@
 | LINK-02 | Phase 25 | Complete |
 | LINK-03 | Phase 26 | Complete |
 | LINK-04 | Phase 26 | Complete |
-| SEO-03 | Phase 29 | Pending |
-| ANAL-01 | Phase 27 / Phase 30 | Pending |
-| ANAL-02 | Phase 27 / Phase 30 | Pending |
-| ANAL-03 | Phase 27 / Phase 30 | Pending |
+| SEO-03 | Phase 29 | Complete |
+| ANAL-01 | Phase 27 / Phase 30 | Complete |
+| ANAL-02 | Phase 27 / Phase 30 | Complete |
+| ANAL-03 | Phase 27 / Phase 30 | Complete |
 | NAV-01 | Phase 28 / Phase 30 | Pending |
 | NAV-02 | Phase 28 / Phase 30 | Pending |
 | NAV-03 | Phase 28 / Phase 30 | Pending |
