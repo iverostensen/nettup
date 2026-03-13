@@ -32,6 +32,19 @@ const allServices = ['nettside', 'nettbutikk', 'landingsside']
 const nettside = services.find((s) => s.slug === 'nettside')!;
 const hasOffer = remainingSlots > 0;
 
+const faqSchema =
+  city.faq && city.faq.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: city.faq.map((item: { question: string; answer: string }) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      }
+    : null;
+
 const steps = [
   {
     step: '1',
@@ -79,6 +92,13 @@ const steps = [
         },
       })}
     />
+    {faqSchema && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(faqSchema)}
+      />
+    )}
   </Fragment>
   <main>
     <Section class="pt-32 md:pt-40">
