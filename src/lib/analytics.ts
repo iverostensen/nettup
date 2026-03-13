@@ -36,7 +36,3 @@ export function trackChatbotOpened(): void {
 export function trackChatbotSuggestionClicked(suggestion: string): void {
   track('Chatbot Suggestion Clicked', { suggestion });
 }
-
-export function trackCityCtaClicked(city: string): void {
-  track('City CTA Clicked', { city });
-}
