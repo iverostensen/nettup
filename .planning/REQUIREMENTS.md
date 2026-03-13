@@ -38,9 +38,9 @@
 
 ### Navigation
 
-- [ ] **NAV-01**: FloatingNav is server-rendered from first byte — no React hydration gap, no empty `astro-island` shell on page load
-- [ ] **NAV-02**: FloatingNav persists as a live DOM node across SPA navigations via `transition:persist` — active link reflects current page after every navigation
-- [ ] **NAV-03**: No `visibility:hidden` body hack (`html[data-loading]` rule) masking the hydration flash — root cause eliminated
+- [x] **NAV-01**: FloatingNav is server-rendered from first byte — no React hydration gap, no empty `astro-island` shell on page load
+- [x] **NAV-02**: FloatingNav persists as a live DOM node across SPA navigations via `transition:persist` — active link reflects current page after every navigation
+- [x] **NAV-03**: No `visibility:hidden` body hack (`html[data-loading]` rule) masking the hydration flash — root cause eliminated
 
 ## v2 Requirements
 
@@ -92,12 +92,12 @@
 | LINK-03 | Phase 26 | Complete |
 | LINK-04 | Phase 26 | Complete |
 | SEO-03 | Phase 29 | Complete |
-| ANAL-01 | Phase 27 / Phase 30 | Complete |
-| ANAL-02 | Phase 27 / Phase 30 | Complete |
-| ANAL-03 | Phase 27 / Phase 30 | Complete |
-| NAV-01 | Phase 28 / Phase 30 | Pending |
-| NAV-02 | Phase 28 / Phase 30 | Pending |
-| NAV-03 | Phase 28 / Phase 30 | Pending |
+| ANAL-01 | Phase 27 | Complete |
+| ANAL-02 | Phase 27 | Complete |
+| ANAL-03 | Phase 27 | Complete |
+| NAV-01 | Phase 28 | Complete |
+| NAV-02 | Phase 28 | Complete |
+| NAV-03 | Phase 28 | Complete |
 
 **Coverage:**
 - v1 requirements: 19 total (12 original + 1 FAQPage + 3 analytics + 3 nav)

@@ -1,8 +1,9 @@
 ---
 phase: 28-floatingnav-rewrite
 verified: 2026-03-08T18:55:00Z
-status: human_needed
-score: 6/7 must-haves verified
+status: passed
+score: 7/7 must-haves verified
+human_verified: 2026-03-13
 human_verification:
   - test: "Navigate between pages via SPA (click nav links) and observe the nav during transition"
     expected: "Nav pill remains fully visible at all times — no blank period, no raw HTML flash, no empty slot"
@@ -22,7 +23,7 @@ human_verification:
 
 **Phase Goal:** Convert FloatingNav from a `client:only` React island to a server-rendered Astro component with `transition:persist`, eliminating the React hydration gap that causes raw HTML flash on every SPA navigation.
 **Verified:** 2026-03-08T18:55:00Z
-**Status:** human_needed
+**Status:** passed
 **Re-verification:** No — initial verification
 
 ---
@@ -85,6 +86,8 @@ Requirements listed in PLAN frontmatter: NAV-01, NAV-02, NAV-03. No `REQUIREMENT
 |------|------|---------|----------|--------|
 | `src/components/islands/FloatingNav.tsx` | — | Dead code — old React island still exists in `src/components/islands/` | ℹ️ Info | No build or runtime impact; it is not imported anywhere. SUMMARY.md noted it as cleanup opportunity. |
 
+> **Resolved (Phase 29, commit bbb982e):** `FloatingNav.tsx` was deleted in Phase 29 gap closure. Dead code no longer present.
+
 No TODOs, placeholders, empty handlers, stub implementations, or console.log-only implementations found in any of the four modified files.
 
 ---
@@ -126,6 +129,22 @@ No gaps found. All artifacts exist, are substantive (not stubs), and are correct
 The only items flagged for human verification are inherently runtime behaviors (visual flash, scroll animation, event dispatch timing) that static analysis cannot confirm — but all structural preconditions for correct behavior are in place.
 
 **Note:** `src/components/islands/FloatingNav.tsx` (the old React island) still exists as dead code. It is not imported anywhere and has no runtime impact, but can be deleted in a follow-up cleanup.
+
+---
+
+### Human Verification Sign-off
+
+**Verified:** 2026-03-13
+**All 4 runtime tests passed:**
+
+| # | Test | Result |
+|---|------|--------|
+| 1 | Zero-flash SPA navigation | PASS |
+| 2 | Scroll hide/show behavior | PASS |
+| 3 | Entrance animation — once per session | PASS |
+| 4 | Mobile menu — custom event trigger | PASS |
+
+All 7 observable truths confirmed. Phase 28 status upgraded from `human_needed` to `passed`.
 
 ---
 
