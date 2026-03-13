@@ -128,8 +128,10 @@ Plans:
 **Requirements:** ANAL-01, ANAL-02, ANAL-03, NAV-01, NAV-02, NAV-03
 **Gap Closure:** Traceability completeness for phases 27 and 28
 
+**Plans:** 1 plan
+
 Plans:
-- [ ] 30-01-PLAN.md — REQUIREMENTS.md backfill for 6 analytics + nav requirements
+- [ ] 30-01-PLAN.md — Phase 28 human runtime verification + REQUIREMENTS.md traceability cleanup (6 rows)
 
 **Deliverables:**
 - `REQUIREMENTS.md` with ANAL-01/02/03 and NAV-01/02/03 entries and traceability rows
