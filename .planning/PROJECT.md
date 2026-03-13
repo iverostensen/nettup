@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Nettup er et norsk fullservice-webyra som bygger nettsider, nettbutikker, webapplikasjoner og AI-integrasjoner for norske bedrifter. Nettsiden er byraets eget utstillingsvindu og primaere salgskanal — med en fullverdig tjenestekatalog, mal-forst priskalkulator, og AI chatbot-radgiver som leder besoekende fra oppdagelse til kontakt.
+Nettup er et norsk fullservice-webyra som bygger nettsider, nettbutikker, webapplikasjoner og AI-integrasjoner for norske bedrifter. Nettsiden er byraets eget utstillingsvindu og primaere salgskanal — med en fullverdig tjenestekatalog, mal-forst priskalkulator, AI chatbot-radgiver, og skalerbart lokalt SEO-system (8 Tier 1-bysider) som leder besoekende fra oppdagelse til kontakt.
 
 ## Core Value
 
@@ -52,36 +52,29 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ GEO-optimalisert norsk kopitekst med verifiserte Lighthouse-scorer og betongtall — v1.4
 - ✓ Chat-drevet sidenavigasjon — chatbot kan foreslå sidebytte via navigationChip i chat-tråden — v1.4
 
-## Current Milestone: v1.5 Lokale SEO-sider
+- ✓ `locations.ts` TypeScript-interface med V1/V2/V3-klar datamodell (tier, slug, intro, faq, nearbyAreas) + `ACTIVE_TIER`-konstant — v1.5
+- ✓ Dynamisk `/steder/[location].astro` via `getStaticPaths()` — 8 Tier 1-bysider generert statisk — v1.5
+- ✓ 8 Tier 1-bysider med genuint differensiert håndskrevet innhold (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss) — v1.5
+- ✓ `Service` JSON-LD med `areaServed` per by + `FAQPage` JSON-LD fra `city.faq` på alle bysider — v1.5
+- ✓ Unik `<title>`, `<meta description>`, `og:title`, og canonical URL per by — v1.5
+- ✓ Footer "Områder vi dekker"-kolonne + `/kontakt` regional dekningsetning — v1.5
+- ✓ Sitemap-dekning bekreftet (8 `/steder/*`-URLer, prioritet 0.8) + V2-promotionkriterier dokumentert — v1.5
+- ✓ Plausible Analytics CDN i BaseLayout + LandingPageLayout — cookieless, GDPR-kompatibel — v1.5
+- ✓ `analytics.ts` wrapper med 7 typede tracker-funksjoner, alle konverteringshendelser koblet — v1.5
+- ✓ FloatingNav rewritet til server-rendert Astro-komponent med `transition:persist` — eliminerer hydration-flash — v1.5
 
-**Goal:** Build a scalable local SEO landing page system targeting Norwegian city search queries — architected from day one to expand from V1 (6–8 hand-crafted Tier 1 cities) through V2 (30–50 AI-assisted towns) to V3 (full Norway coverage) without structural changes.
-
-**Target features:**
-- `src/config/locations.ts` — city data model structured for V1/V2/V3 expansion (city, slug, intro, FAQ, nearby areas, regional industries, areaServed schema field)
-- Dynamic route `src/pages/[location].astro` with `getStaticPaths()` driven entirely by locations config
-- 6–8 Tier 1 cities with hand-written, genuinely differentiated copy (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss)
-- `LocalBusiness` JSON-LD with `areaServed` per page
-- Unique `<title>`, `<meta description>`, canonical URL per city
-- Internal linking from footer/contact page mentioning coverage area
-- Sitemap inclusion of all generated city pages
+<!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
 
 ### Active
 
-- [ ] `locations.ts` config with V1/V2/V3-ready data model
-- [ ] Dynamic `[location].astro` route with `getStaticPaths()`
-- [ ] 6–8 Tier 1 city entries with unique copy
-- [ ] `LocalBusiness` JSON-LD with `areaServed` per city
-- [ ] Per-city SEO metadata (title, description, canonical)
-- [ ] Internal linking from footer/contact to city pages
-- [ ] Sitemap coverage of all city pages
-
-<!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
+*(Next milestone requirements — defined via `/gsd:new-milestone`)*
 
 ### Deferred
 
 - [ ] Ekte kundeuttalelser — erstatt plassholder-testimonials
-- [ ] Flere prosjekter i portefoljen — kun iGive na
+- [ ] Flere prosjekter i portefoljen — kun iGive og Blom Company na
 - [ ] Google Business Profile for lokal SEO
+- [ ] V2 bysider (30–50 norske byer) — gated på V1 indekseringsbekreftelse i Search Console
 
 ### Out of Scope
 
@@ -93,18 +86,19 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Context
 
-**Current state (post v1.4):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver med chat-drevet navigasjon, fullautomatisert SEO-blogg (6 artikler publisert), og skalerbart porteføljesystem med dedikerte kasusstudie-sider for iGive og Blom Company.
-- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions
-- **LOC:** ~9,900 TypeScript/TSX/Astro (22 React islands, 14 ruter)
+**Current state (post v1.5):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver, fullautomatisert SEO-blogg (6+ artikler), skalerbart porteføljesystem, og 8 Tier 1-bysider live med lokal SEO-schema og Plausible Analytics. FloatingNav er nå server-rendert Astro-komponent uten hydration-flash.
+- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions + Plausible Analytics
+- **LOC:** ~10,590 TypeScript/TSX/Astro (22 React islands, 22+ ruter inkl. 8 bysider)
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
-- **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi
-- **Konverteringsmal:** Besoekende → riktig tjenesteside → kontaktskjema (eller chatbot)
+- **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi, lokal tilstedeværelse
+- **Konverteringsmal:** Besoekende → riktig tjenesteside / byside → kontaktskjema (eller chatbot)
 - **Kompetanse:** Nettsider, nettbutikk (Shopify), webapplikasjoner, SEO, AI-integrasjoner, vedlikehold
-- **Blog pipeline:** 2 artikler publisert etter milestone — LIX ≤ 55, review+revision-løkke fungerer i produksjon
-- **Known gap:** Testimonials are placeholder — must replace before heavy traffic
-- **Known gap:** Shopify platform fee figure and Partner status unverified
-- **Known gap:** Auto-merge krever GitHub Pro for private repo — manuell merge fungerer frem til da
+- **Blog pipeline:** Operasjonell i produksjon — LIX ≤ 55, PAT-mønster for CI-triggering fungerer
+- **Analytics:** Plausible (cookieless, GDPR) med 7 Goals aktive. Vercel Analytics beholdt for Web Vitals.
+- **Known gap:** Testimonials er placeholder — erstatt før tung trafikk
+- **Known gap:** Shopify platform fee og Partner-status uverifisert
+- **Known gap:** Auto-merge krever GitHub Pro for private repo — manuell merge fungerer
 
 ## Constraints
 
@@ -144,6 +138,15 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | PAT (GH_PAT) for checkout in blog-generate.yml | GITHUB_TOKEN loop-prevention blocks CI on self-created PRs | ✓ Good — PRs trigger CI correctly |
 | Exit-0 pattern for pipeline failures | Quality rejections are expected flow, not CI failures | ✓ Good — no false alarm emails |
 | Manual .prose-article CSS over @tailwindcss/typography | Avoid new dependency for a single use case | ✓ Good — sufficient for article formatting |
+| ASCII-only URL slugs for Norwegian city names (æ→ae, ø→o, å→a) | Display names keep diacritics; slugs must be URL-safe | ✓ Good — established in Phase 24, consistent across all 8 cities |
+| `Service` JSON-LD with `areaServed` (not duplicate `LocalBusiness`) | Duplicate `LocalBusiness` blocks dilute Knowledge Graph entity | ✓ Good — `"provider": {"@id": "https://nettup.no/#business"}` pattern is correct |
+| `ACTIVE_TIER` constant for tier-gated `getStaticPaths()` | V2 promotion is a one-line change — no structural refactoring | ✓ Good — V2 gated on indexing confirmation per LINK-04 |
+| Plausible CDN (cookieless) as analytics layer | GDPR compliance, no consent banner needed | ✓ Good — 7 Goals active; Vercel Analytics kept for Web Vitals |
+| `analytics.ts` single-source wrapper for all plausible() calls | All callsites go through named functions; SSR guard + optional chain guard | ✓ Good — adblocker-safe, no throws |
+| `trackCityCtaClicked` removed; use `is:inline` IIFE | ES module imports incompatible with `is:inline` scripts in Astro | ✓ Good — inline IIFE fires plausible() directly |
+| FloatingNav as Astro component + `transition:persist` | Eliminate React hydration gap that caused raw HTML flash on SPA nav | ✓ Good — human-verified 2026-03-13, zero flash in all 4 browser tests |
+| Custom DOM event (`open-mobile-menu`) as cross-boundary trigger | Astro hamburger → React MobileMenu without prop drilling or shared state | ✓ Good — clean boundary, MobileMenu stays React for complex animation |
+| Phase 28 runtime verification delegated to human | Visual/timing behaviors (flash, scroll animation, SPA transition) cannot be confirmed by static analysis | ✓ Good — human sign-off is the right gate for perception-dependent requirements |
 
 ---
-*Last updated: 2026-03-08 after v1.5 milestone start*
+*Last updated: 2026-03-13 after v1.5 milestone*

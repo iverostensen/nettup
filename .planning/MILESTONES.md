@@ -1,5 +1,24 @@
 # Milestones
 
+## v1.5 Lokale SEO-sider (Shipped: 2026-03-13)
+
+**Phases completed:** 7 phases (24–30), 12 plans
+**Timeline:** 5 days (2026-03-08 → 2026-03-13)
+**LOC:** ~10,590 TypeScript/TSX/Astro
+**Files changed:** 68 files, +6,837 / -393
+
+**Delivered:** Skalerbart lokalt SEO-system med 8 Tier 1-bysider, Plausible Analytics med 7 Goals, og FloatingNav rewritet til Astro for å eliminere hydration-flash — hele systemet arkitektonisk klart for V2 (30–50 byer) uten strukturelle endringer.
+
+**Key accomplishments:**
+1. `locations.ts` TypeScript-interface med V1/V2/V3-klar datamodell + dynamisk `/steder/[location].astro` via `getStaticPaths()`
+2. 8 Tier 1-bysider live med håndskrevet, differensiert innhold (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss)
+3. Full lokal SEO-schema: `Service` + `FAQPage` JSON-LD på alle bysider, `areaServed` i global `LocalBusiness`
+4. Plausible Analytics instrumentert — 7 Goals, cookieless, GDPR-kompatibel, alle konverteringshendelser koblet
+5. FloatingNav rewritet til server-rendert Astro-komponent med `transition:persist` — null hydration flash
+6. Sitemap-dekning bekreftet (8 `/steder/*`-URLer, prioritet 0.8) + V2-promotionkriterier dokumentert
+
+---
+
 ## v1.4 Portefølje 2.0 (Shipped: 2026-03-08)
 
 **Phases completed:** 4 phases (20–23)

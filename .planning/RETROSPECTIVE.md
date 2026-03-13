@@ -222,6 +222,53 @@
 
 ---
 
+## Milestone: v1.5 — Lokale SEO-sider
+
+**Shipped:** 2026-03-13
+**Phases:** 7 (24–30) | **Plans:** 12 | **Timeline:** 5 days (2026-03-08 → 2026-03-13)
+
+### What Was Built
+- `locations.ts` TypeScript-interface med V1/V2/V3-klar datamodell + dynamisk `/steder/[location].astro` for 8 Tier 1-bysider
+- Håndskrevet, differensiert innhold per by: intro-tekst, by-spesifikt FAQ, nabobyer, metadatavariasjoner
+- Lokal SEO-schema: `Service` JSON-LD med `areaServed` + `FAQPage` JSON-LD fra `city.faq` på alle bysider
+- Sitemap-dekning bekreftet (8 `/steder/*`-URLer, prioritet 0.8) + V2-promotionkriterier dokumentert
+- Plausible Analytics — CDN-script i begge layouts, `analytics.ts` wrapper med 7 Goals, alle konverteringshendelser koblet
+- FloatingNav rewritet fra `client:only` React island til server-rendert Astro-komponent med `transition:persist` — eliminerer hydration-flash
+- Gap-closure fase (29): FAQPage JSON-LD tilbakelagt + død kode fjernet + Phase 27 VERIFICATION.md produsert
+- Traceability-fase (30): ANAL/NAV-krav backfilled i REQUIREMENTS.md + Phase 28 human runtime-verifisering
+
+### What Worked
+- **Audit-first workflow:** Milestone-audit avdekket reelle hull (FAQPage JSON-LD manglet, Phase 27 VERIFICATION.md manglet) før arkivering. To dedikerte gap-closure-faser lukket alt — ingen tech debt sluppet gjennom.
+- **Human verification checkpoint for perception-avhengige krav:** Phase 28 (FloatingNav flash-eliminering) krevde menneskelig bekreftelse — visuell timing kan ikke bekreftes av statisk analyse. Gaten fungerte: bruker bekreftet alle 4 browser-tester.
+- **Tier-gated arkitektur fra dag 1:** `ACTIVE_TIER`-konstant betyr V2 er én linjeskift. Ingen arkitektonisk gjeld.
+- **`is:inline` IIFE for city CTA tracking:** Riktig valg da ES module imports er inkompatible med `is:inline`-scripts. Oppdaget og løst i Phase 29 — ikke etter V2-skalering.
+
+### What Was Inefficient
+- **Tre separate traceability-/verifikasjonsrunder:** Phase 29 produserte Phase 27 VERIFICATION.md, og Phase 30 backfillet ANAL/NAV i REQUIREMENTS.md. Ideelt hadde dette skjedd løpende under implementeringsfasene — men audit-gaten fanget det.
+- **SUMMARY frontmatter har ikke `requirements_completed`-felt:** Alle 12 SUMMARY-filer mangler dette feltet — requirements coverage fastslått via VERIFICATION.md og REQUIREMENTS.md traceability, ikke SUMMARY. Fremtidige milestones bør popuelere dette for full 3-kilde-auditabilitet.
+
+### Patterns Established
+- `locations.ts` config med V1/V2/V3 tier-gate — én konstant styrer all statisk generering og schema
+- `Service` JSON-LD med `"provider": {"@id": ".../#business"}` (ikke re-deklarer `LocalBusiness` per side)
+- `analytics.ts` single-source wrapper: SSR-guard (`typeof window === 'undefined'`) + optional chain (`window.plausible?.()`) for adblocker-sikkerhet
+- `is:inline` IIFE for Plausible events i Astro-komponenter (ikke ES-module-import)
+- Human verification checkpoint for perception-avhengige krav (flash, timing, animasjon)
+- Gap-closure-faser som eksplisitt del av milestonestruktur — ikke skjult tech debt
+
+### Key Lessons
+1. **Audit før arkivering avdekker ekte hull.** To gap-closure-faser lukket reelle mangler (FAQPage JSON-LD, VERIFICATION.md) som ikke var synlige fra implementeringsfaser alene. Audit-gaten er verdt kostnaden.
+2. **Dokumenter traceability løpende, ikke bare ved audit.** Backfilling 6 krav-rader i Phase 30 var unødvendig overhead — REQUIREMENTS.md bør oppdateres i implementeringsfasen.
+3. **`is:inline`-begrensingen i Astro er en skjult felle.** ES module imports fungerer ikke i `is:inline`-scripts. Avklar dette i Phase-planlegging for fremtidige Astro-analytics-integrasjoner.
+4. **V2-gate er arkitektur, ikke prosess.** `ACTIVE_TIER`-konstanten og `LINK-04` (promotionkriterier) gjør V2-eskalering forutsigbar og risikofri — dette er riktig å bygge inn i V1.
+5. **Cookieless analytics er riktig valg for norsk B2B.** Plausible eliminerte behovet for samtykke-banner — enklere UX og GDPR-kompatibel uten compliance-overhead.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6, quality profile
+- 7 faser, 12 planer over 5 dager
+- Notable: Milestone krevde 7 faser men leverte robust gap-closure + audit-trail. Phase 28 (FloatingNav) var mest teknisk kompleks; Phase 30 var raskest (dokumentasjon og human sign-off).
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -233,6 +280,7 @@
 | v1.2 | 5 | 7 | ~10 min | TDD-first engine, wizard reducer pattern, urgent phase insert |
 | v1.3 | 3 | 5 | 2 days | Automated blog pipeline, two-call Claude pattern, exit-0 CI discipline |
 | v1.4 | 4 | - | 1 day | Dynamic portfolio with slug-based case studies, GEO-optimized copy, chat navigation |
+| v1.5 | 7 | 12 | 5 days | Local SEO city pages (8 Tier 1), Plausible Analytics, FloatingNav SSR rewrite, gap-closure audit |
 
 ### Top Lessons (Verified Across Milestones)
 
