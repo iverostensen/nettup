@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08 after v1.5 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 29: Gap Closure — plan 01 complete
+**Current focus:** Phase 30: Traceability og Nav-verifikasjon — plan 01 complete
 
 ## Current Position
 
-Phase: 29 of 30 (Gap Closure)
+Phase: 30 of 30 (Traceability og Nav-verifikasjon)
 Plan: 1 of 1 complete
-Status: Phase 29 plan 01 complete — FAQPage JSON-LD added, dead code removed, Phase 27 verification report produced.
-Last activity: 2026-03-13 - Completed 29-01: Gap closure (SEO-03 + dead code + Phase 27 verification)
+Status: Phase 30 plan 01 complete — Phase 28 runtime verified by human, all 19 v1 requirements marked Complete, 28-VERIFICATION.md upgraded to passed (7/7).
+Last activity: 2026-03-13 - Completed 30-01: Traceability closure (NAV-01/02/03 verified + ANAL row cleanup)
 
 Progress: [██████████] 100%
 
@@ -55,6 +55,11 @@ Progress: [██████████] 100%
 - Phase 27 added: Plausible Analytics
 
 ### Decisions
+
+Key decisions from Phase 30-01 execution:
+- [30-01]: Phase 28 runtime verification delegated to human — visual/timing behaviors (flash, scroll, session animation, cross-boundary events) cannot be confirmed by static analysis alone
+- [30-01]: ANAL traceability rows credited to Phase 27 only — Phase 30 was audit/backfill, not implementation
+- [30-01]: NAV traceability rows credited to Phase 28 only — Phase 30 was verification sign-off, not implementation
 
 Key decisions from Phase 29-01 execution:
 - [29-01]: FAQPage JSON-LD uses city.faq && city.faq.length > 0 guard — null-guard required as some cities may have empty FAQ arrays
@@ -126,5 +131,5 @@ Key decisions from v1.5 research to carry into planning:
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 29-01-PLAN.md — FAQPage JSON-LD added to city pages (SEO-03), dead code removed (FloatingNav.tsx + trackCityCtaClicked), Phase 27 verification report produced (ANAL-01/02/03).
+Stopped at: Completed 30-01-PLAN.md — Phase 28 FloatingNav runtime verified by human (all 4 tests pass), all 19 v1 requirements marked Complete, 28-VERIFICATION.md upgraded to passed (7/7). v1.5 milestone fully traced.
 Resume file: None
