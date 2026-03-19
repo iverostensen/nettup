@@ -1,293 +1,292 @@
-# Pitfalls Research
+# Domain Pitfalls
 
-**Domain:** Local SEO landing pages — adding city/location pages to an existing agency site
-**Project:** Nettup.no v1.5 Lokale SEO-sider
-**Researched:** 2026-03-08
-**Confidence:** HIGH (Google official spam policies + multiple verified sources + Astro-specific technical checks)
+**Domain:** Subscription landing page + Google Ads for Norwegian web agency
+**Project:** Nettup.no v1.6 Landingsside & Google Ads
+**Researched:** 2026-03-19
+**Confidence:** HIGH (codebase-verified issues + official Google docs + Norwegian law references)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Triggering the Doorway Page Penalty With Swapped-City Boilerplate
+Mistakes that cause wasted ad spend, legal risk, or conversion collapse.
 
-**What goes wrong:**
-Google's spam policies define doorway abuse as pages "created to rank for specific, similar search queries" that "lead users to intermediate pages that are not as useful as the final destination." City landing pages are the canonical example Google uses in their own documentation: "multiple domain names or pages targeted at specific regions or cities that funnel users to one page."
+### Pitfall 1: Consent Mode v2 Not Implemented - Google Ads Conversion Tracking Breaks
 
-If every location page uses the same template with only the city name swapped — identical intro, identical FAQ, identical CTA — Google's pattern detection flags the cluster. The March 2024 Core Update and the August 2025 spam update both showed aggressive enforcement against this pattern. A regional HVAC site lost 80% of doorway-page rankings within 30 days of the March 2024 update.
+**What goes wrong:** The current `LandingPageLayout.astro` (lines 186-241) implements basic consent mode: gtag only loads after cookie consent is granted via `localStorage`. Since July 2025, Google requires Consent Mode v2 for EEA traffic. Without advanced consent mode, Google disables remarketing, conversion tracking modeling, and demographic reporting. With only ~31% of users accepting cookies on average, the current implementation loses ~70% of conversion data.
 
-**Why it happens:**
-The temptation is to build a Handlebars-style template: `Vi leverer nettsider i {{by}}.` and push 50 cities through it. It ships fast, but the pages are functionally identical from Google's perspective.
+**Why it happens:** The current consent implementation pre-dates Consent Mode v2 enforcement. It gates gtag loading entirely behind `localStorage.getItem('nettup_ads_consent') === 'granted'`, which is "basic" consent mode. Google needs "advanced" consent mode where gtag loads immediately with default consent states set to `denied`, then updates to `granted` after user consent. This enables cookieless pings and conversion modeling for non-consenting users.
 
-**How to avoid:**
-Each V1 city page (Oslo, Drammen, Asker, Bærum, Lillestrøm, Sandvika, Ski, Moss) must have genuinely differentiated copy. Concrete signals that differentiate a legitimate location page from a doorway page:
-- Unique intro paragraph that names real local context (industry, local landmarks, competitor landscape)
-- City-specific FAQ questions that reflect what businesses in that area actually ask
-- At least one local proof point (client reference, mention of local area served)
-- The page should be "an integral part of the site's user experience" — linked from navigation, footer, and contact page — not orphaned
+**Consequences:**
+- Smart Bidding (Target CPA, Maximize Conversions) operates with incomplete data, leading to overbidding or underbidding
+- Remarketing audiences cannot be built for the majority of visitors
+- The reported conversion count in Google Ads will be ~30% of actual conversions (vs Plausible's complete count)
+- Campaign ROAS reporting is unreliable, making budget decisions guesswork
+- Google may have already disabled advertising features for the account if Consent Mode v2 was not detected
 
-For V2/V3, use AI-assisted generation with a per-city data model (population, regional industries, nearby municipalities) that forces meaningful variation. Do not batch-generate without human review of each batch.
+**Prevention:**
+1. Replace the current gtag loading pattern with advanced Consent Mode v2:
+   ```js
+   // Load gtag immediately (before consent)
+   gtag('consent', 'default', {
+     ad_storage: 'denied',
+     ad_user_data: 'denied',
+     ad_personalization: 'denied',
+     analytics_storage: 'denied'
+   });
+   // On consent granted:
+   gtag('consent', 'update', {
+     ad_storage: 'granted',
+     ad_user_data: 'granted',
+     ad_personalization: 'granted'
+   });
+   ```
+2. Add the two v2 parameters (`ad_user_data`, `ad_personalization`) that the current implementation lacks
+3. Keep Plausible as-is (cookieless, completely unaffected by consent mode)
+4. Verify with Google Ads diagnostics that consent mode is detected after deploy
 
-**Warning signs:**
-- Two city pages have near-identical `<p>` text with only the city name changed
-- City pages are not linked from any navigation element (orphan pages)
-- The page's `<h1>` and intro contain the city name 3+ times in the first 100 words
-- Google Search Console shows impressions but zero clicks on city pages after 4+ weeks indexed
+**Detection:** Google Ads > Tools > Diagnostics for consent mode warnings. Compare Plausible "B2B Form Submit" goal count vs Google Ads reported conversions weekly.
 
-**Phase to address:**
-V1 (hand-crafted pages) — enforce differentiation at authoring time. V2 — define the data model in `locations.ts` to force per-city unique fields before generating any content.
+**Phase:** Must be the first implementation task, before any ad spend begins.
 
----
-
-### Pitfall 2: Thin Content on City Pages — Failing Google's Helpful Content Threshold
-
-**What goes wrong:**
-Thin content for local pages is not purely a word count problem (Google has repeatedly stated word count is not a ranking factor). The real threshold is whether the page "answers the user's question based on their location, need, or search pattern." A 600-word page that only restates generic service descriptions with the city name inserted is thin. A 300-word page with a specific client reference, a local FAQ, and a contact form may not be.
-
-For agency local pages, the specific risk is that pages answer the implicit query ("webdesign [by]") but contain no information a user couldn't get from any other web design agency page. Google's helpful content system penalizes this at the site level — not just the individual page — which means thin V2/V3 pages can drag down the ranking of well-crafted V1 pages.
-
-**Why it happens:**
-Agencies know their service offering doesn't change city to city. The honest answer is "we do the same work in Oslo and in Moss." The mistake is letting that bleed into the copy.
-
-**How to avoid:**
-Define a minimum content spec per city page in `locations.ts`. Required fields that force differentiation:
-- `intro`: 2-3 sentences specific to that city's business environment (min 80 words)
-- `faq`: minimum 3 Q&A pairs, at least 2 must be city-specific (not generic service FAQ)
-- `nearbyAreas`: surrounding municipalities — adds geographic relevance without boilerplate
-- `regionalIndustries`: 2-3 dominant business sectors in that municipality — supports industry-specific framing
-
-Do not publish a V2/V3 city page if the `intro` field is a city-name swap of another page's intro. Add a lint step or pre-publish checklist that checks field length thresholds.
-
-**Warning signs:**
-- `locations.ts` has a city entry where `intro` is under 60 words
-- `faq` entries are identical across more than 2 cities
-- A city page's unique word percentage (comparing to other city pages via diffing) is below 40%
-- Google Search Console shows city pages in "Crawled, not indexed" status persistently
-
-**Phase to address:**
-V1 — define the content spec upfront. V2 — add a data quality check before generating content. V3 — automate uniqueness validation (diff against existing pages) as a pre-publish gate.
+**Confidence:** HIGH - Google's own documentation confirms EEA enforcement since July 2025. Current code clearly uses basic mode.
 
 ---
 
-### Pitfall 3: Duplicate Content Across City Pages — Wrong Use of Canonical and noindex
+### Pitfall 2: Subscription Messaging Triggers "Paying Forever" Objection
 
-**What goes wrong:**
-Two distinct failure modes:
+**What goes wrong:** Switching from the current one-time pricing ("Fra 2 500 kr" with "Lanseringstilbud" badge) to subscription ("0 kr oppstart + 399 kr/mnd") without reframing the value proposition causes prospects to mentally calculate total cost (399 x 12 = 4 788 kr/year) and compare unfavorably against the current one-time Enkel package (2 500 kr). The subscription is actually more expensive after ~6 months.
 
-**Mode A — Canonical collision:** If canonical tags on city pages point to each other (or to the service index page at `/tjenester`), Google consolidates them into one URL. The other city pages become invisible in search. This happens when developers add a blanket `canonical` to the location template pointing to the "main" version.
+**Why it happens:** The current `pricing.ts` shows one-time prices (2 500 / 4 500 / 10 000 kr) with monthly fees (350 / 500 / 750 kr/mnd) positioned as ongoing hosting/support. The new subscription model fundamentally changes the value exchange: the website itself is "free" but you pay indefinitely. For a static website that feels "finished" after delivery, customers ask "why am I still paying?"
 
-**Mode B — noindex + canonical conflict:** Some developers add both `<meta name="robots" content="noindex">` and a `<link rel="canonical">` on thin city pages as a hedge. Google's official guidance: these signals directly contradict each other ("don't index this" vs. "index the canonical version"). In worst case Google ignores both. Never apply both simultaneously.
+**Consequences:**
+- Conversion rate drops despite the lower entry barrier (0 kr vs 2 500 kr)
+- Prospects who calculate annual cost feel deceived ("this costs more than the old price")
+- High early churn (months 3-6) when the "new website" feeling wears off and the monthly charge feels like a tax
+- Negative word-of-mouth from customers who feel locked into ongoing payments for a static product
 
-The correct model: each city page is its own canonical URL. Set `<link rel="canonical" href="https://nettup.no/[city-slug]">` pointing to itself. No `noindex`. Pages that are genuinely too thin to index should either be improved or not published.
+**Prevention:**
+1. Frame the subscription around ongoing services, not the website: "Hosting + SSL + support + monthly updates + SEO-overvaking inkludert"
+2. Show what the monthly fee replaces: "Uten oss: 1 200 kr/ar hosting + 500 kr/ar SSL + 800 kr/time for endringer = dyrere og mer jobb"
+3. Never show total annual cost on the page - let the low monthly number anchor
+4. Include a clear exit clause prominently: "Ingen bindingstid" (the current hero already has this, keep it)
+5. Position one-time packages as alternatives: "Foretrekker du a eie? Se vare engangspakker" - link to `/tjenester/nettside`
+6. Define what happens when a customer cancels: do they keep the site? Lose it? This must be answered on the page
 
-**Why it happens:**
-Developers copy a generic `BaseLayout.astro` pattern without realizing the `canonical` prop defaults to the current URL only if explicitly passed. In Astro, if the canonical tag is conditionally generated and a prop is forgotten, it may default to a wrong URL.
+**Detection:** A/B test subscription vs one-time messaging. Track form abandonment rates in Plausible. Monitor which pricing model users select via custom properties.
 
-**How to avoid:**
-In `[location].astro`, always explicitly pass the canonical URL derived from the page slug:
-```astro
-<BaseLayout canonical={`https://nettup.no/${location.slug}`} />
-```
-Never let canonical default to a catch-all. Add a build-time assertion or post-build audit that checks every city page's canonical URL equals its own URL.
+**Phase:** Landing page content/messaging phase - must be nailed before ads launch.
 
-For near-duplicate pages where content quality is borderline, the correct answer is to improve content — not to noindex or canonicalize away. Google's documentation explicitly states: "Google doesn't recommend using noindex to prevent selection of a canonical page within a single site."
-
-**Warning signs:**
-- Two city pages have the same `<link rel="canonical">` value in the rendered HTML
-- Google Search Console shows "Duplicate, Google chose different canonical than user" for city pages
-- `<meta name="robots" content="noindex">` appears on any city page that also has a canonical pointing elsewhere
-- Screaming Frog or similar crawl tool shows canonical chains (A → B → A) between city pages
-
-**Phase to address:**
-V1 — establish the canonical pattern correctly in `[location].astro` before the first deploy. Verify with a post-build HTML check on the rendered output.
+**Confidence:** MEDIUM - subscription fatigue research supports this, but specific impact depends on Norwegian SMB audience response.
 
 ---
 
-### Pitfall 4: Schema Errors on LocalBusiness areaServed
+### Pitfall 3: ScarcityCounter Uses Fabricated Numbers - Legal Risk Under Markedsforingsloven
 
-**What goes wrong:**
-Four common errors in this specific context:
+**What goes wrong:** The `launchOffer.ts` config uses hardcoded values (`total: 10, taken: 7`) manually updated at build time. The `ScarcityCounter.astro` renders "3 av 10 plasser igjen" as static HTML. This is functionally a fake scarcity counter. Under Norway's markedsforingsloven (section 6-7), stating a limited number of available slots when the limitation is not genuinely tracked constitutes misleading marketing. Forbrukertilsynet (the Norwegian Consumer Authority) actively enforces this, particularly around limited-time/limited-quantity claims.
 
-**Error 1 — areaServed typed as a string instead of a Place object:** Using `"areaServed": "Oslo"` is technically valid per schema.org but weaker than using a typed `Place` entity. Google's implementation prefers `{"@type": "City", "name": "Oslo"}` or `{"@type": "AdministrativeArea", "name": "Akershus"}`.
+**Why it happens:** The counter was built as a conversion optimization tool with good intent. But the numbers are static build-time values that only change when someone manually edits `launchOffer.ts` and redeploys. When the subscription model launches, "3 plasser igjen" will display identically for every visitor for weeks or months.
 
-**Error 2 — Conflicting address + areaServed signals:** Google's structured data validator has a known discrepancy: schema.org allows `areaServed` without a physical `address`, but Google's Rich Results Test requires an `address` field. For a service-area business like Nettup (no physical storefront), the correct approach is to include the physical address (or a PO Box / registered address) even if the business is service-area-only. Omitting `address` causes a validation warning.
+**Consequences:**
+- Legal risk under markedsforingsloven for misleading commercial practices
+- Google Ads policy violation risk (misleading claims can trigger ad disapproval and account suspension)
+- Trust destruction with returning visitors who notice the number never changes
+- Reputational damage - a web agency caught using fake scarcity signals incompetence to potential clients
 
-**Error 3 — Per-page LocalBusiness declarations that conflict with BaseLayout:** If `BaseLayout.astro` already declares a `LocalBusiness` schema with `"@id": "https://nettup.no/#business"` and a city page re-declares a new `LocalBusiness` with a different `@id` or no `@id`, Google sees two separate business entities. This dilutes the Knowledge Graph entity for Nettup.
+**Prevention:**
+1. Make scarcity real: track actual signups in a database or CMS and update the counter dynamically (requires a serverless endpoint)
+2. Switch to time-based scarcity that is truthful and verifiable: "Tilbudet gjelder til 30. april 2026" with a real deadline
+3. Remove scarcity entirely and rely on the value proposition - "0 kr oppstart" is already compelling without fake urgency
+4. If keeping the "first 10 customers" offer, implement honest tracking and remove the counter when slots genuinely fill
+5. Never use countdown timers that reset on page refresh
 
-**Error 4 — areaServed array not updated as cities scale:** The root `LocalBusiness` schema in `BaseLayout.astro` may have a hardcoded or empty `areaServed`. As cities are added to `locations.ts`, the `areaServed` on the root schema should be dynamically derived from the config — not manually maintained.
+**Detection:** Visit the landing page as a returning visitor 2+ weeks after launch. If the number hasn't changed, it's fake.
 
-**How to avoid:**
-- For each city page, emit a minimal schema that references the root entity by `@id` rather than re-declaring the full LocalBusiness:
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "provider": { "@id": "https://nettup.no/#business" },
-  "areaServed": { "@type": "City", "name": "Oslo" },
-  "name": "Webdesign i Oslo"
-}
-```
-- Keep the full `LocalBusiness` declaration exclusively in `BaseLayout.astro`
-- Drive `areaServed` on the root `LocalBusiness` from `locations.ts` at build time so it stays in sync
-- Validate every new page through `https://validator.schema.org` and Google's Rich Results Test before publishing
+**Phase:** Must be resolved during landing page rebuild, before any ad traffic is sent.
 
-**Warning signs:**
-- Rich Results Test shows "Missing field: address" on any city page
-- Schema validator at `schema.org/validator` shows two `LocalBusiness` entities for the same domain
-- `areaServed` in `BaseLayout.astro` is a hardcoded list that doesn't match `locations.ts`
-- City pages have `"@type": "LocalBusiness"` in their own JSON-LD rather than a `@id` reference
-
-**Phase to address:**
-V1 — design the schema architecture before building pages. The `LocalBusiness` + `Service` + `@id` referencing pattern must be established in Phase 1 and reused for all subsequent cities.
+**Confidence:** HIGH - DLA Piper Norway explicitly documents that stating limited availability that isn't real violates markedsforingsloven. The current implementation is verifiably static.
 
 ---
 
-### Pitfall 5: Premature Scaling — Publishing V3 Pages Before V1 and V2 Signal Quality
+### Pitfall 4: Organic /tjenester/nettside Cannibalized by Paid /nettside-for-bedrift
 
-**What goes wrong:**
-Scaling to 300+ pages before the V1 pages have established quality signals causes two problems:
+**What goes wrong:** Both pages target "nettside for bedrift" as primary keyword. The organic page title: `Nettside for bedrift | Profesjonell og rask | Nettup`. The paid landing page title: `Nettside for Bedrift | Fra 2 500 kr (Spar 64%) | Nettup`. Google sees two pages competing for the same query, diluting organic ranking signals while simultaneously paying for clicks that might come free from organic.
 
-**Problem A — Site-level thin content penalty:** Google's helpful content system evaluates the site holistically. If a large proportion of pages are thin (V3 coverage of Leirfjord, Tvedestrand, and Åmot with 200-word stubs), the entire site's ranking can be suppressed — including the core service pages and the blog. The August 2025 spam update showed this cross-page contamination in multiple documented cases.
+**Why it happens:** The landing page was designed for paid traffic but is indexed by Google (no `noindex` directive set). Both pages are optimized for essentially the same keyword. The `LandingPageLayout` has a `noIndex` prop available but it's set to `false` by default and not used on the current page.
 
-**Problem B — Index budget dilution:** A new subdomain or a site with 8 pages suddenly publishing 300 new pages in one sprint confuses Google's crawl budget allocation. Pages may not be indexed for weeks. Importantly, Nettup.no is not a high-authority domain — crawl budget matters.
+**Consequences:**
+- Organic ranking for "nettside for bedrift" weakens as Google splits authority between two URLs
+- Paying for ad clicks on a keyword where organic might already rank (wasted spend)
+- Confusing user experience when both pages appear in search results with different pricing
+- After subscription model launch, organic page shows one-time prices while paid page shows subscription prices - contradictory signals
 
-The documented case study: a site scaled from 300 to 22,000 AI-generated pages in a few months, without human review, and lost all rankings. The pages were removed but recovery was not confirmed.
+**Prevention:**
+1. Set `noIndex={true}` on the `/nettside-for-bedrift` landing page so it only receives paid traffic:
+   ```astro
+   <LandingPageLayout noIndex={true} title="..." />
+   ```
+2. Differentiate keyword intent if keeping both indexed: `/tjenester/nettside` for informational ("what does a business website include"), `/nettside-for-bedrift` for transactional ("buy now")
+3. In Google Ads, add negative keywords matching queries where `/tjenester/nettside` already ranks well (check Search Console first)
+4. Monitor Search Console > Performance > Pages for both URLs appearing on the same query
+5. Consider: does `/nettside-for-bedrift` need organic traffic at all? If it's purely an ads destination, noindex is the clean answer
 
-**Why it happens:**
-The V3 architecture is already built into the dynamic route. Once `[location].astro` and `getStaticPaths()` work, it's technically trivial to add 300 entries to `locations.ts` and deploy. The technical ease creates a false sense that the content is "ready."
+**Detection:** Google Search Console > Performance > Pages. Filter for "nettside for bedrift" query and check if both URLs appear.
 
-**How to avoid:**
-Enforce a staged publication gate:
-- **V1 (6-8 cities):** Hand-written. Ship. Monitor for 6-8 weeks. Check Google Search Console for indexing status, click-through rate, and "Crawled, not indexed" signals.
-- **V2 (30-50 cities):** Only start when V1 pages show indexing confirmation (not just "Discovered") and at least some organic impressions. Use `locations.ts` quality fields to enforce differentiation before batch-generating.
-- **V3 (300+):** Only when V2 shows healthy click-through rates and no site-level suppression signals. Publish in batches of 30-50 per sprint, not all at once.
+**Phase:** Must be decided before launching ads. The noindex prop already exists - this is a one-line change.
 
-Add a `tier` field to `locations.ts` (`'V1' | 'V2' | 'V3'`) and only include locations where `tier` matches the current release phase in `getStaticPaths()`.
-
-**Warning signs:**
-- V1 pages are in "Discovered, not indexed" in Search Console after 4+ weeks
-- V1 pages have impressions but 0 clicks (signals content isn't satisfying intent)
-- Temptation to "just add the remaining cities since the code is ready" before V1 shows results
-- `locations.ts` has 50+ entries before V1 has been live for more than 2 weeks
-
-**Phase to address:**
-V1 — build the tier gate into `getStaticPaths()` from day one. V2 — define promotion criteria (concrete metrics) before starting V2 content. V3 — treat as a separate milestone with its own research and quality threshold.
+**Confidence:** HIGH - the current titles are nearly identical for the same keyword. Cannibalization is near-certain without intervention.
 
 ---
 
-### Pitfall 6: Broken Sitemap Coverage for Dynamically Generated City Pages
+## Moderate Pitfalls
 
-**What goes wrong:**
-`@astrojs/sitemap` works correctly for static-build dynamic routes (i.e., `getStaticPaths()` in static mode). However, there are two known failure conditions:
+### Pitfall 5: Form Friction Kills Paid Traffic Conversions
 
-**Condition A — SSR mode:** If any page in the project uses `output: 'server'` or `output: 'hybrid'` Astro config, the sitemap integration cannot enumerate dynamic routes. Nettup uses Vercel hybrid mode for the `/api/chat` endpoint. If this changes how `[location].astro` is processed, city pages may not appear in the sitemap. This was a documented regression in `@astrojs/sitemap` 1.3.0 (GitHub issue #7015).
+**What goes wrong:** The main `ContactForm` at the bottom of the landing page has 3 visible fields (navn, epost, telefon) + 1 optional textarea (melding) + hidden pakke/tjeneste/kilde fields. For organic traffic that has browsed the site and built trust, this is acceptable. For paid traffic arriving from an ad with zero prior relationship, each visible field reduces conversion rate by an estimated 5-10%.
 
-**Condition B — `site` config not set:** The sitemap integration requires `site` in `astro.config.mjs` to be set to `https://nettup.no` (including protocol). Without it, sitemap entries may have relative URLs that Google rejects.
+**Why it happens:** The same `ContactForm` component is shared between `/kontakt` (organic) and `/nettside-for-bedrift` (paid). Organic visitors have self-selected and invested time browsing. Paid visitors clicked an ad 10 seconds ago and haven't built trust.
 
-**How to avoid:**
-- After the first V1 deploy, immediately verify `https://nettup.no/sitemap-index.xml` lists all city pages
-- Cross-check `sitemap.xml` entries count against the number of entries in `locations.ts` filtered to the active tier
-- Confirm `site: 'https://nettup.no'` is set in `astro.config.mjs`
-- If city pages are missing from the sitemap, add a custom sitemap endpoint (`src/pages/sitemap-locations.xml.ts`) that programmatically generates location entries from `locations.ts`
+**Prevention:**
+1. The `HeroMicroForm` (email-only, one field) already exists in the hero and fires Google Ads conversion events - this is the right primary CTA for paid traffic
+2. Keep the full `ContactForm` as a secondary option at the bottom for visitors who want to provide more detail
+3. Track micro-form vs full-form conversions separately (already done: `HeroMicroForm` fires a separate Formspree submission with `kilde: 'hero-form'`)
+4. Consider a two-step flow: micro-form captures email (fires conversion), then redirects to a "thank you" page that asks for optional details
+5. The current `HeroMicroForm` submit button says "Fa gratis tilbud" which is good - low commitment language
 
-**Warning signs:**
-- `sitemap.xml` line count is lower than `locations.ts` active entry count after deploy
-- Google Search Console's "Submitted but not indexed" report shows city URLs that are in the sitemap
-- `/api/chat` route appearing in the sitemap (signals sitemap enumeration may be misconfigured)
+**Detection:** Compare hero micro-form submissions vs full ContactForm submissions in Formspree. If micro-form converts 3x+ higher on paid traffic (filter by `kilde` parameter), the full form is adding unnecessary friction.
 
-**Phase to address:**
-V1 — verify sitemap coverage immediately after first deploy, before any additional cities are added.
+**Phase:** Landing page rebuild. Ensure micro-form remains the primary CTA above the fold.
 
 ---
 
-## Technical Debt Patterns
+### Pitfall 6: Mobile Performance Tanks Quality Score
 
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| Reuse identical intro template with only city name swapped for V2/V3 | Fast content generation | Doorway page pattern — Google flags the cluster, may penalize entire site | Never — use per-city unique fields in the data model |
-| Keep `areaServed` as a static string in BaseLayout instead of deriving from `locations.ts` | Simpler initial implementation | `areaServed` on root schema goes stale when new cities are added | Only acceptable for V1 if a TODO comment marks it for refactoring before V2 |
-| Publish all 300 V3 cities at once when the `[location].astro` template is ready | Single deploy, minimal ops overhead | Index budget dilution, thin content penalty risk at site level | Never — phased rollout with quality gates is non-negotiable |
-| Use `noindex` on thin city pages to "hide" them temporarily | Prevents penalization of bad pages | `noindex` pages don't count toward topical authority; fix or don't publish | Never — if the page isn't ready to index, it isn't ready to publish |
-| Skip Google Rich Results Test for V2+ cities ("template was validated for V1") | Save time on validation | Schema errors propagate to all new cities; `areaServed` type errors uncaught | Never — validate at least one page per batch |
+**What goes wrong:** The landing page loads React (58.47 kB gzipped), Framer Motion, `LandingHeroAnimation` (`client:load`), `HeroMicroForm` (`client:load`), and `ContactForm` (`client:load`). On mobile 3G connections, this JavaScript payload delays Time to Interactive. Google Ads now weighs landing page experience more heavily in Quality Score (2025 update), and mobile speed is the primary ranking factor.
 
----
+**Why it happens:** All three React islands use `client:load` (immediate hydration), but `LandingHeroAnimation` is `hidden lg:block` (invisible on mobile) and `ContactForm` is at the very bottom of the page. Both hydrate JavaScript that mobile users don't immediately need.
 
-## Integration Gotchas
+**Prevention:**
+1. Change `LandingHeroAnimation` from `client:load` to `client:visible` (or `client:media="(min-width: 1024px)"` since it's desktop-only)
+2. Change `ContactForm` from `client:load` to `client:visible` (it's below the fold)
+3. Keep `HeroMicroForm` as `client:load` (it's above the fold and needs immediate interactivity)
+4. Consider making `HeroMicroForm` a plain HTML form with minimal JS enhancement instead of a full React island
+5. Run Lighthouse mobile audit targeting LCP < 2s and TBT < 200ms
 
-| Integration | Common Mistake | Correct Approach |
-|-------------|----------------|------------------|
-| `@astrojs/sitemap` + Vercel hybrid | Assuming hybrid mode doesn't affect static route enumeration | Verify city pages appear in sitemap after first hybrid-mode deploy; add custom sitemap endpoint if missing |
-| `BaseLayout.astro` canonical | Forgetting to pass explicit canonical to `[location].astro` | Always pass `canonical={`https://nettup.no/${location.slug}`}` explicitly — never let it default |
-| `LocalBusiness` JSON-LD in `BaseLayout` | `areaServed` hardcoded while `locations.ts` grows independently | Drive `areaServed` array from `locations.ts` at build time using `import.meta.glob` or direct import |
-| Google Search Console | Submitting the sitemap but never checking "Discovered, not indexed" vs "Indexed" status | Check coverage report 2 weeks after V1 deploy — "Crawled, not indexed" on multiple city pages is an early warning sign |
-| schema.org Rich Results Test | Testing only the V1 template once | Re-test when adding new city data to `locations.ts` — field values may cause validation errors the template didn't expose |
+**Detection:** Google Ads > Keywords > Quality Score column. "Landing page experience" rated "Below average" = performance problem. Core Web Vitals in Vercel Analytics.
+
+**Phase:** Performance optimization during landing page rebuild, before ad spend.
 
 ---
 
-## Performance Traps
+### Pitfall 7: Dual Analytics Conversion Numbers Diverge - Confusion About True ROAS
 
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| 300 city pages each including large Framer Motion bundle | First load of any city page triggers full React hydration | City pages should be pure Astro (no React islands unless contact form is embedded); defer hydration | Immediately at V3 scale — 300 static pages with React hydration overhead hurts LCP across the board |
-| Sitemap grows to include all 300+ city pages in a single XML file | No direct user symptoms; Google may deprioritize parsing | Keep sitemap under 50,000 URLs; consider splitting by tier (sitemap-v1.xml, sitemap-v2.xml) if approaching limits | At V3 with 300+ pages, approaching sitemap size limits |
-| `locations.ts` loaded entirely on every city page build | Slow build times at V3 scale | The config is imported at build time by `getStaticPaths()` — this is fine. But do not load the entire config on the client side | No user impact; build time degrades beyond ~500 entries |
+**What goes wrong:** Form submit fires both `trackB2BFormSubmit()` (Plausible, cookieless, always fires) and `gtag('event', 'conversion', ...)` (Google Ads, only fires when `window.gtagLoaded` is true). Plausible will always report higher conversion counts than Google Ads. With current basic consent mode, the gap could be 70%+. This creates confusion about actual conversion rates and makes ROAS calculations unreliable.
 
----
+**Prevention:**
+1. Accept and document the divergence: "Plausible = ground truth for total conversions, Google Ads = consented-only conversions"
+2. Implement Consent Mode v2 advanced (Pitfall 1) so Google can model missing conversions via cookieless pings
+3. Use Plausible as source of truth for conversion rate optimization
+4. Use Google Ads conversion data for bid optimization only (Smart Bidding needs its own first-party data)
+5. Add UTM parameters to all ad URLs (`?kilde=gads&kampanje=nettside`) and track the `kilde` parameter as a Plausible custom property to see paid traffic conversions regardless of cookie consent
 
-## Security Mistakes
+**Detection:** Compare weekly: Plausible "B2B Form Submit" goal count vs Google Ads reported conversions. If Google shows <30% of Plausible's count, Consent Mode v2 advanced is essential.
 
-Not applicable to this domain — local SEO pages are static content with no authentication surface. Standard site security inherited from existing Nettup.no setup applies.
-
----
-
-## UX Pitfalls
-
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| City page has no contact CTA or links to service pages | User confirms Nettup covers their city but has no next step | Every city page must end with a contact CTA pre-filled with the city context: `/kontakt?by=oslo` or similar |
-| City pages are orphaned from navigation | Google treats them as low-authority; users can't browse to them | Link all active city pages from the footer "Tjenesteområder" section and from the `/kontakt` page |
-| Listing 300 cities in the footer when V3 ships | Footer becomes cluttered; pages load excessive HTML | Group by region (Østlandet, Vestlandet, etc.) or show only top-tier cities in footer with a "Se alle steder" page |
-| City page claims to serve a city with no local proof | Undermines credibility — users in that city can tell if copy is generic | For V1/V2 cities, include at least one local-specific reference; for V3 cities where proof is absent, be explicit that service is available nationwide |
+**Phase:** Analytics setup phase, alongside Consent Mode v2 implementation.
 
 ---
 
-## Norway-Specific Pitfalls
+### Pitfall 8: Price Inconsistency Between Landing Page and Organic Pages
 
-### hreflang — Not Needed, But Watch the Edge Case
+**What goes wrong:** The site has multiple pricing touchpoints: `/priskalkulator` (calculation engine using `pricing-config.ts`), `/tjenester/nettside` (Service schema shows `minPrice: 8000`), `/nettside-for-bedrift` (shows packages from `pricing.ts` starting at 2 500 kr), and the AI chatbot (may quote prices from training context). Introducing "0 kr + 399 kr/mnd" on the landing page while organic pages still show "fra 8 000 kr" one-time creates a trust-destroying contradiction.
 
-Nettup.no is single-language Norwegian (Bokmål). hreflang tags are irrelevant for a monolingual site with no regional language variants. Do not add them.
+**Why it happens:** Multiple config files (`pricing.ts`, `pricing-config.ts`, `services.ts`, `launchOffer.ts`) each control pricing in different contexts. The subscription model adds yet another pricing dimension without a unified strategy.
 
-One edge case: if blog articles are ever translated to English for GEO purposes, hreflang becomes relevant. As of v1.5 this is out of scope, but adding hreflang for `nb` on Norwegian city pages without a corresponding `en` page will produce orphaned hreflang references that Search Console flags as errors. The safe rule: if no bilingual structure exists, use no hreflang tags.
+**Prevention:**
+1. Strategic decision first: is subscription landing-page-exclusive or site-wide?
+2. If landing-page-exclusive: use `noIndex` (Pitfall 4) to prevent Google from showing both pricing models in search
+3. If site-wide: update `pricing.ts`, `services.ts` (Service schema minPrice), and `pricing-config.ts` simultaneously
+4. Update the chatbot's context in `chatbot.ts` to reflect the new pricing model
+5. Add a "pricing-model" flag to the config system so all components know which model to display
 
-### nb-NO vs. no Language Code
+**Detection:** User test: show someone the ad, then the landing page, then ask them to find pricing on `/tjenester/nettside`. If they report different prices, the inconsistency exists.
 
-The site's `<html lang>` attribute should be `lang="nb"` (Bokmål) not `lang="no"` (generic Norwegian). Google recognizes both, but `nb` is more specific. Ensure `BaseLayout.astro` uses `lang="nb"` consistently on city pages. Mixed signals (some pages `no`, some `nb`) create unnecessary ambiguity.
-
-### Norwegian Municipality Name Collisions
-
-Several Norwegian municipalities share similar names or have names that differ from common usage. Examples relevant to the target city list:
-- "Bærum" and "Bærum kommune" — use the municipality-branded name, not "Barum" (wrong), not "Bærum kommune" (overly formal)
-- "Lillestrøm" became a municipality name in 2020 (merger of Skedsmo, Sørum, Fet). Some residents still use "Skedsmo" or "Kjeller" colloquially. The slug should be `lillestrom` (ASCII-safe) and the displayed name should be "Lillestrøm"
-- URL slugs must be ASCII — use `lillestrom`, `baerum`, `ski` (Ski is already ASCII). Do not use `bærum` in URLs — it breaks on some HTTP clients and complicates sitemap XML encoding
-
-### Google Business Profile Gap
-
-The existing PROJECT.md notes "Google Business Profile" as deferred. Google Business Profile (GBP) is the single strongest local SEO signal for Norwegian businesses and is separate from website structured data. City landing pages without a verified GBP will rank below competitors who have one. This is not a technical pitfall but a strategy gap: city pages alone will not displace a verified GBP listing. Prioritize GBP verification for Nettup's primary service area before scaling to V2.
+**Phase:** Architecture/planning phase - this is a strategic decision that must be made before any code changes.
 
 ---
 
-## "Looks Done But Isn't" Checklist
+## Minor Pitfalls
 
-- [ ] **Each V1 city page has unique intro copy:** Run a text diff between any two city pages — unique content should be > 60% of total words
-- [ ] **Canonical self-references correctly:** Check rendered HTML source of each city page — `<link rel="canonical">` must equal that page's own URL
-- [ ] **No city page has both `noindex` and `canonical`:** Automated check in CI or post-build HTML lint
-- [ ] **`areaServed` in root LocalBusiness schema reflects all published cities:** Compare `areaServed` array count against `locations.ts` active entries count
-- [ ] **Schema validates with no errors:** Every new city page passes `https://validator.schema.org` with zero errors (warnings are acceptable)
-- [ ] **All city pages appear in `sitemap.xml`:** Count sitemap entries and compare against `locations.ts` active entry count post-deploy
-- [ ] **City pages are linked from footer:** Inspect footer HTML in browser — each V1 city should have a visible link
-- [ ] **V1 pages indexed before V2 work starts:** Google Search Console shows V1 pages as "Indexed" (not just "Discovered") before any V2 entry is added to `locations.ts`
-- [ ] **URL slugs are ASCII-only:** No non-ASCII characters in any city slug — verify in `locations.ts` by inspection
-- [ ] **`<html lang="nb">` on all city pages:** Inspect rendered HTML — not `lang="no"`, not omitted
+### Pitfall 9: Star Rating and Testimonials Are Fabricated Social Proof
+
+**What goes wrong:** The hero shows "4.9 / 5 basert pa kundeanmeldelser" with 5 star SVGs but there's no link to actual reviews. The Testimonial section uses placeholder quotes (PROJECT.md known gap). Sending paid traffic to a page with three layers of unverifiable trust signals (fake scarcity + fabricated rating + placeholder testimonials) risks both ad disapproval and customer distrust.
+
+**Prevention:**
+1. Get real Google Business Profile reviews before running ads (even 3-5 genuine reviews)
+2. Link the star rating to the actual review source: "Se anmeldelser pa Google"
+3. Replace placeholder testimonials with real client quotes (from iGive or Blom Company)
+4. Or remove unverifiable claims entirely - honest messaging with zero social proof converts better than obviously fake proof
+
+**Phase:** Pre-launch requirement. Real social proof before any ad spend.
+
+---
+
+### Pitfall 10: Missing Enhanced Conversions Loses Attribution Quality
+
+**What goes wrong:** The current gtag conversion tracking sends the event but no user-provided data. Enhanced Conversions sends hashed first-party data (email) to Google, significantly improving conversion modeling accuracy - especially important with Consent Mode v2 where modeling fills the gap.
+
+**Prevention:**
+1. Before firing the conversion event, set user data:
+   ```js
+   gtag('set', 'user_data', { email: formData.epost });
+   gtag('event', 'conversion', { send_to: 'AW-xxx/yyy' });
+   ```
+2. Both `ContactForm` and `HeroMicroForm` already have the email in component state - just pass it to gtag
+3. This requires enabling Enhanced Conversions in the Google Ads conversion action settings
+
+**Phase:** Conversion tracking setup, alongside Consent Mode v2.
+
+---
+
+### Pitfall 11: Ad Copy Promises Don't Match Landing Page Above the Fold
+
+**What goes wrong:** Ad copy promises a price, timeline, and guarantee. If the landing page hero changes from the current one-time pricing to subscription pricing, existing ad copy becomes misleading. The hero must immediately confirm whatever the ad promised within 3 seconds of landing.
+
+**Prevention:**
+1. Write ad copy last, after landing page content is finalized
+2. Use the `kilde` URL parameter to potentially adjust hero messaging based on ad variant
+3. Current hero already shows price + "Klar pa 1-3 uker" + "30 dagers garanti" - verify these match the updated subscription offer
+4. Test: read the ad, click to the page, and verify every ad claim is visible above the fold without scrolling
+
+**Phase:** Ad copy creation phase - after landing page is finalized.
+
+---
+
+## Phase-Specific Warnings
+
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| Consent Mode v2 | Breaking existing Plausible analytics or cookie banner UX | Test that Plausible fires independently; verify banner still works for users who haven't consented |
+| Subscription pricing model | "Paying forever" objection + price inconsistency across site | Frame around ongoing value; decide site-wide vs landing-page-only before coding |
+| Landing page rebuild | Mobile performance regression; losing current conversion flow | Lighthouse CI gate; A/B test new vs old if possible |
+| Scarcity/urgency elements | Legal risk under markedsforingsloven; ad disapproval | Only use verifiable claims; remove fake counters |
+| Google Ads campaign setup | Cannibalization with organic pages; consent mode gaps | noindex decision + negative keywords; verify Consent Mode v2 detected |
+| Form optimization | Two forms create confusion about which is primary CTA | HeroMicroForm = primary for paid; ContactForm = secondary for detailed inquiries |
+| Social proof | Fabricated reviews and testimonials erode trust on paid traffic | Real reviews on GBP before ad spend; replace placeholder testimonials |
+| Conversion tracking | Enhanced Conversions not capturing email; divergent Plausible vs gtag numbers | Pass email to gtag before conversion event; document expected divergence |
+| Ad copy | Promise/page mismatch after pricing model change | Write ads last; verify every claim visible above fold |
+
+---
+
+## Integration-Specific Gotchas (Existing Stack)
+
+| Integration Point | What Can Break | Prevention |
+|-------------------|----------------|------------|
+| Plausible + gtag consent | Consent Mode v2 changes could accidentally block Plausible script | Plausible uses separate CDN script (`pa-zcQI8BXyP16x3Uxv8veVj.js`); never gate it behind consent logic |
+| `ContactForm` dual tracking | `trackB2BFormSubmit()` and `gtag conversion` fire on different conditions | Accept divergence; use Plausible as ground truth |
+| `HeroMicroForm` + `ContactForm` | Both submit to same Formspree endpoint; duplicate leads possible | Different `kilde` values distinguish them; Formspree deduplication by email within 5 min window |
+| `pricing.ts` + `launchOffer.ts` | Subscription model requires new config structure; old configs still referenced by priskalkulator and chatbot | Audit all import sites before changing pricing configs |
+| `LandingPageLayout` cookie banner | Banner uses `localStorage` which persists across sessions; returning visitors from organic who declined won't see banner on paid landing page | This is actually correct behavior (respecting prior choice) but means paid traffic from previous organic visitors won't have gtag loaded |
+| `pakkeSelected` CustomEvent | Current pricing cards dispatch events that ContactForm listens to; subscription model may remove package selection | Update or remove the event dispatch when changing pricing structure |
 
 ---
 
@@ -295,45 +294,32 @@ The existing PROJECT.md notes "Google Business Profile" as deferred. Google Busi
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Doorway page penalty on city page cluster | HIGH | Remove or substantially rewrite every flagged page; wait for re-crawl; may require Google Search Console reconsideration request if manual action |
-| Thin content site-level suppression from V3 premature scaling | HIGH | Remove or noindex all V3 thin pages; wait for Googlebot to re-process (weeks to months); re-establish site quality with V1/V2 content |
-| Canonical pointing to wrong URL | LOW | Fix canonical prop in `[location].astro`; redeploy; submit affected URLs for recrawl in Search Console |
-| areaServed schema errors | LOW | Fix schema template; redeploy; re-validate; errors clear on next Googlebot crawl |
-| City pages missing from sitemap | LOW | Fix sitemap config or add custom sitemap endpoint; resubmit sitemap in Search Console |
-| noindex + canonical conflict | LOW | Remove noindex from affected pages; redeploy; submit for recrawl |
-| Duplicate city pages (canonical confusion) | MEDIUM | Audit all city page canonicals; fix self-referencing; set 301 redirects if duplicate URLs exist with different slugs |
-
----
-
-## Pitfall-to-Phase Mapping
-
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| Doorway page pattern (Pitfall 1) | V1 authoring — enforce content spec in `locations.ts` | Text diff between any two city pages shows > 60% unique content |
-| Thin content (Pitfall 2) | V1 — define required field lengths; V2 — add pre-publish quality check | No city page has `intro` under 60 words; `faq` has city-specific questions |
-| Canonical / noindex errors (Pitfall 3) | V1 — establish pattern in `[location].astro` before first page | Post-build HTML check confirms each city page self-references in canonical |
-| areaServed schema errors (Pitfall 4) | V1 — schema architecture decision before any pages built | Rich Results Test passes for all V1 pages; no duplicate LocalBusiness entities |
-| Premature V3 scaling (Pitfall 5) | V1/V2 gates — `tier` field in `locations.ts`; promotion criteria defined | V1 pages indexed + showing organic impressions before V2 starts |
-| Sitemap coverage gaps (Pitfall 6) | V1 — verify immediately after first deploy | Sitemap entry count matches `locations.ts` active count post-deploy |
-| Norway-specific (language code, slug encoding) | V1 — establish conventions in `locations.ts` schema | `<html lang="nb">` confirmed; all slugs ASCII-safe in config |
+| Consent Mode v2 missing | LOW | Code change in LandingPageLayout; redeploy; verify in Google Ads diagnostics |
+| Subscription messaging fails | MEDIUM | A/B test; may need to revert to one-time pricing and redesign messaging |
+| Fake scarcity legal issue | LOW-MEDIUM | Remove counter; update ads; if Forbrukertilsynet contacted, respond promptly |
+| Organic cannibalization | LOW | Add `noIndex={true}` to landing page; one-line change + redeploy |
+| Poor Quality Score from mobile perf | MEDIUM | Change hydration strategies; may need to convert React islands to plain HTML |
+| Price inconsistency across site | HIGH | Requires coordinated update of 4+ config files + chatbot context |
+| Fabricated social proof | LOW | Remove claims; replace with real data or nothing |
 
 ---
 
 ## Sources
 
-- Google Spam Policies (official): https://developers.google.com/search/docs/essentials/spam-policies — doorway abuse definition and criteria
-- Google Search Central Blog, March 2024: https://developers.google.com/search/blog/2024/03/core-update-spam-policies — updated enforcement
-- Google canonicalization documentation: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls — canonical vs noindex guidance
-- RicketyRoo: Location Page Spam analysis (MEDIUM confidence — WebSearch verified): https://ricketyroo.com/blog/location-page-spam/
-- Tailride.so case study — 22,000 AI pages penalty (MEDIUM confidence — single source): https://tailride.so/blog/google-penalty-22000-ai-pages
-- Astro sitemap integration docs: https://docs.astro.build/en/guides/integrations-guide/sitemap/
-- Astro sitemap regression, GitHub issue #7015: https://github.com/withastro/astro/issues/7015
-- schema.org areaServed property: https://schema.org/areaServed
-- schema.org LocalBusiness address/areaServed conflict, GitHub issue #4643: https://github.com/schemaorg/schemaorg/issues/4643
-- Google Crawl Budget documentation: https://developers.google.com/search/docs/crawling-indexing/large-site-managing-crawl-budget
-- Manning Search Marketing — Location Pages vs Doorway Pages: https://www.manningmarketing.com/articles/location-pages-vs-doorway-pages-seo-best-practices-and-pitfalls/
-- seroundtable.com — Google city landing pages warning: https://www.seroundtable.com/google-city-landing-pages-doorway-pages-28670.html
+- [Google Consent Mode v2 overview](https://developers.google.com/tag-platform/security/concepts/consent-mode) - HIGH confidence
+- [Google Consent Mode v2 EEA enforcement](https://support.google.com/tagmanager/answer/13695607?hl=en) - HIGH confidence
+- [Consent Mode v2 common mistakes (Bounteous)](https://www.bounteous.com/insights/2025/07/30/top-7-google-consent-mode-mistakes-and-how-fix-them-2025/) - MEDIUM confidence
+- [Google Ads Quality Score (official)](https://support.google.com/google-ads/answer/6167118?hl=en) - HIGH confidence
+- [Google Ads landing page experience update](https://www.servicescalers.com/post/google-ads-landing-page-quality-score-update) - MEDIUM confidence
+- [Markedsforingsloven Black Week guidance (DLA Piper Norway)](https://norway.dlapiper.com/no/nyhet/markedsforingsloven-gjelder-ogsa-under-black-week-praktiske-tips-til-markedsforere) - HIGH confidence
+- [Norwegian marketing law (Lovdata)](https://lovdata.no/dokument/NLE/lov/2009-01-09-2) - HIGH confidence
+- [Fake scarcity dark patterns](https://www.deceptive.design/types/fake-scarcity) - MEDIUM confidence
+- [Subscription fatigue 2025](https://www.influencers-time.com/tackling-subscription-fatigue-in-2025-new-pricing-models/) - MEDIUM confidence
+- [Keyword cannibalization paid vs organic (SEJ)](https://www.searchenginejournal.com/avoiding-keyword-cannibalization-between-paid-organic-search-campaigns/495755/) - HIGH confidence
+- [Conversion tracking guide 2026](https://groas.ai/post/google-ads-conversion-tracking-setup-2026-the-complete-guide-ga4-enhanced-conversions-consent-mode) - MEDIUM confidence
+- [Enhanced Conversions setup (Google)](https://developers.google.com/tag-platform/security/guides/consent) - HIGH confidence
+- [Landing pages for Google Ads best practices](https://infrontmarketing.ca/blog/website-design-development/landing-pages-for-google-ads-best-practices-that-separate-winners-from-wasted-ad-spend/) - MEDIUM confidence
 
 ---
-*Pitfalls research for: Local SEO landing pages — adding city/location pages to Nettup.no (v1.5)*
-*Researched: 2026-03-08*
+*Pitfalls research for: Subscription landing page + Google Ads for Nettup.no (v1.6)*
+*Researched: 2026-03-19*

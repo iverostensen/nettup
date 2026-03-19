@@ -1,338 +1,386 @@
-# Feature Research
+# Feature Landscape
 
-**Domain:** Local SEO landing pages — Norwegian city-targeted pages for a service-area web agency
-**Milestone:** v1.5 Lokale SEO-sider (nettup.no)
-**Researched:** 2026-03-08
-**Confidence:** HIGH (multiple current sources cross-validated; Norwegian competitor analysis performed)
-
----
-
-## Context: What Already Exists
-
-The site has 5 core pages, 7 service pages, a price calculator, AI chatbot, and an automated blog pipeline. There is no city-specific content anywhere. The homepage and service pages target national Norwegian queries ("webbyrå", "nettside for bedrift") but have zero explicit coverage for local queries like "webbyrå Oslo" or "nettside bedrift Drammen".
-
-This milestone adds:
-- `src/config/locations.ts` — city data model with V1/V2/V3 expansion fields
-- `src/pages/[location].astro` — static routes via `getStaticPaths()`
-- 6–8 Tier 1 city pages with hand-written, genuinely differentiated copy
-- `LocalBusiness` JSON-LD with `areaServed` per page
-- Per-city SEO metadata + canonical URLs
-- Internal linking updates (footer, contact page)
-
-No new dependencies. All features use existing Astro 5 + Tailwind 4 + existing schema patterns.
+**Domain:** Web agency subscription landing page + Google Ads conversion optimization
+**Milestone:** v1.6 Landingsside & Google Ads (nettup.no/nettside-for-bedrift)
+**Researched:** 2026-03-19
+**Confidence:** MEDIUM-HIGH (conversion optimization patterns well-documented; Norwegian subscription web agency model is niche with limited direct data)
 
 ---
 
-## The Doorway Page Problem
+## Existing Infrastructure (Already Built)
 
-This is the central design constraint for the entire feature set. Google's spam policies explicitly list location pages as a doorway page risk. The penalty is quiet (pages get "currently not indexed" status) but fatal.
+These sections exist and work. Features below describe changes/additions to them, not rebuilds from scratch.
 
-**Doorway page definition:** A page that exists primarily for search engines, not users. The test: "Would this page exist if Google didn't exist?" If no — it's a doorway page.
-
-**How agencies get penalized:**
-- Identical page copied 40 times with only the city name swapped
-- Pages orphaned from navigation (no internal links in or out)
-- City name mentioned repeatedly in keyword-stuffed paragraphs with no genuine local content
-- Footer crammed with 40+ city names as plain text links
-- Thin FAQ sections that ask/answer nothing users actually want to know
-
-**The 60% rule (MEDIUM confidence):** Industry consensus holds that at least 60% of content per city page must be genuinely unique — not shared boilerplate. This is the threshold that separates legitimate from thin.
-
-**The intent test:** If you can swap the city name and nothing else changes, it needs more depth.
-
----
-
-## Feature Landscape
-
-### Table Stakes (Users and Crawlers Expect These)
-
-Features that a legitimate local SEO landing page must have. Missing these = page won't rank or will be penalized.
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **City-specific `<title>` tag** | Google's primary ranking signal for location queries. `Webbyrå [By] — Nettup` is the canonical pattern. | LOW | Under 60 characters. Include city name near the start. Pattern confirmed by top-ranking Norwegian web agency pages. |
-| **City-specific `<meta description>`** | CTR signal. Users scanning search results need to instantly see their city name and a relevant service claim. | LOW | 120–155 characters. City name in first 10 words. Outcome-first: "Profesjonell nettside for bedrifter i [By]. Rask levering og moderne teknologi." |
-| **Canonical URL per city** | Prevents duplicate content signals when V2/V3 generates many similar pages. | LOW | `https://nettup.no/[city-slug]` — consistent with existing Astro canonical pattern. |
-| **Unique H1 incorporating city** | On-page geo-relevance signal. Generic H1s shared across pages are a thin content red flag. | LOW | "Webbyrå i [By] — Profesjonelle nettsider for lokale bedrifter" is the table stakes pattern. Must be unique per city, not a template with swapped slug. |
-| **City-specific introductory paragraph** | The 60% unique content threshold starts here. First 200 words are evaluated by both Google and AI systems. Boilerplate here is the #1 doorway page red flag. | MEDIUM | Must reference something specific to the city — business culture, local industries, geographic context, nearby areas served. Not just "Vi leverer webtjenester til bedrifter i [By]." |
-| **Service offering section** | Users landing on a city page need to understand what's available in their area. This can be shared content presented consistently, as long as the intro and FAQ are unique. | LOW | Can reuse existing service summaries from `services.ts` with per-city CTA links. This is the shared 40% — acceptable. |
-| **Clear contact CTA with city context** | Users must be able to take action immediately. A generic "Kontakt oss" CTA is weaker than "Kontakt oss for et uforpliktende møte om din [By]-bedrift." | LOW | Pre-fill `?by=[city]` or `?tjeneste=lokal-nettside` to carry city context into the contact form (pattern already exists in codebase). |
-| **NAP consistency** | Name, Address, Phone must match the `LocalBusiness` JSON-LD exactly. Mismatches between on-page text and schema are a local ranking signal loss. | LOW | Nettup has no physical address per city — service-area business model. This changes the implementation: use `areaServed` + `serviceArea`, not `address` per city. |
-| **`LocalBusiness` JSON-LD with `areaServed`** | Structured data is Google's machine-readable confirmation that you serve this city. Without it, city-targeted ranking relies on on-page signals alone — weaker. | MEDIUM | Use `ProfessionalService` subtype (more precise than `LocalBusiness` for a web agency). `areaServed` as array of city names is sufficient; `GeoCircle`/`GeoPolygon` adds minimal value for this use case. |
-| **Sitemap inclusion** | City pages must be in `sitemap.xml` for discovery and crawl prioritisation. | LOW | Astro sitemap integration already auto-includes all static routes — confirmed in existing PROJECT.md setup. No additional work needed beyond ensuring routes are generated. |
-| **Internal links from existing pages** | Orphaned pages are a doorway page red flag. City pages must receive links from at least 2–3 existing pages. | LOW | Footer "Områder vi dekker" section + `/kontakt` page "Vi betjener hele Viken og Oslofjordregionen" text. See Internal Linking section below. |
-| **City-specific FAQ section** | FAQ serves two purposes: genuine user value (passes the doorway test) and `FAQPage` JSON-LD (schema signal). Questions must be specific to the city, not generic service FAQs. | MEDIUM | 3–4 questions. At least 2 must reference something specific to the city or region. "Leverer dere nettsider til bedrifter utenfor [By] sentrum?" is acceptable. "Hva er en nettside?" is not. |
-
-### Differentiators (Competitive Advantage)
-
-Features that elevate Nettup's local pages above the doorway-page-adjacent content published by most Norwegian agencies. Most competitors either skip city pages entirely or publish thin boilerplate.
-
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Local industry mention per city** | Every Norwegian city has a dominant industry cluster. Referencing it signals genuine local knowledge and creates content that cannot be replicated by a template. Oslo: finance/tech/startup, Drammen: industri/logistikk, Asker/Bærum: it-konsulenter og liberale yrker, Lillestrøm: industri og offentlig sektor. | MEDIUM | Must be accurate and specific. 1–2 sentences. Not "many businesses in [city] need websites" — that's useless. "Askers mange IT-konsulentfirmaer trenger profesjonelle nettsider som demonstrerer fagkompetanse til bedriftskunder" is useful. |
-| **Nearby areas served (explicit)** | For each Tier 1 city, explicitly naming nearby towns signals service-area coverage and creates longtail relevance ("webbyrå Nesbyen" can surface from a Drammen page if Numedal is mentioned). Feeds `areaServed` array in schema. | LOW | 2–4 nearby areas per city. Stored in `locations.ts` as `nearbyAreas[]`. Rendered as "Vi betjener også [Nedre Eiker], [Røyken] og [Hurum]." |
-| **Unique testimonial reference per city (future)** | When real client testimonials are collected, displaying a testimonial from a client in the target city is the highest-trust local signal possible. Currently a known gap (placeholder testimonials site-wide). | LOW now, HIGH later | Add a `testimonialCity` field to `locations.ts` schema now so it's ready when real testimonials exist. Don't display fake/generic testimonials — worse than no testimonial. |
-| **`FAQPage` JSON-LD co-located with FAQ** | Consistent with the pattern established in v1.1 service pages and v1.3 blog articles. City-specific FAQ with structured data is more citable by AI systems and more likely to generate rich results. | LOW | Implementation pattern already exists in codebase. Adapt from service page FAQ components. |
-| **Chatbot context injection per city** | The existing AI chatbot (Claude Haiku) already receives page context. Injecting city name and local industries into the system prompt means the chatbot answers "Kan dere hjelpe en bedrift i Drammen?" intelligently without needing separate chatbot configs. | MEDIUM | Requires passing `city` and `region` from page frontmatter to chatbot context. The chatbot infrastructure supports this via existing page-context patterns. |
-| **Blog cross-links from city-relevant articles** | The automated blog pipeline already generates articles with a "lokal-seo" topic cluster. Articles about "lokal SEO i Oslo" can link to `/oslo` city page, creating editorial internal link equity. | LOW | Update blog generation config to include city page links when relevant. No structural changes needed — just config update. |
-| **`BreadcrumbList` JSON-LD** | Consistent with existing site-wide pattern. Establishes page position in site hierarchy for both Google and AI systems. | LOW | Pattern: `Nettup (/) > Webbyrå i [By] (/[city-slug])`. Simple 2-level breadcrumb. |
-
-### Anti-Features (Explicitly Avoid)
-
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| **City-name-only differentiation** | Feels like scaling quickly | This is the textbook doorway page pattern. "Vi leverer nettsider i Oslo" and "Vi leverer nettsider i Drammen" are the same page with a swapped noun. Triggers the quiet deindexing penalty. | Write a unique intro paragraph per city that references real local context — industries, geography, or specific nearby areas. Even 2–3 unique sentences anchored in local reality pass the intent test. |
-| **40+ city footer links** | Looks comprehensive | Google's webmaster guidelines cite this specific pattern as spammy. A wall of city links is a "doorway network" red flag. | Link to 6–8 Tier 1 cities in a clean "Områder vi dekker" footer section. The rest become relevant organically as V2/V3 pages get created and linked contextually. |
-| **Fake "local office" address per city** | Boosts `address` schema trust | This is fraud. Using a virtual office address or co-working space address purely for schema is a violation of Google's local guidelines and will eventually trigger a manual penalty. | Be honest: Nettup is a service-area business. Use `areaServed` to declare coverage. This is the correct schema pattern and Google respects it. |
-| **Identical service section per page** | Reduces copy effort | If services are described in identical language across all city pages, the similarity ratio across pages rises above the 60% unique threshold. | Share service section structure (same component), but vary service descriptions slightly per city, or accept that this is the "shared 40%" and ensure intro + FAQ + industry sections carry the uniqueness. |
-| **Auto-generated city pages at launch** | Scales coverage fast | At V1, AI-generated copy for city pages produces thin content. Google is highly effective at detecting machine-generated local page content in 2026 — particularly the kind that rephrases "local businesses in [city] benefit from professional websites." | Hand-craft V1 (6–8 cities). Build the automation pipeline for V2 (30–50 towns) using AI + human review, not AI-only. |
-| **Geo-targeted redirects based on visitor IP** | Feels personalized | Serves different content to Googlebot vs real users — this is cloaking, a spam policy violation. | Serve the same content to everyone. City pages are static, canonical, and crawlable. Let users choose their city explicitly. |
-| **Generic keyword stuffing ("webbyrå Oslo webbyrå oslo webdesign Oslo")** | Old SEO tactic | Triggers spam detection. City name should appear naturally 3–5 times on the page — in the H1, the intro paragraph, the FAQ, and the schema. Not 15+ times in the body copy. | Use city name where it reads naturally. The schema does the machine-readable geo-targeting work. |
+| Section | Component | Status |
+|---------|-----------|--------|
+| LandingPageLayout | No nav, sticky header, phone CTA | Exists |
+| Hero | H1 keyword match, trust badges, HeroMicroForm, LandingHeroAnimation | Exists |
+| VisualProof | iGive case study screenshot | Exists |
+| LogoCloud | Client logos | Exists |
+| Testimonial | Single testimonial (placeholder) | Exists |
+| WhyUs | 6 differentiators | Exists |
+| PricingSummary | 3-tier cards, ScarcityCounter, guarantee banner | Exists |
+| FAQ | JSON-LD FAQPage schema | Exists |
+| FormSection | Embedded ContactForm with ?pakke= pre-fill | Exists |
+| ScarcityCounter | "X av 10 plasser igjen" inline/card variants | Exists |
+| launchOffer.ts | total/taken config | Exists |
+| pricing.ts | 3 Pakke objects with originalPrice/launchPrice/monthly | Exists |
+| gtag consent setup | Google Ads tag with consent mode | Exists |
 
 ---
 
-## Content Categories
+## Table Stakes
 
-The downstream consumer requested categories: Content, Schema, Internal Linking, City Data, Copy Strategy.
+Features the subscription landing page MUST have. Missing any of these means the page underperforms against paid traffic or the new subscription model is unclear.
 
-### Content
+### TS-1: Subscription Pricing Reframe (0 kr oppstart + 399 kr/mnd)
 
-| Element | Unique per city? | Required | Notes |
-|---------|-----------------|----------|-------|
-| `<title>` tag | YES — must be | Table stakes | "Webbyrå [By] — Nettup" |
-| `<meta description>` | YES | Table stakes | City name in first 10 words |
-| H1 | YES | Table stakes | Includes city name naturally |
-| Intro paragraph (200 words) | YES — critical | Table stakes | References local industries, geography, or character |
-| Service section | NO — shared structure, slightly varied | Table stakes | Reuse `services.ts` data, vary CTA anchor text |
-| FAQ section (3–4 questions) | YES (≥2 questions unique to city) | Table stakes | One question about nearby areas, one about local businesses |
-| Industry mention | YES | Differentiator | 1–2 sentences on dominant local industries |
-| Nearby areas list | YES (per city data) | Table stakes | Feeds schema `areaServed` and on-page text |
-| Contact CTA | NO — shared, with city context | Table stakes | City name in CTA button or label |
-| Testimonial | FUTURE (when real ones exist) | Differentiator | Field reserved in `locations.ts` |
+| Aspect | Detail |
+|--------|--------|
+| Why expected | The entire v1.6 value proposition is "no upfront cost." Current pricing shows 2,500-10,000 kr one-time fees with monthly add-on. Must completely replace this with subscription-first model. |
+| Complexity | Medium |
+| Dependencies | pricing.ts (rewrite), PricingSummary.astro (rewrite), Hero.astro (update price display) |
 
-### Schema
+**What to build:**
 
-| Schema Type | Property | Purpose | Notes |
-|------------|----------|---------|-------|
-| `ProfessionalService` | `@type` | More precise than `LocalBusiness` for a web agency | Use this subtype, not generic `LocalBusiness` |
-| `ProfessionalService` | `name` | "Nettup" | Consistent across all pages |
-| `ProfessionalService` | `url` | Canonical city page URL | Per-city canonical, not homepage |
-| `ProfessionalService` | `areaServed` | Array of city + nearby area names | Drives city-query relevance. Text strings, not GeoShape |
-| `ProfessionalService` | `serviceArea` | `GeoCircle` centered on city (optional) | Optional enhancement for V2; not needed for V1 with named cities |
-| `ProfessionalService` | `description` | City-specific service description | Must match the on-page intro — no mismatch between schema and body |
-| `FAQPage` | FAQ questions and answers | Rich result eligibility + AI citability | Co-located with FAQ section (existing pattern from v1.1) |
-| `BreadcrumbList` | 2-level breadcrumb | Site hierarchy signal | `Nettup > Webbyrå i [By]` |
-| `Organization` (existing) | `sameAs` | Brand authority signal | Already in BaseLayout — no changes needed for city pages |
+- Rewrite `Pakke` interface: replace `originalPrice`/`launchPrice`/`savings`/`discountPercent` with `setupFee: number` (0), `monthlyFee: number` (399), `minimumMonths: number` (12), `includes: string[]`
+- ONE primary subscription offer prominently displayed: 0 kr oppstart + 399 kr/mnd for 5-siders nettside
+- Secondary tiers for larger needs (nettbutikk, webapplikasjon) presented as "Trenger du mer?" below the primary card, not as equal-weight alternatives
+- Price anchoring: show what a comparable one-time website costs (15,000-25,000 kr) as crossed-out reference price, then reveal the 0 kr + 399 kr/mnd subscription alternative
+- "Hva er inkludert"-breakdown beneath price: hosting, SSL, vedlikehold, support, domene-oppsett
+- Monthly cost reframe in supporting text: "Under 100 kr i uka" or "Mindre enn en kopp kaffe om dagen"
 
-**What NOT to add:** `address` per city (Nettup has no per-city physical address), `openingHours` variations per city (same hours everywhere), `geo` coordinates per city (misleading for a service-area business).
+**Pricing psychology (MEDIUM confidence, multiple sources):**
 
-### Internal Linking
+- Anchor with high one-time price first, then reveal subscription as the smart alternative. Anchoring is the single most effective pricing psychology tactic for subscriptions.
+- Von Restorff effect: primary subscription card visually distinct (border-brand, ring, slight scale-up). The option that stands out visually becomes the reference point.
+- Goldilocks principle applies IF showing 3 tiers: position the target tier in the center. But for a single-offer landing page, make the ONE offer the hero -- no choice paralysis.
+- Show monthly price as the default (not annual equivalent). A/B testing data shows monthly-as-default converts better because there's no "price shock" when switching views.
 
-| Link Source | Link Target | Anchor Text | Notes |
-|------------|-------------|-------------|-------|
-| Footer — "Områder vi dekker" section | All V1 city pages | "[By]" (plain city name) | Max 8 links. Clean section, not a dump of 40+ cities. |
-| `/kontakt` page | City pages collection or hub | "Se alle byene vi dekker" | Or specific top 3 cities in body text |
-| `/om-oss` page | Oslo page (most relevant) | "Vi er basert i Drammen og betjener hele Oslofjordregionen" | Natural, contextual mention |
-| Blog articles (lokal-seo cluster) | Relevant city pages | City name in context | Update blog generation config to include city page links |
-| City pages → each other | Regional neighbors | "Jobber du i [Asker]? Se vår side for [Bærum]" | Adds relevance for clusters; 1 link max per page to avoid spam signals |
-| City pages → service pages | All 7 service pages | Service name | City pages are entry points — they must link to conversion pages |
-| Service pages → city hub or top cities | Top 2–3 city pages | "Vi leverer [tjeneste] i Oslo, Drammen og omegn" | Reverse link equity flow |
+### TS-2: Headline + Ad Copy Alignment for Quality Score
 
-**Do not:** Create a standalone `/steder` or `/byer` index page as the only entry point to city pages. That pattern (hub page with no content, only links) is itself a doorway pattern. Link from content-rich pages instead.
+| Aspect | Detail |
+|--------|--------|
+| Why expected | Google Ads Quality Score is built on three pillars: expected CTR, ad relevance, and landing page experience. Keyword-to-headline-to-landing-page alignment directly affects all three. Google's 2025 QS update puts even more weight on user experience and message consistency. |
+| Complexity | Low |
+| Dependencies | Hero.astro, meta title/description, ad copy (external) |
 
-### City Data (`locations.ts` schema)
+**What to build:**
 
-Each city entry in `locations.ts` must support V1/V2/V3 expansion without structural changes:
+- H1 must contain target keyword AND the core offer: "Profesjonell nettside for din bedrift" remains the H1, with "0 kr oppstart" as prominent subheadline
+- Meta title: "Nettside for Bedrift | 0 kr Oppstart, 399 kr/mnd | Nettup"
+- Meta description must mirror what the ad promises: price, delivery time, guarantee -- the three things the user clicked the ad for
+- Ad copy and landing page must tell the same story. If the ad says "Klar pa 2 uker" the landing page must say the same, not "1-3 uker"
+- Quality Score diagnostic: after launch, monitor the three component scores in Google Ads and iterate on whichever is "Below average"
 
-| Field | Type | V1 | V2 | V3 | Notes |
-|-------|------|----|----|-----|-------|
-| `slug` | `string` | required | required | required | URL segment: `oslo`, `drammen`, `asker` |
-| `name` | `string` | required | required | required | Display name: "Oslo", "Drammen" |
-| `region` | `string` | required | required | required | "Akershus", "Viken", "Oslo" |
-| `intro` | `string` | hand-written | AI-assisted + human review | AI-generated | The unique paragraph. V1: full craft. |
-| `industries` | `string[]` | hand-written | AI-assisted | AI-generated | Local industry clusters for the city |
-| `nearbyAreas` | `string[]` | hand-written | hand-written | config | Towns served from this city page |
-| `faq` | `FAQ[]` | hand-written | AI-assisted | AI-generated | `{question: string, answer: string}[]` |
-| `areaServed` | `string[]` | derived from `nearbyAreas` + `name` | same | same | Feeds schema directly |
-| `tier` | `1 \| 2 \| 3` | 1 | 2 | 3 | Content quality tier, informs generation pipeline |
-| `testimonialSlug` | `string?` | null | null | null | Reserved for real testimonial cross-reference |
-| `metaTitle` | `string?` | optional override | optional | optional | If default pattern needs override |
-| `metaDescription` | `string?` | optional override | optional | optional | If default pattern needs override |
+### TS-3: Form Optimization for Paid Traffic
 
-### Copy Strategy
+| Aspect | Detail |
+|--------|--------|
+| Why expected | Paid traffic converts 2-3x worse than organic. Every field in the form costs conversions. Research shows reducing forms from 11 to 4 fields produces 120% conversion lift. Current ContactForm likely has 4-5 fields. |
+| Complexity | Low-Medium |
+| Dependencies | ContactForm island, FormSection.astro |
 
-**The city intro is the hardest and most important part.** It determines whether a page passes or fails the doorway test. Each Tier 1 intro must:
+**What to build:**
 
-1. Open with a direct, specific claim that references the city (not just names it)
-2. Mention 1–2 dominant local industries or business characteristics
-3. Explain what Nettup does for those businesses specifically
-4. Include geographic context (nearby areas, region, commuter belt)
-5. Be written as a person, not a machine
+- Reduce landing page form to 3 visible fields: Navn (name), E-post (email), Telefon (phone)
+- Remove from visible form: company name, message textarea, service selector (already implied by landing page context)
+- Auto-populate hidden fields: selected package from ?pakke= param, UTM parameters (utm_source, utm_medium, utm_campaign, utm_content) for attribution
+- CTA button text must be specific and low-commitment: "Fa gratis nettside-samtale" or "Bestill gratis samtale" -- not generic "Send" or "Kontakt oss"
+- Trust reinforcement directly below submit button: "Vi ringer deg innen 24 timer. Ingen forpliktelser."
+- Progressive profiling: collect minimum at conversion, gather qualification details in follow-up call
 
-**Good example (Drammen):**
-> "Drammen er Norges femte største by og en voksende næringsregion med sterk industri-, logistikk- og teknologibase. Bedrifter her konkurrerer i et marked som strekker seg fra Kongsberg i sør til Sandvika i nord. Nettup hjelper Drammens-bedrifter med profesjonelle nettsider og nettbutikker som er raske, synlige i Google og bygget for å konvertere besøkende til kunder — fra vår base rett over fjorden."
+### TS-4: Mobile-First Layout Verification
 
-**Bad example (doorway):**
-> "Leter du etter et webbyrå i Drammen? Vi i Nettup leverer nettsider til bedrifter i Drammen og omegn. Kontakt oss for nettside i Drammen i dag."
+| Aspect | Detail |
+|--------|--------|
+| Why expected | 83% of landing page traffic is mobile. Mobile converts at 2.5-2.9% vs desktop 4.8-5.1%. Google Ads mobile traffic skews even higher. |
+| Complexity | Low |
+| Dependencies | All sections |
 
-**Scaling strategy for V2 (30–50 towns):** Use a two-call Claude generation pattern (same as blog pipeline) with a city data seed object. First call generates the body, second call generates metadata (title, description, FAQ). Human review gate before publish. The `tier: 2` field in `locations.ts` signals which pages went through AI generation vs hand-crafting.
+**What to build:**
+
+- Verify all touch targets are 48x48dp minimum with 8dp spacing (existing standard, audit and confirm)
+- Single-column layout on mobile (already exists, confirm no regressions from pricing rewrite)
+- Price and CTA must be visible without scrolling on 375px viewport
+- Form inputs must not require horizontal scroll
+- Test form submission flow on mobile: keyboard doesn't obscure submit button, auto-scroll after field focus works
+
+### TS-5: Page Speed for Quality Score
+
+| Aspect | Detail |
+|--------|--------|
+| Why expected | Google's 2025 Quality Score update increased weight on page experience. A 1-second mobile delay causes 20% conversion drop. For paid traffic pages, speed is literally money. |
+| Complexity | Low |
+| Dependencies | LandingHeroAnimation (React island), HeroMicroForm (React island) |
+
+**What to build:**
+
+- Audit current LCP on /nettside-for-bedrift (two React islands load in hero with `client:load`)
+- Consider `client:visible` for below-fold React islands (if any exist below fold)
+- Ensure hero image (iGive preview) has explicit width/height to prevent CLS
+- Preload critical hero assets (already partially done with getImage optimization)
+- Target: LCP < 1.5s, CLS < 0.1 (stricter than site-wide 2s target because paid traffic ROI depends on it)
+- Run Lighthouse on mobile emulation before and after changes; document scores
+
+### TS-6: Google Ads Conversion Tracking
+
+| Aspect | Detail |
+|--------|--------|
+| Why expected | Without conversion tracking, Google Ads Smart Bidding cannot optimize. Every day running ads without conversion data wastes budget. This is not optional -- it's required to run ads effectively. |
+| Complexity | Medium |
+| Dependencies | Existing gtag consent setup, form submission events |
+
+**What to build:**
+
+- Primary conversion event: Form submission (full form)
+- Secondary conversion: Phone number click (tel: link in header and form section)
+- Secondary conversion: Email click (mailto: link)
+- Enhanced conversions: pass hashed email/phone to Google Ads for better attribution matching
+- Conversion linker tag for cross-session attribution
+- Mirror all conversion events as Plausible goals for independent verification
+- Thank-you state after form submit: clear visual confirmation that submission succeeded (inline, not redirect)
+
+---
+
+## Differentiators
+
+Features that increase conversion rate beyond baseline. Not strictly required, but deliver measurable lift based on research data.
+
+### D-1: Enhanced Scarcity Counter with Visual Progress
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Current ScarcityCounter is plain text ("3 av 10 plasser igjen"). Research shows scarcity + discount combined = 178% more likely to convert. Visual progress bars make scarcity tangible. |
+| Complexity | Low |
+| Dependencies | ScarcityCounter.astro, launchOffer.ts |
+
+**What to build:**
+
+- Add visual progress bar showing slots filled (7/10 = 70% filled bar, brand color)
+- Optional: pulsing dot or subtle glow on remaining count (respect prefers-reduced-motion)
+- Place scarcity counter in TWO locations: below hero price AND below pricing section (currently only in pricing)
+- Update copy to be month-specific: "Kun 3 abonnementsplasser igjen i mars" -- adds real temporal urgency
+- CRITICAL: Must remain truthful. Update launchOffer.ts when customers sign up. Never manufacture fake scarcity. This is both an ethical and practical requirement -- Norwegian consumers are skeptical and fake urgency destroys trust permanently.
+
+### D-2: Contextual Trust Signals for Cold Ad Traffic
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Cold traffic from ads bounces in 3-8 seconds without credibility markers. Research data: customer reviews with photos +18-27% lift, money-back guarantees +12-19%, founder credentials +7-12%. |
+| Complexity | Medium |
+| Dependencies | Hero.astro, Testimonial section |
+
+**What to build:**
+
+- Compact trust bar directly under H1: "Norsk selskap | 30 dagers garanti | 24t responstid" (3 badges, always above fold)
+- Replace or remove the 4.9/5 star rating in hero. It currently says "basert pa kundeanmeldelser" but these reviews don't exist anywhere verifiable. Cold traffic from ads is the MOST skeptical audience. An unverifiable rating does more harm than good. Either link to real Google Reviews or remove entirely.
+- Add founder photo + name near testimonial section. Research shows founder-visible brands convert 15-28% better than faceless ones. Especially relevant for a small Norwegian agency competing against larger faceless competitors.
+- Move guarantee banner earlier in page -- before the pricing section, not after it. Reducing risk perception BEFORE the user sees the price is more effective.
+- Norwegian-specific trust: Organisasjonsnummer visible somewhere on the page (B2B buyers verify on Proff.no)
+
+### D-3: Subscription Objection-Handling Sections
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | A subscription model raises specific objections that one-time purchase pricing doesn't: "What if I want to cancel?", "Do I own the website?", "What happens after the minimum period?" Addressing these inline prevents bounce at the critical moment before form submission. |
+| Complexity | Medium |
+| Dependencies | New section components, placed between PricingSummary and FormSection |
+
+**What to build:**
+
+- "Hva skjer etter 12 maneder?" -- explain minimum contract period, month-to-month after that, cancellation terms, website ownership/transfer options
+- "Abonnement vs. Engangskjop" comparison table: show total cost over 1 year, 2 years, 3 years. Make the subscription value obvious (0 kr upfront + ongoing support vs. 15,000 kr upfront + no support after delivery)
+- "Hva er inkludert i 399 kr/mnd?" expandable/visible breakdown: hosting, SSL-sertifikat, teknisk vedlikehold, innholdsendringer (X per maned), support, sikkerhetskopier
+- Place these BETWEEN pricing section and form section -- this is where objections peak (user has seen the offer but hasn't committed yet)
+
+### D-4: Sticky Mobile CTA Bar
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Mobile users scroll through long landing pages. A sticky CTA ensures the conversion action is always one tap away. |
+| Complexity | Low |
+| Dependencies | None (new component) |
+
+**What to build:**
+
+- Fixed bar at bottom of mobile viewport (hidden on desktop)
+- Two actions: "Ring oss" (tel: link, left side) + "Bestill samtale" (scroll to #kontakt, right side, brand-colored)
+- Appears after scrolling past hero section (not immediately -- avoid covering hero CTA)
+- Disappears when form section is in viewport (avoid competing with the actual form)
+- Slim: max 56px height, semi-transparent background
+- Track interactions as Plausible events
+
+### D-5: UTM Parameter Capture in Form
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Know which ad group and keyword drove each lead. Without this, ad optimization is campaign-level only, not keyword-level. |
+| Complexity | Low |
+| Dependencies | ContactForm island, URL params |
+
+**What to build:**
+
+- Read utm_source, utm_medium, utm_campaign, utm_content, utm_term from URL on page load
+- Store in hidden form fields submitted with form data
+- Also capture gclid (Google click ID) for offline conversion upload
+- Plausible event props mirror the UTM values for analytics cross-reference
+
+### D-6: Dynamic Keyword Headline Support
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | When the landing page subtitle adapts to match the specific ad keyword the user clicked, perceived relevance increases and Quality Score improves. |
+| Complexity | Low-Medium |
+| Dependencies | Hero.astro, URL params from Google Ads ValueTrack |
+
+**What to build:**
+
+- Read `?kw=` URL parameter passed from Google Ads via ValueTrack {keyword}
+- Dynamically update the subheadline or supporting text (NOT the H1 -- keep H1 static for SEO)
+- Keyword mapping with fallback:
+  - Default (no param): "Klar pa 2 uker. 0 kr oppstart."
+  - "billig nettside": "Profesjonell nettside til fast manedspris"
+  - "nettside pris": "Fra 399 kr/mnd. Ingen oppstartskostnad."
+  - "webbyra [city]": "Vi bygger nettsider for bedrifter i [city]"
+- Fallback gracefully for unrecognized keywords
+
+---
+
+## Anti-Features
+
+Features to explicitly NOT build. These seem tempting but hurt conversion or waste effort.
+
+| Anti-Feature | Why Avoid | What to Do Instead |
+|--------------|-----------|-------------------|
+| Countdown timer with fake deadline | Destroys trust with ad-skeptical cold traffic. Norwegian consumers are especially resistant to pressure tactics. If the deadline isn't real, it's deceptive. | Use real scarcity (limited subscription slots). Month-specific slot count is honest and effective. |
+| Exit-intent popup | Aggressive, cheap-feeling for a professional agency. Undermines the premium positioning. | Let pricing quality and trust signals do the work. If users leave, retarget them via Google Ads remarketing. |
+| Live chat / chatbot on landing page | Competes with form for attention. Landing pages must have ONE conversion path. The main site chatbot is great for organic visitors -- but paid traffic needs singular focus. | Keep chatbot off /nettside-for-bedrift. LandingPageLayout already excludes it. |
+| Three equal-weight pricing tiers | The subscription offer is ONE clear thing: 0 kr + 399 kr/mnd. Three equal cards create choice paralysis with cold traffic who doesn't know you yet. | One hero subscription card. Secondary tiers collapsed below as "Trenger du mer?" text. |
+| Testimonial carousel / slider | Carousels have near-zero interaction rates on landing pages. A single powerful testimonial outperforms 5 rotating weak ones. | One testimonial with photo, full name, company name, and a specific result metric. |
+| Social media links | Every outbound link is an exit. The landing page removes navigation for this reason. | Zero exit paths except conversion actions (form, phone, email). |
+| "Mest populaer" badge on single offer | Marking your only option as "most popular" is transparently manipulative when there's one option. | Use visual emphasis (border, scale, color) instead of a text badge. |
+| Complex pricing calculator link | /priskalkulator exists on main site for exploratory visitors. Linking from paid landing page creates exit to page with navigation. | "Trenger du noe skreddersydd? Ring oss pa [number]" -- keeps them in conversion mode. |
+| Fake star rating (4.9/5 "basert pa kundeanmeldelser") | Currently in hero. No verifiable source. Cold ad traffic is the most skeptical audience. Unverifiable claims actively hurt conversion. | Remove until real Google Reviews exist, or replace with a single specific client quote. |
+| Google Tag Manager | Additional script when gtag.js is already loaded. Adds complexity and another request. | Use gtag.js directly for the 3-4 conversion events needed. |
+| Hotjar / session recording at launch | Adds consent requirement (not cookieless), script weight, and complexity. | Evaluate after 2-4 weeks of ad data. Use Plausible + Google Ads reporting first. |
+| A/B testing framework | Overkill for one landing page with limited traffic. Requires 1,000+ weekly visitors for statistical validity. | Use Google Ads campaign experiments (URL-based variant splitting) if testing is needed. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[locations.ts config]
-    +-- required by --> [getStaticPaths() in [location].astro]
-    +-- drives --> [per-city SEO metadata]
-    +-- drives --> [LocalBusiness/ProfessionalService JSON-LD]
-    +-- drives --> [areaServed values in schema]
-    +-- drives --> [nearbyAreas on-page text]
-    +-- feeds --> [FAQPage JSON-LD (via faq[] field)]
+TS-1 (Pricing Reframe) --> TS-2 (Headline Alignment)
+  New pricing model informs what headline/meta says
 
-[[location].astro dynamic route]
-    +-- required by --> [all city pages]
-    +-- reads from --> [locations.ts config]
-    +-- includes --> [ProfessionalService JSON-LD]
-    +-- includes --> [FAQPage JSON-LD]
-    +-- includes --> [BreadcrumbList JSON-LD]
-    +-- links to --> [service pages (conversion path)]
-    +-- links to --> [contact page with pre-fill]
+TS-1 (Pricing Reframe) --> D-1 (Scarcity Enhancement)
+  New subscription offer determines what scarcity counts ("abonnementsplasser")
 
-[Footer "Områder vi dekker" section]
-    +-- links to --> [all V1 city pages]
-    +-- prevents --> [orphaned pages (doorway red flag)]
-    +-- requires --> [city pages to exist first]
+TS-1 (Pricing Reframe) --> D-3 (Objection Handling)
+  Subscription terms drive which objections need answering
 
-[Contact page internal link update]
-    +-- links to --> [city pages]
-    +-- provides --> [2nd source of internal link equity]
+TS-3 (Form Optimization) --> D-5 (UTM Capture)
+  Form must have hidden fields before UTM values can be stored
 
-[FAQPage JSON-LD]
-    +-- requires --> [faq[] content in locations.ts]
-    +-- pattern already exists in --> [v1.1 service pages]
+TS-3 (Form Optimization) --> TS-6 (Conversion Tracking)
+  Form submission events must be defined before tracking can fire
 
-[Blog lokal-seo cluster articles]
-    +-- enhances --> [city pages via inbound editorial links]
-    +-- requires --> [city pages to exist and be indexed first]
+TS-6 (Conversion Tracking) --> D-6 (Dynamic Keywords)
+  UTM/keyword tracking feeds into attribution reports
 
-[Chatbot city context injection]
-    +-- enhances --> [city pages UX]
-    +-- requires --> [city page frontmatter passing city/region to ChatWidget]
-    +-- existing infrastructure supports this --> [no new dependencies]
+TS-4 (Mobile Layout) -- no blockers, parallel
+TS-5 (Page Speed) -- no blockers, parallel
+D-2 (Trust Signals) -- no blockers, parallel
+D-4 (Sticky Mobile CTA) -- no blockers, parallel
 ```
 
-### Dependency Notes
+---
 
-- **`locations.ts` is the critical path.** Everything else depends on it being correctly structured. Get the data model right before writing any page component — it must support V1/V2/V3 without structural changes.
-- **Orphan prevention is mandatory at launch.** City pages without internal links will fail Google's doorway page test. Footer update and `/kontakt` link update must ship with the city pages, not after.
-- **FAQ content is a blocker for `FAQPage` JSON-LD.** The schema cannot be written until FAQ questions and answers exist in `locations.ts`. This means city data must be complete before the route template is finalized.
-- **V2 AI generation pipeline is a separate milestone.** The `tier` field and AI generation workflow are future scope. V1 is hand-crafted only — resist the temptation to generate V1 content programmatically.
+## MVP Recommendation
+
+**Must ship together (core of v1.6 -- cannot run ads without all of these):**
+
+1. **TS-1: Subscription Pricing Reframe** -- the entire purpose of v1.6; everything else supports this
+2. **TS-2: Headline + Ad Copy Alignment** -- required for Google Ads Quality Score; can't run effective ads without it
+3. **TS-3: Form Optimization** -- paid traffic demands minimal friction; 3 fields max
+4. **TS-5: Page Speed Audit** -- Quality Score gatekeeper; measure before/after
+5. **TS-6: Google Ads Conversion Tracking** -- cannot run ads without defined conversions
+6. **D-5: UTM Parameter Capture** -- must know which keywords drive leads from day 1
+
+**Ship immediately after (first optimization wave, within first week):**
+
+7. **D-1: Scarcity Counter Enhancement** -- low effort, high conversion lift, builds on existing component
+8. **D-2: Trust Signals for Cold Traffic** -- addresses the #1 cold traffic bounce cause
+9. **D-3: Objection Handling Sections** -- subscription model specifically needs these
+10. **D-4: Sticky Mobile CTA** -- low effort, keeps conversion action visible on scroll
+
+**Defer until data supports it:**
+
+- **D-6 (Dynamic Keyword Insertion):** Optimization play. Run ads for 2-4 weeks first, identify which keywords convert, THEN personalize for top converters.
+- **TS-4 (Full mobile audit):** Spot-check during build. Full audit only if mobile bounce rate exceeds 60% after launch.
 
 ---
 
-## MVP Definition
+## Google Ads Campaign Structure (Companion Feature)
 
-### Launch With (v1.5 core)
+Not a landing page feature, but the landing page exists to receive this traffic. Campaign structure dictates headline/copy requirements.
 
-All items required for the milestone to be meaningful. A partial release (pages without internal links, or schema without unique copy) is worse than no release.
+### Recommended Campaign Structure
 
-**Infrastructure:**
-- [ ] `locations.ts` with V1/V2/V3-ready schema — 6–8 Tier 1 entries with all fields populated
-- [ ] `[location].astro` dynamic route with `getStaticPaths()` driven by `locations.ts`
-- [ ] Per-city `<title>`, `<meta description>`, canonical URL
-- [ ] `ProfessionalService` JSON-LD with `areaServed` per city
-- [ ] `FAQPage` JSON-LD from `faq[]` field
-- [ ] `BreadcrumbList` JSON-LD
-- [ ] Sitemap auto-includes generated city pages (already handled by existing Astro integration)
+| Campaign | Ad Group | Keywords (Norwegian) | Match Type |
+|----------|----------|---------------------|------------|
+| Nettside Bedrift | Generell | nettside for bedrift, lage nettside bedrift, ny nettside for firma | Phrase |
+| Nettside Bedrift | Pris | nettside pris, billig nettside bedrift, rimelig nettside | Phrase |
+| Nettside Bedrift | Byra | webbyra, webdesign byra, nettside byra | Phrase |
+| Nettside Bedrift | Abonnement | nettside abonnement, nettside manedlig, nettside leie, nettside fast pris | Phrase |
+| Nettside Lokal | Oslo | nettside oslo, webbyra oslo, webdesign oslo | Phrase |
+| Nettside Lokal | Drammen | nettside drammen, webbyra drammen, webdesign drammen | Phrase |
+| Nettside Lokal | Baerum/Asker | nettside baerum, webbyra asker | Phrase |
 
-**Content (per city):**
-- [ ] Unique intro paragraph (200+ words, references local industries and geography)
-- [ ] Industry mention (1–2 sentences, specific to city)
-- [ ] Nearby areas list (2–4 towns per city, rendered on-page and in schema)
-- [ ] City-specific FAQ (3–4 questions, ≥2 genuinely local)
-- [ ] Service section (shared structure, city-aware CTA links)
-- [ ] Contact CTA with city context
+### Ad Copy Framework
 
-**Internal linking (ship with pages, not after):**
-- [ ] Footer "Områder vi dekker" section linking to all V1 city pages
-- [ ] `/kontakt` page mentions coverage area with city links
-- [ ] City pages link to relevant service pages
+- Headline 1: Match H1 keyword ("Profesjonell Nettside for Bedrift")
+- Headline 2: Price point ("0 kr Oppstart - 399 kr/mnd")
+- Headline 3: Trust signal ("30 Dagers Garanti")
+- Description 1: Expand on value + delivery time + CTA
+- Description 2: Reinforce trust + secondary benefit
+- Sitelink extensions: Prosjekter, Om Oss, Priskalkulator, Kontakt
+- Callout extensions: "Norsk Selskap", "24t Responstid", "Ingen Binding Etter 12 mnd"
 
-### Add After Validation (v1.5.x)
+### Negative Keywords
 
-- [ ] Real testimonials per city — when actual client quotes from each area are available
-- [ ] Blog articles linking to city pages — update lokal-seo cluster config
-- [ ] Chatbot city context injection — once city pages are indexed and converting
-- [ ] `/om-oss` page geographic mention — minor, but adds contextual internal link
+- gratis (free-seekers, zero conversion intent)
+- wordpress, wix, squarespace, webflow (DIY builders)
+- jobb, stilling, karriere, ansatt (job seekers)
+- kurs, laere, utdanning (education seekers)
+- mal, template (template seekers)
+- wordpress tema, shopify tema (theme shoppers)
 
-### Future Consideration (v2+)
+### Budget Allocation
 
-- [ ] 30–50 Tier 2 city pages — requires AI generation pipeline with human review gate
-- [ ] `serviceArea` with `GeoCircle` coordinates — marginal gain, only relevant at V3 scale
-- [ ] City-specific landing page for each service type (e.g., `/oslo/nettbutikk`) — high complexity, only if Tier 1 city pages are ranking and converting
-- [ ] Regional hub pages (e.g., `/oslofjord`) — aggregates nearby city pages, only useful at V3 scale
-
----
-
-## Feature Prioritization Matrix
-
-| Feature | SEO/User Value | Implementation Cost | Priority |
-|---------|----------------|---------------------|----------|
-| `locations.ts` V1/V2/V3-ready schema | HIGH | LOW | P1 |
-| `[location].astro` with `getStaticPaths()` | HIGH | LOW | P1 |
-| Unique city intro paragraphs (6–8 cities) | HIGH (doorway test) | MEDIUM (writing time) | P1 |
-| `ProfessionalService` JSON-LD + `areaServed` | HIGH | LOW | P1 |
-| `FAQPage` JSON-LD (city-specific questions) | HIGH | LOW | P1 |
-| Footer "Områder vi dekker" section | HIGH (orphan prevention) | LOW | P1 |
-| Per-city `<title>` + `<meta description>` | HIGH | LOW | P1 |
-| Industry mentions per city | MEDIUM–HIGH | LOW (1–2 sentences) | P1 |
-| Nearby areas on-page text | MEDIUM | LOW | P1 |
-| BreadcrumbList JSON-LD | MEDIUM | LOW | P1 |
-| `/kontakt` internal link update | MEDIUM | LOW | P1 |
-| Service section with city-aware CTA | MEDIUM | LOW | P1 |
-| Chatbot city context injection | MEDIUM | MEDIUM | P2 |
-| Blog cross-links from lokal-seo articles | MEDIUM | LOW | P2 |
-| Real testimonials per city | HIGH (when available) | EXTERNAL (client) | P2 (blocked) |
-| `serviceArea` GeoCircle coordinates | LOW | LOW | P3 |
-| Per-service city pages (`/oslo/nettbutikk`) | HIGH (long term) | HIGH | P3 |
-
----
-
-## Norwegian Market Specifics
-
-These points apply specifically to the Norwegian context and are not covered in generic local SEO guides.
-
-**Language:** All content in Norwegian bokmål. `hreflang="nb"` in schema. Query patterns use "webbyrå" (not "webbyrå"), "nettside for bedrift", "nettside Drammen". Norwegian users search in Norwegian — no need for English variants.
-
-**Geographic clusters:** The Tier 1 cities are not random — they follow the Oslo commuter belt (Oslofjordregionen/Viken). This is Nettup's actual operational market. Asker, Bærum, Sandvika, and Ski are effectively greater-Oslo suburbs. Lillestrøm and Moss are regional centres with distinct business communities. The city pages should acknowledge this regional coherence, not pretend each city is an isolated market.
-
-**No Google Business Profile at launch:** The PROJECT.md lists Google Business Profile as deferred. This means city pages carry all the local SEO weight at launch — schema and on-page content must work without GBP citation support. This increases the importance of `areaServed` completeness and on-page geographic specificity.
-
-**Org number trust signal:** Norwegian B2B buyers verify org numbers on Proff.no or Brønnøysundregistrene. The existing `Organization` schema in BaseLayout already includes this. No change needed for city pages — they inherit from `BaseLayout`.
-
-**Vipps:** Not relevant for a web agency landing page (no e-commerce on the marketing site).
-
-**Competitor landscape:** Norwegian web agencies with local pages (Mediseo, Journey Agency, A2N) generally use a pattern of: service page with city name in title + a brief geographic paragraph. They do not typically include: city-specific FAQ, industry mentions, nearby areas, or `areaServed` in schema. This means Tier 1 pages built to the standard above will be technically superior to most current competitors' local pages.
+Start with "Nettside Bedrift > Generell" and "Nettside Bedrift > Pris" ad groups at 70% of budget. These have highest commercial intent. Scale to local campaigns after 2-4 weeks of conversion data.
 
 ---
 
 ## Sources
 
-- PROJECT.md (`/Users/iverostensen/nettup/.planning/PROJECT.md`) — milestone scope and existing architecture (HIGH confidence)
-- [RicketyRoo: Location Page Spam — What Crosses the Line?](https://ricketyroo.com/blog/location-page-spam/) — doorway page definition and detection patterns (HIGH confidence, 2026)
-- [Sterling Sky: How to Create Unique and Helpful Service Area Pages](https://www.sterlingsky.ca/how-to-create-unique-and-helpful-service-area-pages-for-local-businesses/) — uniqueness requirements, thin content patterns (HIGH confidence)
-- [Search Engine Land: Service Area Pages](https://searchengineland.com/guide/service-area-pages) — hub/spoke structure, orphan page risks (HIGH confidence)
-- [Dalton Luka: How to Create Local Landing Pages That Rank (2026)](https://daltonluka.com/blog/local-landing-pages) — content structure, schema, internal linking (MEDIUM confidence)
-- [Arc4: Local Landing Pages (2026)](https://arc4.com/local-landing-pages/) — table stakes content elements (MEDIUM confidence)
-- [Schema.org: LocalBusiness](https://schema.org/LocalBusiness) — `areaServed`, `serviceArea` property definitions (HIGH confidence, authoritative)
-- [Schema.org: ProfessionalService](https://schema.org/ProfessionalService) — correct subtype for web agency (HIGH confidence, authoritative)
-- [AuthorityNW: Service-Area Businesses Schema Setup](https://authoritynw.com/blog/service-area-businesses-gmb-schema-setup/) — `areaServed` vs `serviceArea` distinction (MEDIUM confidence)
-- [Search Engine Journal: Hub & Spoke Internal Links](https://www.searchenginejournal.com/hub-spoke-internal-links/442005/) — internal link strategy for city pages (MEDIUM confidence)
-- [Journey Agency: Webbyrå Oslo](https://journeyagency.com/tjenester/nettside-og-brukeropplevelse/webbyra-oslo/) — Norwegian competitor local page analysis (HIGH confidence, direct observation)
-- [Google Search Central Community: Landing pages turn into doorway pages](https://support.google.com/webmasters/thread/135300269/landing-pages-turn-into-doorway-pages?hl=en) — Google's stated position on location page patterns (HIGH confidence)
-- [First Page Sage: Local SEO 2026](https://firstpagesage.com/seo-blog/local-seo-guide/) — 2026 local ranking factors (MEDIUM confidence)
+- [Landing Page Best Practices 2026 -- Lovable](https://lovable.dev/guides/landing-page-best-practices-convert) -- form optimization (11->4 fields = 120% lift), CTA framing ("Trial for free" +104%), mobile touch targets (HIGH confidence)
+- [Landing Page Conversion Rates by Industry -- First Page Sage](https://firstpagesage.com/seo-blog/landing-page-conversion-rates-by-industry/) -- industry conversion benchmarks (MEDIUM confidence)
+- [Google Ads Quality Score -- Google Help](https://support.google.com/google-ads/answer/6167118?hl=en) -- Quality Score components definition (HIGH confidence, authoritative)
+- [Quality Score in 2026 -- Optmyzr](https://www.optmyzr.com/blog/google-ads-quality-score/) -- 2025 QS system update details (MEDIUM confidence)
+- [5 Ways to Use Quality Score -- Google Help](https://support.google.com/google-ads/answer/6167130?hl=en) -- QS optimization strategies (HIGH confidence, authoritative)
+- [Landing Page Statistics 2026 -- Blogging Wizard](https://bloggingwizard.com/landing-page-statistics/) -- form field data, 83% mobile traffic stat (MEDIUM confidence)
+- [Subscription Pricing Psychology -- Binary Stream](https://binarystream.com/4-secrets-to-better-subscription-pricing-psychology/) -- Goldilocks, Von Restorff, anchoring, mood as conversion factor (MEDIUM confidence)
+- [DTC Landing Page Strategies 2026 -- MHI Growth Engine](https://mhigrowthengine.com/blog/best-landing-page-strategies-dtc-brands-2026/) -- founder presence +15-28%, trust element lift data (MEDIUM confidence)
+- [Using Scarcity and Urgency Ethically -- Site123](https://www.site123.com/learn/using-scarcity-and-urgency-on-landing-pages-ethically) -- ethical scarcity guidelines (MEDIUM confidence)
+- [Scarcity Effect in Marketing -- Lead Alchemists](https://www.leadalchemists.com/marketing-psychology/scarcity-effect/) -- scarcity + discount = 178% lift (MEDIUM confidence)
+- [Subscription Web Design Pricing 2026 -- Rubik](https://www.rubik.design/blog/understanding-web-design-subscription-pricing-in-2026) -- subscription model market trends (LOW confidence, single source)
+- [Google Ads Campaign Structure -- Search Atlas](https://searchatlas.com/blog/google-ads-campaign-structure/) -- ad group organization (MEDIUM confidence)
+- [How to Write Landing Pages 2026 -- Advait Labs](https://advaitlabs.com/how-to-write-landing-page-that-converts-2026/) -- loss aversion framing, cognitive fluency (MEDIUM confidence)
+- [B2B Landing Pages 2025 -- Exposure Ninja](https://exposureninja.com/blog/b2b-landing-pages/) -- B2B form and trust patterns (MEDIUM confidence)
+- [Landing Page Conversion Stats -- Genesys Growth](https://genesysgrowth.com/blog/landing-page-conversion-stats-for-marketing-leaders) -- progressive profiling strategy (MEDIUM confidence)
 
 ---
-*Feature research for: Nettup v1.5 — Lokale SEO-sider (city landing pages)*
-*Researched: 2026-03-08*
+*Feature research for: Nettup v1.6 -- Landingsside & Google Ads*
+*Researched: 2026-03-19*

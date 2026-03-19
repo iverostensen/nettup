@@ -1,202 +1,281 @@
-# Stack Research
+# Stack Research: v1.6 Landing Page & Google Ads
 
-**Domain:** Local SEO landing pages — Astro 5 dynamic routes, config-driven location data
-**Researched:** 2026-03-08
+**Domain:** Conversion-optimized landing page rebuild, Google Ads tracking, subscription pricing
+**Researched:** 2026-03-19
 **Confidence:** HIGH
 
 ## Scope
 
-This file covers ONLY what is NEW or CHANGED for the v1.5 Local SEO landing pages milestone. The existing validated stack (Astro 5, Tailwind 4, React islands, Framer Motion, `@astrojs/sitemap`, Vercel adapter, TypeScript strict, `src/config/` data pattern) is NOT re-researched here.
+This file covers ONLY what is NEW or CHANGED for the v1.6 milestone. The following are validated and NOT re-researched: Astro 5, Tailwind 4, React islands, Framer Motion, Vercel hosting (`output: 'static'`), Formspree forms, Plausible Analytics, LandingPageLayout (no nav, phone CTA, cookie consent banner), Google Ads gtag (`AW-17409050017`) already loaded with consent.
 
-**Bottom line: zero new packages required.**
+**Bottom line: zero new npm packages required. All new capabilities are configuration and code patterns using the existing stack.**
 
 ---
 
 ## What Already Exists (No Changes Needed)
 
-| Capability | How It Works in Codebase | Status |
-|------------|--------------------------|--------|
-| Dynamic routes with `getStaticPaths()` | `src/pages/prosjekter/[slug].astro` — config array → `params + props` | Production-proven |
-| Config-driven data model | `src/config/projects.ts` — typed interface + exported array | Exact pattern to replicate |
-| Sitemap auto-inclusion of dynamic routes | `@astrojs/sitemap` crawls all prerendered routes in static mode | Confirmed in Astro docs |
-| LocalBusiness JSON-LD | BaseLayout already emits `LocalBusiness` with `areaServed` array | Extend per-page, do not replace |
-| Per-page JSON-LD injection | `<slot name="head" />` in BaseLayout — used by `blogg/[slug].astro` | Established pattern |
-| Canonical URL | `new URL(Astro.url.pathname, Astro.site)` computed automatically in BaseLayout | Automatic |
-| BreadcrumbList | Auto-generated from `pageLabels` map in BaseLayout | Needs city label entries |
-| Per-page `<title>` and `<meta description>` | BaseLayout `title` and `description` props | Standard |
+| Capability | How It Works | Status |
+|------------|--------------|--------|
+| LandingPageLayout | No nav, sticky logo+phone, cookie consent, gtag loader | Production-ready |
+| Google Ads gtag | `AW-17409050017`, consent-gated loading via localStorage | Working |
+| Cookie consent banner | Accept/decline, persists in `nettup_ads_consent` | Working |
+| Plausible Analytics | Cookieless, `analytics.ts` wrapper with 7 typed events | Working |
+| `reveal-on-scroll` animations | IntersectionObserver in LandingPageLayout | Working |
+| Formspree forms | `xnjnzybj`, honeypot spam protection | Working |
+| `noIndex` prop on LandingPageLayout | For A/B test variant pages | Ready to use |
 
 ---
 
 ## New Capabilities Required
 
-### 1. `src/config/locations.ts` — Location Data Model
+### 1. Google Ads Conversion Tracking (Enhanced)
 
-**Pattern:** Mirror `src/config/projects.ts` exactly. Export typed `Location` interface and a `locations` array. `getStaticPaths()` in `[location].astro` imports and maps the array.
+**What exists:** Basic gtag config fires on page load. No conversion events fire on form submit.
 
-**V1/V2/V3-ready interface design:**
+**What's needed:** Fire `gtag('event', 'conversion', {...})` when the landing page form is submitted and when the phone CTA is clicked. Also set up Enhanced Conversions to send hashed user data for better attribution.
+
+**Implementation pattern (no new dependencies):**
 
 ```typescript
-export interface Location {
-  // Routing
-  slug: string;                    // URL segment: 'oslo' → /oslo
-  city: string;                    // Display name: 'Oslo'
-  region: string;                  // 'Oslo' | 'Viken' | 'Akershus' — for schema/copy
+// src/lib/ads-tracking.ts
 
-  // SEO metadata (unique per page — required for all tiers)
-  metaTitle: string;               // <60 chars, e.g. "Nettside for bedrifter i Oslo | Nettup"
-  metaDescription: string;         // <160 chars, localized pitch
+/** Fire Google Ads conversion event. Only works if gtag loaded (consent granted). */
+export function trackAdsConversion(conversionLabel: string, value?: number): void {
+  if (typeof window === 'undefined' || !window.gtagLoaded) return;
+  window.gtag?.('event', 'conversion', {
+    send_to: `AW-17409050017/${conversionLabel}`,
+    value: value ?? 0,
+    currency: 'NOK',
+  });
+}
 
-  // Page copy (hand-written V1, AI-assisted V2+)
-  intro: string;                   // 2–3 sentences, genuinely unique per city
-  whyCity?: string;                // Optional: why Nettup suits THIS city specifically
-  nearbyAreas?: string[];          // Internal linking: ['Asker', 'Bærum', 'Lillestrøm']
-  regionalIndustries?: string[];   // Localized social proof hooks: ['restaurant', 'rørlegger']
+/** Enhanced conversions: send hashed user data alongside conversion. */
+export function trackAdsFormConversion(
+  conversionLabel: string,
+  userData: { email?: string; phone?: string },
+  value?: number
+): void {
+  if (typeof window === 'undefined' || !window.gtagLoaded) return;
 
-  // FAQ (optional — V1 can omit, V2+ expands)
-  faq?: { question: string; answer: string }[];
+  // Set user_data for enhanced conversions (gtag hashes automatically)
+  window.gtag?.('set', 'user_data', {
+    email: userData.email,
+    phone_number: userData.phone, // Must be E.164 format: +4741327136
+  });
 
-  // Schema.org
-  schemaCity: string;              // Canonical name for areaServed City.name
-  schemaWikipediaId: string;       // Wikipedia URL for @id — see table below
+  window.gtag?.('event', 'conversion', {
+    send_to: `AW-17409050017/${conversionLabel}`,
+    value: value ?? 0,
+    currency: 'NOK',
+  });
+}
 
-  // Expansion control
-  tier: 1 | 2 | 3;                // 1=hand-crafted, 2=AI-assisted, 3=stub
+/** Track phone CTA clicks as conversion. */
+export function trackAdsPhoneClick(conversionLabel: string): void {
+  if (typeof window === 'undefined' || !window.gtagLoaded) return;
+  window.gtag?.('event', 'conversion', {
+    send_to: `AW-17409050017/${conversionLabel}`,
+  });
 }
 ```
 
-**Why this shape:**
-- `slug` separate from `city` lets the URL be `/oslo` while city name is `'Oslo'` — no runtime mapping
-- `schemaWikipediaId` enables proper `@id` on schema.org City objects; field name is explicit so whoever writes V2 entries knows what to put
-- `tier` makes V2/V3 expansion a data change only — no structural or template change
-- All optional fields (`faq`, `whyCity`, `nearbyAreas`, `regionalIndustries`) mean V1 entries stay minimal; V3 stubs need only required fields
-- TypeScript strict mode ensures all V1 required fields are present at build time
+**Setup steps in Google Ads:**
+1. Create conversion action "Skjema sendt" (category: Submit Lead Form) -- get conversion label
+2. Create conversion action "Telefon klikk" (category: Phone Call) -- get conversion label
+3. Enable Enhanced Conversions on the "Skjema sendt" conversion action in Google Ads settings
+4. Use Tag Assistant to verify events fire correctly
 
-**Confidence:** HIGH — directly mirrors the `projects.ts` pattern validated in production
-
----
-
-### 2. Dynamic Route — `src/pages/[location].astro`
-
-**Pattern:** Identical to `src/pages/prosjekter/[slug].astro`.
+**TypeScript types needed (add to existing `env.d.ts` or a new `src/types/gtag.d.ts`):**
 
 ```typescript
-export function getStaticPaths() {
-  return locations.map((loc) => ({
-    params: { location: loc.slug },
-    props: { location: loc },
-  }));
-}
-
-interface Props {
-  location: Location;
-}
-
-const { location } = Astro.props;
-```
-
-**Key decisions:**
-- Pass full `Location` object via `props`, not just `params` — avoids re-importing config inside the component body; consistent with `[slug].astro` pattern
-- `params.location` is a string (slug is `string`) — Astro requires params to be strings
-- No `async` on `getStaticPaths()` — data is a local TS array with no I/O, fastest possible
-
-**Build-time behaviour:** Astro executes `getStaticPaths()` once at build start, then renders each returned path in parallel. For 300 cities, the function call itself is synchronous and near-instant; rendering 300 static pages takes roughly 2–3 seconds at Astro's ~127 pages/sec throughput.
-
-**Confidence:** HIGH — production-proven pattern, verified against Astro routing reference docs
-
----
-
-### 3. LocalBusiness JSON-LD with `areaServed` per Page
-
-**Approach:** The BaseLayout already emits a global `LocalBusiness` with broad `areaServed` (Oslo, Oslo-området, Norway). For city pages, inject an additional page-scoped `LocalBusiness` block via `<slot name="head" />`. Do NOT modify BaseLayout's global schema — the global one remains correct for all non-city pages.
-
-**Correct `areaServed` format — schema.org `City` type with Wikipedia `@id`:**
-
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "@id": "https://nettup.no/#business",
-  "name": "Nettup",
-  "url": "https://nettup.no",
-  "areaServed": {
-    "@type": "City",
-    "name": "Oslo",
-    "@id": "https://en.wikipedia.org/wiki/Oslo"
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+    gtagLoaded?: boolean;
   }
 }
 ```
 
-**Wikipedia `@id` values for V1 cities:**
+**Confidence:** HIGH -- gtag conversion snippet pattern is well-documented by Google. Enhanced Conversions with `gtag('set', 'user_data', ...)` is the recommended approach per Google's official docs. The `window.gtagLoaded` flag already exists in LandingPageLayout.
 
-| City | `schemaWikipediaId` value |
-|------|--------------------------|
-| Oslo | `https://en.wikipedia.org/wiki/Oslo` |
-| Drammen | `https://en.wikipedia.org/wiki/Drammen` |
-| Asker | `https://en.wikipedia.org/wiki/Asker` |
-| Bærum | `https://en.wikipedia.org/wiki/B%C3%A6rum` |
-| Lillestrøm | `https://en.wikipedia.org/wiki/Lillstr%C3%B8m` |
-| Sandvika | `https://en.wikipedia.org/wiki/Sandvika` |
-| Ski | `https://en.wikipedia.org/wiki/Ski,_Norway` |
-| Moss | `https://en.wikipedia.org/wiki/Moss,_Norway` |
-
-**Why Wikipedia `@id`:** Schema.org recommends using a URL as the `@id` for named place entities. Wikipedia is the most widely recognized knowledge base reference for Norwegian city names. The `@id` helps Google connect the schema City entity to its Knowledge Graph entry for that municipality.
-
-**Simpler valid alternative:** Omit `@id` and use `{ "@type": "City", "name": "Oslo" }` — this is what BaseLayout already uses for the global schema and it validates. Add `@id` on city pages for the Knowledge Graph alignment benefit.
-
-**Confidence:** MEDIUM — `@type: City` with Wikipedia `@id` confirmed from schema.org spec and RankMath documentation. Google's exact handling of Norwegian city entities not independently verified; pattern is consistent with documented best practices.
+**Sources:**
+- [Google Ads conversion tracking with gtag](https://support.google.com/google-ads/answer/7548399)
+- [Enhanced conversions setup with Google tag](https://support.google.com/google-ads/answer/13258081)
+- [Google conversion measurement docs](https://developers.google.com/tag-platform/devguides/conversions)
 
 ---
 
-### 4. Sitemap — No Code Changes Required
+### 2. Subscription Pricing UI (No New Dependencies)
 
-The existing `@astrojs/sitemap` in `astro.config.mjs` automatically discovers and includes all pages generated by `getStaticPaths()` when `output: 'static'` is set. City pages at `/oslo`, `/drammen` etc. will appear in the sitemap after the route file is added — no config changes needed.
+**Context:** New offer is 0 kr oppstart + 399 kr/mnd for 5-siders nettside (first 10 customers). This is NOT a SaaS pricing page with toggles -- it's a single subscription offer on a conversion landing page.
 
-**Optional: extend `serialize` to set priority for city pages.** The existing callback already handles blog pages. Adding city pages follows the same pattern:
+**Recommended approach: Astro section component, not React island.**
 
-```javascript
-sitemap({
-  serialize(item) {
-    if (item.url.startsWith('https://nettup.no/blogg/')) {
-      return { ...item, changefreq: 'monthly', priority: 0.7 };
-    }
-    // City landing pages
-    if (/^https:\/\/nettup\.no\/[a-z-]+\/$/.test(item.url) &&
-        !['tjenester', 'om-oss', 'prosjekter', 'kontakt', 'blogg', 'priskalkulator', 'personvern'].includes(
-          item.url.replace('https://nettup.no/', '').replace('/', '')
-        )) {
-      return { ...item, changefreq: 'monthly', priority: 0.8 };
-    }
-    return item;
-  },
-}),
+Subscription pricing on a landing page does not need client-side interactivity. It needs:
+- Clear monthly price with struck-through comparison
+- "What's included" checklist
+- Scarcity signal (X of 10 plasser igjen)
+- Single CTA button scrolling to form
+
+**Pattern:**
+
+```astro
+<!-- _sections/SubscriptionPricing.astro -->
+<section class="py-20 bg-surface">
+  <div class="container mx-auto px-4 max-w-3xl text-center">
+    <h2>Alt inkludert. Ingen overraskelser.</h2>
+    <div class="bg-surface-raised rounded-2xl p-8 border border-white/10">
+      <div class="text-5xl font-bold text-brand">399 kr/mnd</div>
+      <div class="text-text-muted">0 kr oppstart</div>
+      <!-- Checklist items -->
+      <!-- Scarcity badge: "7 av 10 plasser igjen" -->
+      <!-- CTA: scroll to form -->
+    </div>
+  </div>
+</section>
 ```
 
-Note: Google ignores `priority` and `changefreq`. The serialization is for other crawlers and is optional for V1.
+**Why NOT a pricing toggle (monthly/annual):** This is a single offer, not a tier comparison. Adding toggle complexity reduces clarity and hurts conversion on a focused landing page. The subscription model should feel simple and risk-free.
 
-**Confidence:** HIGH — verified against Astro sitemap integration official docs. Static mode is already configured.
+**Scarcity counter approach:** Hard-code the number in a config constant (e.g. `launchOffer.ts` or inline). Do NOT build a real-time counter -- that requires a database and adds complexity for no conversion benefit. Update the number manually as customers sign up.
+
+**Confidence:** HIGH -- subscription pricing presentation is pure HTML/CSS. No technical risk.
 
 ---
 
-### 5. BaseLayout `pageLabels` Map — Minor Update
+### 3. A/B Testing Variant Pages
 
-The `pageLabels` map in `BaseLayout.astro` drives auto-breadcrumb generation. City pages will fall through to the raw slug (e.g. `'oslo'`) if not present in the map, which produces an acceptable breadcrumb.
+**The constraint:** Project uses `output: 'static'` with Vercel adapter. Astro middleware runs only at build time for static pages. This means Astro-level middleware cannot do runtime A/B routing.
 
-For better breadcrumb display names (`"Nettside i Oslo"` instead of `"oslo"`), add entries. For V1 (8 cities) this is acceptable as manual entries. For V3 (300+), generate the map programmatically from the `locations` array — BaseLayout's frontmatter can import from `locations.ts` directly.
+**Two viable approaches, ranked:**
+
+#### Approach A: Vercel Edge Middleware (RECOMMENDED)
+
+Vercel Edge Middleware runs at the edge BEFORE the static cache. It can rewrite requests to serve different pre-built static pages without SSR. This is the same pattern Vercel uses for their own A/B testing.
+
+**How it works:**
+1. Build two static pages: `/nettside-for-bedrift/index.html` and `/nettside-for-bedrift/b/index.html`
+2. Create `middleware.ts` at project root (Vercel convention, NOT `src/middleware.ts`)
+3. Middleware reads a cookie; if no cookie, assigns variant randomly and sets cookie
+4. Middleware rewrites request to the appropriate variant page
+5. User always sees `/nettside-for-bedrift` in browser URL bar
+
+**Implementation:**
 
 ```typescript
-// In BaseLayout.astro — V3-safe approach:
-import { locations } from '@/config/locations';
-const cityPageLabels = Object.fromEntries(
-  locations.map((loc) => [`/${loc.slug}`, `Nettside i ${loc.city}`])
-);
-const pageLabels: Record<string, string> = {
-  '/': 'Hjem',
-  // ... existing entries
-  ...cityPageLabels,
+// middleware.ts (project root -- Vercel Edge Middleware)
+import { NextResponse } from 'next/server'; // Vercel middleware uses this API
+
+export const config = {
+  matcher: '/nettside-for-bedrift',
 };
+
+export default function middleware(request: Request) {
+  const cookie = request.headers.get('cookie') ?? '';
+  const variantMatch = cookie.match(/nettup_ab=([ab])/);
+
+  let variant = variantMatch?.[1];
+  if (!variant) {
+    variant = Math.random() < 0.5 ? 'a' : 'b';
+  }
+
+  const url = new URL(request.url);
+  if (variant === 'b') {
+    url.pathname = '/nettside-for-bedrift/b';
+  }
+
+  const response = NextResponse.rewrite(url);
+  if (!variantMatch) {
+    response.cookies.set('nettup_ab', variant, { maxAge: 60 * 60 * 24 * 30 });
+  }
+  return response;
+}
 ```
 
-This change is purely additive — no risk to existing breadcrumbs.
+**IMPORTANT CAVEAT:** Vercel Edge Middleware for non-Next.js frameworks has limited official documentation. The `@astrojs/vercel` adapter supports `edgeMiddleware: true` in config, which creates an edge function from Astro's `src/middleware.ts`. However, Astro middleware on static pages has documented limitations (runs at build time only for prerendered pages).
+
+**Confidence:** MEDIUM -- Vercel Edge Middleware rewrites are well-documented for Next.js. For Astro with `output: 'static'`, this specific pattern needs validation during implementation. The community reports it works but there are edge cases with cookies.
+
+#### Approach B: URL-Based Variants with UTM Parameters (SIMPLER, RECOMMENDED FOR V1)
+
+Skip middleware entirely. Create two separate landing page URLs:
+- `/nettside-for-bedrift` (variant A -- control)
+- `/nettside-for-bedrift-b` (variant B -- new design)
+
+Use Google Ads to split traffic by creating two ad groups pointing to different URLs. Track conversions per page in both Google Ads and Plausible.
+
+**Advantages:**
+- Zero infrastructure complexity
+- Works perfectly with `output: 'static'`
+- Google Ads natively supports traffic splitting across ad groups
+- Plausible shows per-page conversion rates
+- `noIndex` on variant B prevents SEO duplication
+
+**Disadvantages:**
+- Not true A/B testing (Google Ads splits may not be perfectly 50/50)
+- Organic traffic doesn't get split
+
+**Implementation:**
+1. Create `/nettside-for-bedrift-b/index.astro` using LandingPageLayout with `noIndex={true}`
+2. Create separate Google Ads ad group pointing to variant B URL
+3. Compare conversion rates in Google Ads dashboard
+
+**Confidence:** HIGH -- no technical risk, uses only existing capabilities.
+
+**Recommendation:** Start with Approach B (URL-based) for the initial A/B test. It ships in hours, not days. If you need true 50/50 splitting for organic traffic later, implement Approach A.
+
+---
+
+### 4. Conversion-Optimized Section Patterns (No New Dependencies)
+
+All conversion optimization elements are pure Astro components with Tailwind styling. No new libraries needed.
+
+| Pattern | Implementation | Notes |
+|---------|---------------|-------|
+| Social proof (logos) | LogoCloud.astro already exists | Expand with more logos if available |
+| Urgency/scarcity | Static badge: "X av 10 plasser igjen" | Hard-coded in config, update manually |
+| Trust signals | Checkmark lists, guarantee badges | Pure Tailwind/SVG |
+| Sticky CTA | `position: sticky` footer bar on mobile | Pure CSS, no JS needed |
+| Countdown timer | NOT recommended | Fake urgency damages trust |
+| Exit-intent popup | NOT recommended | Aggressive, hurts brand perception |
+| Form prefill from UTM | Read `URLSearchParams` in form component | Minimal inline JS |
+| Phone number tracking | `trackAdsPhoneClick()` on tel: link click | See section 1 above |
+
+**Sticky mobile CTA pattern (pure CSS):**
+
+```astro
+<!-- Sticky bottom CTA bar, visible on mobile only -->
+<div class="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-surface/95 backdrop-blur-md p-4 md:hidden">
+  <a href="#kontakt" class="block w-full rounded-full bg-brand py-3 text-center font-semibold text-surface">
+    Kom i gang - 0 kr oppstart
+  </a>
+</div>
+```
+
+**Confidence:** HIGH -- all pure HTML/CSS/minimal JS patterns.
+
+---
+
+## Plausible Analytics Additions
+
+Extend `src/lib/analytics.ts` with new tracking functions for the landing page:
+
+```typescript
+export function trackLandingFormSubmit(variant?: string): void {
+  track('Landing Form Submit', variant ? { variant } : undefined);
+}
+
+export function trackLandingPhoneClick(variant?: string): void {
+  track('Landing Phone Click', variant ? { variant } : undefined);
+}
+
+export function trackLandingScrollDepth(depth: string): void {
+  track('Landing Scroll Depth', { depth });
+}
+```
+
+These fire alongside (not instead of) Google Ads conversion events. Plausible gives you analytics without consent; Google Ads conversions require consent.
 
 ---
 
@@ -204,38 +283,41 @@ This change is purely additive — no risk to existing breadcrumbs.
 
 | Considered | Decision | Reason |
 |------------|----------|--------|
-| External CMS (Contentful, Sanity) for city data | Rejected | `src/config/locations.ts` matches existing patterns, TypeScript type safety, zero new deps, data doesn't change frequently enough to need a CMS |
-| `astro-seo` package | Rejected | BaseLayout already handles all meta tags; adding a package creates duplication |
-| Separate sitemap plugin | Rejected | Existing `@astrojs/sitemap` handles dynamic routes natively in static mode |
-| Separate `LocalBusiness` schema Astro component | Deferred | Inline in `[location].astro` for V1; extract to a component only if schema diverges across multiple templates |
-| Zod validation for `locations.ts` | Rejected for V1 | TypeScript strict mode catches required field omissions at build time; Zod adds runtime overhead for a static config |
-
----
-
-## Scalability: V1 to V3 with Zero Structural Changes
-
-| Stage | Cities | Data Approach | Build Impact |
-|-------|--------|---------------|--------------|
-| V1 | 6–8 | Hand-written entries, `tier: 1` | ~1s additional |
-| V2 | 30–50 | AI-assisted copy appended to same array, `tier: 2` | ~1–2s additional |
-| V3 | 300+ | Script-generated stubs, `tier: 3`, `intro` as minimal placeholder | ~2–3s additional |
-
-**Key insight:** `getStaticPaths()` returns the array synchronously from a local TypeScript module — no filesystem I/O, no network. At 300 entries Astro renders ~300 static HTML files in 2–3 seconds. The build will still complete in well under 30 seconds total.
-
-If V3 introduces performance concerns (unlikely with Astro SSG), the mitigation is to filter by `tier` in `getStaticPaths()` and deploy Tier 3 stubs as a separate build — not an architectural change needed now.
+| Google Tag Manager (GTM) | Rejected | gtag.js is already loaded; GTM adds another script, container overhead, and complexity for 2 conversion events |
+| Optimizely / LaunchDarkly | Rejected | Overkill for a single A/B test on one landing page; URL-based splitting is sufficient |
+| `@vercel/edge-config` | Deferred | Only needed if implementing Approach A for A/B testing; URL-based approach avoids this |
+| Hotjar / Microsoft Clarity | Deferred | Heatmaps are valuable but add another consent requirement; evaluate after first ad campaign data |
+| `react-countdown` | Rejected | Countdown timers create fake urgency; the scarcity message (X of 10 remaining) is sufficient |
+| Form library (react-hook-form, etc.) | Rejected | Existing Formspree pattern with native validation works; no complex form logic needed |
 
 ---
 
 ## Integration Points with Existing Stack
 
-| Existing File | Change for v1.5 | Impact |
+| Existing File | Change for v1.6 | Impact |
 |---------------|-----------------|--------|
-| `src/config/locations.ts` | New file | None on existing pages |
-| `src/pages/[location].astro` | New file | None on existing routes |
-| `astro.config.mjs` | Optional `serialize` extension | Non-breaking additive |
-| `src/layouts/BaseLayout.astro` | Optional `pageLabels` extension | Non-breaking additive |
-| `src/components/layout/Footer.astro` | Add city links section | Additive — no current functionality changes |
-| `src/pages/kontakt/index.astro` | Add coverage area mention | Content change only |
+| `src/lib/ads-tracking.ts` | New file | None on existing code |
+| `src/lib/analytics.ts` | Add 3 new tracking functions | Additive only |
+| `src/types/gtag.d.ts` | New file (Window type augmentation) | Additive only |
+| `src/pages/nettside-for-bedrift/index.astro` | Full rebuild of sections | Replaces existing content |
+| `src/pages/nettside-for-bedrift/_sections/*` | Rebuild/add sections | Replaces existing sections |
+| `src/layouts/LandingPageLayout.astro` | No changes needed | Stable |
+| `src/config/launchOffer.ts` | Update pricing to subscription model | May need new fields |
+| `astro.config.mjs` | No changes needed | Stable |
+
+---
+
+## Google Ads Setup Requirements (Outside Codebase)
+
+These are Google Ads dashboard configurations, not code changes:
+
+| Action | Where | Notes |
+|--------|-------|-------|
+| Create "Skjema sendt" conversion action | Google Ads > Goals > Conversions | Category: Submit Lead Form, value: set per lead value |
+| Create "Telefon klikk" conversion action | Google Ads > Goals > Conversions | Category: Phone Call |
+| Enable Enhanced Conversions | On "Skjema sendt" conversion action | Settings > Enhanced Conversions > Google tag |
+| Get conversion labels | From each conversion action's tag setup | Paste into `ads-tracking.ts` constants |
+| Verify with Tag Assistant | [tagassistant.google.com](https://tagassistant.google.com) | Test both events fire on form submit and phone click |
 
 ---
 
@@ -250,17 +332,17 @@ If V3 introduces performance concerns (unlikely with Astro SSG), the mitigation 
 
 ## Sources
 
-- [Astro Routing Reference](https://docs.astro.build/en/reference/routing-reference/) — `getStaticPaths()` return format, `props` alongside `params` (HIGH confidence — official docs)
-- [Astro Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/) — auto-inclusion of dynamic routes, `serialize` callback, static mode requirement (HIGH confidence — official docs)
-- [RankMath: Multiple areaServed Cities](https://rankmath.com/kb/add-multiple-areaserved-cities-to-localbusiness-schema/) — `@type: City` with Wikipedia `@id` format (MEDIUM confidence — SEO tool documentation)
-- [schema.org/LocalBusiness](https://schema.org/LocalBusiness) — `areaServed` property spec (HIGH confidence — authoritative)
-- [Astro build performance](https://www.bitdoze.com/astro-ssg-build-optimization/) — ~127 pages/sec throughput reference (MEDIUM confidence — single source)
-- Codebase `src/pages/prosjekter/[slug].astro` + `src/config/projects.ts` — config-driven `getStaticPaths()` pattern validated in production (HIGH confidence — direct code read)
-- Codebase `src/pages/blogg/[slug].astro` — per-page JSON-LD via `<slot name="head" />` confirmed working (HIGH confidence — direct code read)
-- Codebase `src/layouts/BaseLayout.astro` — existing `LocalBusiness` schema, `pageLabels` map, `<slot name="head" />` (HIGH confidence — direct code read)
-- Codebase `astro.config.mjs` — existing `serialize` callback, `output: 'static'` confirmed (HIGH confidence — direct code read)
+- [Google Ads conversion tracking with gtag](https://support.google.com/google-ads/answer/7548399) -- event snippet format (HIGH confidence)
+- [Enhanced conversions for web using Google tag](https://support.google.com/google-ads/answer/13258081) -- user_data setup (HIGH confidence)
+- [Google conversion measurement developer docs](https://developers.google.com/tag-platform/devguides/conversions) -- send_to pattern (HIGH confidence)
+- [Vercel Edge Middleware for A/B testing](https://vercel.com/blog/vercel-edge-middleware-dynamic-at-the-speed-of-static) -- rewrite static pages pattern (MEDIUM confidence for Astro specifically)
+- [Astro middleware docs](https://docs.astro.build/en/guides/middleware/) -- context.rewrite() API (HIGH confidence)
+- [Vercel Edge Config](https://vercel.com/docs/edge-config) -- feature flags and A/B test config (MEDIUM confidence)
+- Codebase `src/layouts/LandingPageLayout.astro` -- existing gtag loader, consent flow, `window.gtagLoaded` flag (HIGH confidence)
+- Codebase `src/lib/analytics.ts` -- existing Plausible wrapper pattern (HIGH confidence)
+- Codebase `astro.config.mjs` -- `output: 'static'` constraint (HIGH confidence)
 
 ---
 
-*Stack research for: Nettup v1.5 Local SEO landing pages*
-*Researched: 2026-03-08*
+*Stack research for: Nettup v1.6 Landing Page & Google Ads*
+*Researched: 2026-03-19*
