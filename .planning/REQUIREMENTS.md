@@ -57,29 +57,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRACK-01 | — | Pending |
-| TRACK-02 | — | Pending |
-| TRACK-03 | — | Pending |
-| TRACK-04 | — | Pending |
-| TRACK-05 | — | Pending |
-| LP-01 | — | Pending |
-| LP-02 | — | Pending |
-| LP-03 | — | Pending |
-| LP-04 | — | Pending |
-| LP-05 | — | Pending |
-| LP-06 | — | Pending |
-| LP-07 | — | Pending |
-| LP-08 | — | Pending |
-| ADS-01 | — | Pending |
-| ADS-02 | — | Pending |
-| ADS-03 | — | Pending |
-| ADS-04 | — | Pending |
+| TRACK-01 | Phase 31 | Pending |
+| TRACK-02 | Phase 32 | Pending |
+| TRACK-03 | Phase 32 | Pending |
+| TRACK-04 | Phase 31 | Pending |
+| TRACK-05 | Phase 32 | Pending |
+| LP-01 | Phase 33 | Pending |
+| LP-02 | Phase 32 | Pending |
+| LP-03 | Phase 33 | Pending |
+| LP-04 | Phase 33 | Pending |
+| LP-05 | Phase 33 | Pending |
+| LP-06 | Phase 33 | Pending |
+| LP-07 | Phase 33 | Pending |
+| LP-08 | Phase 33 | Pending |
+| ADS-01 | Phase 34 | Pending |
+| ADS-02 | Phase 34 | Pending |
+| ADS-03 | Phase 34 | Pending |
+| ADS-04 | Phase 34 | Pending |
 
 **Coverage:**
 - v1.6 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 after roadmap creation*

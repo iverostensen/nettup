@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Landingsside & Google Ads
-status: defining_requirements
+status: ready_to_plan
 last_updated: "2026-03-19"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -15,38 +15,64 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-19 after v1.6 milestone start)
+See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Defining requirements for v1.6 Landingsside & Google Ads
+**Current focus:** Phase 31 - Tracking Infrastructure
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-19 — Milestone v1.6 started
+Phase: 31 of 34 (Tracking Infrastructure)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0
+- Average duration: -
+- Total execution time: 0 hours
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+**Recent Trend:**
+- Last 5 plans: -
+- Trend: -
+
+*Updated after each plan completion*
 
 ## Accumulated Context
 
 ### Decisions
 
-Key decisions from milestone setup:
+Key decisions from milestone setup and roadmap:
 - [v1.6]: New subscription model: 0 kr oppstart + 399 kr/mnd for 5-page website, first 10 customers
 - [v1.6]: Cancel = site taken down (not owned by customer while subscribing)
-- [v1.6]: Entry-level offer only — larger websites and nettbutikk at normal pricing from /tjenester
+- [v1.6]: Entry-level offer only -- larger websites and nettbutikk at normal pricing from /tjenester
 - [v1.6]: 10 spots chosen over 5 for ad optimization runway while maintaining scarcity
+- [v1.6 roadmap]: Consent Mode v2 + noindex must precede all content work
+- [v1.6 roadmap]: subscriptionOffer.ts replaces launchOffer.ts + pricing.ts as single source of truth
+- [v1.6 roadmap]: Form redirect to /takk page instead of inline success state (Google-recommended)
+- [v1.6 roadmap]: Ad campaign docs come last (ad copy must match final page content)
 
 ### Pending Todos
 
 - Replace placeholder testimonials in `src/config/testimonials.ts` before launch traffic (carried from v1.0)
 - Verify Shopify platform fee figure before publishing on nettbutikk page (research flag)
 - Verify Nettup's Shopify Partner status before writing nettbutikk credibility copy (research flag)
-- iGive: real testimonial quote requires client outreach — launch with placeholder, update post-launch
+- iGive: real testimonial quote requires client outreach -- launch with placeholder, update post-launch
 
 ### Blockers/Concerns
 
-- iGive testimonial quote is placeholder — real quote requires client outreach before launch
+- Business decisions needed before Phase 33: (1) subscription cancellation/ownership terms, (2) real testimonial availability, (3) scarcity counter approach
+- iGive testimonial quote is placeholder -- real quote requires client outreach before launch
 
 ### Quick Tasks Completed
 
@@ -64,5 +90,5 @@ Key decisions from milestone setup:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Milestone v1.6 started — defining requirements
+Stopped at: Roadmap created, ready to plan Phase 31
 Resume file: None
