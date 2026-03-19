@@ -1,14 +1,17 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.6
-milestone_name: Landingsside & Google Ads
-status: ready_to_plan
-last_updated: "2026-03-19"
+milestone_name: milestone
+status: planning
+stopped_at: Phase 31 context gathered
+last_updated: "2026-03-19T13:02:03.940Z"
+last_activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -53,12 +56,14 @@ Progress: [░░░░░░░░░░] 0%
 ### Decisions
 
 Key decisions from milestone setup and roadmap:
-- [v1.6]: New subscription model: 0 kr oppstart + 399 kr/mnd for 5-page website, first 10 customers
+- [v1.6]: **One service, one campaign** -- landing page sells exactly one thing: 5-page subscription website at 0 kr oppstart + 399 kr/mnd
+- [v1.6]: No tiers, no package selector -- one clear yes/no decision for cold Google Ads traffic
 - [v1.6]: Cancel = site taken down (not owned by customer while subscribing)
-- [v1.6]: Entry-level offer only -- larger websites and nettbutikk at normal pricing from /tjenester
-- [v1.6]: 10 spots chosen over 5 for ad optimization runway while maintaining scarcity
+- [v1.6]: First 10 customers (10 chosen over 5 for ad optimization runway while maintaining scarcity)
+- [v1.6]: Visitors who need more (custom website, e-commerce) get linked to /tjenester -- upsell paths, not campaign targets
+- [v1.6]: Google Ads campaign targets only the single subscription offer, sitelinks to /tjenester as upsell
 - [v1.6 roadmap]: Consent Mode v2 + noindex must precede all content work
-- [v1.6 roadmap]: subscriptionOffer.ts replaces launchOffer.ts + pricing.ts as single source of truth
+- [v1.6 roadmap]: subscriptionOffer.ts replaces launchOffer.ts + pricing.ts -- single offer, not a package array
 - [v1.6 roadmap]: Form redirect to /takk page instead of inline success state (Google-recommended)
 - [v1.6 roadmap]: Ad campaign docs come last (ad copy must match final page content)
 
@@ -89,6 +94,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-19
-Stopped at: Roadmap created, ready to plan Phase 31
-Resume file: None
+Last session: 2026-03-19T13:02:03.932Z
+Stopped at: Phase 31 context gathered
+Resume file: .planning/phases/31-tracking-infrastructure/31-CONTEXT.md
