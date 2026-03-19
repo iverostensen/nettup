@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
 status: planning
-stopped_at: Phase 31 context gathered
-last_updated: "2026-03-19T13:02:03.940Z"
+stopped_at: Completed 31-01-PLAN.md
+last_updated: "2026-03-19T13:29:01.631Z"
 last_activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 31 P01 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Key decisions from milestone setup and roadmap:
 - [v1.6 roadmap]: subscriptionOffer.ts replaces launchOffer.ts + pricing.ts -- single offer, not a package array
 - [v1.6 roadmap]: Form redirect to /takk page instead of inline success state (Google-recommended)
 - [v1.6 roadmap]: Ad campaign docs come last (ad copy must match final page content)
+- [Phase 31]: Consent Mode v2 advanced: gtag always loads with denied defaults, updates on accept
+- [Phase 31]: Plausible Analytics replaces Vercel Analytics references on privacy page
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-19T13:02:03.932Z
-Stopped at: Phase 31 context gathered
-Resume file: .planning/phases/31-tracking-infrastructure/31-CONTEXT.md
+Last session: 2026-03-19T13:29:01.629Z
+Stopped at: Completed 31-01-PLAN.md
+Resume file: None

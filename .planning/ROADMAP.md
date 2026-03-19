@@ -12,7 +12,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
 - Integer phases (31, 32, 33, 34): Planned milestone work (continuing from v1.5 phase 30)
 - Decimal phases (31.1, 32.1): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 31: Tracking Infrastructure** - Consent Mode v2 upgrade and noindex to prepare for paid traffic
+- [x] **Phase 31: Tracking Infrastructure** - Consent Mode v2 upgrade and noindex to prepare for paid traffic (completed 2026-03-19)
 - [ ] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture
 - [ ] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester
 - [ ] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer
@@ -27,7 +27,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
   1. gtag loads immediately on page load with all consent states set to `denied` by default, and updates to `granted` when user consents (Consent Mode v2 advanced mode)
   2. `ad_user_data` and `ad_personalization` consent parameters are present in the gtag consent config
   3. `/nettside-for-bedrift` has `noindex` meta tag preventing search engine indexing
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 31-01-PLAN.md -- Consent Mode v2 upgrade, noIndex default, sitemap exclusion, privacy page update
@@ -85,7 +85,7 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 31. Tracking Infrastructure | 0/1 | Not started | - |
+| 31. Tracking Infrastructure | 1/1 | Complete   | 2026-03-19 |
 | 32. Config & Conversion Flow | 0/? | Not started | - |
 | 33. Landing Page Content Rebuild | 0/? | Not started | - |
 | 34. Google Ads Campaign Docs | 0/? | Not started | - |
