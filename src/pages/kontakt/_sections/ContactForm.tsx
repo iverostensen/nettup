@@ -23,7 +23,8 @@ interface FormData {
 
 import { pakker } from '@/config/pricing';
 import { services } from '@/config/services';
-import { trackContactFormSubmit, trackB2BFormSubmit } from '@/lib/analytics';
+import { trackContactFormSubmit } from '@/lib/analytics';
+import { captureUtmParams, getUtmParams } from '@/lib/utm';
 
 const FORMSPREE_ID = 'xnjnzybj';
 
@@ -70,6 +71,7 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
 
   // Read URL parameters for pre-selection and tracking
   useEffect(() => {
+    captureUtmParams();
     const params = new URLSearchParams(window.location.search);
     const pakkeParam = params.get('pakke');
     const kildeParam = params.get('kilde');
@@ -142,24 +144,17 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
           tjeneste: formData.tjeneste || 'Ikke valgt',
           melding: formData.melding,
           kilde: formData.kilde || 'direkte',
+          ...(context === 'b2b' ? getUtmParams() : {}),
         }),
       });
 
       if (response.ok) {
-        setStatus('success');
-
-        // Fire Google Ads conversion event (only if gtag loaded with consent)
-        if (window.gtagLoaded && window.gtag) {
-          window.gtag('event', 'conversion', {
-            send_to: 'AW-17409050017/EvwaCNm05eFbEKGLpO1A',
-          });
-        }
-
         if (context === 'b2b') {
-          trackB2BFormSubmit();
-        } else {
-          trackContactFormSubmit();
+          window.location.href = '/nettside-for-bedrift/takk';
+          return;
         }
+        setStatus('success');
+        trackContactFormSubmit();
       } else {
         setStatus('error');
       }

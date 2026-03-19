@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { captureUtmParams, getUtmParams } from '@/lib/utm';
 
 // Extend window type for gtag
 declare global {
@@ -17,6 +17,10 @@ export default function HeroMicroForm() {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    captureUtmParams();
+  }, []);
 
   const validateEmail = (email: string): boolean => {
     if (!email.trim()) {
@@ -53,18 +57,13 @@ export default function HeroMicroForm() {
           melding: 'Hurtighenvendelse fra hero-form',
           pakke: pakkeParam || 'Ikke valgt',
           kilde: kildeParam || 'hero-form',
+          ...getUtmParams(),
         }),
       });
 
       if (response.ok) {
-        setStatus('success');
-
-        // Fire Google Ads conversion event (only if gtag loaded with consent)
-        if (window.gtagLoaded && window.gtag) {
-          window.gtag('event', 'conversion', {
-            send_to: 'AW-17409050017/EvwaCNm05eFbEKGLpO1A',
-          });
-        }
+        window.location.href = '/nettside-for-bedrift/takk';
+        return;
       } else {
         setStatus('error');
         setError('Noe gikk galt. Vennligst prøv igjen.');
@@ -86,32 +85,6 @@ export default function HeroMicroForm() {
     setStatus('idle');
     setError('');
   };
-
-  if (status === 'success') {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center"
-        role="status"
-        aria-live="polite"
-      >
-        <div className="flex items-center justify-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5 text-brand"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-          </svg>
-          <span className="text-sm font-medium">Takk! Vi kontakter deg snart.</span>
-        </div>
-      </motion.div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
