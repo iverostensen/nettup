@@ -1,7 +1,6 @@
 ---
 import { cities, ACTIVE_TIER, type City } from '@/config/locations';
 import { services } from '@/config/services';
-import { remainingSlots } from '@/config/launchOffer';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import Button from '@/components/ui/Button.astro';
@@ -30,7 +29,6 @@ const allServices = ['nettside', 'nettbutikk', 'landingsside']
   .filter(Boolean);
 
 const nettside = services.find((s) => s.slug === 'nettside')!;
-const hasOffer = remainingSlots > 0;
 
 const faqSchema =
   city.faq && city.faq.length > 0
@@ -119,17 +117,7 @@ const steps = [
         <div class="reveal-on-scroll reveal-stagger-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Button href={`/kontakt?sted=${city.slug}`} size="lg">Få et gratis tilbud</Button>
           <span class="text-sm text-text-muted">
-            {hasOffer ? (
-              <>
-                <span class="font-semibold text-brand">{nettside.launchPriceRange}</span>
-                {' '}
-                <span class="line-through">{nettside.priceRange}</span>
-                {' · '}
-                <span>{remainingSlots} plasser igjen</span>
-              </>
-            ) : (
-              <>{nettside.priceRange} · Klar på 2–4 uker</>
-            )}
+            {nettside.priceRange} · Klar på 2–4 uker
           </span>
         </div>
       </div>
