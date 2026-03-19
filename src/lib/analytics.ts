@@ -36,3 +36,7 @@ export function trackChatbotOpened(): void {
 export function trackChatbotSuggestionClicked(suggestion: string): void {
   track('Chatbot Suggestion Clicked', { suggestion });
 }
+
+export function trackB2BLead(): void {
+  track('B2B Lead');
+}
