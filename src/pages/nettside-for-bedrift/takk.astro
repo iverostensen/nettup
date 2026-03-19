@@ -1,0 +1,82 @@
+---
+/**
+ * Thank-you page: /nettside-for-bedrift/takk
+ *
+ * Shown after successful B2B form submission (redirect from HeroMicroForm or ContactForm).
+ * Fires Google Ads conversion + Plausible 'B2B Lead' events on page load.
+ * No form, no user input -- static confirmation with next steps.
+ */
+import LandingPageLayout from '@/layouts/LandingPageLayout.astro';
+---
+
+<LandingPageLayout
+  title="Takk for henvendelsen | Nettup"
+  description="Vi har mottatt din henvendelse og kontakter deg innen 24 timer."
+>
+  <main class="py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <div class="mx-auto max-w-2xl text-center">
+        <!-- Success icon -->
+        <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand/10 border border-brand/20">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="h-8 w-8 text-brand"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+
+        <!-- Heading + subtitle -->
+        <h1 class="text-3xl font-bold md:text-4xl">Takk for henvendelsen!</h1>
+        <p class="mt-4 text-lg text-text-muted">Vi kontakter deg innen 24 timer.</p>
+
+        <!-- Next-steps card -->
+        <div class="mt-10 rounded-2xl border border-white/10 bg-surface-raised p-6 md:p-8 text-left">
+          <h2 class="text-xl font-bold mb-6">Hva skjer nå?</h2>
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand text-sm font-bold">1</div>
+              <div>
+                <p class="font-bold text-text">Vi ringer deg</p>
+                <p class="mt-1 text-sm text-text-muted">En av oss tar kontakt for å bli kjent med bedriften din og hva du trenger.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand text-sm font-bold">2</div>
+              <div>
+                <p class="font-bold text-text">Oppstartsmøte</p>
+                <p class="mt-1 text-sm text-text-muted">Vi avtaler innhold, design og leveringstid. Du trenger ikke forberede noe.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand text-sm font-bold">3</div>
+              <div>
+                <p class="font-bold text-text">Nettsiden er klar</p>
+                <p class="mt-1 text-sm text-text-muted">Vi bygger og lanserer nettsiden din. Du betaler ingenting før du er fornøyd.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Conversion tracking (fires on page load) -->
+  <script is:inline>
+    // Gtag conversion (Consent Mode v2 handles consent state)
+    if (window.gtagLoaded && window.gtag) {
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-17409050017/EvwaCNm05eFbEKGLpO1A',
+      });
+    }
+
+    // Plausible 'B2B Lead' event
+    if (window.plausible) {
+      window.plausible('B2B Lead');
+    }
+  </script>
+</LandingPageLayout>
