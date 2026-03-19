@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/ui/Section.astro';
 
-const lastUpdated = '17. januar 2025';
+const lastUpdated = '19. mars 2026';
 ---
 
 <BaseLayout
@@ -65,31 +65,50 @@ const lastUpdated = '17. januar 2025';
               <li><strong class="text-text">Trafikkilde</strong> (automatisk fra URL-parameter)</li>
             </ul>
 
-            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.2 Analytiske data</h3>
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.2 Plausible Analytics</h3>
             <p class="mb-3 text-text-muted">
-              Vi bruker Vercel Analytics for å forstå hvordan besøkende bruker nettsiden vår.
-              Dette verktøyet er personvernvennlig og samler inn:
+              Vi bruker Plausible Analytics for å forstå hvordan besøkende bruker nettsiden vår.
+              Plausible er et personvernvennlig analyseverktøy som kjører helt uten informasjonskapsler
+              og krever ingen samtykke.
             </p>
             <ul class="list-inside list-disc space-y-1 text-text-muted">
               <li>Sidevisninger (hvilke sider du besøker)</li>
-              <li>Ytelsesdata (lastetider)</li>
               <li>Generell geografisk plassering (land/region, ikke presis lokasjon)</li>
               <li>Enhetstype og nettleser</li>
             </ul>
             <p class="mt-3 text-text-muted">
-              <strong class="text-text">Viktig:</strong> Vercel Analytics setter ingen informasjonskapsler (cookies)
-              og sporer ikke enkeltbrukere på tvers av sider eller økter.
+              <strong class="text-text">Viktig:</strong> Plausible setter ingen informasjonskapsler (cookies),
+              sporer ikke enkeltbrukere, og samler ikke inn personopplysninger. Dette er helt adskilt
+              fra Google sin sporingstjeneste.
             </p>
 
-            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.3 Markedsføringscookies (kun landingssider)</h3>
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.3 Google Ads (kun landingssider)</h3>
             <p class="mb-3 text-text-muted">
               På våre landingssider (f.eks. /nettside-for-bedrift) bruker vi Google Ads
-              konverteringssporing for å måle effekten av våre annonser. Denne teknologien
-              aktiveres <strong class="text-text">kun etter at du har gitt samtykke</strong> via cookie-banneret.
+              for å måle effekten av våre annonser. Google sin sporingstjeneste lastes alltid
+              på disse sidene, men hvordan den fungerer avhenger av ditt samtykke:
             </p>
-            <p class="text-text-muted">
-              Disse cookiene setter Google, og vi har ingen kontroll over dataene som samles inn
-              utover at vi mottar anonymiserte konverteringsrapporter.
+            <div class="mt-4 space-y-4">
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Hvis du godtar</h4>
+                <p class="text-sm text-text-muted">
+                  Google kan lagre informasjonskapsler for å måle om du gjennomfører en handling
+                  etter å ha sett en annonse (konverteringssporing). Google kan også bruke dataene
+                  til å tilpasse annonser du ser på andre nettsteder.
+                </p>
+              </div>
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Hvis du avslår</h4>
+                <p class="text-sm text-text-muted">
+                  Google lagrer ingen informasjonskapsler og samler ikke inn personopplysninger.
+                  Sporingstjenesten sender kun anonyme, samlede signaler uten personlig identifisering.
+                  Ingen data brukes til å tilpasse annonser.
+                </p>
+              </div>
+            </div>
+            <p class="mt-4 text-text-muted">
+              Ditt valg lagres i nettleserens lokale lagring (localStorage) under nøkkelen
+              <code class="rounded bg-surface px-1 text-xs">nettup_ads_consent</code>.
             </p>
           </section>
 
@@ -142,9 +161,19 @@ const lastUpdated = '17. januar 2025';
               </div>
 
               <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Plausible Analytics</h4>
+                <p class="text-sm text-text-muted">
+                  Personvernvennlig nettanalyse uten informasjonskapsler. Ingen personidentifiserbare data samles inn.
+                </p>
+                <p class="mt-1 text-xs text-text-muted">
+                  Lokasjon: EU (data lagres i EU)
+                </p>
+              </div>
+
+              <div class="rounded-lg bg-surface p-4">
                 <h4 class="font-medium text-text">Vercel</h4>
                 <p class="text-sm text-text-muted">
-                  Hosting av nettsiden og personvernvennlig analyse. Ingen personidentifiserbare data lagres.
+                  Hosting av nettsiden.
                 </p>
                 <p class="mt-1 text-xs text-text-muted">
                   Lokasjon: USA (dekket av EU-US Data Privacy Framework)
@@ -152,9 +181,10 @@ const lastUpdated = '17. januar 2025';
               </div>
 
               <div class="rounded-lg bg-surface p-4">
-                <h4 class="font-medium text-text">Google (kun ved samtykke)</h4>
+                <h4 class="font-medium text-text">Google (landingssider)</h4>
                 <p class="text-sm text-text-muted">
-                  Google Ads konverteringssporing på landingssider. Aktiveres kun etter eksplisitt samtykke.
+                  Google Ads sporingstjeneste på landingssider. Lastes alltid, men lagrer kun informasjonskapsler
+                  og personopplysninger etter eksplisitt samtykke. Uten samtykke sendes kun anonyme signaler.
                 </p>
                 <p class="mt-1 text-xs text-text-muted">
                   Lokasjon: USA (dekket av EU-US Data Privacy Framework)
@@ -174,20 +204,18 @@ const lastUpdated = '17. januar 2025';
             <h3 class="mb-3 mt-4 text-lg font-medium text-text">Hovedsiden (nettup.no)</h3>
             <p class="text-text-muted">
               Hovedsiden setter <strong class="text-text">ingen informasjonskapsler</strong>. Vi bruker kun
-              Vercel Analytics som er helt cookiefri.
+              Plausible Analytics som er helt cookiefri.
             </p>
 
             <h3 class="mb-3 mt-6 text-lg font-medium text-text">Landingssider</h3>
             <p class="mb-3 text-text-muted">
-              På landingssider (f.eks. /nettside-for-bedrift) vises en cookie-banner. Hvis du godtar:
+              På landingssider vises en cookie-banner. Google sin sporingstjeneste lastes uansett,
+              men oppfører seg ulikt basert på ditt valg:
             </p>
             <ul class="list-inside list-disc space-y-1 text-text-muted">
-              <li><strong class="text-text">Google Ads cookies</strong> – brukes for konverteringssporing</li>
+              <li><strong class="text-text">Godtar:</strong> Google lagrer informasjonskapsler for konverteringssporing og annonsepersonalisering</li>
+              <li><strong class="text-text">Avslår:</strong> Ingen informasjonskapsler lagres, kun anonyme signaler sendes</li>
             </ul>
-            <p class="mt-3 text-text-muted">
-              Ditt valg lagres i nettleserens lokale lagring (localStorage) under nøkkelen
-              <code class="rounded bg-surface px-1 text-xs">nettup_ads_consent</code>.
-            </p>
 
             <h3 class="mb-3 mt-6 text-lg font-medium text-text">Hvordan trekke tilbake samtykke</h3>
             <p class="text-text-muted">
@@ -214,7 +242,7 @@ const lastUpdated = '17. januar 2025';
                     <td class="py-3">Inntil 2 år, eller til du ber om sletting</td>
                   </tr>
                   <tr class="border-b border-white/5">
-                    <td class="py-3">Vercel Analytics</td>
+                    <td class="py-3">Plausible Analytics</td>
                     <td class="py-3">Aggregerte data, ingen persondata lagres</td>
                   </tr>
                   <tr class="border-b border-white/5">
