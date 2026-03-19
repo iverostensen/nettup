@@ -13,6 +13,7 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
+      filter: (page) => !page.includes('/nettside-for-bedrift'),
       serialize(item) {
         if (item.url === 'https://nettup.no/blogg/') {
           return { ...item, changefreq: 'weekly', priority: 0.8 };

@@ -23,7 +23,7 @@ const {
   title,
   description = 'Profesjonell nettside for din bedrift. Lanseringstilbud: Fra 2 500 kr (ordinært 7 000 kr). Moderne, rask og SEO-optimalisert.',
   image = '/images/og-image.jpg',
-  noIndex = false,
+  noIndex = true,
   phone = '+47 413 27 136',
 } = Astro.props;
 
@@ -163,7 +163,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     >
       <div class="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-4 sm:flex-row">
         <p class="text-sm text-text-muted">
-          Vi bruker cookies for å måle annonseeffekt.
+          Vi bruker informasjonskapsler for å måle annonseeffekt. Les mer i vår <a href="/personvern" class="text-brand underline underline-offset-2 transition-colors duration-150 hover:text-brand-light">personvernerklæring</a>.
         </p>
         <div class="flex gap-3">
           <button
@@ -182,61 +182,79 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       </div>
     </div>
 
-    <!-- Google Ads gtag (loaded only after consent) -->
+    <!-- Google Ads Consent Mode v2 (advanced mode) -->
     <script is:inline>
       (function() {
-        const GTAG_ID = 'AW-17409050017';
-        const CONSENT_KEY = 'nettup_ads_consent';
+        var GTAG_ID = 'AW-17409050017';
+        var CONSENT_KEY = 'nettup_ads_consent';
 
-        // Check existing consent
-        const consent = localStorage.getItem(CONSENT_KEY);
+        // 1. Define dataLayer and gtag function
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        window.gtag = gtag;
 
-        if (consent === 'granted') {
-          loadGtag();
-        } else if (consent !== 'denied') {
-          // Show banner if no choice made yet
+        // 2. Set consent defaults BEFORE loading gtag.js (CRITICAL ORDER)
+        gtag('consent', 'default', {
+          'ad_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied',
+          'analytics_storage': 'denied',
+        });
+
+        // 3. Check stored consent -- update immediately if previously granted
+        var stored = localStorage.getItem(CONSENT_KEY);
+        if (stored === 'granted') {
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted',
+          });
+        }
+
+        // 4. Load gtag.js (ALWAYS, regardless of consent state)
+        var script = document.createElement('script');
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GTAG_ID;
+        script.async = true;
+        document.head.appendChild(script);
+
+        // 5. Initialize gtag
+        gtag('js', new Date());
+        gtag('config', GTAG_ID);
+        window.gtagLoaded = true;
+
+        // 6. Show banner only if no stored choice
+        if (stored === null) {
           document.getElementById('cookie-banner')?.classList.remove('hidden');
         }
 
-        // Handle accept
+        // 7. Handle accept
         document.getElementById('cookie-accept')?.addEventListener('click', function() {
           localStorage.setItem(CONSENT_KEY, 'granted');
-          loadGtag();
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted',
+          });
           hideBanner();
         });
 
-        // Handle decline
+        // 8. Handle decline
         document.getElementById('cookie-decline')?.addEventListener('click', function() {
           localStorage.setItem(CONSENT_KEY, 'denied');
+          // No consent update needed -- defaults are already denied
           hideBanner();
         });
 
         function hideBanner() {
-          const banner = document.getElementById('cookie-banner');
+          var banner = document.getElementById('cookie-banner');
           if (banner) {
             banner.style.opacity = '0';
             banner.style.transform = 'translateY(100%)';
             banner.style.transition = 'opacity 0.3s, transform 0.3s';
-            setTimeout(() => banner.remove(), 300);
+            setTimeout(function() { banner.remove(); }, 300);
           }
-        }
-
-        function loadGtag() {
-          // Load gtag.js script
-          const script = document.createElement('script');
-          script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GTAG_ID;
-          script.async = true;
-          document.head.appendChild(script);
-
-          // Initialize gtag
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', GTAG_ID);
-
-          // Mark as loaded for conversion tracking
-          window.gtagLoaded = true;
         }
       })();
     </script>
