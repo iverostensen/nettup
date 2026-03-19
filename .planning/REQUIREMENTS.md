@@ -17,8 +17,8 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 ### Tracking
 
 - [x] **TRACK-01**: Consent Mode v2 upgrade -- load gtag immediately with denied defaults, update on consent (recovers ~70% conversion data)
-- [ ] **TRACK-02**: Dedicated `/nettside-for-bedrift/takk` thank-you page fires gtag conversion + Plausible event on page load
-- [ ] **TRACK-03**: Form submission redirects to `/takk` instead of inline success state (b2b context only)
+- [x] **TRACK-02**: Dedicated `/nettside-for-bedrift/takk` thank-you page fires gtag conversion + Plausible event on page load
+- [x] **TRACK-03**: Form submission redirects to `/takk` instead of inline success state (b2b context only)
 - [x] **TRACK-04**: Landing page has `noindex` meta to prevent SEO cannibalization with `/tjenester/nettside`
 - [x] **TRACK-05**: UTM parameters captured from URL and stored in form submission (source, medium, campaign)
 
@@ -67,8 +67,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TRACK-01 | Phase 31 | Complete |
-| TRACK-02 | Phase 32 | Pending |
-| TRACK-03 | Phase 32 | Pending |
+| TRACK-02 | Phase 32 | Complete |
+| TRACK-03 | Phase 32 | Complete |
 | TRACK-04 | Phase 31 | Complete |
 | TRACK-05 | Phase 32 | Complete |
 | LP-01 | Phase 33 | Pending |

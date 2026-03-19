@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
 status: executing
-stopped_at: Completed 32-01-PLAN.md
-last_updated: "2026-03-19T14:39:58.998Z"
-last_activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
+stopped_at: Completed 32-02-PLAN.md
+last_updated: "2026-03-19T14:45:00.403Z"
+last_activity: 2026-03-19 -- Completed 32-01 config migration and utilities
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 67
 ---
 
 # Project State
@@ -52,6 +52,7 @@ Progress: [███████░░░] 67%
 *Updated after each plan completion*
 | Phase 31 P01 | 3min | 2 tasks | 3 files |
 | Phase 32 P01 | 3min | 2 tasks | 5 files |
+| Phase 32 P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,7 @@ Key decisions from milestone setup and roadmap:
 - [Phase 31]: Plausible Analytics replaces Vercel Analytics references on privacy page
 - [Phase 32]: PricingSummary interim single-card version; Phase 33 rebuilds fully
 - [Phase 32]: pricing.ts kept alive for ContactForm PAKKE_INFO badge until Phase 33
+- [Phase 32]: Conversion events fire only on /takk page, never inline in form components
 
 ### Pending Todos
 
@@ -100,6 +102,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-19T14:39:00Z
-Stopped at: Completed 32-01-PLAN.md
-Resume file: .planning/phases/32-config-conversion-flow/32-02-PLAN.md
+Last session: 2026-03-19T14:45:00.401Z
+Stopped at: Completed 32-02-PLAN.md
+Resume file: None

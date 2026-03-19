@@ -13,7 +13,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
 - Decimal phases (31.1, 32.1): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 31: Tracking Infrastructure** - Consent Mode v2 upgrade and noindex to prepare for paid traffic (completed 2026-03-19)
-- [ ] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture
+- [x] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture (completed 2026-03-19)
 - [ ] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester
 - [ ] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer
 
@@ -41,7 +41,7 @@ Plans:
   2. `/nettside-for-bedrift/takk` page exists and fires both gtag conversion event and Plausible event on page load
   3. Form submission on the landing page redirects the user to `/nettside-for-bedrift/takk` instead of showing an inline success message
   4. UTM parameters (source, medium, campaign) are captured from the URL and included in form submission data
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 32-01-PLAN.md -- subscriptionOffer.ts config, importer migration, launchOffer deletion, analytics + UTM utilities
@@ -86,6 +86,6 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
-| 32. Config & Conversion Flow | 1/2 | In Progress|  |
+| 32. Config & Conversion Flow | 2/2 | Complete   | 2026-03-19 |
 | 33. Landing Page Content Rebuild | 0/? | Not started | - |
 | 34. Google Ads Campaign Docs | 0/? | Not started | - |
