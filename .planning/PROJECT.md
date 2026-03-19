@@ -67,7 +67,15 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ### Active
 
-*(Next milestone requirements — defined via `/gsd:new-milestone`)*
+## Current Milestone: v1.6 Landingsside & Google Ads
+
+**Goal:** Gjor `/nettside-for-bedrift` til den mest konverteringsoptimaliserte landingssiden for Google Ads, med nytt abonnementstilbud (0 kr oppstart + 399 kr/mnd) og full annonsekampanjeklarhet.
+
+**Target features:**
+- Nytt abonnementstilbud: 0 kr oppstart, 399 kr/mnd for 5-siders nettside (forste 10 kunder)
+- Fullstendig ombygging av `/nettside-for-bedrift` for maksimal konvertering
+- Google Ads konverteringssporing, annonsekopi, sokeordlister og kampanjestruktur
+- Storre tjenester (nettbutikk, webapplikasjon) tilgjengelig som sekundaere tilbud
 
 ### Deferred
 
@@ -149,4 +157,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Phase 28 runtime verification delegated to human | Visual/timing behaviors (flash, scroll animation, SPA transition) cannot be confirmed by static analysis | ✓ Good — human sign-off is the right gate for perception-dependent requirements |
 
 ---
-*Last updated: 2026-03-13 after v1.5 milestone*
+*Last updated: 2026-03-19 after v1.6 milestone start*

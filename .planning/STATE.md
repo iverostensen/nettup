@@ -1,108 +1,41 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: milestone
-status: unknown
-last_updated: "2026-03-13T16:45:37.046Z"
+milestone: v1.6
+milestone_name: Landingsside & Google Ads
+status: defining_requirements
+last_updated: "2026-03-19"
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 12
-  completed_plans: 12
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-13 after v1.5 milestone)
+See: .planning/PROJECT.md (updated 2026-03-19 after v1.6 milestone start)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Planning next milestone (v1.6) — run `/gsd:new-milestone`
+**Current focus:** Defining requirements for v1.6 Landingsside & Google Ads
 
 ## Current Position
 
-Phase: 30 of 30 (Traceability og Nav-verifikasjon)
-Plan: 1 of 1 complete
-Status: Phase 30 plan 01 complete — Phase 28 runtime verified by human, all 19 v1 requirements marked Complete, 28-VERIFICATION.md upgraded to passed (7/7).
-Last activity: 2026-03-13 - Completed 30-01: Traceability closure (NAV-01/02/03 verified + ANAL row cleanup)
-
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 5 (v1.3)
-- Average duration: ~7 min
-- Total execution time: ~35 min
-
-**By Phase (v1.3–v1.4):**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 17. Blog Infrastructure | 2/2 | 10 min | 5 min |
-| 18. Pipeline Scripts | 2/2 | 5 min | 2.5 min |
-| 19. GitHub Actions | 1/1 | 15 min | 15 min |
-| Phase 25 P03 | 52s | 2 tasks | 2 files |
-| Phase 26 P01 | ~1 min | 2 tasks | 3 files |
-| Phase 26 P02 | 2 | 1 tasks | 0 files |
-| Phase 28-floatingnav-rewrite P01 | 20 | 3 tasks | 4 files |
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-19 — Milestone v1.6 started
 
 ## Accumulated Context
 
-### Roadmap Evolution
-
-- Phase 27 added: Plausible Analytics
-
 ### Decisions
 
-Key decisions from Phase 30-01 execution:
-- [30-01]: Phase 28 runtime verification delegated to human — visual/timing behaviors (flash, scroll, session animation, cross-boundary events) cannot be confirmed by static analysis alone
-- [30-01]: ANAL traceability rows credited to Phase 27 only — Phase 30 was audit/backfill, not implementation
-- [30-01]: NAV traceability rows credited to Phase 28 only — Phase 30 was verification sign-off, not implementation
-
-Key decisions from Phase 29-01 execution:
-- [29-01]: FAQPage JSON-LD uses city.faq && city.faq.length > 0 guard — null-guard required as some cities may have empty FAQ arrays
-- [29-01]: trackCityCtaClicked removed from analytics.ts — city CTA tracking uses is:inline IIFE in [location].astro (ES module imports incompatible with is:inline scripts)
-- [29-01]: FloatingNav.tsx deleted — FloatingNav.astro is the live component since Phase 28 rewrite; the tsx file was orphaned dead code
-
-Key decisions from Phase 27-02 execution:
-- [27-02]: ContactForm uses context prop ('contact' | 'b2b') with default 'contact' to discriminate form origins without duplicating component
-- [27-02]: handleBubbleClick uses functional setState to guard trackChatbotOpened — fires only when prev === false (opening), never on close
-- [27-02]: trackWizardEstimateShown fires in useEffect with empty dep array — no StrictMode guard needed as production does not double-invoke
-
-Key decisions from Phase 27-01 execution:
-- [27-01]: env.d.ts uses direct `interface Window {}` (not `declare global {}`) — file has no imports/exports so it's a global script; the wrapper is only needed in module context
-- [27-01]: No transition:persist on Plausible script — Plausible handles SPA routing natively via history.pushState
-- [27-01]: buildEstimateRange() lives in analytics.ts, not exported — wizard callsites pass raw min/max numbers, formatting is centralized
-
-Key decisions from Phase 26-01 execution:
-- [26-01]: areaServed computed from cities.filter(c => c.tier <= ACTIVE_TIER) — self-maintaining as new city configs are added
-- [26-01]: AdministrativeArea Oslo-området entry dropped — redundant once actual city entries cover Oslo
-- [26-01]: steder index rule (priority 0.9) added as future-safe — harmless until v2 index page is added
-
-Key decisions from Phase 25-01 execution:
-- [25-01]: City intro copy differentiated via local neighborhood references — not generic bynavn-swap pattern
-- [25-01]: FAQ price answers use plain-text priskalkulator URL — compatible with both template rendering and FAQPage JSON-LD (plan 25-02)
-- [25-01]: metaDescription varied value props per city to avoid duplicate meta content across 8 pages
-
-Key decisions from Phase 24-01 execution:
-- [24-01]: ACTIVE_TIER = 1 exported as constant — tier-promotion is a one-line change in locations.ts
-- [24-01]: details/summary HTML for FAQ (no animated accordion) — Phase 25 can enhance if needed
-- [24-01]: nearbyAreas stores slugs; display names resolved via cities.find() to avoid duplication
-
-Key decisions from v1.5 research to carry into planning:
-
-- [v1.5 research]: URL slugs must be ASCII-only (`lillestrom`, `baerum`) — display names use Norwegian characters; establish in Phase 24 before any content is written
-- [v1.5 research]: Use `Service` JSON-LD with `"provider": {"@id": "https://nettup.no/#business"}` — never two `LocalBusiness` blocks (Knowledge Graph entity dilution risk)
-- [v1.5 research]: Footer "Omrader vi dekker" and city pages must ship in the same deploy — orphaned pages at any point in their index lifecycle treated as doorway pages
-- [v1.5 research]: V2 expansion gated on V1 indexing confirmation — LINK-04 must be written before V2 starts; not doing this is the documented path to site-level suppression
-- [v1.5 research]: `@astrojs/sitemap` has known regression in hybrid mode (issue #7015) — verify sitemap coverage immediately after first deploy; have custom endpoint ready as fallback
-- [Phase 25]: lg:grid-cols-4 in footer (not md:) prevents 4 cols being too narrow at 768px; logo uses md:col-span-2 lg:col-span-1
-- [Phase 26]: LINK-03 verified 2026-03-08: 8 /steder/* URLs confirmed in sitemap at priority 0.8
-- [Phase 28-01]: FloatingNav converted from client:only React island to Astro component + transition:persist — eliminates hydration gap that caused raw HTML flash
-- [Phase 28-01]: MobileMenu stays React island but self-manages open state via CustomEvent('open-mobile-menu') dispatched by Astro hamburger button
-- [Phase 28-01]: Tjenester sub-page label reverts to 'Tjenester' after SPA navigation — accepted tradeoff, active color state is always correct
+Key decisions from milestone setup:
+- [v1.6]: New subscription model: 0 kr oppstart + 399 kr/mnd for 5-page website, first 10 customers
+- [v1.6]: Cancel = site taken down (not owned by customer while subscribing)
+- [v1.6]: Entry-level offer only — larger websites and nettbutikk at normal pricing from /tjenester
+- [v1.6]: 10 spots chosen over 5 for ad optimization runway while maintaining scarcity
 
 ### Pending Todos
 
@@ -130,6 +63,6 @@ Key decisions from v1.5 research to carry into planning:
 
 ## Session Continuity
 
-Last session: 2026-03-13
-Stopped at: Completed 30-01-PLAN.md — Phase 28 FloatingNav runtime verified by human (all 4 tests pass), all 19 v1 requirements marked Complete, 28-VERIFICATION.md upgraded to passed (7/7). v1.5 milestone fully traced.
+Last session: 2026-03-19
+Stopped at: Milestone v1.6 started — defining requirements
 Resume file: None
