@@ -51,10 +51,9 @@ Source: Established Tailwind spacing scale, `LandingPageLayout.astro` fixed head
 
 | Role | Size | Weight | Line Height | Font Family | Tailwind Class |
 |------|------|--------|-------------|-------------|----------------|
-| Body | 16px (1rem) | 400 | 1.5 | Inter | `text-base` |
-| Body large | 18px (1.125rem) | 400 | 1.5 | Inter | `text-lg` |
-| Step label | 14px (0.875rem) | 500 | 1.4 | Inter | `text-sm font-medium` |
-| Heading (h2) | 20px (1.25rem) | 600 | 1.3 | Inter | `text-xl font-semibold` |
+| Body / subtitle | 16px (1rem) | 400 | 1.5 | Inter | `text-base` |
+| Step label | 14px (0.875rem) | 700 | 1.4 | Inter | `text-sm font-bold` |
+| Heading (h2) | 20px (1.25rem) | 700 | 1.3 | Inter | `text-xl font-bold` |
 | Display (h1) | 30px mobile / 36px desktop | 700 | 1.2 | Inter | `text-3xl md:text-4xl font-bold` |
 
 Source: Established patterns from `global.css` prose styles and existing page headings. Display headings on landing pages use Inter bold (not Space Grotesk) to match the existing `/nettside-for-bedrift` page.
@@ -143,8 +142,8 @@ LandingPageLayout (existing)
 
 - Container: `rounded-2xl border border-white/10 bg-surface-raised p-6 md:p-8`
 - Max width: `max-w-2xl mx-auto`
-- Steps use numbered circles: `w-8 h-8 rounded-full bg-brand/10 text-brand text-sm font-semibold flex items-center justify-center`
-- Step content: title in `font-semibold text-text`, description in `text-text-muted text-sm`
+- Steps use numbered circles: `w-8 h-8 rounded-full bg-brand/10 text-brand text-sm font-bold flex items-center justify-center`
+- Step content: title in `font-bold text-text`, description in `text-text-muted text-sm`
 - Vertical spacing between steps: 24px (`space-y-6`)
 - Optional: thin vertical connector line between step circles using `border-l border-white/10`
 
