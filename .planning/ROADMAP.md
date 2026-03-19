@@ -41,7 +41,7 @@ Plans:
   2. `/nettside-for-bedrift/takk` page exists and fires both gtag conversion event and Plausible event on page load
   3. Form submission on the landing page redirects the user to `/nettside-for-bedrift/takk` instead of showing an inline success message
   4. UTM parameters (source, medium, campaign) are captured from the URL and included in form submission data
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 32-01-PLAN.md -- subscriptionOffer.ts config, importer migration, launchOffer deletion, analytics + UTM utilities
@@ -86,6 +86,6 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
-| 32. Config & Conversion Flow | 0/2 | Not started | - |
+| 32. Config & Conversion Flow | 1/2 | In Progress|  |
 | 33. Landing Page Content Rebuild | 0/? | Not started | - |
 | 34. Google Ads Campaign Docs | 0/? | Not started | - |

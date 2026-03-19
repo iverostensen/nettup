@@ -20,12 +20,12 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 - [ ] **TRACK-02**: Dedicated `/nettside-for-bedrift/takk` thank-you page fires gtag conversion + Plausible event on page load
 - [ ] **TRACK-03**: Form submission redirects to `/takk` instead of inline success state (b2b context only)
 - [x] **TRACK-04**: Landing page has `noindex` meta to prevent SEO cannibalization with `/tjenester/nettside`
-- [ ] **TRACK-05**: UTM parameters captured from URL and stored in form submission (source, medium, campaign)
+- [x] **TRACK-05**: UTM parameters captured from URL and stored in form submission (source, medium, campaign)
 
 ### Landing Page
 
 - [ ] **LP-01**: Single subscription offer as hero: 0 kr oppstart + 399 kr/mnd for 5-siders nettside, anchored against one-time cost -- no tiers, no package selector
-- [ ] **LP-02**: `subscriptionOffer.ts` replaces `launchOffer.ts` + `pricing.ts` as single source of truth for the one offer (price, features, terms, upsell links)
+- [x] **LP-02**: `subscriptionOffer.ts` replaces `launchOffer.ts` + `pricing.ts` as single source of truth for the one offer (price, features, terms, upsell links)
 - [ ] **LP-03**: Reduced form: name, email, phone only (remove pakke, tjeneste, melding fields -- there is only one service to inquire about)
 - [ ] **LP-04**: Remove fake social proof: static scarcity counter replaced with honest approach, unverifiable 4.9-star rating removed
 - [ ] **LP-05**: FAQ rewritten for subscription model (cancellation, ownership, "paying forever" objection, what's included)
@@ -70,9 +70,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRACK-02 | Phase 32 | Pending |
 | TRACK-03 | Phase 32 | Pending |
 | TRACK-04 | Phase 31 | Complete |
-| TRACK-05 | Phase 32 | Pending |
+| TRACK-05 | Phase 32 | Complete |
 | LP-01 | Phase 33 | Pending |
-| LP-02 | Phase 32 | Pending |
+| LP-02 | Phase 32 | Complete |
 | LP-03 | Phase 33 | Pending |
 | LP-04 | Phase 33 | Pending |
 | LP-05 | Phase 33 | Pending |

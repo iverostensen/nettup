@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
-status: planning
-stopped_at: Phase 32 context gathered
-last_updated: "2026-03-19T14:09:14.985Z"
+status: executing
+stopped_at: Completed 32-01-PLAN.md
+last_updated: "2026-03-19T14:39:58.998Z"
 last_activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 0
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 31 - Tracking Infrastructure
+**Current focus:** Phase 32 - Config & Conversion Flow
 
 ## Current Position
 
-Phase: 31 of 34 (Tracking Infrastructure)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-03-19 -- Roadmap created for v1.6 Landingsside & Google Ads
+Phase: 32 of 34 (Config & Conversion Flow)
+Plan: 1 of 3 in current phase
+Status: Executing
+Last activity: 2026-03-19 -- Completed 32-01 config migration and utilities
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 31 P01 | 3min | 2 tasks | 3 files |
+| Phase 32 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Key decisions from milestone setup and roadmap:
 - [v1.6 roadmap]: Ad campaign docs come last (ad copy must match final page content)
 - [Phase 31]: Consent Mode v2 advanced: gtag always loads with denied defaults, updates on accept
 - [Phase 31]: Plausible Analytics replaces Vercel Analytics references on privacy page
+- [Phase 32]: PricingSummary interim single-card version; Phase 33 rebuilds fully
+- [Phase 32]: pricing.ts kept alive for ContactForm PAKKE_INFO badge until Phase 33
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-19T14:09:14.976Z
-Stopped at: Phase 32 context gathered
-Resume file: .planning/phases/32-config-conversion-flow/32-CONTEXT.md
+Last session: 2026-03-19T14:39:00Z
+Stopped at: Completed 32-01-PLAN.md
+Resume file: .planning/phases/32-config-conversion-flow/32-02-PLAN.md
