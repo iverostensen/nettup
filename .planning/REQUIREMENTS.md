@@ -24,12 +24,12 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 
 ### Landing Page
 
-- [ ] **LP-01**: Single subscription offer as hero: 0 kr oppstart + 399 kr/mnd for 5-siders nettside, anchored against one-time cost -- no tiers, no package selector
+- [x] **LP-01**: Single subscription offer as hero: 0 kr oppstart + 399 kr/mnd for 5-siders nettside, anchored against one-time cost -- no tiers, no package selector
 - [x] **LP-02**: `subscriptionOffer.ts` replaces `launchOffer.ts` + `pricing.ts` as single source of truth for the one offer (price, features, terms, upsell links)
 - [ ] **LP-03**: Reduced form: name, email, phone only (remove pakke, tjeneste, melding fields -- there is only one service to inquire about)
-- [ ] **LP-04**: Remove fake social proof: static scarcity counter replaced with honest approach, unverifiable 4.9-star rating removed
+- [x] **LP-04**: Remove fake social proof: static scarcity counter replaced with honest approach, unverifiable 4.9-star rating removed
 - [ ] **LP-05**: FAQ rewritten for subscription model (cancellation, ownership, "paying forever" objection, what's included)
-- [ ] **LP-06**: Meta title/description updated: "Nettside for Bedrift | 0 kr Oppstart, 399 kr/mnd | Nettup"
+- [x] **LP-06**: Meta title/description updated: "Nettside for Bedrift | 0 kr Oppstart, 399 kr/mnd | Nettup"
 - [ ] **LP-07**: WhyUs section updated for subscription value props (ongoing support, no large upfront investment, everything included)
 - [ ] **LP-08**: PricingSummary replaced with single offer card (not a tier grid) + "Trenger du mer?" upsell section linking to `/tjenester` for custom websites and e-commerce
 
@@ -71,12 +71,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRACK-03 | Phase 32 | Complete |
 | TRACK-04 | Phase 31 | Complete |
 | TRACK-05 | Phase 32 | Complete |
-| LP-01 | Phase 33 | Pending |
+| LP-01 | Phase 33 | Complete |
 | LP-02 | Phase 32 | Complete |
 | LP-03 | Phase 33 | Pending |
-| LP-04 | Phase 33 | Pending |
+| LP-04 | Phase 33 | Complete |
 | LP-05 | Phase 33 | Pending |
-| LP-06 | Phase 33 | Pending |
+| LP-06 | Phase 33 | Complete |
 | LP-07 | Phase 33 | Pending |
 | LP-08 | Phase 33 | Pending |
 | ADS-01 | Phase 34 | Pending |

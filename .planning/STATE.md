@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
 status: executing
-stopped_at: Phase 33 context gathered
-last_updated: "2026-03-20T09:16:41.967Z"
-last_activity: 2026-03-19 -- Completed 32-01 config migration and utilities
+stopped_at: Completed 33-01-PLAN.md
+last_updated: "2026-03-20T18:38:03.581Z"
+last_activity: 2026-03-20 -- Completed 33-01 above-fold content rebuild
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 5
   percent: 67
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 32 - Config & Conversion Flow
+**Current focus:** Phase 33 - Landing Page Content Rebuild
 
 ## Current Position
 
-Phase: 32 of 34 (Config & Conversion Flow)
-Plan: 1 of 3 in current phase
+Phase: 33 of 34 (Landing Page Content Rebuild)
+Plan: 2 of 2 in current phase
 Status: Executing
-Last activity: 2026-03-19 -- Completed 32-01 config migration and utilities
+Last activity: 2026-03-20 -- Completed 33-01 above-fold content rebuild
 
 Progress: [███████░░░] 67%
 
@@ -53,6 +53,7 @@ Progress: [███████░░░] 67%
 | Phase 31 P01 | 3min | 2 tasks | 3 files |
 | Phase 32 P01 | 3min | 2 tasks | 5 files |
 | Phase 32 P02 | 3min | 2 tasks | 3 files |
+| Phase 33 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Key decisions from milestone setup and roadmap:
 - [Phase 32]: PricingSummary interim single-card version; Phase 33 rebuilds fully
 - [Phase 32]: pricing.ts kept alive for ContactForm PAKKE_INFO badge until Phase 33
 - [Phase 32]: Conversion events fire only on /takk page, never inline in form components
+- [Phase 33]: Price anchoring uses '15 000+ kr' as competitor reference point
+- [Phase 33]: Subscription CTA language: 'Kom i gang' replaces 'Fa gratis tilbud' across landing page
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-20T09:16:41.955Z
-Stopped at: Phase 33 context gathered
-Resume file: .planning/phases/33-landing-page-content-rebuild/33-CONTEXT.md
+Last session: 2026-03-20T18:37:52.117Z
+Stopped at: Completed 33-01-PLAN.md
+Resume file: None
