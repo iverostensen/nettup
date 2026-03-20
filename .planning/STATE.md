@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
-status: executing
-stopped_at: Completed 34-01-PLAN.md
-last_updated: "2026-03-20T19:42:59.195Z"
-last_activity: 2026-03-20 -- Completed 33-01 above-fold content rebuild
+status: completed
+stopped_at: Completed 34-02-PLAN.md
+last_updated: "2026-03-20T19:43:43.240Z"
+last_activity: 2026-03-20 -- Completed 34-02 ad extensions and campaign structure
 progress:
   total_phases: 4
   completed_phases: 4
   total_plans: 8
   completed_plans: 8
-  percent: 67
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 33 - Landing Page Content Rebuild
+**Current focus:** Phase 34 - Google Ads Campaign Docs
 
 ## Current Position
 
-Phase: 33 of 34 (Landing Page Content Rebuild)
-Plan: 2 of 2 in current phase
-Status: Executing
-Last activity: 2026-03-20 -- Completed 33-01 above-fold content rebuild
+Phase: 34 of 34 (Google Ads Campaign Docs)
+Plan: 2 of 2 in current phase (complete)
+Status: Complete
+Last activity: 2026-03-20 -- Completed 34-02 ad extensions and campaign structure
 
-Progress: [███████░░░] 67%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -85,6 +85,9 @@ Key decisions from milestone setup and roadmap:
 - [Phase 33]: ContactForm uses context prop for conditional b2b/contact rendering instead of separate components
 - [Phase 34]: Exact match for primary keywords, phrase match for secondary/long-tail; no broad match initially
 - [Phase 34]: Pin H1 (service) to Position 1 and H2 (price) to Position 2 across all RSA variants
+- [Phase 34]: Sitelinks map to subscriptionOffer.ts upsellLinks plus /prosjekter as portfolio proof
+- [Phase 34]: 3-phase bidding: Manual CPC (wk 1-4), Maximize Clicks (wk 5-8), Maximize Conversions (wk 9+)
+- [Phase 34]: 100 NOK/day recommended starting budget with 50-150 NOK/day range
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-20T19:42:59.194Z
-Stopped at: Completed 34-01-PLAN.md
+Last session: 2026-03-20T19:43:43.238Z
+Stopped at: Completed 34-02-PLAN.md
 Resume file: None

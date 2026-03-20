@@ -37,8 +37,8 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 
 - [x] **ADS-01**: Keyword research targeting one service: "nettside for bedrift", "billig nettside", "nettside pris", "nettside abonnement" with volumes and bid suggestions
 - [x] **ADS-02**: 3-5 ad copy variants -- all focused on the single 399 kr/mnd offer (headlines + descriptions)
-- [ ] **ADS-03**: Ad extensions: sitelinks to `/tjenester` subpages as upsell paths, callouts ("0 kr oppstart", "24t respons", "30 dagers garanti")
-- [ ] **ADS-04**: Single campaign structure -- one ad group for the subscription offer, budget recommendations, negative keywords to filter non-target traffic
+- [x] **ADS-03**: Ad extensions: sitelinks to `/tjenester` subpages as upsell paths, callouts ("0 kr oppstart", "24t respons", "30 dagers garanti")
+- [x] **ADS-04**: Single campaign structure -- one ad group for the subscription offer, budget recommendations, negative keywords to filter non-target traffic
 
 ## Future Requirements
 
@@ -81,8 +81,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LP-08 | Phase 33 | Complete |
 | ADS-01 | Phase 34 | Complete |
 | ADS-02 | Phase 34 | Complete |
-| ADS-03 | Phase 34 | Pending |
-| ADS-04 | Phase 34 | Pending |
+| ADS-03 | Phase 34 | Complete |
+| ADS-04 | Phase 34 | Complete |
 
 **Coverage:**
 - v1.6 requirements: 17 total
