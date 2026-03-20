@@ -1,0 +1,30 @@
+---
+/**
+ * UpsellSection - "Trenger du mer?" links to /tjenester
+ *
+ * Secondary to the main subscription offer.
+ * Links visitors who need custom websites or e-commerce to /tjenester subpages.
+ */
+import { subscriptionOffer } from '@/config/subscriptionOffer';
+---
+
+<section class="py-12 md:py-16 bg-surface">
+  <div class="container mx-auto px-4">
+    <div class="reveal-on-scroll mx-auto max-w-2xl text-center">
+      <h2 class="text-2xl font-bold md:text-3xl">Trenger du mer enn 5 sider?</h2>
+      <p class="mt-4 text-text-muted">
+        Se våre skreddersydde løsninger for større prosjekter.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        {subscriptionOffer.upsellLinks.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-full border border-white/10 px-6 py-3 text-sm font-medium text-text transition-colors hover:border-brand/30 hover:text-brand"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
