@@ -2,41 +2,34 @@
 /**
  * Landing Page: /nettside-for-bedrift/
  *
- * Dedicated Google Ads landing page for keyword "nettside for bedrift"
- *
- * Key optimizations:
- * - Headline matches ad keyword exactly
- * - No navigation (reduces exits)
- * - Form embedded on page (no click to /kontakt/)
- * - Trust signals throughout
- * - Phone CTA in header
- * - Results section for social proof (Lighthouse scores)
- * - Testimonial from real customer (iGive)
- * - FAQ section with JSON-LD schema for rich snippets
+ * Single-offer subscription landing page for Google Ads traffic.
+ * One offer (0 kr oppstart + 399 kr/mnd), one decision (yes/no).
+ * Visitors who need more get linked to /tjenester.
  */
 import LandingPageLayout from '@/layouts/LandingPageLayout.astro';
+import { subscriptionOffer } from '@/config/subscriptionOffer';
 import Hero from './_sections/Hero.astro';
 import VisualProof from './_sections/VisualProof.astro';
-import LogoCloud from './_sections/LogoCloud.astro';
-import Testimonial from './_sections/Testimonial.astro';
-import WhyUs from './_sections/WhyUs.astro';
 import PricingSummary from './_sections/PricingSummary.astro';
+import WhyUs from './_sections/WhyUs.astro';
+import Testimonial from './_sections/Testimonial.astro';
 import FAQ from './_sections/FAQ.astro';
+import UpsellSection from './_sections/UpsellSection.astro';
 import FormSection from './_sections/FormSection.astro';
 ---
 
 <LandingPageLayout
-  title="Nettside for Bedrift | Fra 2 500 kr (Spar 64%) | Nettup"
-  description="Profesjonell nettside for din bedrift. Lanseringstilbud: Fra 2 500 kr (ordinært 7 000 kr). Kun 10 plasser!"
+  title={subscriptionOffer.meta.title}
+  description={subscriptionOffer.meta.description}
 >
   <main>
     <Hero />
     <VisualProof />
-    <LogoCloud />
-    <Testimonial />
-    <WhyUs />
     <PricingSummary />
+    <WhyUs />
+    <Testimonial />
     <FAQ />
+    <UpsellSection />
     <FormSection />
   </main>
 </LandingPageLayout>
