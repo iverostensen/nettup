@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
 status: completed
-stopped_at: Completed 34-03-PLAN.md
-last_updated: "2026-03-20T19:58:47.257Z"
-last_activity: 2026-03-20 -- Completed 34-03 gap closure (24t Respons callout)
+stopped_at: Completed 35-01-PLAN.md
+last_updated: "2026-03-20T20:44:55.325Z"
+last_activity: 2026-03-20 -- Completed 35-01 (Google Ads Setup Guide)
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 5
+  completed_phases: 5
+  total_plans: 10
+  completed_plans: 10
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 34 - Google Ads Campaign Docs
+**Current focus:** Phase 35 - Google Ads Setup Guide
 
 ## Current Position
 
-Phase: 34 of 34 (Google Ads Campaign Docs)
-Plan: 3 of 3 in current phase (complete)
+Phase: 35 of 35 (Google Ads Setup Guide)
+Plan: 1 of 1 in current phase (complete)
 Status: Complete
-Last activity: 2026-03-20 -- Completed 34-03 gap closure (24t Respons callout)
+Last activity: 2026-03-20 -- Completed 35-01 (Google Ads Setup Guide)
 
 Progress: [██████████] 100%
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 34 P01 | 3min | 2 tasks | 2 files |
 | Phase 34 P02 | 2min | 2 tasks | 2 files |
 | Phase 34 P03 | 2min | 1 tasks | 1 files |
+| Phase 35 P01 | 3min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,11 @@ Key decisions from milestone setup and roadmap:
 - [Phase 34]: 3-phase bidding: Manual CPC (wk 1-4), Maximize Clicks (wk 5-8), Maximize Conversions (wk 9+)
 - [Phase 34]: 100 NOK/day recommended starting budget with 50-150 NOK/day range
 - [Phase 34]: 24t Respons callout placed after 30 Dagers Garanti to group ADS-03 callouts together
+- [Phase 35]: Guide follows Google Ads console flow order, references Phase 34 docs by relative path, uses Assets terminology
+
+### Roadmap Evolution
+
+- Phase 35 added: Google Ads Setup Guide -- practical step-by-step for first-time campaign setup
 
 ### Pending Todos
 
@@ -118,6 +124,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-20T19:56:00.000Z
-Stopped at: Completed 34-03-PLAN.md
+Last session: 2026-03-20T20:44:55.323Z
+Stopped at: Completed 35-01-PLAN.md
 Resume file: None

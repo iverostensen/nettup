@@ -16,7 +16,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
 - [x] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture (completed 2026-03-19)
 - [x] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester (completed 2026-03-20)
 - [x] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer (gap closure in progress) (completed 2026-03-20)
-- [ ] **Phase 35: Google Ads Setup Guide** - Step-by-step guide for setting up the first campaign in Google Ads console
+- [x] **Phase 35: Google Ads Setup Guide** - Step-by-step guide for setting up the first campaign in Google Ads console (completed 2026-03-20)
 
 ## Phase Details
 
@@ -90,7 +90,7 @@ Plans:
   2. Guide references Phase 34 docs (keywords.md, ad-copy.md, extensions.md, campaign-structure.md) by relative path rather than duplicating content
   3. Conversion tracking verification steps include the exact gtag conversion ID (AW-17409050017) and label (EvwaCNm05eFbEKGLpO1A)
   4. Post-launch monitoring section specifies target metrics (CTR > 3%, CPC < 40 NOK) and bidding phase transition criteria
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 35-01-PLAN.md -- Complete setup guide: account creation, campaign setup, conversion verification, first-week monitoring
@@ -106,4 +106,4 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34 -> 35
 | 32. Config & Conversion Flow | 2/2 | Complete    | 2026-03-19 |
 | 33. Landing Page Content Rebuild | 3/3 | Complete    | 2026-03-20 |
 | 34. Google Ads Campaign Docs | 3/3 | Complete    | 2026-03-20 |
-| 35. Google Ads Setup Guide | 0/1 | In progress |            |
+| 35. Google Ads Setup Guide | 1/1 | Complete   | 2026-03-20 |

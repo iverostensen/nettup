@@ -42,8 +42,8 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 
 ### Google Ads Setup Guide
 
-- [ ] **GUIDE-01**: Step-by-step setup guide covering account creation, campaign setup, keyword import, ad creation, and assets configuration -- all referencing Phase 34 docs as source material
-- [ ] **GUIDE-02**: Post-launch verification checklist and first-week monitoring plan with specific metrics, thresholds, and bidding phase transition criteria
+- [x] **GUIDE-01**: Step-by-step setup guide covering account creation, campaign setup, keyword import, ad creation, and assets configuration -- all referencing Phase 34 docs as source material
+- [x] **GUIDE-02**: Post-launch verification checklist and first-week monitoring plan with specific metrics, thresholds, and bidding phase transition criteria
 
 ## Future Requirements
 
