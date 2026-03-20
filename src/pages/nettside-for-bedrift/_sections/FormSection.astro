@@ -5,16 +5,9 @@
  * Simplified single-column layout to reduce visual clutter
  * and focus attention on the form conversion action.
  * - id="kontakt" for anchor scrolling
- * - Dynamic heading based on selected package
+ * - Static heading with scarcity text
  */
 import ContactForm from '@/pages/kontakt/_sections/ContactForm';
-
-// Package names for dynamic heading
-const pakkeNames: Record<string, string> = {
-  enkel: 'Enkel-pakken',
-  standard: 'Standard-pakken',
-  premium: 'Premium-pakken',
-};
 ---
 
 <section id="kontakt" class="scroll-mt-20 py-16 md:py-24 bg-surface">
@@ -22,11 +15,14 @@ const pakkeNames: Record<string, string> = {
     <div class="mx-auto max-w-2xl">
       <!-- Section header with dynamic title -->
       <div class="reveal-on-scroll mb-8 text-center">
-        <h2 class="text-3xl font-bold md:text-4xl" id="form-heading">
-          Få et uforpliktende tilbud
+        <h2 class="text-3xl font-bold md:text-4xl">
+          Få din nettside — 0 kr oppstart
         </h2>
         <p class="mt-4 text-text-muted">
-          Fyll ut skjemaet, så kontakter vi deg innen 24 timer.
+          Fyll inn dine detaljer, så tar vi kontakt innen 24 timer.
+        </p>
+        <p class="mt-3 text-sm text-brand/80 font-medium">
+          Vi tar inn et begrenset antall kunder om gangen
         </p>
         <!-- Simplified trust line -->
         <div class="mt-4 flex items-center justify-center gap-4 text-sm text-text-muted/70">
@@ -102,17 +98,3 @@ const pakkeNames: Record<string, string> = {
   </div>
 </section>
 
-<script define:vars={{ pakkeNames }} is:inline>
-  // Update heading based on URL parameter
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    const pakke = params.get('pakke');
-
-    if (pakke && pakkeNames[pakke]) {
-      const heading = document.getElementById('form-heading');
-      if (heading) {
-        heading.textContent = `Få tilbud på ${pakkeNames[pakke]}`;
-      }
-    }
-  }
-</script>

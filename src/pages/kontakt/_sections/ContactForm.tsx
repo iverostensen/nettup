@@ -21,6 +21,8 @@ interface FormData {
   kilde: string;
 }
 
+// pricing.ts is used for PAKKE_INFO badge on /kontakt page (context="contact")
+// Not rendered for b2b context but import must stay
 import { pakker } from '@/config/pricing';
 import { services } from '@/config/services';
 import { trackContactFormSubmit } from '@/lib/analytics';
@@ -202,7 +204,7 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
   return (
     <div className="mx-auto max-w-xl">
       {/* Service badge */}
-      {selectedTjeneste && (
+      {context !== 'b2b' && selectedTjeneste && (
         <div className="mb-3 rounded-xl border border-brand/20 bg-brand/5 p-4">
           <div className="flex items-center gap-3">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/20">
@@ -223,7 +225,7 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
       )}
 
       {/* Package confirmation badge */}
-      {selectedPakke && showBadge && (
+      {context !== 'b2b' && selectedPakke && showBadge && (
         <motion.div
           initial={reducedMotion ? {} : { opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -367,29 +369,31 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
             </div>
 
             {/* Pakke field hidden - tracked via URL params only to reduce form friction */}
-            <input
-              type="hidden"
-              name="pakke"
-              value={formData.pakke}
-            />
-            <input type="hidden" name="tjeneste" value={formData.tjeneste} />
+            {context !== 'b2b' && (
+              <>
+                <input type="hidden" name="pakke" value={formData.pakke} />
+                <input type="hidden" name="tjeneste" value={formData.tjeneste} />
+              </>
+            )}
 
-            <div>
-              <label htmlFor="melding" className={labelClasses}>
-                Melding <span className="text-text-muted/50">(valgfritt)</span>
-              </label>
-              <textarea
-                id="melding"
-                name="melding"
-                value={formData.melding}
-                onChange={handleChange}
-                placeholder="F.eks: Trenger nettside for håndverksbedrift med 5 sider og kontaktskjema"
-                rows={3}
-                className={`${inputClasses} resize-none`}
-                disabled={status === 'submitting'}
-              />
-              {errors.melding && <p className={errorClasses}>{errors.melding}</p>}
-            </div>
+            {context !== 'b2b' && (
+              <div>
+                <label htmlFor="melding" className={labelClasses}>
+                  Melding <span className="text-text-muted/50">(valgfritt)</span>
+                </label>
+                <textarea
+                  id="melding"
+                  name="melding"
+                  value={formData.melding}
+                  onChange={handleChange}
+                  placeholder="F.eks: Trenger nettside for håndverksbedrift med 5 sider og kontaktskjema"
+                  rows={3}
+                  className={`${inputClasses} resize-none`}
+                  disabled={status === 'submitting'}
+                />
+                {errors.melding && <p className={errorClasses}>{errors.melding}</p>}
+              </div>
+            )}
 
             {status === 'error' && (
               <div
@@ -443,7 +447,7 @@ export default function ContactForm({ context = 'contact' }: Props = {}) {
                   Sender...
                 </span>
               ) : (
-                'Send melding'
+                context === 'b2b' ? 'Send henvendelse' : 'Send melding'
               )}
             </button>
           </motion.form>
