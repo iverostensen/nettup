@@ -45,10 +45,8 @@ const optimizedPreview = await getImage({ src: iGiveImage, width: 600, quality: 
 
       <!-- Value proposition with price anchoring -->
       <div class="reveal-on-scroll delay-1 mt-6">
-        <p class="text-xl text-text-muted md:text-2xl">
-          <span class="text-text-muted/70 line-through">Andre tar 15 000+ kr</span>
-          <span class="mx-2 text-text-muted/50">→</span>
-          <span class="font-semibold text-brand">{subscriptionOffer.price.setupPrice} kr oppstart</span>
+        <p class="text-xl font-semibold text-brand md:text-2xl">
+          {subscriptionOffer.price.setupPrice} kr oppstart
         </p>
         <p class="mt-2 text-2xl font-bold text-text md:text-3xl">
           kun {subscriptionOffer.price.monthlyPrice} kr/mnd
@@ -102,8 +100,8 @@ const optimizedPreview = await getImage({ src: iGiveImage, width: 600, quality: 
 
       <!-- Micro-testimonial from iGive -->
       <div class="reveal-on-scroll delay-4 mt-6 flex items-center gap-3 justify-center lg:justify-start">
-        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
-          <img src="/images/igive-logo.svg" alt="iGive logo" class="h-full w-full object-contain" />
+        <div class="flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+          <img src="/images/stein_eriksen_profile_picture.jpg" alt="Stein Eriksen" class="h-full w-full object-cover" />
         </div>
         <p class="text-sm text-text-muted italic">
           "Nettup leverte på under to uker – resultatet snakker for seg selv."

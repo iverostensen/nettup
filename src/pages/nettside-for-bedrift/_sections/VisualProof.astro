@@ -6,7 +6,7 @@
  * Focuses on visual quality, not technical metrics.
  */
 import { Image } from 'astro:assets';
-import iGiveImage from '@/assets/images/igive-hero.png';
+import blomImage from '@/assets/images/blom-hero.png';
 ---
 
 <section class="py-16 md:py-24 bg-surface">
@@ -25,34 +25,21 @@ import iGiveImage from '@/assets/images/igive-hero.png';
         <!-- Screenshot -->
         <div class="relative rounded-lg overflow-hidden border border-white/10">
           <Image
-            src={iGiveImage}
-            alt="iGive salgsside - profesjonell nettside laget av Nettup"
+            src={blomImage}
+            alt="Blom Company nettbutikk - profesjonell nettside laget av Nettup"
             width={1200}
             quality={85}
             class="w-full h-auto"
             loading="lazy"
           />
-
-          <!-- Logo badge overlay on screenshot -->
-          <div class="absolute top-4 left-4 rounded-lg bg-white/95 backdrop-blur-sm border border-white/20 px-3 py-2 shadow-lg">
-            <div class="flex items-center gap-3">
-              <img
-                src="/images/igive-logo.svg"
-                alt="iGive"
-                class="h-6 w-auto"
-              />
-              <div class="h-4 w-px bg-gray-300"></div>
-              <div class="text-xs text-gray-600 font-medium">Kunde</div>
-            </div>
-          </div>
         </div>
 
         <!-- Attribution -->
         <div class="mt-6 text-center">
           <p class="text-sm text-text-muted">
-            Levert for iGive i januar 2026.{' '}
+            Levert for Blom Company.{' '}
             <a href="/prosjekter" class="text-brand hover:text-brand-light">
-              Les hele case-studien →
+              Se våre prosjekter →
             </a>
           </p>
         </div>
