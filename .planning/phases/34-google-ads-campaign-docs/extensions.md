@@ -28,6 +28,7 @@ Callouts matcher landingssiden og tillitsbadgene. Google velger automatisk hvilk
 | 0 kr Oppstart | 13 |
 | Ingen Bindingstid | 18 |
 | 30 Dagers Garanti | 18 |
+| 24t Respons | 11 |
 | Klar pa 1-3 Uker | 17 |
 | SSL og Hosting Inkl. | 20 |
 | Support Inkludert | 17 |
