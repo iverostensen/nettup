@@ -1,9 +1,9 @@
 ---
 /**
- * VisualProof - Screenshot with metrics overlay
+ * VisualProof - Website preview screenshot
  *
- * Shows actual iGive project with performance metrics
- * Replaces generic Results section for better credibility
+ * Shows actual iGive project as example of what we deliver.
+ * Focuses on visual quality, not technical metrics.
  */
 import { Image } from 'astro:assets';
 import iGiveImage from '@/assets/images/igive-hero.png';
@@ -13,34 +13,15 @@ import iGiveImage from '@/assets/images/igive-hero.png';
   <div class="container mx-auto px-4">
     <!-- Section header -->
     <div class="reveal-on-scroll mb-12 text-center max-w-2xl mx-auto">
-      <h2 class="text-3xl font-bold md:text-4xl">Resultater som teller</h2>
+      <h2 class="text-3xl font-bold md:text-4xl">Slik kan din nettside se ut</h2>
       <p class="mt-4 text-text-muted">
-        Når vi sier at nettsidene våre er raske og profesjonelle, mener vi det. Se hvordan iGives salgsside presterer.
+        Vi bygger moderne, raske nettsider som fungerer på alle enheter. Her er et eksempel fra en av våre kunder.
       </p>
     </div>
 
     <!-- Visual proof with screenshot -->
     <div class="reveal-on-scroll delay-1 mx-auto max-w-5xl">
       <div class="relative rounded-2xl border border-white/10 bg-surface-raised p-4 md:p-8 overflow-hidden">
-        <!-- Metrics overlay - positioned top -->
-        <div class="grid grid-cols-3 gap-4 mb-6">
-          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
-            <div class="text-3xl font-bold text-brand md:text-4xl">95</div>
-            <div class="mt-1 text-sm text-text-muted">Ytelse</div>
-            <div class="mt-1 text-xs text-text-muted/70">Lighthouse</div>
-          </div>
-          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
-            <div class="text-3xl font-bold text-brand md:text-4xl">&lt;1s</div>
-            <div class="mt-1 text-sm text-text-muted">Lastetid</div>
-            <div class="mt-1 text-xs text-text-muted/70">First Load</div>
-          </div>
-          <div class="rounded-xl border border-brand/20 bg-brand/5 p-4 text-center">
-            <div class="text-3xl font-bold text-brand md:text-4xl">100</div>
-            <div class="mt-1 text-sm text-text-muted">SEO</div>
-            <div class="mt-1 text-xs text-text-muted/70">Google</div>
-          </div>
-        </div>
-
         <!-- Screenshot -->
         <div class="relative rounded-lg overflow-hidden border border-white/10">
           <Image
@@ -69,7 +50,7 @@ import iGiveImage from '@/assets/images/igive-hero.png';
         <!-- Attribution -->
         <div class="mt-6 text-center">
           <p class="text-sm text-text-muted">
-            Faktisk prosjekt levert i januar 2026.{' '}
+            Levert for iGive i januar 2026.{' '}
             <a href="/prosjekter" class="text-brand hover:text-brand-light">
               Les hele case-studien →
             </a>
@@ -81,7 +62,7 @@ import iGiveImage from '@/assets/images/igive-hero.png';
     <!-- Trust reinforcement -->
     <div class="reveal-on-scroll delay-2 mt-12 text-center">
       <p class="text-text-muted">
-        Alle våre nettsider leveres med samme kvalitetsstandarder
+        Alle nettsider inkluderer responsivt design, SEO og SSL-sertifikat
       </p>
     </div>
   </div>

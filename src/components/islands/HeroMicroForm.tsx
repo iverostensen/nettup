@@ -142,7 +142,7 @@ export default function HeroMicroForm() {
               Sender...
             </span>
           ) : (
-            'Få gratis tilbud'
+            'Kom i gang'
           )}
         </button>
       </div>
@@ -167,7 +167,7 @@ export default function HeroMicroForm() {
       )}
 
       <p className="mt-2 text-xs text-text-muted/70">
-        Vi svarer innen 24 timer. Ingen forpliktelser.
+        0 kr oppstart. Ingen bindingstid.
       </p>
     </form>
   );
