@@ -26,7 +26,7 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 
 - [x] **LP-01**: Single subscription offer as hero: 0 kr oppstart + 399 kr/mnd for 5-siders nettside, anchored against one-time cost -- no tiers, no package selector
 - [x] **LP-02**: `subscriptionOffer.ts` replaces `launchOffer.ts` + `pricing.ts` as single source of truth for the one offer (price, features, terms, upsell links)
-- [ ] **LP-03**: Reduced form: name, email, phone only (remove pakke, tjeneste, melding fields -- there is only one service to inquire about)
+- [x] **LP-03**: Reduced form: name, email, phone only (remove pakke, tjeneste, melding fields -- there is only one service to inquire about)
 - [x] **LP-04**: Remove fake social proof: static scarcity counter replaced with honest approach, unverifiable 4.9-star rating removed
 - [x] **LP-05**: FAQ rewritten for subscription model (cancellation, ownership, "paying forever" objection, what's included)
 - [x] **LP-06**: Meta title/description updated: "Nettside for Bedrift | 0 kr Oppstart, 399 kr/mnd | Nettup"
@@ -73,7 +73,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRACK-05 | Phase 32 | Complete |
 | LP-01 | Phase 33 | Complete |
 | LP-02 | Phase 32 | Complete |
-| LP-03 | Phase 33 | Pending |
+| LP-03 | Phase 33 | Complete |
 | LP-04 | Phase 33 | Complete |
 | LP-05 | Phase 33 | Complete |
 | LP-06 | Phase 33 | Complete |

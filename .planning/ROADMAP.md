@@ -14,7 +14,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
 
 - [x] **Phase 31: Tracking Infrastructure** - Consent Mode v2 upgrade and noindex to prepare for paid traffic (completed 2026-03-19)
 - [x] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture (completed 2026-03-19)
-- [ ] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester
+- [x] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester (completed 2026-03-20)
 - [ ] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer
 
 ## Phase Details
@@ -57,7 +57,7 @@ Plans:
   3. Static scarcity counter and unverifiable 4.9-star rating are removed, replaced with honest approach
   4. FAQ section addresses subscription-specific objections (cancellation, ownership, "paying forever", what's included)
   5. PricingSummary replaced with single offer card + "Trenger du mer?" section that links to `/tjenester` for custom websites and e-commerce -- these are upsell paths, not campaign offers
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 33-01-PLAN.md -- Hero price anchoring, VisualProof website previews, HeroMicroForm button update
@@ -87,5 +87,5 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 |-------|----------------|--------|-----------|
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
 | 32. Config & Conversion Flow | 2/2 | Complete    | 2026-03-19 |
-| 33. Landing Page Content Rebuild | 2/3 | In Progress|  |
+| 33. Landing Page Content Rebuild | 3/3 | Complete   | 2026-03-20 |
 | 34. Google Ads Campaign Docs | 0/? | Not started | - |
