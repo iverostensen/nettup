@@ -57,12 +57,12 @@ Plans:
   3. Static scarcity counter and unverifiable 4.9-star rating are removed, replaced with honest approach
   4. FAQ section addresses subscription-specific objections (cancellation, ownership, "paying forever", what's included)
   5. PricingSummary replaced with single offer card + "Trenger du mer?" section that links to `/tjenester` for custom websites and e-commerce -- these are upsell paths, not campaign offers
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 33-01: TBD
-- [ ] 33-02: TBD
-- [ ] 33-03: TBD
+- [ ] 33-01-PLAN.md -- Hero price anchoring, VisualProof website previews, HeroMicroForm button update
+- [ ] 33-02-PLAN.md -- PricingSummary guarantee, WhyUs subscription cards, FAQ rewrite, UpsellSection creation
+- [ ] 33-03-PLAN.md -- FormSection simplification, ContactForm b2b field reduction, index.astro wiring, stale reference cleanup
 
 ### Phase 34: Google Ads Campaign Docs
 **Goal**: A single-service Google Ads campaign ready to launch, targeting the 399 kr/mnd subscription offer exclusively
@@ -87,5 +87,5 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 |-------|----------------|--------|-----------|
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
 | 32. Config & Conversion Flow | 2/2 | Complete    | 2026-03-19 |
-| 33. Landing Page Content Rebuild | 0/? | Not started | - |
+| 33. Landing Page Content Rebuild | 0/3 | Not started | - |
 | 34. Google Ads Campaign Docs | 0/? | Not started | - |
