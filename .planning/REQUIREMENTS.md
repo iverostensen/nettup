@@ -1,7 +1,7 @@
 # Requirements: Nettup v1.6
 
 **Defined:** 2026-03-19
-**Updated:** 2026-03-19
+**Updated:** 2026-03-20
 **Core Value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
 
 ## Strategic Focus
@@ -39,6 +39,11 @@ Requirements for the Landingsside & Google Ads milestone. Each maps to roadmap p
 - [x] **ADS-02**: 3-5 ad copy variants -- all focused on the single 399 kr/mnd offer (headlines + descriptions)
 - [x] **ADS-03**: Ad extensions: sitelinks to `/tjenester` subpages as upsell paths, callouts ("0 kr oppstart", "24t respons", "30 dagers garanti")
 - [x] **ADS-04**: Single campaign structure -- one ad group for the subscription offer, budget recommendations, negative keywords to filter non-target traffic
+
+### Google Ads Setup Guide
+
+- [ ] **GUIDE-01**: Step-by-step setup guide covering account creation, campaign setup, keyword import, ad creation, and assets configuration -- all referencing Phase 34 docs as source material
+- [ ] **GUIDE-02**: Post-launch verification checklist and first-week monitoring plan with specific metrics, thresholds, and bidding phase transition criteria
 
 ## Future Requirements
 
@@ -83,12 +88,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADS-02 | Phase 34 | Complete |
 | ADS-03 | Phase 34 | Complete |
 | ADS-04 | Phase 34 | Complete |
+| GUIDE-01 | Phase 35 | Planned |
+| GUIDE-02 | Phase 35 | Planned |
 
 **Coverage:**
-- v1.6 requirements: 17 total
-- Mapped to phases: 17
+- v1.6 requirements: 19 total
+- Mapped to phases: 19
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after roadmap creation*
+*Last updated: 2026-03-20 after Phase 35 planning*
