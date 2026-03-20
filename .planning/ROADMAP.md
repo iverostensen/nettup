@@ -73,10 +73,11 @@ Plans:
   2. 3-5 ad copy variants exist, all focused on the 399 kr/mnd offer -- no mention of multiple tiers or packages
   3. Ad extensions prepared: sitelinks to `/tjenester` subpages as upsell paths (not as campaign alternatives), callouts matching the single offer
   4. Single campaign structure with one primary ad group for the subscription offer, budget recommendations, and negative keywords to filter non-target traffic (e.g., "gratis nettside", "wordpress")
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 34-01: TBD
+- [ ] 34-01-PLAN.md -- Keyword research and ad copy variants (keywords.md + ad-copy.md)
+- [ ] 34-02-PLAN.md -- Ad extensions and campaign structure (extensions.md + campaign-structure.md)
 
 ## Progress
 
@@ -88,4 +89,4 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
 | 32. Config & Conversion Flow | 2/2 | Complete    | 2026-03-19 |
 | 33. Landing Page Content Rebuild | 3/3 | Complete    | 2026-03-20 |
-| 34. Google Ads Campaign Docs | 0/? | Not started | - |
+| 34. Google Ads Campaign Docs | 0/2 | Not started | - |
