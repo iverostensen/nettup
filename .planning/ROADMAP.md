@@ -15,7 +15,7 @@ Build order follows strict dependency chains: tracking infrastructure first (ads
 - [x] **Phase 31: Tracking Infrastructure** - Consent Mode v2 upgrade and noindex to prepare for paid traffic (completed 2026-03-19)
 - [x] **Phase 32: Config & Conversion Flow** - subscriptionOffer.ts config for the single offer, thank-you page, form redirect, UTM capture (completed 2026-03-19)
 - [x] **Phase 33: Landing Page Content Rebuild** - Single-offer page: one subscription card, reduced form, honest trust signals, upsell links to /tjenester (completed 2026-03-20)
-- [ ] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer
+- [x] **Phase 34: Google Ads Campaign Docs** - Single-service campaign: keyword research, ad copy, extensions targeting 399 kr/mnd offer (completed 2026-03-20)
 
 ## Phase Details
 
@@ -73,7 +73,7 @@ Plans:
   2. 3-5 ad copy variants exist, all focused on the 399 kr/mnd offer -- no mention of multiple tiers or packages
   3. Ad extensions prepared: sitelinks to `/tjenester` subpages as upsell paths (not as campaign alternatives), callouts matching the single offer
   4. Single campaign structure with one primary ad group for the subscription offer, budget recommendations, and negative keywords to filter non-target traffic (e.g., "gratis nettside", "wordpress")
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 34-01-PLAN.md -- Keyword research and ad copy variants (keywords.md + ad-copy.md)
@@ -89,4 +89,4 @@ Phases execute in numeric order: 31 -> 32 -> 33 -> 34
 | 31. Tracking Infrastructure | 1/1 | Complete    | 2026-03-19 |
 | 32. Config & Conversion Flow | 2/2 | Complete    | 2026-03-19 |
 | 33. Landing Page Content Rebuild | 3/3 | Complete    | 2026-03-20 |
-| 34. Google Ads Campaign Docs | 0/2 | Not started | - |
+| 34. Google Ads Campaign Docs | 2/2 | Complete   | 2026-03-20 |

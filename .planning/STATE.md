@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: milestone
 status: executing
-stopped_at: Completed 33-03-PLAN.md
-last_updated: "2026-03-20T18:46:47.803Z"
+stopped_at: Completed 34-01-PLAN.md
+last_updated: "2026-03-20T19:42:59.195Z"
 last_activity: 2026-03-20 -- Completed 33-01 above-fold content rebuild
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 4
+  total_plans: 8
+  completed_plans: 8
   percent: 67
 ---
 
@@ -56,6 +56,8 @@ Progress: [███████░░░] 67%
 | Phase 33 P01 | 2min | 2 tasks | 3 files |
 | Phase 33 P02 | 2min | 2 tasks | 4 files |
 | Phase 33 P03 | 2min | 2 tasks | 3 files |
+| Phase 34 P01 | 3min | 2 tasks | 2 files |
+| Phase 34 P02 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -81,6 +83,8 @@ Key decisions from milestone setup and roadmap:
 - [Phase 33]: Subscription CTA language: 'Kom i gang' replaces 'Fa gratis tilbud' across landing page
 - [Phase 33]: Guarantee wording uses first-month risk-free framing instead of refund language
 - [Phase 33]: ContactForm uses context prop for conditional b2b/contact rendering instead of separate components
+- [Phase 34]: Exact match for primary keywords, phrase match for secondary/long-tail; no broad match initially
+- [Phase 34]: Pin H1 (service) to Position 1 and H2 (price) to Position 2 across all RSA variants
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ Key decisions from milestone setup and roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-20T18:43:07.473Z
-Stopped at: Completed 33-03-PLAN.md
+Last session: 2026-03-20T19:42:59.194Z
+Stopped at: Completed 34-01-PLAN.md
 Resume file: None
