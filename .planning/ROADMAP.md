@@ -27,7 +27,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
 - [x] **Phase 37: Privacy & Compliance** - Privacy page Meta Pixel disclosure, environment-variable kill switch (completed 2026-03-28)
 - [x] **Phase 38: Landing Page Ad Consistency** - Price anchoring against competitors, consent banner parity, custom OG image for social sharing (completed 2026-03-28)
 - [x] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan (completed 2026-03-28)
-- [ ] **Phase 40: Multi-Channel Strategy** - Phased rollout plan (Facebook > Google long-tail > TikTok), budget allocation, KPI targets, scaling rules
+- [x] **Phase 40: Multi-Channel Strategy** - Phased rollout plan (Facebook > Google long-tail > TikTok), budget allocation, KPI targets, scaling rules (completed 2026-03-28)
 - [ ] **Phase 41: Lead Magnet & Mid-Funnel Asset** - Email-gated checklist page for cheaper mid-funnel lead capture
 
 ## Phase Details
@@ -102,9 +102,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Multi-channel strategy doc defines 3-phase rollout: Facebook months 1-3 (primary, 70% budget), Google Ads long-tail months 2-4 (secondary, 20% budget), TikTok/expansion months 4+ (test, 10% budget)
   2. Budget document specifies starting spend (5 000-10 000 kr/mnd), campaign-level splits (awareness 40% / consideration 30% / conversion 30%), expected CPL ranges (300-950 NOK), and break-even math (1 client/month = profitable)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 40-01-PLAN.md -- Multi-channel strategy with 3-phase rollout, budget allocation, KPIs, and scaling rules
+- [x] 40-01-PLAN.md -- Multi-channel strategy with 3-phase rollout, budget allocation, KPIs, and scaling rules
 
 ### Phase 41: Lead Magnet & Mid-Funnel Asset
 **Goal**: A mid-funnel conversion path exists for prospects who aren't ready to buy -- capturing emails at lower CPL than direct-to-contact campaigns, building a nurture list for future follow-up
@@ -133,5 +133,5 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | 37. Privacy & Compliance | 0/1 | Complete    | 2026-03-28 |
 | 38. Landing Page Ad Consistency | 0/2 | Complete    | 2026-03-28 |
 | 39. Campaign Strategy & Documentation | 2/3 | Complete    | 2026-03-28 |
-| 40. Multi-Channel Strategy | 0/1 | Not started | - |
+| 40. Multi-Channel Strategy | 1/1 | Complete   | 2026-03-28 |
 | 41. Lead Magnet & Mid-Funnel Asset | 0/TBD | Not started | - |
