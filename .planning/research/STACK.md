@@ -1,348 +1,291 @@
-# Stack Research: v1.6 Landing Page & Google Ads
+# Technology Stack
 
-**Domain:** Conversion-optimized landing page rebuild, Google Ads tracking, subscription pricing
-**Researched:** 2026-03-19
-**Confidence:** HIGH
+**Project:** Nettup v1.7 Multi-Channel Ad Campaign
+**Researched:** 2026-03-28
+**Scope:** NEW capabilities only (Meta Pixel, ad creative generation, consent coexistence, retargeting events, UTM expansion)
 
-## Scope
+## Existing Stack (validated, not re-researched)
 
-This file covers ONLY what is NEW or CHANGED for the v1.6 milestone. The following are validated and NOT re-researched: Astro 5, Tailwind 4, React islands, Framer Motion, Vercel hosting (`output: 'static'`), Formspree forms, Plausible Analytics, LandingPageLayout (no nav, phone CTA, cookie consent banner), Google Ads gtag (`AW-17409050017`) already loaded with consent.
-
-**Bottom line: zero new npm packages required. All new capabilities are configuration and code patterns using the existing stack.**
+Astro 5 + Tailwind 4 + React 19 islands + Framer Motion + Vercel (hybrid) + Plausible Analytics + Google Ads Consent Mode v2 (advanced) + Formspree + sessionStorage UTM (3 params).
 
 ---
 
-## What Already Exists (No Changes Needed)
+## New Stack Additions
 
-| Capability | How It Works | Status |
-|------------|--------------|--------|
-| LandingPageLayout | No nav, sticky logo+phone, cookie consent, gtag loader | Production-ready |
-| Google Ads gtag | `AW-17409050017`, consent-gated loading via localStorage | Working |
-| Cookie consent banner | Accept/decline, persists in `nettup_ads_consent` | Working |
-| Plausible Analytics | Cookieless, `analytics.ts` wrapper with 7 typed events | Working |
-| `reveal-on-scroll` animations | IntersectionObserver in LandingPageLayout | Working |
-| Formspree forms | `xnjnzybj`, honeypot spam protection | Working |
-| `noIndex` prop on LandingPageLayout | For A/B test variant pages | Ready to use |
+### 1. Meta Pixel (fbevents.js)
 
----
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Meta Pixel SDK (fbevents.js) | 2.0 (CDN) | Facebook/Instagram conversion tracking + retargeting audiences | No npm package -- Meta Pixel is a CDN-loaded script snippet (connect.facebook.net/en_US/fbevents.js). Same deployment pattern as existing gtag. Zero new dependencies. |
 
-## New Capabilities Required
+**Integration pattern:** Inline `<script is:inline>` in `LandingPageLayout.astro`, mirroring the existing gtag block. The fbevents.js loader is a self-contained IIFE that creates the global `fbq()` function, identical in concept to how `gtag()` is bootstrapped via dataLayer.
 
-### 1. Google Ads Conversion Tracking (Enhanced)
+**Base code:**
+```javascript
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
+n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+```
 
-**What exists:** Basic gtag config fires on page load. No conversion events fire on form submit.
+**Consent-aware initialization (CRITICAL ORDER):**
+```javascript
+fbq('consent', 'revoke');           // 1. Deny by default (GDPR)
+fbq('init', 'YOUR_PIXEL_ID');      // 2. Initialize pixel
+fbq('track', 'PageView');          // 3. Track page view (queued until consent)
+// On user consent: fbq('consent', 'grant');  // 4. Releases queued events
+```
 
-**What's needed:** Fire `gtag('event', 'conversion', {...})` when the landing page form is submitted and when the phone CTA is clicked. Also set up Enhanced Conversions to send hashed user data for better attribution.
+**Key behavior:** When `fbq('consent', 'revoke')` is called before `init`, the pixel loads and queues events locally but does NOT transmit to Meta servers. Calling `fbq('consent', 'grant')` releases the queue. This is architecturally identical to Google's Consent Mode v2 denied-defaults pattern already in the codebase.
 
-**Implementation pattern (no new dependencies):**
+**Confidence:** HIGH -- verified against Meta's official GDPR developer documentation (developers.facebook.com/docs/meta-pixel/implementation/gdpr).
 
-```typescript
-// src/lib/ads-tracking.ts
+### 2. UTM Expansion
 
-/** Fire Google Ads conversion event. Only works if gtag loaded (consent granted). */
-export function trackAdsConversion(conversionLabel: string, value?: number): void {
-  if (typeof window === 'undefined' || !window.gtagLoaded) return;
-  window.gtag?.('event', 'conversion', {
-    send_to: `AW-17409050017/${conversionLabel}`,
-    value: value ?? 0,
-    currency: 'NOK',
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| No new dependency | N/A | Expand `utm.ts` to capture `utm_content` + `utm_term` | Facebook Ads uses dynamic URL parameters (`{{ad.name}}`, `{{adset.name}}`) that map to utm_content and utm_term. Current implementation only captures 3 params; Facebook attribution needs 5. |
+
+**Change scope:** Add `'utm_content'` and `'utm_term'` to the existing `UTM_KEYS` array in `src/lib/utm.ts`. That is the entire change -- the `captureUtmParams()` and `getUtmParams()` functions are already generic over the array.
+
+**Facebook URL template:**
+```
+?utm_source=facebook&utm_medium=paid_social&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_term={{adset.name}}
+```
+
+**Confidence:** HIGH -- trivial change to existing working code.
+
+### 3. Ad Creative Image Generation (Build-Time)
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| satori | ^0.18.3 | JSX-to-SVG rendering for ad templates | Vercel-maintained, supports flexbox + absolute positioning, custom fonts (Inter, Space Grotesk already in project). Renders brand-consistent ad images from TypeScript templates. |
+| @resvg/resvg-js | ^2.6.2 | SVG-to-PNG conversion | High-performance Rust-based renderer. Required because Facebook/Instagram require PNG/JPG (not SVG). Used only at build time. |
+
+**Why satori + resvg-js instead of manual Figma/Canva recreation:**
+1. **Reproducible** -- templates are code, can be iterated and version-controlled
+2. **Brand-consistent** -- imports from `brand.ts` and uses actual project fonts
+3. **Batch generation** -- one `npm run generate:ads` produces all 6 creatives
+4. **OG image** -- same pipeline generates the custom `/nettside-for-bedrift` OG image
+5. **No external tooling** -- does not require Figma, Canva, or Adobe accounts
+
+**What satori supports that matters for ad creatives:**
+- Flexbox layout (display: flex)
+- position: absolute (for overlaying text on backgrounds)
+- Custom fonts (loaded from .woff files, already available via @fontsource/inter and @fontsource/space-grotesk)
+- Gradients, border-radius, opacity, box-shadow
+- Colors (hex, rgb, hsl -- maps directly to brand tokens)
+
+**What satori does NOT support (not needed for ad creatives):**
+- CSS Grid (use flexbox instead)
+- z-index (paint order follows DOM order -- fine for layered ad layouts)
+- calc() expressions
+- Interactive properties (irrelevant for static images)
+
+**Output specifications:**
+| Format | Dimensions | Use Case |
+|--------|-----------|----------|
+| PNG 1080x1080 | Feed ads (Facebook + Instagram) | 4 variations |
+| PNG 1080x1920 | Story/Reel ads (9:16) | 2 variations |
+| PNG 1200x630 | Custom OG image for /nettside-for-bedrift | 1 image |
+
+**Vite configuration note:** resvg-js is a native Node addon (Rust via napi-rs). Vite's SSR bundler cannot process native addons, so it must be marked as `ssr.external` if used within Astro's build pipeline. However, since ad generation runs as a standalone script via `tsx`, this is not needed.
+
+**Recommended approach:** Standalone build script at `src/scripts/ads/generate-creatives.ts` run via `tsx`, not through Astro's build pipeline. This avoids Vite/SSR complications entirely and keeps the ad generation independent of the site build. The project already has `tsx` as a devDependency (v4.21.0).
+
+**Confidence:** HIGH for satori (well-documented, actively maintained by Vercel, used across Astro ecosystem for OG images). HIGH for resvg-js (standalone script avoids Vite integration issues).
+
+### 4. Consent-Aware Dual-Pixel Loading
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| No new dependency | N/A | Unified consent banner controls both gtag and fbq | Extends existing consent IIFE in LandingPageLayout.astro to also call fbq('consent', 'grant'/'revoke'). Single consent key in localStorage controls both pixels. |
+
+**Architecture decision: One consent banner, one localStorage key, two pixels.**
+
+The existing consent implementation uses `nettup_ads_consent` in localStorage. Meta Pixel consent maps to the same user choice:
+
+```javascript
+// Existing consent accept handler (LandingPageLayout.astro line ~232-239)
+// EXTEND to also call fbq:
+document.getElementById('cookie-accept')?.addEventListener('click', function() {
+  localStorage.setItem(CONSENT_KEY, 'granted');
+  // Google (existing)
+  gtag('consent', 'update', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted',
   });
-}
-
-/** Enhanced conversions: send hashed user data alongside conversion. */
-export function trackAdsFormConversion(
-  conversionLabel: string,
-  userData: { email?: string; phone?: string },
-  value?: number
-): void {
-  if (typeof window === 'undefined' || !window.gtagLoaded) return;
-
-  // Set user_data for enhanced conversions (gtag hashes automatically)
-  window.gtag?.('set', 'user_data', {
-    email: userData.email,
-    phone_number: userData.phone, // Must be E.164 format: +4741327136
-  });
-
-  window.gtag?.('event', 'conversion', {
-    send_to: `AW-17409050017/${conversionLabel}`,
-    value: value ?? 0,
-    currency: 'NOK',
-  });
-}
-
-/** Track phone CTA clicks as conversion. */
-export function trackAdsPhoneClick(conversionLabel: string): void {
-  if (typeof window === 'undefined' || !window.gtagLoaded) return;
-  window.gtag?.('event', 'conversion', {
-    send_to: `AW-17409050017/${conversionLabel}`,
-  });
-}
+  // Meta (NEW)
+  if (window.fbq) fbq('consent', 'grant');
+  hideBanner();
+});
 ```
 
-**Setup steps in Google Ads:**
-1. Create conversion action "Skjema sendt" (category: Submit Lead Form) -- get conversion label
-2. Create conversion action "Telefon klikk" (category: Phone Call) -- get conversion label
-3. Enable Enhanced Conversions on the "Skjema sendt" conversion action in Google Ads settings
-4. Use Tag Assistant to verify events fire correctly
+**Why NOT separate consent for Google vs Meta:**
+- Norwegian users see one banner, make one choice. Splitting creates friction and confusion.
+- Both pixels serve the same purpose (ad measurement). The GDPR legal basis is identical (consent, art. 6(1)(a)).
+- The consent banner text already says "Vi bruker informasjonskapsler for a male annonseeffekt" -- this covers both vendors.
+- Privacy policy section 2.3 needs a new subsection (2.4) for Meta Pixel disclosure, mirroring the Google Ads section.
 
-**TypeScript types needed (add to existing `env.d.ts` or a new `src/types/gtag.d.ts`):**
+**Key coexistence behaviors:**
 
+| Consent State | gtag behavior | fbq behavior |
+|--------------|--------------|-------------|
+| No choice yet (banner shown) | Loads, denied defaults, modeled conversions | Loads, revoked, events queued locally |
+| Granted | Full tracking, cookies set | Full tracking, cookies set, queue released |
+| Denied | Cookieless pings, modeled conversions | No data transmission to Meta |
+
+**Important difference:** Google Consent Mode v2 "advanced" sends anonymized pings even when denied (for modeled conversions). Meta Pixel in revoked state sends NOTHING. This is a fundamental difference -- Meta is more privacy-restrictive in denied state. This means Meta will have lower attributed conversion numbers than Google when consent rates are low. This is expected and correct behavior.
+
+**Confidence:** HIGH -- Meta's fbq consent API is documented and tested. The pattern directly extends the existing consent IIFE without structural changes.
+
+### 5. Retargeting Event Infrastructure
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| No new dependency | N/A | Fire fbq standard events for retargeting audiences | Uses existing fbq() global function. Standard events (ViewContent, Lead) are recognized by Meta Ads Manager for Custom Audience creation. |
+
+**Events to implement:**
+
+| Event | Where | Parameters | Retargeting Use |
+|-------|-------|-----------|----------------|
+| `ViewContent` | `/nettside-for-bedrift` page load | `{ content_name: 'Nettside Abonnement', content_category: 'Landing Page', value: 399, currency: 'NOK' }` | "Viewed pricing but didn't convert" audience |
+| `Lead` | `/nettside-for-bedrift/takk` page load | `{ content_name: 'Nettside Abonnement', value: 399, currency: 'NOK' }` | Conversion tracking + lookalike seed audience |
+
+**Implementation location:**
+- `ViewContent`: Inline `<script is:inline>` on `/nettside-for-bedrift/index.astro`, fires after fbq init
+- `Lead`: Added to existing conversion script on `/nettside-for-bedrift/takk.astro` alongside gtag conversion and Plausible event
+
+**Custom Audience definitions (built in Meta Ads Manager, not code):**
+1. **Warm retarget:** People who fired `ViewContent` but NOT `Lead` in last 30 days
+2. **Lookalike seed:** People who fired `Lead` in last 180 days
+3. **Broad retarget:** All pixel-tracked visitors in last 14 days (PageView)
+
+**Confidence:** HIGH -- standard Meta Pixel events with well-documented parameters.
+
+### 6. Window Type Extensions
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| No new dependency | N/A | Add fbq to Window interface in env.d.ts | TypeScript type safety for inline scripts using fbq(). Mirrors existing Window.plausible pattern. |
+
+**Addition to `src/env.d.ts`:**
 ```typescript
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-    gtagLoaded?: boolean;
-  }
+interface Window {
+  plausible?: (eventName: string, options?: PlausibleOptions) => void;
+  fbq?: (...args: unknown[]) => void;
+  _fbq?: (...args: unknown[]) => void;
 }
 ```
 
-**Confidence:** HIGH -- gtag conversion snippet pattern is well-documented by Google. Enhanced Conversions with `gtag('set', 'user_data', ...)` is the recommended approach per Google's official docs. The `window.gtagLoaded` flag already exists in LandingPageLayout.
+Note: `is:inline` scripts bypass TypeScript checking. The type extension is for any future React island that might call fbq directly.
 
-**Sources:**
-- [Google Ads conversion tracking with gtag](https://support.google.com/google-ads/answer/7548399)
-- [Enhanced conversions setup with Google tag](https://support.google.com/google-ads/answer/13258081)
-- [Google conversion measurement docs](https://developers.google.com/tag-platform/devguides/conversions)
+**Confidence:** HIGH -- follows existing pattern.
 
 ---
 
-### 2. Subscription Pricing UI (No New Dependencies)
+## What NOT to Add
 
-**Context:** New offer is 0 kr oppstart + 399 kr/mnd for 5-siders nettside (first 10 customers). This is NOT a SaaS pricing page with toggles -- it's a single subscription offer on a conversion landing page.
-
-**Recommended approach: Astro section component, not React island.**
-
-Subscription pricing on a landing page does not need client-side interactivity. It needs:
-- Clear monthly price with struck-through comparison
-- "What's included" checklist
-- Scarcity signal (X of 10 plasser igjen)
-- Single CTA button scrolling to form
-
-**Pattern:**
-
-```astro
-<!-- _sections/SubscriptionPricing.astro -->
-<section class="py-20 bg-surface">
-  <div class="container mx-auto px-4 max-w-3xl text-center">
-    <h2>Alt inkludert. Ingen overraskelser.</h2>
-    <div class="bg-surface-raised rounded-2xl p-8 border border-white/10">
-      <div class="text-5xl font-bold text-brand">399 kr/mnd</div>
-      <div class="text-text-muted">0 kr oppstart</div>
-      <!-- Checklist items -->
-      <!-- Scarcity badge: "7 av 10 plasser igjen" -->
-      <!-- CTA: scroll to form -->
-    </div>
-  </div>
-</section>
-```
-
-**Why NOT a pricing toggle (monthly/annual):** This is a single offer, not a tier comparison. Adding toggle complexity reduces clarity and hurts conversion on a focused landing page. The subscription model should feel simple and risk-free.
-
-**Scarcity counter approach:** Hard-code the number in a config constant (e.g. `launchOffer.ts` or inline). Do NOT build a real-time counter -- that requires a database and adds complexity for no conversion benefit. Update the number manually as customers sign up.
-
-**Confidence:** HIGH -- subscription pricing presentation is pure HTML/CSS. No technical risk.
-
----
-
-### 3. A/B Testing Variant Pages
-
-**The constraint:** Project uses `output: 'static'` with Vercel adapter. Astro middleware runs only at build time for static pages. This means Astro-level middleware cannot do runtime A/B routing.
-
-**Two viable approaches, ranked:**
-
-#### Approach A: Vercel Edge Middleware (RECOMMENDED)
-
-Vercel Edge Middleware runs at the edge BEFORE the static cache. It can rewrite requests to serve different pre-built static pages without SSR. This is the same pattern Vercel uses for their own A/B testing.
-
-**How it works:**
-1. Build two static pages: `/nettside-for-bedrift/index.html` and `/nettside-for-bedrift/b/index.html`
-2. Create `middleware.ts` at project root (Vercel convention, NOT `src/middleware.ts`)
-3. Middleware reads a cookie; if no cookie, assigns variant randomly and sets cookie
-4. Middleware rewrites request to the appropriate variant page
-5. User always sees `/nettside-for-bedrift` in browser URL bar
-
-**Implementation:**
-
-```typescript
-// middleware.ts (project root -- Vercel Edge Middleware)
-import { NextResponse } from 'next/server'; // Vercel middleware uses this API
-
-export const config = {
-  matcher: '/nettside-for-bedrift',
-};
-
-export default function middleware(request: Request) {
-  const cookie = request.headers.get('cookie') ?? '';
-  const variantMatch = cookie.match(/nettup_ab=([ab])/);
-
-  let variant = variantMatch?.[1];
-  if (!variant) {
-    variant = Math.random() < 0.5 ? 'a' : 'b';
-  }
-
-  const url = new URL(request.url);
-  if (variant === 'b') {
-    url.pathname = '/nettside-for-bedrift/b';
-  }
-
-  const response = NextResponse.rewrite(url);
-  if (!variantMatch) {
-    response.cookies.set('nettup_ab', variant, { maxAge: 60 * 60 * 24 * 30 });
-  }
-  return response;
-}
-```
-
-**IMPORTANT CAVEAT:** Vercel Edge Middleware for non-Next.js frameworks has limited official documentation. The `@astrojs/vercel` adapter supports `edgeMiddleware: true` in config, which creates an edge function from Astro's `src/middleware.ts`. However, Astro middleware on static pages has documented limitations (runs at build time only for prerendered pages).
-
-**Confidence:** MEDIUM -- Vercel Edge Middleware rewrites are well-documented for Next.js. For Astro with `output: 'static'`, this specific pattern needs validation during implementation. The community reports it works but there are edge cases with cookies.
-
-#### Approach B: URL-Based Variants with UTM Parameters (SIMPLER, RECOMMENDED FOR V1)
-
-Skip middleware entirely. Create two separate landing page URLs:
-- `/nettside-for-bedrift` (variant A -- control)
-- `/nettside-for-bedrift-b` (variant B -- new design)
-
-Use Google Ads to split traffic by creating two ad groups pointing to different URLs. Track conversions per page in both Google Ads and Plausible.
-
-**Advantages:**
-- Zero infrastructure complexity
-- Works perfectly with `output: 'static'`
-- Google Ads natively supports traffic splitting across ad groups
-- Plausible shows per-page conversion rates
-- `noIndex` on variant B prevents SEO duplication
-
-**Disadvantages:**
-- Not true A/B testing (Google Ads splits may not be perfectly 50/50)
-- Organic traffic doesn't get split
-
-**Implementation:**
-1. Create `/nettside-for-bedrift-b/index.astro` using LandingPageLayout with `noIndex={true}`
-2. Create separate Google Ads ad group pointing to variant B URL
-3. Compare conversion rates in Google Ads dashboard
-
-**Confidence:** HIGH -- no technical risk, uses only existing capabilities.
-
-**Recommendation:** Start with Approach B (URL-based) for the initial A/B test. It ships in hours, not days. If you need true 50/50 splitting for organic traffic later, implement Approach A.
-
----
-
-### 4. Conversion-Optimized Section Patterns (No New Dependencies)
-
-All conversion optimization elements are pure Astro components with Tailwind styling. No new libraries needed.
-
-| Pattern | Implementation | Notes |
-|---------|---------------|-------|
-| Social proof (logos) | LogoCloud.astro already exists | Expand with more logos if available |
-| Urgency/scarcity | Static badge: "X av 10 plasser igjen" | Hard-coded in config, update manually |
-| Trust signals | Checkmark lists, guarantee badges | Pure Tailwind/SVG |
-| Sticky CTA | `position: sticky` footer bar on mobile | Pure CSS, no JS needed |
-| Countdown timer | NOT recommended | Fake urgency damages trust |
-| Exit-intent popup | NOT recommended | Aggressive, hurts brand perception |
-| Form prefill from UTM | Read `URLSearchParams` in form component | Minimal inline JS |
-| Phone number tracking | `trackAdsPhoneClick()` on tel: link click | See section 1 above |
-
-**Sticky mobile CTA pattern (pure CSS):**
-
-```astro
-<!-- Sticky bottom CTA bar, visible on mobile only -->
-<div class="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-surface/95 backdrop-blur-md p-4 md:hidden">
-  <a href="#kontakt" class="block w-full rounded-full bg-brand py-3 text-center font-semibold text-surface">
-    Kom i gang - 0 kr oppstart
-  </a>
-</div>
-```
-
-**Confidence:** HIGH -- all pure HTML/CSS/minimal JS patterns.
-
----
-
-## Plausible Analytics Additions
-
-Extend `src/lib/analytics.ts` with new tracking functions for the landing page:
-
-```typescript
-export function trackLandingFormSubmit(variant?: string): void {
-  track('Landing Form Submit', variant ? { variant } : undefined);
-}
-
-export function trackLandingPhoneClick(variant?: string): void {
-  track('Landing Phone Click', variant ? { variant } : undefined);
-}
-
-export function trackLandingScrollDepth(depth: string): void {
-  track('Landing Scroll Depth', { depth });
-}
-```
-
-These fire alongside (not instead of) Google Ads conversion events. Plausible gives you analytics without consent; Google Ads conversions require consent.
-
----
-
-## No New Dependencies
-
-| Considered | Decision | Reason |
-|------------|----------|--------|
-| Google Tag Manager (GTM) | Rejected | gtag.js is already loaded; GTM adds another script, container overhead, and complexity for 2 conversion events |
-| Optimizely / LaunchDarkly | Rejected | Overkill for a single A/B test on one landing page; URL-based splitting is sufficient |
-| `@vercel/edge-config` | Deferred | Only needed if implementing Approach A for A/B testing; URL-based approach avoids this |
-| Hotjar / Microsoft Clarity | Deferred | Heatmaps are valuable but add another consent requirement; evaluate after first ad campaign data |
-| `react-countdown` | Rejected | Countdown timers create fake urgency; the scarcity message (X of 10 remaining) is sufficient |
-| Form library (react-hook-form, etc.) | Rejected | Existing Formspree pattern with native validation works; no complex form logic needed |
-
----
-
-## Integration Points with Existing Stack
-
-| Existing File | Change for v1.6 | Impact |
-|---------------|-----------------|--------|
-| `src/lib/ads-tracking.ts` | New file | None on existing code |
-| `src/lib/analytics.ts` | Add 3 new tracking functions | Additive only |
-| `src/types/gtag.d.ts` | New file (Window type augmentation) | Additive only |
-| `src/pages/nettside-for-bedrift/index.astro` | Full rebuild of sections | Replaces existing content |
-| `src/pages/nettside-for-bedrift/_sections/*` | Rebuild/add sections | Replaces existing sections |
-| `src/layouts/LandingPageLayout.astro` | No changes needed | Stable |
-| `src/config/launchOffer.ts` | Update pricing to subscription model | May need new fields |
-| `astro.config.mjs` | No changes needed | Stable |
-
----
-
-## Google Ads Setup Requirements (Outside Codebase)
-
-These are Google Ads dashboard configurations, not code changes:
-
-| Action | Where | Notes |
-|--------|-------|-------|
-| Create "Skjema sendt" conversion action | Google Ads > Goals > Conversions | Category: Submit Lead Form, value: set per lead value |
-| Create "Telefon klikk" conversion action | Google Ads > Goals > Conversions | Category: Phone Call |
-| Enable Enhanced Conversions | On "Skjema sendt" conversion action | Settings > Enhanced Conversions > Google tag |
-| Get conversion labels | From each conversion action's tag setup | Paste into `ads-tracking.ts` constants |
-| Verify with Tag Assistant | [tagassistant.google.com](https://tagassistant.google.com) | Test both events fire on form submit and phone click |
+| Rejected Technology | Why Not |
+|-------------------|---------|
+| `react-facebook-pixel` npm package | Wrapper around fbq() that adds unnecessary abstraction. The raw fbq() API is 3 function calls. A wrapper adds bundle size, version coupling, and React lifecycle complexity for zero benefit. |
+| Google Tag Manager (GTM) | Overkill for 2 pixels. Direct script tags are simpler, faster (no GTM container load), and already the established pattern. GTM adds a management layer with no payoff at this scale. |
+| `@vercel/og` | Vercel's OG image package uses satori internally but is designed for Next.js Edge Runtime. Using satori + resvg-js directly gives full control and works in standalone Node scripts. |
+| `sharp` (for PNG conversion) | resvg-js handles SVG-to-PNG natively and is faster (Rust-based). Sharp would be a redundant 25MB+ dependency. |
+| `html2canvas` / `puppeteer` (for ad image export) | Headless browser approach is 100x slower than satori and requires Chrome/Chromium runtime. Satori renders in-process via WASM/native. Puppeteer is already a devDependency but should NOT be used for this. |
+| Additional font files for satori | @fontsource/inter and @fontsource/space-grotesk already include .woff format files in node_modules. No separate font download needed. |
+| Meta Conversions API (CAPI / server-side) | Server-side Meta event deduplication and adblocker bypass. Requires server endpoint, access token management, and event_id deduplication. Out of scope for v1.7 -- evaluate after first campaign if pixel-only attribution is insufficient. |
+| Meta Business SDK (npm) | Node.js SDK for Conversions API. Not needed for client-side pixel events. |
+| Third-party CMP (Cookiebot, OneTrust, CookieYes) | 2 pixels do not justify a CMP subscription (starting at ~$10/mo). The existing custom consent banner is clean, GDPR-compliant, and well-understood. CMP becomes worthwhile at 5+ tracking scripts or if a stricter interpretation of ePrivacy Directive is needed. |
+| `satori-html` npm package | Converts HTML template strings to satori VNodes. Unnecessary because satori natively accepts JSX, and the project already has React/JSX support. Using JSX directly gives type safety and IDE support. |
 
 ---
 
 ## Installation
 
 ```bash
-# No new packages required.
-# All capabilities exist in the current stack.
+# New dev dependencies for ad creative generation script
+npm install -D satori @resvg/resvg-js
 ```
+
+That is the ONLY `npm install` needed. Meta Pixel is CDN-loaded (zero npm packages). UTM expansion, consent integration, and retargeting events are all code changes to existing files.
+
+**Total new npm dependencies: 2 (dev only)**
+- `satori` ~2.5MB (includes WASM layout engine)
+- `@resvg/resvg-js` ~8MB (native Rust addon, platform-specific binary)
+
+Neither dependency ships to the browser or increases the client bundle. Both are used exclusively in the standalone ad generation script.
+
+---
+
+## Integration Points with Existing Code
+
+### Files to modify (not create)
+
+| File | Change | Risk |
+|------|--------|------|
+| `src/layouts/LandingPageLayout.astro` | Add fbq loader + consent integration in existing IIFE | LOW -- additive to existing consent block, same pattern as gtag |
+| `src/lib/utm.ts` | Add `'utm_content'` and `'utm_term'` to UTM_KEYS array | NEGLIGIBLE -- 1-line change, functions are generic |
+| `src/env.d.ts` | Add fbq to Window interface | NEGLIGIBLE -- type-only change |
+| `src/pages/nettside-for-bedrift/index.astro` | Add ViewContent event inline script | LOW -- new script block, no structural change |
+| `src/pages/nettside-for-bedrift/takk.astro` | Add fbq Lead event alongside existing gtag + plausible | LOW -- additive to existing conversion script |
+| `src/pages/personvern/index.astro` | Add section 2.4 for Meta Pixel disclosure + update section 4 data sharing | LOW -- content addition |
+| `package.json` | Add `"generate:ads"` script | NEGLIGIBLE |
+
+### Files to create
+
+| File | Purpose |
+|------|---------|
+| `src/scripts/ads/generate-creatives.ts` | Orchestrator script: loads fonts, renders templates, writes PNGs |
+| `src/scripts/ads/templates/feed-price.tsx` | 1080x1080 price-focused feed ad template |
+| `src/scripts/ads/templates/feed-social-proof.tsx` | 1080x1080 testimonial/social proof feed ad template |
+| `src/scripts/ads/templates/feed-problem.tsx` | 1080x1080 problem-agitation feed ad template |
+| `src/scripts/ads/templates/feed-benefit.tsx` | 1080x1080 benefit-focused feed ad template |
+| `src/scripts/ads/templates/story-price.tsx` | 1080x1920 price-focused story/reel template |
+| `src/scripts/ads/templates/story-cta.tsx` | 1080x1920 CTA-focused story/reel template |
+| `src/scripts/ads/templates/og-landing.tsx` | 1200x630 custom OG image for /nettside-for-bedrift |
+| `public/images/ads/` | Output directory for generated PNG files |
+
+### package.json script addition
+
+```json
+{
+  "scripts": {
+    "generate:ads": "tsx src/scripts/ads/generate-creatives.ts"
+  }
+}
+```
+
+---
+
+## Alternatives Considered
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| Meta Pixel loading | Direct `<script is:inline>` in layout | GTM container | GTM adds complexity, latency, and a management layer for just 2 tags. Direct scripts are faster and match existing gtag pattern. |
+| Ad image generation | satori + resvg-js (code-based) | Manual Figma/Canva design | Code templates are version-controlled, batch-generated, and guaranteed brand-consistent. Manual design requires designer tooling and cannot be iterated in PRs. |
+| Ad image generation | satori + resvg-js (code-based) | Puppeteer screenshot | 100x slower, requires headless Chrome, non-deterministic rendering. Already a devDependency but wrong tool for this job. |
+| SVG-to-PNG conversion | @resvg/resvg-js | sharp | resvg-js is purpose-built for SVG input, faster (Rust), and smaller. Sharp is a general image processing library -- overkill. |
+| Consent management | Extend existing custom IIFE | Third-party CMP | 2 pixels do not justify CMP subscription/complexity. Custom banner is clean and compliant. |
+| Font loading for satori | Read .woff from @fontsource in node_modules | Download fonts separately | @fontsource packages already include .woff format files. No duplication. |
+| Pixel event tracking | Client-side fbq() only | Conversions API (server-side) | CAPI adds server endpoint, access tokens, and deduplication logic. Evaluate after v1.7 campaign data shows whether client-side-only attribution is sufficient. |
 
 ---
 
 ## Sources
 
-- [Google Ads conversion tracking with gtag](https://support.google.com/google-ads/answer/7548399) -- event snippet format (HIGH confidence)
-- [Enhanced conversions for web using Google tag](https://support.google.com/google-ads/answer/13258081) -- user_data setup (HIGH confidence)
-- [Google conversion measurement developer docs](https://developers.google.com/tag-platform/devguides/conversions) -- send_to pattern (HIGH confidence)
-- [Vercel Edge Middleware for A/B testing](https://vercel.com/blog/vercel-edge-middleware-dynamic-at-the-speed-of-static) -- rewrite static pages pattern (MEDIUM confidence for Astro specifically)
-- [Astro middleware docs](https://docs.astro.build/en/guides/middleware/) -- context.rewrite() API (HIGH confidence)
-- [Vercel Edge Config](https://vercel.com/docs/edge-config) -- feature flags and A/B test config (MEDIUM confidence)
-- Codebase `src/layouts/LandingPageLayout.astro` -- existing gtag loader, consent flow, `window.gtagLoaded` flag (HIGH confidence)
-- Codebase `src/lib/analytics.ts` -- existing Plausible wrapper pattern (HIGH confidence)
-- Codebase `astro.config.mjs` -- `output: 'static'` constraint (HIGH confidence)
-
----
-
-*Stack research for: Nettup v1.6 Landing Page & Google Ads*
-*Researched: 2026-03-19*
+- [Meta Pixel GDPR implementation (official)](https://developers.facebook.com/docs/meta-pixel/implementation/gdpr) -- HIGH confidence
+- [Meta Pixel Get Started (official)](https://developers.facebook.com/docs/meta-pixel/get-started/) -- HIGH confidence
+- [Meta Pixel conversion tracking (official)](https://developers.facebook.com/docs/meta-pixel/implementation/conversion-tracking/) -- HIGH confidence
+- [Meta Pixel standard event specs (official)](https://www.facebook.com/business/help/402791146561655) -- HIGH confidence
+- [satori GitHub repository (Vercel)](https://github.com/vercel/satori) -- HIGH confidence, v0.18.3
+- [@resvg/resvg-js npm](https://www.npmjs.com/package/@resvg/resvg-js) -- HIGH confidence, v2.6.2
+- [Facebook UTM parameter guide (Attributer)](https://attributer.io/blog/add-utm-parameters-facebook-ads) -- MEDIUM confidence
+- [Meta Consent Mode explained (SecurePrivacy)](https://secureprivacy.ai/blog/meta-consent-mode-explained-2025) -- MEDIUM confidence
+- [Facebook ad image specs 2026 (Buffer)](https://buffer.com/resources/facebook-ad-specs-image-sizes/) -- MEDIUM confidence
+- [Astro + satori OG image generation (mfyz.com)](https://mfyz.com/generate-beautiful-og-images-astro-satori/) -- MEDIUM confidence
+- [Facebook/Meta Pixel Consent Mode (MeasureMinds)](https://measuremindsgroup.com/facebook-meta-pixel-consent-mode) -- MEDIUM confidence

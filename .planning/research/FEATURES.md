@@ -1,386 +1,550 @@
 # Feature Landscape
 
-**Domain:** Web agency subscription landing page + Google Ads conversion optimization
-**Milestone:** v1.6 Landingsside & Google Ads (nettup.no/nettside-for-bedrift)
-**Researched:** 2026-03-19
-**Confidence:** MEDIUM-HIGH (conversion optimization patterns well-documented; Norwegian subscription web agency model is niche with limited direct data)
+**Domain:** Multi-channel ad campaign infrastructure (Meta Pixel, ad creatives, ad copy, lead forms, retargeting, audience targeting, A/B testing, multi-channel strategy)
+**Milestone:** v1.7 Multi-Channel Ad Campaign (nettup.no)
+**Researched:** 2026-03-28
+**Confidence:** HIGH (Meta Pixel integration patterns well-documented; Norwegian market benchmarks verified; consent patterns verified against Norwegian E-Com Act + Datatilsynet enforcement)
 
 ---
 
-## Existing Infrastructure (Already Built)
+## Existing Infrastructure (Already Built in v1.6)
 
-These sections exist and work. Features below describe changes/additions to them, not rebuilds from scratch.
+These capabilities exist and work. v1.7 features build on top of them.
 
-| Section | Component | Status |
-|---------|-----------|--------|
-| LandingPageLayout | No nav, sticky header, phone CTA | Exists |
-| Hero | H1 keyword match, trust badges, HeroMicroForm, LandingHeroAnimation | Exists |
-| VisualProof | iGive case study screenshot | Exists |
-| LogoCloud | Client logos | Exists |
-| Testimonial | Single testimonial (placeholder) | Exists |
-| WhyUs | 6 differentiators | Exists |
-| PricingSummary | 3-tier cards, ScarcityCounter, guarantee banner | Exists |
-| FAQ | JSON-LD FAQPage schema | Exists |
-| FormSection | Embedded ContactForm with ?pakke= pre-fill | Exists |
-| ScarcityCounter | "X av 10 plasser igjen" inline/card variants | Exists |
-| launchOffer.ts | total/taken config | Exists |
-| pricing.ts | 3 Pakke objects with originalPrice/launchPrice/monthly | Exists |
-| gtag consent setup | Google Ads tag with consent mode | Exists |
+| Capability | Component | Status |
+|-----------|-----------|--------|
+| Google Ads Consent Mode v2 (advanced) | LandingPageLayout.astro consent IIFE | Production |
+| Cookie consent banner | LandingPageLayout.astro DOM + localStorage | Production |
+| GTM-free gtag with denied defaults | Inline script, always loads | Production |
+| Plausible Analytics (cookieless) | BaseLayout + LandingPageLayout, 7 Goals | Production |
+| UTM capture (3 params: source, medium, campaign) | src/lib/utm.ts, sessionStorage | Production |
+| Conversion tracking (gtag + Plausible) | /takk page, dual events fire on load | Production |
+| Subscription landing page | /nettside-for-bedrift (single-offer, 0 kr + 399 kr/mnd) | Production |
+| B2B micro-form + redirect to /takk | HeroMicroForm.tsx (email-only) + ContactForm.tsx | Production |
+| Privacy policy (Google Ads disclosed) | /personvern | Production |
+| Formspree with honeypot | xnjnzybj, hidden _gotcha field | Production |
+| subscriptionOffer.ts SSOT | Price, features, terms, meta | Production |
+| `nettup_ads_consent` localStorage key | Consent state persisted across sessions | Production |
+| noindex on landing page | No SEO cannibalization with /tjenester/nettside | Production |
 
 ---
 
 ## Table Stakes
 
-Features the subscription landing page MUST have. Missing any of these means the page underperforms against paid traffic or the new subscription model is unclear.
+Features v1.7 MUST have. Missing any means the Facebook campaign cannot launch or runs without proper tracking.
 
-### TS-1: Subscription Pricing Reframe (0 kr oppstart + 399 kr/mnd)
+### TS-1: Meta Pixel Integration with Consent-Aware Loading
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | The entire v1.6 value proposition is "no upfront cost." Current pricing shows 2,500-10,000 kr one-time fees with monthly add-on. Must completely replace this with subscription-first model. |
+| Why expected | Cannot run Facebook/Instagram ad campaigns without a pixel. No pixel = no conversion tracking, no retargeting audiences, no lookalike audience seeding. Facebook Ads Manager requires pixel data to optimize delivery. |
 | Complexity | Medium |
-| Dependencies | pricing.ts (rewrite), PricingSummary.astro (rewrite), Hero.astro (update price display) |
+| Dependencies | LandingPageLayout.astro (existing consent IIFE), env.d.ts |
 
 **What to build:**
 
-- Rewrite `Pakke` interface: replace `originalPrice`/`launchPrice`/`savings`/`discountPercent` with `setupFee: number` (0), `monthlyFee: number` (399), `minimumMonths: number` (12), `includes: string[]`
-- ONE primary subscription offer prominently displayed: 0 kr oppstart + 399 kr/mnd for 5-siders nettside
-- Secondary tiers for larger needs (nettbutikk, webapplikasjon) presented as "Trenger du mer?" below the primary card, not as equal-weight alternatives
-- Price anchoring: show what a comparable one-time website costs (15,000-25,000 kr) as crossed-out reference price, then reveal the 0 kr + 399 kr/mnd subscription alternative
-- "Hva er inkludert"-breakdown beneath price: hosting, SSL, vedlikehold, support, domene-oppsett
-- Monthly cost reframe in supporting text: "Under 100 kr i uka" or "Mindre enn en kopp kaffe om dagen"
+- Load fbevents.js CDN script in LandingPageLayout.astro, inside the existing consent IIFE
+- Call `fbq('consent', 'revoke')` BEFORE `fbq('init')` -- this is the Meta GDPR pattern (equivalent to Google's denied defaults)
+- Call `fbq('init', 'PIXEL_ID')` and `fbq('track', 'PageView')` after revoke
+- On stored consent = granted: call `fbq('consent', 'grant')` alongside existing gtag consent update
+- On accept button click: add `fbq('consent', 'grant')` to existing handler
+- On decline: no change needed (revoked state is the default)
+- Add `window.fbq` type to env.d.ts Window interface
+- Add `dns-prefetch` and `preconnect` hints for `connect.facebook.net` in `<head>`
+- Do NOT add `<noscript><img>` fallback (sends data without consent)
+- Do NOT add pixel to BaseLayout -- only LandingPageLayout pages need it
 
-**Pricing psychology (MEDIUM confidence, multiple sources):**
+**Why pixel-only (no CAPI):** Multiple sources confirm client-side pixel is sufficient for campaigns under ~1000 EUR/month. Meta Conversions API requires server-side infrastructure, access token management, and event deduplication. Document CAPI as v2.0 upgrade path.
 
-- Anchor with high one-time price first, then reveal subscription as the smart alternative. Anchoring is the single most effective pricing psychology tactic for subscriptions.
-- Von Restorff effect: primary subscription card visually distinct (border-brand, ring, slight scale-up). The option that stands out visually becomes the reference point.
-- Goldilocks principle applies IF showing 3 tiers: position the target tier in the center. But for a single-offer landing page, make the ONE offer the hero -- no choice paralysis.
-- Show monthly price as the default (not annual equivalent). A/B testing data shows monthly-as-default converts better because there's no "price shock" when switching views.
-
-### TS-2: Headline + Ad Copy Alignment for Quality Score
+### TS-2: ViewContent + Lead Standard Events
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | Google Ads Quality Score is built on three pillars: expected CTR, ad relevance, and landing page experience. Keyword-to-headline-to-landing-page alignment directly affects all three. Google's 2025 QS update puts even more weight on user experience and message consistency. |
+| Why expected | PageView alone is too broad for useful retargeting. ViewContent on the landing page + Lead on /takk enables the critical audience split: "visited but didn't convert" vs "converted." These are Meta's standard events, recognized by Ads Manager for Custom Audience creation and optimization event selection. Never use custom events to replace standard events -- Meta's global data for standard events improves optimization. |
 | Complexity | Low |
-| Dependencies | Hero.astro, meta title/description, ad copy (external) |
+| Dependencies | TS-1 (pixel must be loaded) |
 
 **What to build:**
 
-- H1 must contain target keyword AND the core offer: "Profesjonell nettside for din bedrift" remains the H1, with "0 kr oppstart" as prominent subheadline
-- Meta title: "Nettside for Bedrift | 0 kr Oppstart, 399 kr/mnd | Nettup"
-- Meta description must mirror what the ad promises: price, delivery time, guarantee -- the three things the user clicked the ad for
-- Ad copy and landing page must tell the same story. If the ad says "Klar pa 2 uker" the landing page must say the same, not "1-3 uker"
-- Quality Score diagnostic: after launch, monitor the three component scores in Google Ads and iterate on whichever is "Below average"
+- `fbq('track', 'ViewContent', { content_name: 'Nettside Abonnement', content_category: 'Landing Page', value: 399, currency: 'NOK' })` on /nettside-for-bedrift page load
+- `fbq('track', 'Lead', { content_name: 'Nettside Abonnement', value: 399, currency: 'NOK' })` on /nettside-for-bedrift/takk page load (alongside existing gtag conversion + Plausible event)
+- Both fire as inline scripts (`<script is:inline>`), matching existing conversion event pattern on /takk
+- `value: 399` enables Meta's ROAS optimization
+- Optional: add `FormStart` custom event in HeroMicroForm.tsx on first email field focus for high-intent retargeting (one-time fire per session using a flag)
 
-### TS-3: Form Optimization for Paid Traffic
+### TS-3: UTM Expansion (5 Standard Parameters)
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | Paid traffic converts 2-3x worse than organic. Every field in the form costs conversions. Research shows reducing forms from 11 to 4 fields produces 120% conversion lift. Current ContactForm likely has 4-5 fields. |
-| Complexity | Low-Medium |
-| Dependencies | ContactForm island, FormSection.astro |
+| Why expected | Facebook Ads use dynamic URL parameters ({{ad.name}}, {{adset.name}}) that map to utm_content and utm_term. Current implementation only captures 3 params. Without utm_content and utm_term, Formspree submissions cannot attribute which specific ad creative and audience segment drove each lead. |
+| Complexity | Negligible |
+| Dependencies | None (independent of pixel work) |
 
 **What to build:**
 
-- Reduce landing page form to 3 visible fields: Navn (name), E-post (email), Telefon (phone)
-- Remove from visible form: company name, message textarea, service selector (already implied by landing page context)
-- Auto-populate hidden fields: selected package from ?pakke= param, UTM parameters (utm_source, utm_medium, utm_campaign, utm_content) for attribution
-- CTA button text must be specific and low-commitment: "Fa gratis nettside-samtale" or "Bestill gratis samtale" -- not generic "Send" or "Kontakt oss"
-- Trust reinforcement directly below submit button: "Vi ringer deg innen 24 timer. Ingen forpliktelser."
-- Progressive profiling: collect minimum at conversion, gather qualification details in follow-up call
+- Add `'utm_content'` and `'utm_term'` to the UTM_KEYS array in src/lib/utm.ts
+- That is the entire code change. captureUtmParams() and getUtmParams() are already generic over the array. HeroMicroForm and ContactForm already spread getUtmParams() into submissions
+- Document the Facebook URL template: `?utm_source=facebook&utm_medium=paid_social&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_term={{adset.name}}`
 
-### TS-4: Mobile-First Layout Verification
+### TS-4: Privacy Policy Update (Meta Pixel Disclosure)
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | 83% of landing page traffic is mobile. Mobile converts at 2.5-2.9% vs desktop 4.8-5.1%. Google Ads mobile traffic skews even higher. |
+| Why expected | GDPR requires informing data subjects about all processors before data collection begins. Current privacy policy discloses Google but not Meta. Launching Meta Pixel without updating the policy is a compliance violation. Datatilsynet specifically cited incomplete privacy disclosures in their 2025 enforcement wave, issuing 2.92B EUR in GDPR fines across Europe for improper pixel implementations. |
 | Complexity | Low |
-| Dependencies | All sections |
+| Dependencies | TS-1 (must document what is implemented) |
 
 **What to build:**
 
-- Verify all touch targets are 48x48dp minimum with 8dp spacing (existing standard, audit and confirm)
-- Single-column layout on mobile (already exists, confirm no regressions from pricing rewrite)
-- Price and CTA must be visible without scrolling on 375px viewport
-- Form inputs must not require horizontal scroll
-- Test form submission flow on mobile: keyboard doesn't obscure submit button, auto-scroll after field focus works
+- Add section 2.4 "Meta Pixel (landingssider)" to personvern/index.astro, mirroring existing section 2.3 for Google
+- Add "Meta (Facebook/Instagram)" entry to section 4 "Hvem deler vi data med" with processor details and DPF legal basis
+- Add Meta cookies (_fbp, _fbc) to section 5 under Landingssider subsection
+- Add "Male annonseeffekt (Meta Ads)" row to section 3 legal basis table with "Samtykke (GDPR art. 6(1)(a))"
+- Update lastUpdated date
 
-### TS-5: Page Speed for Quality Score
+### TS-5: Consent Banner Button Parity
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | Google's 2025 Quality Score update increased weight on page experience. A 1-second mobile delay causes 20% conversion drop. For paid traffic pages, speed is literally money. |
+| Why expected | Norway's E-Com Act (January 2025) requires accept and reject buttons with equal visual prominence. Current banner has "Avsla" as outline/ghost button and "Godta" as solid brand button. Datatilsynet explicitly cited "manipulative consent practices" and "nudging" in their 2025 enforcement actions. Adding a second tracking pixel to a non-compliant banner doubles the legal risk surface. |
 | Complexity | Low |
-| Dependencies | LandingHeroAnimation (React island), HeroMicroForm (React island) |
+| Dependencies | None (independent, but should ship alongside TS-1) |
 
 **What to build:**
 
-- Audit current LCP on /nettside-for-bedrift (two React islands load in hero with `client:load`)
-- Consider `client:visible` for below-fold React islands (if any exist below fold)
-- Ensure hero image (iGive preview) has explicit width/height to prevent CLS
-- Preload critical hero assets (already partially done with getImage optimization)
-- Target: LCP < 1.5s, CLS < 0.1 (stricter than site-wide 2s target because paid traffic ROI depends on it)
-- Run Lighthouse on mobile emulation before and after changes; document scores
+- Restyle both consent banner buttons to have equal visual weight
+- Both solid buttons: "Avsla" with same padding, font-weight, and border-radius as "Godta" but neutral color (e.g., bg-white/10 vs bg-brand)
+- Do NOT use ghost/outline for decline and solid for accept
+- CSS-only change to existing button classes in LandingPageLayout.astro
 
-### TS-6: Google Ads Conversion Tracking
+### TS-6: Ad Creative Image Templates
 
 | Aspect | Detail |
 |--------|--------|
-| Why expected | Without conversion tracking, Google Ads Smart Bidding cannot optimize. Every day running ads without conversion data wastes budget. This is not optional -- it's required to run ads effectively. |
-| Complexity | Medium |
-| Dependencies | Existing gtag consent setup, form submission events |
+| Why expected | Cannot run Facebook/Instagram ads without visual creatives. Need minimum 4 feed (1080x1080, 1:1) + 2 story (1080x1920, 9:16) images for A/B testing. Plus 1 custom OG image (1200x630) for landing page social preview. Creatives must match brand exactly (colors, fonts, tone) for landing page consistency. |
+| Complexity | Medium-High |
+| Dependencies | satori + @resvg/resvg-js (new dev dependencies), brand.ts, @fontsource fonts |
 
 **What to build:**
 
-- Primary conversion event: Form submission (full form)
-- Secondary conversion: Phone number click (tel: link in header and form section)
-- Secondary conversion: Email click (mailto: link)
-- Enhanced conversions: pass hashed email/phone to Google Ads for better attribution matching
-- Conversion linker tag for cross-session attribution
-- Mirror all conversion events as Plausible goals for independent verification
-- Thank-you state after form submit: clear visual confirmation that submission succeeded (inline, not redirect)
+- Build script at src/scripts/ads/generate-creatives.ts run via `tsx`
+- 4 feed templates (1080x1080 PNG):
+  - Price-focused: "0 kr oppstart" hero text, brand gradient background
+  - Problem-agitation: "Er nettsiden din fra 2015?" problem framing
+  - Benefit-focused: "Ferdig pa 14 dager" outcome promise
+  - Objection-handling: "Ingen bindingstid" reassurance
+- 2 story templates (1080x1920 PNG):
+  - Price CTA: full-screen price with swipe-up prompt (safe zone: avoid top 14% and bottom 20% for Meta UI elements)
+  - Before/after concept: old vs modern website comparison
+- 1 custom OG image (1200x630 PNG) for /nettside-for-bedrift with price offer
+- All use Inter + Space Grotesk from @fontsource, brand colors from brand.ts
+- Output to public/images/ads/ (OG image) and .planning/ads/creatives/ (for Meta Ads Manager upload)
+- PNG format for text-heavy creatives (superior quality vs JPG). Max 30MB per Meta specs
+- Price (0 kr + 399 kr/mnd) must be readable at mobile feed size (~320px rendered width)
+
+**Format specs (verified from Meta Ads Guide 2026):**
+
+| Format | Dimensions | Aspect Ratio | Placements |
+|--------|-----------|-------------|------------|
+| Feed square | 1080x1080 | 1:1 | Feed, Marketplace, Right Column, Messenger |
+| Story/Reel | 1080x1920 | 9:16 | Stories, Reels, Audience Network interstitials |
+| OG image | 1200x630 | ~1.91:1 | Link preview in Feed ads |
+
+### TS-7: Ad Copy Document
+
+| Aspect | Detail |
+|--------|--------|
+| Why expected | Ad copy is the #1 determinant of CTR. Must have all hook/body/CTA variants documented before campaign setup. Norwegian bokmal, matching brand tone ("Professional but approachable"). |
+| Complexity | Low (documentation, not code) |
+| Dependencies | subscriptionOffer.ts (prices must match SSOT) |
+
+**What to build:**
+
+- .planning/ads/copy/FACEBOOK-AD-COPY.md with:
+  - 4+ primary text variants using PAS framework (Problem-Agitate-Solve). Each tests a different pain point
+  - 4+ headline variants (under 40 characters for full mobile visibility)
+  - 2-3 description variants (supporting text below headline)
+  - CTA button recommendation: "Kom i gang" for website conversion, "Send inn" for lead forms
+  - Hook-first structure: first line must contain price hook (0 kr) or pain point. Never start with "Vi tilbyr..."
+  - UTM template per variant: `utm_source=facebook&utm_medium=paid_social&utm_campaign=[name]&utm_content=[creative_id]&utm_term=[audience]`
+  - Audience-specific copy: cold (problem-aware), warm (offer-specific), hot (recovery "Du var nesten der")
+  - All copy in Norwegian bokmal. No English buzzwords. No em dashes. No excessive emoji
+
+**Copy framework rules:**
+
+| Rule | Rationale |
+|------|-----------|
+| Facebook truncates at ~125 chars on mobile | Keep primary text to 2-3 short sentences |
+| Headlines under 40 chars | Full visibility without truncation |
+| No competitor names | Norwegian business culture values understatement; use "vanlig webbyra" (generic) |
+| No clickbait | "Du vil ikke tro..." undermines professional positioning |
+| Price anchoring allowed | "Andre tar 15 000+ kr" against generic industry, not named competitors |
 
 ---
 
 ## Differentiators
 
-Features that increase conversion rate beyond baseline. Not strictly required, but deliver measurable lift based on research data.
+Features that improve campaign performance or operational efficiency. Not blockers for launch, but deliver measurable lift.
 
-### D-1: Enhanced Scarcity Counter with Visual Progress
+### D-1: Lead Form Specification (Facebook Instant Forms)
 
 | Aspect | Detail |
 |--------|--------|
-| Value proposition | Current ScarcityCounter is plain text ("3 av 10 plasser igjen"). Research shows scarcity + discount combined = 178% more likely to convert. Visual progress bars make scarcity tangible. |
+| Value proposition | Facebook Instant Forms generate 2.4x more leads than website conversion campaigns and cost 20% less per lead (Meta published data). For a low-consideration 399 kr/mnd offer, the reduced friction of pre-filled in-platform forms is a strong match. Running both paths (instant form + website conversion) simultaneously provides the best data. |
+| Complexity | Low (specification document, not code) |
+| Dependencies | TS-4 (privacy policy URL needed for form) |
+
+**What to build:**
+
+- .planning/ads/copy/LEAD-FORM-SPEC.md with:
+  - Form type: **Higher Intent** (adds review/confirmation step, filtering impulse clickers)
+  - Fields: Navn (name, pre-filled), E-post (email, pre-filled), Telefon (phone, pre-filled)
+  - Qualifying question: "Har bedriften din nettside i dag?" (Yes/No) -- filters non-buyers, increases lead quality 20-30% at ~15% volume cost
+  - Context card (intro screen): offer summary (0 kr + 399 kr/mnd, 3 bullet benefits) before fields
+  - Thank-you screen: "Takk! Vi ringer deg innen 24 timer." + "Visit Website" button to /tjenester
+  - Privacy policy link: /personvern (after TS-4 update)
+  - Maximum 4 fields total (name + email + phone + 1 qualifier). Each additional field reduces conversion ~10%
+  - Do NOT make company name required (Facebook can't pre-fill it; manual entry doubles abandonment)
+  - Do NOT use "More volume" form type (pre-submits, junk leads). Always "Higher intent"
+  - Dual-path recommendation: 60/40 budget split favoring instant forms, adjust based on close rates after 2 weeks
+
+**Lead form notification:** Facebook Lead Center provides free real-time email notifications. No Zapier/webhook automation needed at <5 leads/day volume.
+
+### D-2: Audience Targeting Definitions
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Targeting is the second most important factor (after creative) in Facebook ad performance. Documenting audience specs prevents trial-and-error waste in Ads Manager. Critical caveat: Meta retired many detailed targeting options Jan 15, 2026 and removed exclusion targeting March 2025. |
+| Complexity | Low (documentation, not code) |
+| Dependencies | None |
+
+**What to build:**
+
+- .planning/ads/strategy/AUDIENCE-TARGETING.md with:
+
+**Cold audiences (60% of launch budget):**
+
+| Targeting Layer | Specification | Notes |
+|----------------|---------------|-------|
+| Geography | Oslo + Viken (matching 8 city pages), expandable to rest of Norway | Primary market first |
+| Age | 25-55 | Business decision-maker range; let Meta optimize within |
+| Language | Norwegian | Both ad language and audience language |
+| Interest layer 1 | "Entreprenorskap" OR "Smabedrift" OR "Daglig leder" | Business ownership signals |
+| Interest layer 2 | Squarespace OR Wix OR WordPress (competitor users) | Signals website need |
+| Behavior | Facebook Page Admins (verify availability post-Jan 2026) | Strong business ownership signal |
+| Advantage+ audience | Run as parallel test against manual targeting | Meta's AI often outperforms manual at scale |
+
+**Warm audiences (30% of launch budget, activate after 7+ days of pixel data):**
+
+| Audience | Definition | Activation Threshold |
+|----------|-----------|---------------------|
+| ViewContent visitors | /nettside-for-bedrift visitors last 30 days who didn't convert | 100+ visitors |
+| FormStart abandoners | Started form but didn't submit (requires FormStart custom event) | 50+ events |
+
+**Hot audiences (10%, activate after sufficient conversions):**
+
+| Audience | Definition | Activation Threshold |
+|----------|-----------|---------------------|
+| Lookalike 1% from converters | Users similar to Lead event converters | 50+ conversions |
+| Lookalike 2-5% | Broader expansion of converter lookalike | After 1% is profitable |
+
+**Anti-patterns for targeting:**
+- Do NOT stack 10+ interests (post-2026, broad audiences >500k perform better)
+- Do NOT rely on job titles only (Norwegian profiles rarely list accurate titles)
+- Do NOT attempt audience exclusions (removed by Meta March 2025)
+- Do NOT target below age 25 (very few Norwegian SMB owners)
+- Do NOT target internationally (Norwegian-only offer)
+
+### D-3: A/B Testing Framework Document
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Without explicit kill criteria and scaling rules, ad optimization is gut-feel. At small budgets (50-200 NOK/day), data noise is high and requires disciplined decision rules. |
+| Complexity | Low (documentation, not code) |
+| Dependencies | D-4 (strategy context) |
+
+**What to build:**
+
+- .planning/ads/strategy/AB-TESTING-PLAN.md with:
+
+**Campaign structure:**
+- Separate testing campaigns from scaling campaigns (never mix)
+- Testing: discover winners at controlled budget
+- Scaling: amplify proven winners only
+
+**Minimum data thresholds:**
+- 2000+ impressions per creative before any decision
+- 50-100 NOK spend per variant minimum
+- 3-day observation window (no early kills, daily variance is 3-5x at small budgets)
+
+**Kill criteria (three-strike system):**
+- Strike 1: CPA > target (150 NOK) by 20% for 3 consecutive days
+- Strike 2: CPM up 25%+ from start without CPA recovery
+- Strike 3: Frequency > 4.0 in any 7-day window
+- 2 strikes = 50% budget reduction and monitor
+- 3 strikes = kill creative, archive as "Fatigued"
+
+**Testing sequence (one variable at a time):**
+- Week 1-2: Test 4 value prop angles (same format, same audience)
+- Week 3-4: Test format (static vs carousel) with winning message
+- Week 5-6: Test audience segments with winning creative+format
+
+**Scaling rules for winners:**
+- Graduate to scaling: CPA below 150 NOK after 100+ NOK spend
+- Budget increase: 20% every 3 days (never >20%, resets learning phase)
+- Never 2x budget overnight
+
+**Phase-gated budget escalation:**
+- Phase 1 (Day 1-7): 50 NOK/day testing, total ~350 NOK
+- Phase 2 (Day 8-21): 100 NOK/day with 2-3 winning creatives
+- Phase 3 (Day 22+): 200+ NOK/day scaling winners only
+
+**Creative fatigue monitoring:**
+- Half-life ~21 days
+- When CTR drops 20% from peak AND frequency > 3.0, rotate creative
+- Always have 2-3 tested reserve creatives ready
+- Refresh cycle: new batch every 2-3 weeks
+
+### D-4: Multi-Channel Strategy Document
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | Prevents "split budget too thin" mistake. Documents phased approach with trigger criteria. Key insight: under ~3000 NOK/month per channel, you cannot reach statistical significance. |
+| Complexity | Low (documentation, not code) |
+| Dependencies | None |
+
+**What to build:**
+
+- .planning/ads/strategy/MULTI-CHANNEL-STRATEGY.md with:
+
+**Channel priority and rationale:**
+
+| Channel | Role | Budget Share | Rationale |
+|---------|------|-------------|-----------|
+| Facebook/Instagram | Primary (70-80%) | Start at 100% | Norway CPM 33% below global ($13.42 vs $20.10). CPC ~8.50 NOK. Discovery-driven purchase, visual format matches subscription offer |
+| Google Ads (long-tail) | Secondary (15-25%) | Add in Month 2 | Already documented in v1.6. Captures high-intent "need website now" searches. Saturated market (50+ agencies, 25-40 NOK CPC) so long-tail only |
+| TikTok | Experimental (5-10%) | Phase 3 only | Norwegian B2B audience unproven. Requires video creative. Defer until Facebook+Google prove profitable |
+
+**Budget thresholds:**
+- Under 3000 NOK/month total: 100% Facebook. Single-channel focus
+- 3000-5000 NOK/month: 80/20 Facebook/Google
+- Above 5000 NOK/month: 70/20/10 with experimental channel
+
+**Phased rollout:**
+- Month 1: Facebook only (learn, optimize, find winning creative)
+- Month 2: Add Google long-tail (only after Facebook CPA stabilizes)
+- Month 3: Evaluate TikTok (only if Facebook audience saturated)
+
+**Seasonal adjustments for Norway:**
+- Higher CPM periods: Easter, May 17 (Syttende Mai), Black Friday, Christmas
+- Lower CPM periods: January, late August
+- Plan budget increases during cheap periods, maintain minimum during expensive periods
+
+**Channels to explicitly NOT use:**
+- LinkedIn: 80-120 NOK CPC in Norway (10-14x Facebook). Only viable for 50,000+ NOK contracts
+- Display/banner: Low intent, dramatically higher CPL
+- Programmatic: Requires DSP, 10,000+ NOK/month minimums
+
+### D-5: Meta Pixel Kill Switch (Config Flag)
+
+| Aspect | Detail |
+|--------|--------|
+| Value proposition | If the EU-US Data Privacy Framework is invalidated (Schrems III risk), Meta Pixel becomes immediately illegal. A config flag allows disabling with a one-line change. |
 | Complexity | Low |
-| Dependencies | ScarcityCounter.astro, launchOffer.ts |
+| Dependencies | TS-1 |
 
 **What to build:**
 
-- Add visual progress bar showing slots filled (7/10 = 70% filled bar, brand color)
-- Optional: pulsing dot or subtle glow on remaining count (respect prefers-reduced-motion)
-- Place scarcity counter in TWO locations: below hero price AND below pricing section (currently only in pricing)
-- Update copy to be month-specific: "Kun 3 abonnementsplasser igjen i mars" -- adds real temporal urgency
-- CRITICAL: Must remain truthful. Update launchOffer.ts when customers sign up. Never manufacture fake scarcity. This is both an ethical and practical requirement -- Norwegian consumers are skeptical and fake urgency destroys trust permanently.
+- Add `META_PIXEL_ENABLED: boolean` to src/config/tracking.ts
+- Wrap fbq loader in LandingPageLayout with conditional check
+- When disabled: no fbevents.js loads, no fbq calls, consent banner stays generic
+- When enabled: full pixel functionality
 
-### D-2: Contextual Trust Signals for Cold Ad Traffic
-
-| Aspect | Detail |
-|--------|--------|
-| Value proposition | Cold traffic from ads bounces in 3-8 seconds without credibility markers. Research data: customer reviews with photos +18-27% lift, money-back guarantees +12-19%, founder credentials +7-12%. |
-| Complexity | Medium |
-| Dependencies | Hero.astro, Testimonial section |
-
-**What to build:**
-
-- Compact trust bar directly under H1: "Norsk selskap | 30 dagers garanti | 24t responstid" (3 badges, always above fold)
-- Replace or remove the 4.9/5 star rating in hero. It currently says "basert pa kundeanmeldelser" but these reviews don't exist anywhere verifiable. Cold traffic from ads is the MOST skeptical audience. An unverifiable rating does more harm than good. Either link to real Google Reviews or remove entirely.
-- Add founder photo + name near testimonial section. Research shows founder-visible brands convert 15-28% better than faceless ones. Especially relevant for a small Norwegian agency competing against larger faceless competitors.
-- Move guarantee banner earlier in page -- before the pricing section, not after it. Reducing risk perception BEFORE the user sees the price is more effective.
-- Norwegian-specific trust: Organisasjonsnummer visible somewhere on the page (B2B buyers verify on Proff.no)
-
-### D-3: Subscription Objection-Handling Sections
+### D-6: Unified Tracking Config (Single Source of Truth)
 
 | Aspect | Detail |
 |--------|--------|
-| Value proposition | A subscription model raises specific objections that one-time purchase pricing doesn't: "What if I want to cancel?", "Do I own the website?", "What happens after the minimum period?" Addressing these inline prevents bounce at the critical moment before form submission. |
-| Complexity | Medium |
-| Dependencies | New section components, placed between PricingSummary and FormSection |
-
-**What to build:**
-
-- "Hva skjer etter 12 maneder?" -- explain minimum contract period, month-to-month after that, cancellation terms, website ownership/transfer options
-- "Abonnement vs. Engangskjop" comparison table: show total cost over 1 year, 2 years, 3 years. Make the subscription value obvious (0 kr upfront + ongoing support vs. 15,000 kr upfront + no support after delivery)
-- "Hva er inkludert i 399 kr/mnd?" expandable/visible breakdown: hosting, SSL-sertifikat, teknisk vedlikehold, innholdsendringer (X per maned), support, sikkerhetskopier
-- Place these BETWEEN pricing section and form section -- this is where objections peak (user has seen the offer but hasn't committed yet)
-
-### D-4: Sticky Mobile CTA Bar
-
-| Aspect | Detail |
-|--------|--------|
-| Value proposition | Mobile users scroll through long landing pages. A sticky CTA ensures the conversion action is always one tap away. |
+| Value proposition | Pixel IDs, conversion labels, and settings are currently scattered across LandingPageLayout.astro (gtag ID inline), takk.astro (conversion label inline), and proposed pixel integration. A single tracking.ts prevents ID mismatches. |
 | Complexity | Low |
-| Dependencies | None (new component) |
+| Dependencies | None |
 
 **What to build:**
 
-- Fixed bar at bottom of mobile viewport (hidden on desktop)
-- Two actions: "Ring oss" (tel: link, left side) + "Bestill samtale" (scroll to #kontakt, right side, brand-colored)
-- Appears after scrolling past hero section (not immediately -- avoid covering hero CTA)
-- Disappears when form section is in viewport (avoid competing with the actual form)
-- Slim: max 56px height, semi-transparent background
-- Track interactions as Plausible events
+- src/config/tracking.ts with all tracking IDs:
+  ```typescript
+  export const tracking = {
+    google: { id: 'AW-17409050017', conversionLabel: 'EvwaCNm05eFbEKGLpO1A' },
+    meta: { pixelId: 'YOUR_PIXEL_ID', enabled: true },
+    plausible: { domain: 'nettup.no' },
+    consent: { storageKey: 'nettup_ads_consent' },
+  } as const;
+  ```
+- Import in LandingPageLayout.astro and takk.astro instead of hardcoded strings
+- Note: inline scripts cannot import ES modules. Values need injection as `data-*` attributes or inline `<script>` variable definitions
 
-### D-5: UTM Parameter Capture in Form
+### D-7: Custom OG Image for Landing Page
 
 | Aspect | Detail |
 |--------|--------|
-| Value proposition | Know which ad group and keyword drove each lead. Without this, ad optimization is campaign-level only, not keyword-level. |
+| Value proposition | Current landing page uses generic og-image.jpg. When shared or previewed in Facebook ad link previews, an offer-specific OG image (showing "0 kr oppstart, 399 kr/mnd") dramatically improves click-through from link preview |
 | Complexity | Low |
-| Dependencies | ContactForm island, URL params |
+| Dependencies | Can be part of TS-6 creative generation script |
 
 **What to build:**
 
-- Read utm_source, utm_medium, utm_campaign, utm_content, utm_term from URL on page load
-- Store in hidden form fields submitted with form data
-- Also capture gclid (Google click ID) for offline conversion upload
-- Plausible event props mirror the UTM values for analytics cross-reference
-
-### D-6: Dynamic Keyword Headline Support
-
-| Aspect | Detail |
-|--------|--------|
-| Value proposition | When the landing page subtitle adapts to match the specific ad keyword the user clicked, perceived relevance increases and Quality Score improves. |
-| Complexity | Low-Medium |
-| Dependencies | Hero.astro, URL params from Google Ads ValueTrack |
-
-**What to build:**
-
-- Read `?kw=` URL parameter passed from Google Ads via ValueTrack {keyword}
-- Dynamically update the subheadline or supporting text (NOT the H1 -- keep H1 static for SEO)
-- Keyword mapping with fallback:
-  - Default (no param): "Klar pa 2 uker. 0 kr oppstart."
-  - "billig nettside": "Profesjonell nettside til fast manedspris"
-  - "nettside pris": "Fra 399 kr/mnd. Ingen oppstartskostnad."
-  - "webbyra [city]": "Vi bygger nettsider for bedrifter i [city]"
-- Fallback gracefully for unrecognized keywords
+- 1200x630 PNG with subscription offer prominently displayed
+- Update LandingPageLayout.astro og:image meta tag for /nettside-for-bedrift
+- Brand colors and fonts matching other creatives
 
 ---
 
 ## Anti-Features
 
-Features to explicitly NOT build. These seem tempting but hurt conversion or waste effort.
+Features to explicitly NOT build for v1.7.
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| Countdown timer with fake deadline | Destroys trust with ad-skeptical cold traffic. Norwegian consumers are especially resistant to pressure tactics. If the deadline isn't real, it's deceptive. | Use real scarcity (limited subscription slots). Month-specific slot count is honest and effective. |
-| Exit-intent popup | Aggressive, cheap-feeling for a professional agency. Undermines the premium positioning. | Let pricing quality and trust signals do the work. If users leave, retarget them via Google Ads remarketing. |
-| Live chat / chatbot on landing page | Competes with form for attention. Landing pages must have ONE conversion path. The main site chatbot is great for organic visitors -- but paid traffic needs singular focus. | Keep chatbot off /nettside-for-bedrift. LandingPageLayout already excludes it. |
-| Three equal-weight pricing tiers | The subscription offer is ONE clear thing: 0 kr + 399 kr/mnd. Three equal cards create choice paralysis with cold traffic who doesn't know you yet. | One hero subscription card. Secondary tiers collapsed below as "Trenger du mer?" text. |
-| Testimonial carousel / slider | Carousels have near-zero interaction rates on landing pages. A single powerful testimonial outperforms 5 rotating weak ones. | One testimonial with photo, full name, company name, and a specific result metric. |
-| Social media links | Every outbound link is an exit. The landing page removes navigation for this reason. | Zero exit paths except conversion actions (form, phone, email). |
-| "Mest populaer" badge on single offer | Marking your only option as "most popular" is transparently manipulative when there's one option. | Use visual emphasis (border, scale, color) instead of a text badge. |
-| Complex pricing calculator link | /priskalkulator exists on main site for exploratory visitors. Linking from paid landing page creates exit to page with navigation. | "Trenger du noe skreddersydd? Ring oss pa [number]" -- keeps them in conversion mode. |
-| Fake star rating (4.9/5 "basert pa kundeanmeldelser") | Currently in hero. No verifiable source. Cold ad traffic is the most skeptical audience. Unverifiable claims actively hurt conversion. | Remove until real Google Reviews exist, or replace with a single specific client quote. |
-| Google Tag Manager | Additional script when gtag.js is already loaded. Adds complexity and another request. | Use gtag.js directly for the 3-4 conversion events needed. |
-| Hotjar / session recording at launch | Adds consent requirement (not cookieless), script weight, and complexity. | Evaluate after 2-4 weeks of ad data. Use Plausible + Google Ads reporting first. |
-| A/B testing framework | Overkill for one landing page with limited traffic. Requires 1,000+ weekly visitors for statistical validity. | Use Google Ads campaign experiments (URL-based variant splitting) if testing is needed. |
+| Meta Pixel on all pages (BaseLayout) | Only paid ad traffic arrives at /nettside-for-bedrift. Adding pixel to all pages forces consent banner on every page, degrading UX for organic visitors who currently see zero cookie banners (Plausible is cookieless). | Pixel only in LandingPageLayout. Expand scope only if retargeting strategy explicitly needs broader site coverage. |
+| Conversions API (CAPI) server-side | Adds server endpoint, access token management, event deduplication. Multiple sources confirm pixel-only is sufficient for campaigns under ~1000 EUR/month. | Evaluate after 4 weeks of campaign data. Add CAPI when ad spend exceeds this or match rates drop below 60%. |
+| GTM (Google Tag Manager) | Overkill for 2 tracking tags. Adds container load (80-120KB), management layer. Direct script tags are simpler, faster, and already established. | Continue with direct gtag + fbq script tags. Evaluate GTM only at 5+ tracking scripts. |
+| Advanced matching (PII hashing) | Sends hashed email/phone to Meta for better match rates. Additional GDPR compliance burden for marginal improvement at small scale. | Standard pixel matching at launch. Revisit when match rates need improvement. |
+| Video ad creatives | Video delivers 47% higher engagement and 34% higher conversion rate BUT requires production resources disproportionate to v1.7 scope. | Start with static. Document video as the #1 scaling lever for v2.0 if static creatives prove profitable. |
+| Dynamic Creative Optimization (DCO) from day 1 | DCO lets Meta mix elements but obscures which combination won. Bad for learning. | Manual creative testing first. Switch to DCO only after identifying 3+ validated winning elements. |
+| Automated Ads Manager rules | At 50-200 NOK/day, automated rules overreact to daily variance. One bad day triggers premature budget cuts. | Manual daily review for first 30 days. |
+| Automated lead scoring | Requires CRM integration, scoring model, calibration. Premature at 0 leads/day. | Manual qualification via phone call. Track lead quality in a spreadsheet. |
+| Cross-channel event deduplication | Google and Meta attribution models are opaque and incompatible. | Use Formspree submission count as source of truth. Accept platform totals will exceed actual leads. |
+| Facebook/Instagram Login SDK | Social login is irrelevant for B2B lead generation landing page. | Continue with email-based form submission. |
+| Pixel events on chatbot | Chatbot excluded from LandingPageLayout. Adding pixel events would require pixel on BaseLayout. | Chatbot interactions tracked via Plausible only. |
+| TikTok ads at launch | Norwegian B2B audience unproven. Requires video creative. | Document as Phase 3 experimental channel if Facebook+Google prove profitable. |
+| LinkedIn ads | 80-120 NOK CPC in Norway. Only viable for 50,000+ NOK contracts. | Explicitly ruled out for 399 kr/mnd offer. |
+| More than 6 initial creatives | Dilutes budget. Need ~2000 impressions per creative. At 50 NOK/day, 6 creatives need ~24 days for statistical confidence. | Launch with 4 feed + 2 story = 6 total. Add variants only after initial data. |
+| Placeholder testimonial creatives | Testimonials still placeholder per PROJECT.md. Fake quotes in paid ads are deceptive and may violate markedsforingsloven. | Defer testimonial ads until real quotes exist. Use benefit-driven copy. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-TS-1 (Pricing Reframe) --> TS-2 (Headline Alignment)
-  New pricing model informs what headline/meta says
+TS-1 (Meta Pixel) --> TS-2 (Retargeting Events)
+  Pixel must be loaded before events can fire
 
-TS-1 (Pricing Reframe) --> D-1 (Scarcity Enhancement)
-  New subscription offer determines what scarcity counts ("abonnementsplasser")
+TS-1 (Meta Pixel) --> TS-4 (Privacy Policy)
+  Must document what is implemented
 
-TS-1 (Pricing Reframe) --> D-3 (Objection Handling)
-  Subscription terms drive which objections need answering
+TS-1 (Meta Pixel) --> D-5 (Kill Switch)
+  Can't disable what doesn't exist yet
 
-TS-3 (Form Optimization) --> D-5 (UTM Capture)
-  Form must have hidden fields before UTM values can be stored
+TS-5 (Consent Parity) -- should ship WITH TS-1 (same layout file edit)
 
-TS-3 (Form Optimization) --> TS-6 (Conversion Tracking)
-  Form submission events must be defined before tracking can fire
+TS-3 (UTM Expansion) -- independent, no blockers, one-line code change
 
-TS-6 (Conversion Tracking) --> D-6 (Dynamic Keywords)
-  UTM/keyword tracking feeds into attribution reports
+TS-6 (Ad Creatives) -- independent of pixel work, can run in parallel
+  |
+  +-- TS-7 (Ad Copy) provides text content for creative overlays
 
-TS-4 (Mobile Layout) -- no blockers, parallel
-TS-5 (Page Speed) -- no blockers, parallel
-D-2 (Trust Signals) -- no blockers, parallel
-D-4 (Sticky Mobile CTA) -- no blockers, parallel
+D-1 (Lead Form Spec) -- depends on TS-4 (privacy policy URL)
+
+D-2 (Audience Targeting) -- independent, pure documentation
+
+D-3 (A/B Testing) -- depends on D-4 (strategy context)
+
+D-4 (Multi-Channel Strategy) -- independent, pure documentation
 ```
+
+**Critical path:** Meta Pixel + consent (TS-1) must ship first. All tracking, retargeting, and campaign optimization depends on the pixel collecting data. Ad copy, creatives, and all documentation can be prepared in parallel.
 
 ---
 
 ## MVP Recommendation
 
-**Must ship together (core of v1.6 -- cannot run ads without all of these):**
+**Must ship together (cannot run Facebook ads without all of these):**
 
-1. **TS-1: Subscription Pricing Reframe** -- the entire purpose of v1.6; everything else supports this
-2. **TS-2: Headline + Ad Copy Alignment** -- required for Google Ads Quality Score; can't run effective ads without it
-3. **TS-3: Form Optimization** -- paid traffic demands minimal friction; 3 fields max
-4. **TS-5: Page Speed Audit** -- Quality Score gatekeeper; measure before/after
-5. **TS-6: Google Ads Conversion Tracking** -- cannot run ads without defined conversions
-6. **D-5: UTM Parameter Capture** -- must know which keywords drive leads from day 1
+1. **TS-1: Meta Pixel + Consent** -- foundation for all Facebook campaign data
+2. **TS-2: ViewContent + Lead Events** -- conversion optimization and retargeting audiences
+3. **TS-3: UTM Expansion** -- per-creative attribution in Formspree
+4. **TS-4: Privacy Policy Update** -- legal blocker, must deploy before pixel goes live
+5. **TS-5: Consent Banner Parity** -- legal compliance, fix before adding second pixel
 
-**Ship immediately after (first optimization wave, within first week):**
+**Should ship before ads launch:**
 
-7. **D-1: Scarcity Counter Enhancement** -- low effort, high conversion lift, builds on existing component
-8. **D-2: Trust Signals for Cold Traffic** -- addresses the #1 cold traffic bounce cause
-9. **D-3: Objection Handling Sections** -- subscription model specifically needs these
-10. **D-4: Sticky Mobile CTA** -- low effort, keeps conversion action visible on scroll
+6. **TS-6: Ad Creative Templates** -- need images to run ads
+7. **TS-7: Ad Copy Document** -- need copy to set up campaigns
+8. **D-2: Audience Targeting** -- need audience definitions for Ads Manager setup
+9. **D-1: Lead Form Spec** -- defines the instant form conversion path
+
+**Ship alongside or shortly after launch:**
+
+10. **D-3: A/B Testing Framework** -- testing and scaling rules for optimization phase
+11. **D-4: Multi-Channel Strategy** -- phased channel rollout and budget allocation
+12. **D-5: Kill Switch** -- safety net, low effort
+13. **D-7: Custom OG Image** -- improved link preview appearance
 
 **Defer until data supports it:**
 
-- **D-6 (Dynamic Keyword Insertion):** Optimization play. Run ads for 2-4 weeks first, identify which keywords convert, THEN personalize for top converters.
-- **TS-4 (Full mobile audit):** Spot-check during build. Full audit only if mobile bounce rate exceeds 60% after launch.
+- **D-6: Unified Tracking Config** -- code hygiene, not campaign effectiveness. Evaluate at third tracking platform
+- Meta Conversions API -- when ad spend > 1000 EUR/month
+- Video creatives -- when static proves profitable
+- City-specific ad sets -- when CPL varies >50% across regions
+- CRM webhooks for lead forms -- when volume > 5 leads/day
+- Cross-channel retargeting -- when both Facebook and Google are active
 
 ---
 
-## Google Ads Campaign Structure (Companion Feature)
+## Norwegian Market Benchmarks (Reference)
 
-Not a landing page feature, but the landing page exists to receive this traffic. Campaign structure dictates headline/copy requirements.
+| Metric | Norway | Global | Confidence | Source |
+|--------|--------|--------|------------|--------|
+| Facebook CPM | $13.42 | $20.10 | HIGH | SuperAds 2025 |
+| Facebook CTR | 1.56% | 1.81% | HIGH | SuperAds 2025 |
+| Facebook CPC | ~8.50 NOK | ~12 NOK (est.) | MEDIUM | PROJECT.md + AdAmigo 2026 |
+| B2B Facebook CVR | ~10.63% | ~10.63% | MEDIUM | SaaS Hero 2026 |
+| Global Lead Form CPL | $28-42 (300-450 NOK) | Same | MEDIUM | LeadSync 2026 |
+| Instant Form vs Website leads | 2.4x more volume | Same | HIGH | Meta published data |
+| Instant Form vs Website CPL | 20% lower | Same | HIGH | Meta published data |
+| Creative fatigue half-life | ~21 days | Same | MEDIUM | AdRow 2026 |
+| Video vs static engagement | +47% for video | Same | MEDIUM | Multiple 2025-2026 |
+| Min test impressions | 2000/creative | Same | HIGH | Meta + multiple sources |
 
-### Recommended Campaign Structure
+**CPL target rationale:** 150 NOK target is aggressive vs global avg (300-450 NOK) but justified by: (1) low-friction subscription offer (0 kr oppstart, no commitment), (2) Norway's 33% below-average CPM, (3) instant form pre-fill reducing abandonment. If 150 NOK proves unrealistic, 200 NOK is still viable given 399 kr/mnd x 12 months = 4,788 NOK subscriber LTV.
 
-| Campaign | Ad Group | Keywords (Norwegian) | Match Type |
-|----------|----------|---------------------|------------|
-| Nettside Bedrift | Generell | nettside for bedrift, lage nettside bedrift, ny nettside for firma | Phrase |
-| Nettside Bedrift | Pris | nettside pris, billig nettside bedrift, rimelig nettside | Phrase |
-| Nettside Bedrift | Byra | webbyra, webdesign byra, nettside byra | Phrase |
-| Nettside Bedrift | Abonnement | nettside abonnement, nettside manedlig, nettside leie, nettside fast pris | Phrase |
-| Nettside Lokal | Oslo | nettside oslo, webbyra oslo, webdesign oslo | Phrase |
-| Nettside Lokal | Drammen | nettside drammen, webbyra drammen, webdesign drammen | Phrase |
-| Nettside Lokal | Baerum/Asker | nettside baerum, webbyra asker | Phrase |
-
-### Ad Copy Framework
-
-- Headline 1: Match H1 keyword ("Profesjonell Nettside for Bedrift")
-- Headline 2: Price point ("0 kr Oppstart - 399 kr/mnd")
-- Headline 3: Trust signal ("30 Dagers Garanti")
-- Description 1: Expand on value + delivery time + CTA
-- Description 2: Reinforce trust + secondary benefit
-- Sitelink extensions: Prosjekter, Om Oss, Priskalkulator, Kontakt
-- Callout extensions: "Norsk Selskap", "24t Responstid", "Ingen Binding Etter 12 mnd"
-
-### Negative Keywords
-
-- gratis (free-seekers, zero conversion intent)
-- wordpress, wix, squarespace, webflow (DIY builders)
-- jobb, stilling, karriere, ansatt (job seekers)
-- kurs, laere, utdanning (education seekers)
-- mal, template (template seekers)
-- wordpress tema, shopify tema (theme shoppers)
-
-### Budget Allocation
-
-Start with "Nettside Bedrift > Generell" and "Nettside Bedrift > Pris" ad groups at 70% of budget. These have highest commercial intent. Scale to local campaigns after 2-4 weeks of conversion data.
+**Seasonal note:** CPM/CPC rises during Easter, May 17, Black Friday, Christmas. January and August are typically the cheapest months for Norwegian Facebook ads.
 
 ---
 
 ## Sources
 
-- [Landing Page Best Practices 2026 -- Lovable](https://lovable.dev/guides/landing-page-best-practices-convert) -- form optimization (11->4 fields = 120% lift), CTA framing ("Trial for free" +104%), mobile touch targets (HIGH confidence)
-- [Landing Page Conversion Rates by Industry -- First Page Sage](https://firstpagesage.com/seo-blog/landing-page-conversion-rates-by-industry/) -- industry conversion benchmarks (MEDIUM confidence)
-- [Google Ads Quality Score -- Google Help](https://support.google.com/google-ads/answer/6167118?hl=en) -- Quality Score components definition (HIGH confidence, authoritative)
-- [Quality Score in 2026 -- Optmyzr](https://www.optmyzr.com/blog/google-ads-quality-score/) -- 2025 QS system update details (MEDIUM confidence)
-- [5 Ways to Use Quality Score -- Google Help](https://support.google.com/google-ads/answer/6167130?hl=en) -- QS optimization strategies (HIGH confidence, authoritative)
-- [Landing Page Statistics 2026 -- Blogging Wizard](https://bloggingwizard.com/landing-page-statistics/) -- form field data, 83% mobile traffic stat (MEDIUM confidence)
-- [Subscription Pricing Psychology -- Binary Stream](https://binarystream.com/4-secrets-to-better-subscription-pricing-psychology/) -- Goldilocks, Von Restorff, anchoring, mood as conversion factor (MEDIUM confidence)
-- [DTC Landing Page Strategies 2026 -- MHI Growth Engine](https://mhigrowthengine.com/blog/best-landing-page-strategies-dtc-brands-2026/) -- founder presence +15-28%, trust element lift data (MEDIUM confidence)
-- [Using Scarcity and Urgency Ethically -- Site123](https://www.site123.com/learn/using-scarcity-and-urgency-on-landing-pages-ethically) -- ethical scarcity guidelines (MEDIUM confidence)
-- [Scarcity Effect in Marketing -- Lead Alchemists](https://www.leadalchemists.com/marketing-psychology/scarcity-effect/) -- scarcity + discount = 178% lift (MEDIUM confidence)
-- [Subscription Web Design Pricing 2026 -- Rubik](https://www.rubik.design/blog/understanding-web-design-subscription-pricing-in-2026) -- subscription model market trends (LOW confidence, single source)
-- [Google Ads Campaign Structure -- Search Atlas](https://searchatlas.com/blog/google-ads-campaign-structure/) -- ad group organization (MEDIUM confidence)
-- [How to Write Landing Pages 2026 -- Advait Labs](https://advaitlabs.com/how-to-write-landing-page-that-converts-2026/) -- loss aversion framing, cognitive fluency (MEDIUM confidence)
-- [B2B Landing Pages 2025 -- Exposure Ninja](https://exposureninja.com/blog/b2b-landing-pages/) -- B2B form and trust patterns (MEDIUM confidence)
-- [Landing Page Conversion Stats -- Genesys Growth](https://genesysgrowth.com/blog/landing-page-conversion-stats-for-marketing-leaders) -- progressive profiling strategy (MEDIUM confidence)
+- [Meta Business Help Center: Standard Events Best Practices](https://www.facebook.com/business/help/2254103654917599) -- HIGH confidence
+- [Meta Business Help Center: Standard Event Specifications](https://www.facebook.com/business/help/402791146561655) -- HIGH confidence
+- [Meta Business Help Center: A/B Testing](https://www.facebook.com/business/help/1738164643098669) -- HIGH confidence
+- [Meta Business Help Center: Website Custom Audiences](https://www.facebook.com/business/help/666509013483225) -- HIGH confidence
+- [Meta Developers: Meta Pixel Conversion Tracking](https://developers.facebook.com/docs/meta-pixel/implementation/conversion-tracking/) -- HIGH confidence
+- [Meta Developers: Custom Audiences from Pixel](https://developers.facebook.com/docs/meta-pixel/implementation/custom-audiences) -- HIGH confidence
+- [Meta Pixel GDPR Implementation (official)](https://developers.facebook.com/docs/meta-pixel/implementation/gdpr) -- HIGH confidence
+- [Datatilsynet: Tracking Pixel Enforcement 2025](https://www.datatilsynet.no/en/news/news-2025/unlawful-sharing-of-personal-information-through-tracking-pixels-on-six-websites/) -- HIGH confidence
+- [Norwegian E-Com Act Compliance (Cookie Information)](https://cookieinformation.com/resources/blog/norwegian-e-com-act-compliance-checklist/) -- HIGH confidence
+- [satori GitHub (Vercel)](https://github.com/vercel/satori) -- HIGH confidence
+- [Aimers: Facebook Ads Best Practices for 2026 (B2B)](https://aimers.io/blog/facebook-ads-best-practices) -- MEDIUM confidence
+- [Aimers: Facebook Retargeting Ads for B2B SaaS 2026](https://aimers.io/blog/facebook-retargeting-ads-what-works-best-for-b2b-saas) -- MEDIUM confidence
+- [Cropink: B2B Facebook Ads Guide 2026](https://cropink.com/b2b-facebook-ads) -- MEDIUM confidence
+- [WordStream: Facebook Ad Targeting 2026](https://www.wordstream.com/blog/facebook-ad-targeting) -- MEDIUM confidence
+- [SuperAds: Facebook CTR Benchmarks Norway 2025](https://www.superads.ai/facebook-ads-costs/ctr-click-through-rate/norway) -- HIGH confidence
+- [SuperAds: Facebook CPM Benchmarks Norway 2025](https://www.superads.ai/facebook-ads-costs/cpm-cost-per-mille/norway) -- HIGH confidence
+- [LeadSync: Facebook Lead Ads CPL Benchmarks 2026](https://leadsync.me/blog/facebook-lead-ads-cost-per-lead/) -- MEDIUM confidence
+- [LeadSync: Instant Forms vs Website Forms](https://leadsync.me/blog/facebook-instant-forms-vs-website-forms/) -- MEDIUM confidence
+- [AdRow: Creative Testing Framework for Meta Ads 2026](https://adrow.ai/en/blog/creative-testing-framework-meta-ads/) -- MEDIUM confidence
+- [Buffer: Facebook Ad Specs 2026](https://buffer.com/resources/facebook-ad-specs-image-sizes/) -- MEDIUM confidence
+- [Shopify: Facebook Ad Sizes 2026](https://www.shopify.com/blog/facebook-ad-sizes) -- MEDIUM confidence
+- [Jon Loomer: Standard Events, Custom Events, Custom Conversions](https://www.jonloomer.com/standard-events-custom-events-and-custom-conversions/) -- MEDIUM confidence
+- [Jon Loomer: Testing Quality Leads from Instant Forms vs Website](https://www.jonloomer.com/testing-quality-leads/) -- MEDIUM confidence
+- [SecurePrivacy: Meta Consent Mode Explained 2025](https://secureprivacy.ai/blog/meta-consent-mode-explained-2025) -- MEDIUM confidence
+- [Stackmatix: Facebook vs Google Ads Cost 2026](https://www.stackmatix.com/blog/facebook-ads-vs-google-ads-cost) -- MEDIUM confidence
+- [Zopply: Digital Marketing Budget Allocation for SMEs](https://zopply.com/digital-marketing/digital-marketing-budget-allocation/) -- MEDIUM confidence
+- [TheEEDigital: 2026 Facebook Ads Benchmarks](https://www.theedigital.com/blog/facebook-ads-benchmarks) -- MEDIUM confidence
+- [AdAmigo: Meta CPC/CPM Benchmarks by Country 2026](https://www.adamigo.ai/blog/meta-ads-cpm-cpc-benchmarks-by-country-2026) -- MEDIUM confidence
+- [SaaS Hero: B2B SaaS Facebook Conversion Benchmarks 2026](https://www.saashero.net/strategy/b2b-saas-facebook-conversion-benchmarks/) -- MEDIUM confidence
+- [AdNabu: Conversions API vs Meta Pixel 2026](https://blog.adnabu.com/facebook-pixel/facebook-conversions-api-vs-pixel/) -- MEDIUM confidence
+- Existing codebase: LandingPageLayout.astro, utm.ts, takk.astro, HeroMicroForm.tsx, personvern/index.astro -- HIGH confidence
 
 ---
-*Feature research for: Nettup v1.6 -- Landingsside & Google Ads*
-*Researched: 2026-03-19*
+*Feature research for: Nettup v1.7 -- Multi-Channel Ad Campaign*
+*Researched: 2026-03-28*
