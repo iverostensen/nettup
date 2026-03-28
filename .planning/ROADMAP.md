@@ -23,7 +23,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
 
 ## Phases
 
-- [ ] **Phase 36: Meta Pixel & Full-Site Event Tracking** - Consent-aware Meta Pixel, conversion events on landing page + key site pages, retargeting event infrastructure
+- [x] **Phase 36: Meta Pixel & Full-Site Event Tracking** - Consent-aware Meta Pixel, conversion events on landing page + key site pages, retargeting event infrastructure (completed 2026-03-28)
 - [ ] **Phase 37: Privacy & Compliance** - Privacy page Meta Pixel disclosure, environment-variable kill switch
 - [ ] **Phase 38: Landing Page Ad Consistency** - Price anchoring against competitors, consent banner parity, custom OG image for social sharing
 - [ ] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan
@@ -43,7 +43,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
   4. ViewContent events with content_name fire on /priskalkulator, /tjenester/nettside, /tjenester/nettbutikk, and /tjenester/landingsside for retargeting segmentation
   5. UTM capture on /takk stores all 5 params (source, medium, campaign, content, term) for Facebook attribution
   6. Meta Pixel is loaded via BaseLayout.astro (not just LandingPageLayout) so retargeting events fire site-wide
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 36-01-PLAN.md -- Consent-aware Meta Pixel infrastructure in both layouts with consent banner
 - [ ] 36-02-PLAN.md -- Per-page ViewContent/Lead events and UTM expansion to 5 params
@@ -118,7 +118,7 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Not started | - |
+| 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
 | 37. Privacy & Compliance | 0/TBD | Not started | - |
 | 38. Landing Page Ad Consistency | 0/TBD | Not started | - |
 | 39. Campaign Strategy & Documentation | 0/TBD | Not started | - |
