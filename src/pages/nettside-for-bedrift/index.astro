@@ -33,3 +33,8 @@ import FormSection from './_sections/FormSection.astro';
     <FormSection />
   </main>
 </LandingPageLayout>
+<script is:inline>
+  if (localStorage.getItem('nettup_ads_consent') === 'granted' && window.fbq) {
+    fbq('track', 'ViewContent', { content_name: 'B2B Landingsside' });
+  }
+</script>

@@ -78,5 +78,10 @@ import LandingPageLayout from '@/layouts/LandingPageLayout.astro';
     if (window.plausible) {
       window.plausible('B2B Lead');
     }
+
+    // Meta Pixel Lead conversion
+    if (localStorage.getItem('nettup_ads_consent') === 'granted' && window.fbq) {
+      fbq('track', 'Lead');
+    }
   </script>
 </LandingPageLayout>

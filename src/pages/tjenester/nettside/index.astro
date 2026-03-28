@@ -49,3 +49,8 @@ const serviceSchema = {
     <CTA />
   </main>
 </BaseLayout>
+<script is:inline data-astro-rerun>
+  if (localStorage.getItem('nettup_ads_consent') === 'granted' && window.fbq) {
+    fbq('track', 'ViewContent', { content_name: 'Nettside' });
+  }
+</script>
