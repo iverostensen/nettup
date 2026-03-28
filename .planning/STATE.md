@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: Multi-Channel Ad Campaign
 status: Phase complete — ready for verification
-stopped_at: Completed 39-01-PLAN.md
-last_updated: "2026-03-28T20:02:11.937Z"
+stopped_at: Completed 39-03-PLAN.md
+last_updated: "2026-03-28T20:02:19.698Z"
 progress:
   total_phases: 6
   completed_phases: 3
@@ -81,6 +81,9 @@ Key decisions from v1.7 roadmap:
 - [Phase 39]: Week 1 video priority: bold text-on-screen in CapCut -- lowest barrier, 10-15 min production, highest cold traffic stopping power
 - [Phase 39-01]: 6 static ad variants (vs minimum 4) for richer A/B testing pool on campaign launch
 - [Phase 39-01]: Carousel Variant B uses Wix pricing comparison to frame Nettup as rational choice for cold audiences
+- [Phase 39-campaign-strategy-documentation]: Sequential A/B testing (not simultaneous) to maximize data per cell at 5 000 kr/mnd budget
+- [Phase 39-campaign-strategy-documentation]: Norwegian + English job title variants in cold targeting (fritekst-based in Meta)
+- [Phase 39-campaign-strategy-documentation]: Context card before lead form improves quality vs volume tradeoff (Pitfall 4 mitigation)
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ Key decisions from v1.7 roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-28T20:02:08.663Z
-Stopped at: Completed 39-01-PLAN.md
+Last session: 2026-03-28T20:02:19.695Z
+Stopped at: Completed 39-03-PLAN.md
 Resume file: None
