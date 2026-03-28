@@ -31,12 +31,12 @@ Requirements for multi-channel Facebook/Instagram ad campaign infrastructure.
 ### Campaign Documentation
 
 - [ ] **CAMP-01**: Facebook ad copy document with all 4+ variants (primary text, headline, description, CTA) in Norwegian covering awareness/consideration/conversion funnel stages
-- [ ] **CAMP-02**: Faceless video creative plan with 5 formats, production specs, scripts/overlays, and tools
+- [x] **CAMP-02**: Faceless video creative plan with 5 formats, production specs, scripts/overlays, and tools
 - [ ] **CAMP-03**: Carousel ad plan with 2 variants (case study walk-through + DIY vs professional comparison)
 - [ ] **CAMP-04**: Audience targeting definitions with 3 layers (cold/warm/hot) including Business Page admins, job title stack, interest stack, and estimated sizes
 - [ ] **CAMP-05**: Lead form specification with exact fields, pre-fill config, qualifying question, and thank-you screen copy
 - [ ] **CAMP-06**: A/B testing plan with test matrix (2 hooks x 2 audiences), kill criteria (CPL/frequency/CTR thresholds), and scaling rules
-- [ ] **CAMP-07**: Weekly content production cadence documented (under 2 hrs/week total)
+- [x] **CAMP-07**: Weekly content production cadence documented (under 2 hrs/week total)
 
 ## v2 Requirements
 
@@ -80,12 +80,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | AD-03 | Phase 38 | Pending |
 | AD-04 | Phase 38 | Pending |
 | CAMP-01 | Phase 39 | Pending |
-| CAMP-02 | Phase 39 | Pending |
+| CAMP-02 | Phase 39 | Complete |
 | CAMP-03 | Phase 39 | Pending |
 | CAMP-04 | Phase 39 | Pending |
 | CAMP-05 | Phase 39 | Pending |
 | CAMP-06 | Phase 39 | Pending |
-| CAMP-07 | Phase 39 | Pending |
+| CAMP-07 | Phase 39 | Complete |
 
 **Coverage:**
 - v1.7 requirements: 19 total
