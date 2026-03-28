@@ -77,22 +77,24 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Current Milestone: v1.7 Multi-Channel Ad Campaign
 
-**Goal:** Ship everything buildable in code for a Facebook/Instagram-led ad campaign: Meta Pixel tracking, ad creative templates, ad copy, multi-channel strategy docs, and audience/targeting specs.
+**Goal:** Prepare nettup.no for a Facebook/Instagram-led ad campaign: Meta Pixel tracking across the full site, landing page improvements for ad-to-page consistency, privacy compliance, video-first creative strategy, and mid-funnel lead magnet.
+
+**Key research insight:** Video outperforms static images by 47% engagement and 80% brand recall. Norway Facebook CPC is ~8.50 NOK (24% below global). Few Norwegian web agencies self-advertise on Facebook -- low competition. Summer launch (June-Aug) gets 35-65% cheaper inventory.
 
 **Target features:**
-- Meta Pixel integration with consent-aware loading (extending Consent Mode v2)
-- ViewContent + Lead conversion events on landing page and /takk
+- Meta Pixel integration with consent-aware loading across full site (not just landing page)
+- ViewContent + Lead conversion events on landing page, /takk, /priskalkulator, and service pages
 - UTM expansion (utm_content + utm_term) for Facebook attribution
-- 4x static ad image templates (1080x1080) in brand colors
-- 2x story/reel templates (1080x1920)
-- Custom OG image for /nettside-for-bedrift with price offer
-- Facebook ad copy document (all variants with hook/body/CTA)
-- Lead form specification (exact fields, thank-you screen)
-- Multi-channel strategy doc (Facebook > Google long-tail > TikTok phasing)
-- Audience targeting definitions (Business Page admins, job titles, interests)
+- Landing page price anchoring against competitors (resolves INT-01 from v1.6)
+- Custom OG image for /nettside-for-bedrift with subscription price offer
+- Facebook ad copy document (awareness/consideration/conversion variants)
+- Video creative plan (founder talking-head, screen recording demo, before/after reveal)
+- 3-layer audience targeting (cold/warm/hot with retargeting segments)
+- Lead form specification (exact fields, pre-fill, thank-you screen)
 - A/B testing plan with kill criteria and scaling rules
-- Privacy page updated with Meta Pixel disclosure
-- Retargeting event infrastructure via pixel events
+- Multi-channel strategy (Facebook primary > Google long-tail > TikTok phasing)
+- Privacy page updated with Meta Pixel disclosure + env var kill switch
+- /sjekkliste lead magnet page for cheaper mid-funnel lead capture
 
 ### Deferred
 
@@ -117,12 +119,12 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
 - **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi, lokal tilstedeværelse
-- **Konverteringsmal:** Facebook/Instagram Ad → Lead Form (instant) → oppfolging innen 24t | Facebook Ad (retarget) → /nettside-for-bedrift → skjema → /takk | Google Ads (long-tail) → /nettside-for-bedrift → skjema → /takk | Organisk → tjenesteside / byside → kontaktskjema (eller chatbot)
+- **Konverteringsmal:** Facebook Video Ad (cold) → awareness → retarget | Facebook Carousel (warm) → /nettside-for-bedrift → skjema → /takk | Facebook Lead Form (warm) → instant capture → oppfolging innen 5min | Facebook Ad (cold/warm) → /sjekkliste → e-post capture → nurture | Google Ads (long-tail) → /nettside-for-bedrift → skjema → /takk | Organisk → tjenesteside / byside → kontaktskjema (eller chatbot)
 - **Kompetanse:** Nettsider, nettbutikk (Shopify), webapplikasjoner, SEO, AI-integrasjoner, vedlikehold
 - **Blog pipeline:** Operasjonell i produksjon — LIX ≤ 55, PAT-mønster for CI-triggering fungerer
 - **Analytics:** Plausible (cookieless, GDPR) med 7 Goals aktive. Google Ads Consent Mode v2 (advanced). Vercel Analytics beholdt for Web Vitals.
 - **Google Ads:** Kampanjedokumentasjon ferdig (sokeord, annonsekopi, tillegg, struktur, oppsettguide). Lansering venter pa manuell oppsett i Google Ads-konsollen. Konkurranseanalyse viser mettet marked (50+ byraer, 25-40 NOK CPC) — demotert til fase 2-kanal med kun long-tail sokeord.
-- **Facebook/Instagram Ads:** v1.7 leverer Meta Pixel, annonsekreativ (4 statiske + 2 story), kopitekst, malgruppespesifikasjoner og flerkanals strategi. Facebook CPC i Norge ~8.50 NOK, 29% under globalt snitt.
+- **Facebook/Instagram Ads:** v1.7 leverer Meta Pixel (full-site), faceless video-forst kreativ strategi (scroll-throughs, before/after, bold text, coding timelapse, developer-aesthetic ads -- ingen ansikt pa kamera, voiceover OK), kopitekst, carousel-planer, 3-lags malgruppesegmentering (cold/warm/hot), lead magnet for mid-funnel, og flerkanals strategi. Facebook CPC i Norge ~8.50 NOK, 24% under globalt snitt. Fa norske webbyraer bruker Facebook til egen leadgen -- lav konkurranse. Produksjonsverktoy: CapCut + URLtoVideo + OBS (gratis), Screen Studio ($89), ElevenLabs ($5/mnd).
 - **Known gap:** Testimonials er placeholder — erstatt for tung trafikk
 - **Known gap:** Shopify platform fee og Partner-status uverifisert
 - **Known gap:** Auto-merge krever GitHub Pro for private repo — manuell merge fungerer
@@ -183,4 +185,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Price anchoring against "15 000+ kr" competitor reference | Frames 399 kr/mnd as dramatically cheaper than typical one-time cost | ⚠️ Revisit — ad copy references this but landing page does not show it consistently (INT-01) |
 
 ---
-*Last updated: 2026-03-28 after v1.7 milestone start*
+*Last updated: 2026-03-28 — Phase 36 complete: consent-aware Meta Pixel in both layouts, ViewContent on 5 pages, Lead on /takk, 5-param UTM capture. Human UAT pending (browser Pixel Helper testing).*
