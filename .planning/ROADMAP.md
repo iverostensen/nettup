@@ -26,7 +26,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
 - [x] **Phase 36: Meta Pixel & Full-Site Event Tracking** - Consent-aware Meta Pixel, conversion events on landing page + key site pages, retargeting event infrastructure (completed 2026-03-28)
 - [x] **Phase 37: Privacy & Compliance** - Privacy page Meta Pixel disclosure, environment-variable kill switch (completed 2026-03-28)
 - [x] **Phase 38: Landing Page Ad Consistency** - Price anchoring against competitors, consent banner parity, custom OG image for social sharing (completed 2026-03-28)
-- [ ] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan
+- [x] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan (completed 2026-03-28)
 - [ ] **Phase 40: Multi-Channel Strategy** - Phased rollout plan (Facebook > Google long-tail > TikTok), budget allocation, KPI targets, scaling rules
 - [ ] **Phase 41: Lead Magnet & Mid-Funnel Asset** - Email-gated checklist page for cheaper mid-funnel lead capture
 
@@ -89,7 +89,7 @@ Plans:
   5. Lead form specification defines exact fields (navn, e-post, telefon, dropdown: Nettside/Nettbutikk/Landingsside/Vet ikke enna), pre-fill config from Facebook profile, and thank-you screen copy
   6. A/B testing plan includes test matrix (2 hooks x 2 audiences minimum), kill criteria (CPL > 950 NOK, frequency > 3, CTR < 0.5%), and scaling rules (increase budget 20% every 3 days on winners)
   7. Weekly content production cadence documented: 2x scroll-throughs (10 min each), 1x bold text hook (10 min), 1x before/after or process clip (30-60 min) -- under 2 hrs/week total
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 39-01-PLAN.md -- Ad copy variants (6 static + 2 carousel) across all funnel stages
 - [x] 39-02-PLAN.md -- Video creative plan (5 formats) and weekly production cadence
@@ -130,6 +130,6 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
 | 37. Privacy & Compliance | 0/1 | Complete    | 2026-03-28 |
 | 38. Landing Page Ad Consistency | 0/2 | Complete    | 2026-03-28 |
-| 39. Campaign Strategy & Documentation | 2/3 | In Progress|  |
+| 39. Campaign Strategy & Documentation | 2/3 | Complete    | 2026-03-28 |
 | 40. Multi-Channel Strategy | 0/TBD | Not started | - |
 | 41. Lead Magnet & Mid-Funnel Asset | 0/TBD | Not started | - |
