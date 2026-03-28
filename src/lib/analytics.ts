@@ -40,3 +40,7 @@ export function trackChatbotSuggestionClicked(suggestion: string): void {
 export function trackB2BLead(): void {
   track('B2B Lead');
 }
+
+export function trackLeadMagnetDownload(): void {
+  track('Lead Magnet Download');
+}
