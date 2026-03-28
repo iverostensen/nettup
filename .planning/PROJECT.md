@@ -65,17 +65,17 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 <!-- v2.0 Hub/Cluster Pages — prerequisite: ≥3 articles per cluster -->
 
+- ✓ Consent Mode v2 advanced: gtag loads med denied defaults, updates on consent, 4 consent params -- v1.6
+- ✓ subscriptionOffer.ts som single source of truth for abonnementstilbud (0 kr oppstart + 399 kr/mnd) -- v1.6
+- ✓ /nettside-for-bedrift/takk konverteringsside med gtag + Plausible dual events + UTM capture -- v1.6
+- ✓ Landingsside ombygget: prisforankret hero, 3-felt b2b-skjema, abonnements-FAQ, upsell til /tjenester -- v1.6
+- ✓ noindex pa /nettside-for-bedrift for a unnga SEO-kannibalisering med /tjenester/nettside -- v1.6
+- ✓ Google Ads kampanjedokumentasjon: sokeordanalyse, 5 RSA-varianter, annonsetillegg, kampanjestruktur -- v1.6
+- ✓ 10-stegs Google Ads oppsettguide med konverteringsverifisering og forste-ukes overvakingsplan -- v1.6
+
 ### Active
 
-## Current Milestone: v1.6 Landingsside & Google Ads
-
-**Goal:** Gjor `/nettside-for-bedrift` til den mest konverteringsoptimaliserte landingssiden for Google Ads, med nytt abonnementstilbud (0 kr oppstart + 399 kr/mnd) og full annonsekampanjeklarhet.
-
-**Target features:**
-- Nytt abonnementstilbud: 0 kr oppstart, 399 kr/mnd for 5-siders nettside (forste 10 kunder)
-- Fullstendig ombygging av `/nettside-for-bedrift` for maksimal konvertering
-- Google Ads konverteringssporing, annonsekopi, sokeordlister og kampanjestruktur
-- Storre tjenester (nettbutikk, webapplikasjon) tilgjengelig som sekundaere tilbud
+(Next milestone not yet defined -- run `/gsd:new-milestone`)
 
 ### Deferred
 
@@ -94,19 +94,21 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 
 ## Context
 
-**Current state (post v1.5):** Fullverdig tjenestekatalog, additiv priskalkulator, AI chatbot-rådgiver, fullautomatisert SEO-blogg (6+ artikler), skalerbart porteføljesystem, og 8 Tier 1-bysider live med lokal SEO-schema og Plausible Analytics. FloatingNav er nå server-rendert Astro-komponent uten hydration-flash.
-- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions + Plausible Analytics
-- **LOC:** ~10,590 TypeScript/TSX/Astro (22 React islands, 22+ ruter inkl. 8 bysider)
+**Current state (post v1.6):** Alt fra v1.5 pluss konverteringsoptimalisert landingsside for Google Ads med single-offer abonnement (0 kr oppstart + 399 kr/mnd), Consent Mode v2, dedikert /takk-konverteringsside, og komplett kampanjedokumentasjon klar for lansering.
+- **Stack:** Astro 5 + Tailwind 4 + React islands + Framer Motion + Vercel (hybrid) + GitHub Actions + Plausible Analytics + Google Ads (Consent Mode v2)
+- **LOC:** ~11,100 TypeScript/TSX/Astro (22 React islands, 22+ ruter inkl. 8 bysider)
 - **Tier 3 (Expressive):** Animasjoner og React er tillatt — dette er showpiece
 - **Malgruppe:** Norske bedrifter — teknisk ukyndige beslutningstakere
 - **Posisjonering:** Fullservice-webyra, rask levering, moderne teknologi, lokal tilstedeværelse
-- **Konverteringsmal:** Besoekende → riktig tjenesteside / byside → kontaktskjema (eller chatbot)
+- **Konverteringsmal:** Google Ads → /nettside-for-bedrift → skjema → /takk (konvertering) | Organisk → tjenesteside / byside → kontaktskjema (eller chatbot)
 - **Kompetanse:** Nettsider, nettbutikk (Shopify), webapplikasjoner, SEO, AI-integrasjoner, vedlikehold
 - **Blog pipeline:** Operasjonell i produksjon — LIX ≤ 55, PAT-mønster for CI-triggering fungerer
-- **Analytics:** Plausible (cookieless, GDPR) med 7 Goals aktive. Vercel Analytics beholdt for Web Vitals.
-- **Known gap:** Testimonials er placeholder — erstatt før tung trafikk
+- **Analytics:** Plausible (cookieless, GDPR) med 7 Goals aktive. Google Ads Consent Mode v2 (advanced). Vercel Analytics beholdt for Web Vitals.
+- **Google Ads:** Kampanjedokumentasjon ferdig (sokeord, annonsekopi, tillegg, struktur, oppsettguide). Lansering venter pa manuell oppsett i Google Ads-konsollen.
+- **Known gap:** Testimonials er placeholder — erstatt for tung trafikk
 - **Known gap:** Shopify platform fee og Partner-status uverifisert
 - **Known gap:** Auto-merge krever GitHub Pro for private repo — manuell merge fungerer
+- **Known tech debt:** 6 low-severity items from v1.6 audit (see milestones/v1.6-MILESTONE-AUDIT.md)
 
 ## Constraints
 
@@ -155,6 +157,12 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | FloatingNav as Astro component + `transition:persist` | Eliminate React hydration gap that caused raw HTML flash on SPA nav | ✓ Good — human-verified 2026-03-13, zero flash in all 4 browser tests |
 | Custom DOM event (`open-mobile-menu`) as cross-boundary trigger | Astro hamburger → React MobileMenu without prop drilling or shared state | ✓ Good — clean boundary, MobileMenu stays React for complex animation |
 | Phase 28 runtime verification delegated to human | Visual/timing behaviors (flash, scroll animation, SPA transition) cannot be confirmed by static analysis | ✓ Good — human sign-off is the right gate for perception-dependent requirements |
+| Consent Mode v2 advanced: gtag always loads with denied defaults | Recovers ~70% conversion data from non-consenting users via modeled conversions | ✓ Good — legal compliance + maximum data recovery |
+| subscriptionOffer.ts replaces launchOffer.ts + pricing.ts | Single offer = single config file; no tier arrays, no package selection | ✓ Good — all sections import from one source |
+| Form redirect to /takk instead of inline success | Google-recommended conversion tracking pattern; cleaner attribution | ✓ Good — dual events (gtag + Plausible) fire reliably |
+| One service, one campaign: 399 kr/mnd subscription only | Cold ad traffic needs one clear yes/no decision; upsells go to /tjenester | ✓ Good — zero decision friction on landing page |
+| 3-phase bidding: Manual CPC → Maximize Clicks → Maximize Conversions | Small-budget strategy; needs data before Smart Bidding works | ✓ Good — documented with transition criteria |
+| Price anchoring against "15 000+ kr" competitor reference | Frames 399 kr/mnd as dramatically cheaper than typical one-time cost | ⚠️ Revisit — ad copy references this but landing page does not show it consistently (INT-01) |
 
 ---
-*Last updated: 2026-03-19 after v1.6 milestone start*
+*Last updated: 2026-03-28 after v1.6 milestone completion*

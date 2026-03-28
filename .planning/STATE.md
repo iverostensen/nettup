@@ -4,8 +4,8 @@ milestone: v1.6
 milestone_name: milestone
 status: completed
 stopped_at: Completed 35-01-PLAN.md
-last_updated: "2026-03-20T20:48:31.580Z"
-last_activity: 2026-03-20 -- Completed 35-01 (Google Ads Setup Guide)
+last_updated: "2026-03-28T15:48:48.945Z"
+last_activity: 2026-03-28
 progress:
   total_phases: 5
   completed_phases: 5
@@ -18,23 +18,23 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-19)
+See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 35 - Google Ads Setup Guide
+**Current focus:** v1.6 shipped -- planning next milestone
 
 ## Current Position
 
-Phase: 35 of 35 (Google Ads Setup Guide)
-Plan: 1 of 1 in current phase (complete)
-Status: Complete
-Last activity: 2026-03-20 -- Completed 35-01 (Google Ads Setup Guide)
+Milestone: v1.6 Landingsside & Google Ads -- SHIPPED 2026-03-28
+Status: Complete -- awaiting next milestone (`/gsd:new-milestone`)
+Last activity: 2026-03-28
 
 Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -46,6 +46,7 @@ Progress: [██████████] 100%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
@@ -66,6 +67,7 @@ Progress: [██████████] 100%
 ### Decisions
 
 Key decisions from milestone setup and roadmap:
+
 - [v1.6]: **One service, one campaign** -- landing page sells exactly one thing: 5-page subscription website at 0 kr oppstart + 399 kr/mnd
 - [v1.6]: No tiers, no package selector -- one clear yes/no decision for cold Google Ads traffic
 - [v1.6]: Cancel = site taken down (not owned by customer while subscribing)

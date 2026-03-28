@@ -269,6 +269,54 @@
 
 ---
 
+## Milestone: v1.6 — Landingsside & Google Ads
+
+**Shipped:** 2026-03-28
+**Phases:** 5 (31-35) | **Plans:** 10 | **Timeline:** 2 days (2026-03-19 → 2026-03-20)
+
+### What Was Built
+- Consent Mode v2 advanced: gtag loads with denied defaults, updates on consent, 4 consent params, noIndex on landing page
+- subscriptionOffer.ts as single source of truth replacing launchOffer.ts + pricing.ts — one offer, no tiers
+- /nettside-for-bedrift/takk thank-you page with dual conversion events (gtag + Plausible) + UTM capture in payloads
+- Full landing page rebuild: price-anchored hero, 3-field b2b form, subscription FAQ with JSON-LD, upsell to /tjenester
+- Google Ads campaign docs: keyword research (14 primary + 17 negatives), 5 RSA variants, extensions, campaign structure with 3-phase bidding
+- 10-step setup guide for Google Ads console with conversion verification and first-week monitoring plan
+
+### What Worked
+- **Strict dependency chain:** Tracking → config → content → ad docs → setup guide. Each phase built on verified outputs from the previous one — no rework needed
+- **subscriptionOffer.ts as SSOT worked immediately:** Hero, PricingSummary, WhyUs, UpsellSection, and meta tags all imported from one config file — the config-first pattern from v1.0 continues to scale
+- **Consent Mode v2 advanced as first phase:** Legal/tracking compliance before any content work prevented the "ship then fix compliance" anti-pattern
+- **Ad docs as documentation, not code:** Campaign structure, keywords, and ad copy as .md files in .planning — enables human review and iteration without touching codebase
+- **3-phase bidding strategy:** Manual CPC → Maximize Clicks → Maximize Conversions with clear transition criteria gives a small-budget advertiser a concrete plan instead of "use Smart Bidding"
+
+### What Was Inefficient
+- **PricingSummary hardcodes prices instead of importing subscriptionOffer.ts fields:** The SSOT pattern was established in Phase 32 but PricingSummary bypassed it in Phase 33 — caught by audit, not by execution
+- **Ad copy references non-existent page content:** Description #3 references "Andre tar 15 000+ kr" price anchor, but the rendered landing page does not display this text. Message match table in ad-copy.md is inaccurate
+- **trackB2BLead() exported but never imported:** Analytics wrapper function created in Phase 32 but takk.astro fires plausible() directly instead of using it — dead code
+- **SUMMARY frontmatter still inconsistent:** 32-02-SUMMARY.md missing TRACK-02 and TRACK-03 from requirements_completed — same issue flagged in v1.5 retro
+
+### Patterns Established
+- Consent Mode v2 advanced: denied defaults → consent update → modeled conversions for Google Ads
+- redirect-to-/takk conversion pattern: form submit → Formspree 200 → redirect → dual event fire
+- UTM sessionStorage capture: captureUtmParams on landing → getUtmParams spread in form payload
+- subscriptionOffer.ts for single-product landing pages — price, features, terms, upsellLinks in one export
+- Ad campaign documentation as .planning/ markdown files — separates campaign content from codebase
+- Message match verification: ad copy ↔ landing page content cross-reference table
+
+### Key Lessons
+1. **Verify SSOT compliance in the same phase.** PricingSummary hardcoding prices while subscriptionOffer.ts exists is the exact failure mode SSOT prevents. Phase 33 should have caught this in verification, not the milestone audit.
+2. **Ad copy must be written against the rendered page, not assumptions.** Description #3's price anchor does not exist on the live page. Write ad copy last, cross-reference against actual page content.
+3. **Dead exports are a code smell.** trackB2BLead() was created "for later" but never used. Either use it immediately or don't create it — Phase 32 should not have shipped it without a consumer.
+4. **SUMMARY frontmatter discipline needs enforcement.** Same gap flagged in v1.5. Consider making `requirements_completed` a required field in the summary template.
+5. **Two-day milestone execution with 10 plans is achievable.** Strict dependency chains and config-first architecture enabled rapid sequential execution without rework.
+
+### Cost Observations
+- Model: Claude Sonnet 4.6, quality profile
+- 10 plans in ~25 min total execution (1-3 min per plan)
+- Notable: Phase 34 (campaign docs) generated the most planning/doc artifacts but had the simplest execution — writing structured markdown is fast. Phase 33 (content rebuild) was most complex with 3 plans touching 8 Astro sections.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -281,6 +329,7 @@
 | v1.3 | 3 | 5 | 2 days | Automated blog pipeline, two-call Claude pattern, exit-0 CI discipline |
 | v1.4 | 4 | - | 1 day | Dynamic portfolio with slug-based case studies, GEO-optimized copy, chat navigation |
 | v1.5 | 7 | 12 | 5 days | Local SEO city pages (8 Tier 1), Plausible Analytics, FloatingNav SSR rewrite, gap-closure audit |
+| v1.6 | 5 | 10 | 2 days | Single-offer landing page rebuild, Consent Mode v2, Google Ads campaign docs + setup guide |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -294,3 +343,5 @@
 8. **Test integration points end-to-end before shipping** — pipeline code is fast to write; the complexity is in Claude API + GitHub API interactions (v1.3)
 9. **Two-call pattern for large Claude outputs** — mixing ~2000-word markdown and structured JSON in one call is fragile; split into content call then metadata call (v1.3)
 10. **Check platform plan limitations during research** — GitHub Free blocks branch protection on private repos; discover early to set correct expectations (v1.3)
+11. **Verify SSOT compliance in same phase** — creating a config file and then hardcoding values that should come from it defeats the purpose; catch in phase verification, not audit (v1.6)
+12. **Write ad copy against rendered page, not assumptions** — message match tables should reference actual DOM content; discrepancies caught late are harder to fix (v1.6)
