@@ -67,7 +67,10 @@ Plans:
   1. PricingSummary section includes a competitor price anchor ("Andre byraer tar 15 000-50 000 kr for en nettside") that frames the 399 kr/mnd offer as dramatically cheaper -- resolves INT-01 gap from v1.6 audit
   2. Consent banner accept and decline buttons have equal visual prominence (both solid styling, no dark patterns)
   3. /nettside-for-bedrift uses a custom OG image (1200x630) showing "0 kr oppstart | 399 kr/mnd" instead of the generic og-image.jpg -- generated once via satori, not a build pipeline
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 38-01-PLAN.md -- Competitor price anchor + consent banner button parity
+- [ ] 38-02-PLAN.md -- Custom OG image wiring for social sharing
 
 ### Phase 39: Campaign Strategy & Documentation
 **Goal**: Complete Facebook campaign documentation enables launching ads without additional research -- all copy, targeting, creative plans, and testing rules are defined and ready for Ads Manager setup
@@ -122,7 +125,7 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 |-------|----------------|--------|-----------|
 | 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
 | 37. Privacy & Compliance | 0/1 | Complete    | 2026-03-28 |
-| 38. Landing Page Ad Consistency | 0/TBD | Not started | - |
+| 38. Landing Page Ad Consistency | 0/2 | Not started | - |
 | 39. Campaign Strategy & Documentation | 0/TBD | Not started | - |
 | 40. Multi-Channel Strategy | 0/TBD | Not started | - |
 | 41. Lead Magnet & Mid-Funnel Asset | 0/TBD | Not started | - |
