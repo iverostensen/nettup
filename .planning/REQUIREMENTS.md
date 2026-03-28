@@ -9,12 +9,12 @@ Requirements for multi-channel Facebook/Instagram ad campaign infrastructure.
 
 ### Tracking Infrastructure
 
-- [ ] **TRACK-01**: Meta Pixel base code loads in LandingPageLayout with `fbq('consent','revoke')` before `fbq('init')`, matching existing gtag denied-defaults pattern
-- [ ] **TRACK-02**: Consent banner accept/decline triggers `fbq('consent','grant')` alongside existing `gtag('consent','update')`, sharing single localStorage key
-- [ ] **TRACK-03**: Consent banner buttons have equal visual prominence (solid styling for both accept and decline per E-Com Act)
-- [ ] **TRACK-04**: `fbq('track','ViewContent')` fires on /nettside-for-bedrift page load (consent-gated)
-- [ ] **TRACK-05**: `fbq('track','Lead')` fires on /nettside-for-bedrift/takk page load alongside existing gtag conversion event
-- [ ] **TRACK-06**: UTM capture expanded to 5 params (utm_content + utm_term added to existing source/medium/campaign in utm.ts)
+- [x] **TRACK-01**: Meta Pixel base code loads in LandingPageLayout with `fbq('consent','revoke')` before `fbq('init')`, matching existing gtag denied-defaults pattern
+- [x] **TRACK-02**: Consent banner accept/decline triggers `fbq('consent','grant')` alongside existing `gtag('consent','update')`, sharing single localStorage key
+- [x] **TRACK-03**: Consent banner buttons have equal visual prominence (solid styling for both accept and decline per E-Com Act)
+- [x] **TRACK-04**: `fbq('track','ViewContent')` fires on /nettside-for-bedrift page load (consent-gated)
+- [x] **TRACK-05**: `fbq('track','Lead')` fires on /nettside-for-bedrift/takk page load alongside existing gtag conversion event
+- [x] **TRACK-06**: UTM capture expanded to 5 params (utm_content + utm_term added to existing source/medium/campaign in utm.ts)
 
 ### Privacy & Compliance
 
@@ -30,11 +30,13 @@ Requirements for multi-channel Facebook/Instagram ad campaign infrastructure.
 
 ### Campaign Documentation
 
-- [ ] **CAMP-01**: Facebook ad copy document with all 4 variants (primary text, headline, description, CTA) in Norwegian
-- [ ] **CAMP-02**: Multi-channel strategy doc with phased rollout (Facebook month 1-2, Google long-tail month 2-3, TikTok month 3+), budget allocation, and KPI targets
-- [ ] **CAMP-03**: Audience targeting definitions (Business Page admins, job title stack, interest stack) with estimated sizes
-- [ ] **CAMP-04**: Lead form specification (exact fields, pre-fill config, qualifying question, thank-you screen copy)
-- [ ] **CAMP-05**: A/B testing plan with test matrix, kill criteria (CPL/CPM/frequency thresholds), and scaling rules
+- [ ] **CAMP-01**: Facebook ad copy document with all 4+ variants (primary text, headline, description, CTA) in Norwegian covering awareness/consideration/conversion funnel stages
+- [ ] **CAMP-02**: Faceless video creative plan with 5 formats, production specs, scripts/overlays, and tools
+- [ ] **CAMP-03**: Carousel ad plan with 2 variants (case study walk-through + DIY vs professional comparison)
+- [ ] **CAMP-04**: Audience targeting definitions with 3 layers (cold/warm/hot) including Business Page admins, job title stack, interest stack, and estimated sizes
+- [ ] **CAMP-05**: Lead form specification with exact fields, pre-fill config, qualifying question, and thank-you screen copy
+- [ ] **CAMP-06**: A/B testing plan with test matrix (2 hooks x 2 audiences), kill criteria (CPL/frequency/CTR thresholds), and scaling rules
+- [ ] **CAMP-07**: Weekly content production cadence documented (under 2 hrs/week total)
 
 ## v2 Requirements
 
@@ -65,12 +67,12 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRACK-01 | Phase 36 | Pending |
-| TRACK-02 | Phase 36 | Pending |
-| TRACK-03 | Phase 36 | Pending |
-| TRACK-04 | Phase 36 | Pending |
-| TRACK-05 | Phase 36 | Pending |
-| TRACK-06 | Phase 36 | Pending |
+| TRACK-01 | Phase 36 | Complete |
+| TRACK-02 | Phase 36 | Complete |
+| TRACK-03 | Phase 36 | Complete |
+| TRACK-04 | Phase 36 | Complete |
+| TRACK-05 | Phase 36 | Complete |
+| TRACK-06 | Phase 36 | Complete |
 | PRIV-01 | Phase 37 | Pending |
 | PRIV-02 | Phase 37 | Pending |
 | AD-01 | Phase 38 | Pending |
@@ -82,12 +84,14 @@ Deferred to future release. Tracked but not in current roadmap.
 | CAMP-03 | Phase 39 | Pending |
 | CAMP-04 | Phase 39 | Pending |
 | CAMP-05 | Phase 39 | Pending |
+| CAMP-06 | Phase 39 | Pending |
+| CAMP-07 | Phase 39 | Pending |
 
 **Coverage:**
-- v1.7 requirements: 17 total
-- Mapped to phases: 17
+- v1.7 requirements: 19 total
+- Mapped to phases: 19
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after roadmap creation*
+*Last updated: 2026-03-28 after Phase 39 planning (added CAMP-06, CAMP-07)*

@@ -89,7 +89,11 @@ Plans:
   5. Lead form specification defines exact fields (navn, e-post, telefon, dropdown: Nettside/Nettbutikk/Landingsside/Vet ikke enna), pre-fill config from Facebook profile, and thank-you screen copy
   6. A/B testing plan includes test matrix (2 hooks x 2 audiences minimum), kill criteria (CPL > 950 NOK, frequency > 3, CTR < 0.5%), and scaling rules (increase budget 20% every 3 days on winners)
   7. Weekly content production cadence documented: 2x scroll-throughs (10 min each), 1x bold text hook (10 min), 1x before/after or process clip (30-60 min) -- under 2 hrs/week total
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 39-01-PLAN.md -- Ad copy variants (6 static + 2 carousel) across all funnel stages
+- [ ] 39-02-PLAN.md -- Video creative plan (5 formats) and weekly production cadence
+- [ ] 39-03-PLAN.md -- Audience targeting (3 layers), lead form spec, and A/B testing plan
 
 ### Phase 40: Multi-Channel Strategy
 **Goal**: Phased rollout plan across channels with budget allocation, timeline, and KPI targets -- so you know exactly when to activate each channel and how to measure success
@@ -126,6 +130,6 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
 | 37. Privacy & Compliance | 0/1 | Complete    | 2026-03-28 |
 | 38. Landing Page Ad Consistency | 0/2 | Complete    | 2026-03-28 |
-| 39. Campaign Strategy & Documentation | 0/TBD | Not started | - |
+| 39. Campaign Strategy & Documentation | 0/3 | Planned | - |
 | 40. Multi-Channel Strategy | 0/TBD | Not started | - |
 | 41. Lead Magnet & Mid-Funnel Asset | 0/TBD | Not started | - |
