@@ -19,6 +19,7 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID || '';
 
 const areaServedCities = cities
   .filter(c => c.tier <= ACTIVE_TIER)
@@ -188,6 +189,103 @@ const breadcrumbSchema = {
       plausible.init()
       /* eslint-enable */
     </script>
+
+    <!-- Unified Consent Mode v2 + Meta Pixel -->
+    <script is:inline define:vars={{ pixelId }}>
+      (function() {
+        var GTAG_ID = 'AW-17409050017';
+        var CONSENT_KEY = 'nettup_ads_consent';
+
+        // --- gtag setup ---
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        window.gtag = gtag;
+
+        gtag('consent', 'default', {
+          'ad_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied',
+          'analytics_storage': 'denied',
+        });
+
+        // --- fbq setup (Meta Pixel) ---
+        if (pixelId) {
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
+            n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window,document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+
+          fbq('consent', 'revoke');
+        }
+
+        // Check stored consent
+        var stored = localStorage.getItem(CONSENT_KEY);
+        if (stored === 'granted') {
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted',
+          });
+          if (pixelId && window.fbq) { fbq('consent', 'grant'); }
+        }
+
+        // Load gtag.js
+        var gs = document.createElement('script');
+        gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + GTAG_ID;
+        gs.async = true;
+        document.head.appendChild(gs);
+
+        // Initialize
+        gtag('js', new Date());
+        gtag('config', GTAG_ID);
+
+        if (pixelId) {
+          fbq('init', pixelId);
+          fbq('track', 'PageView');
+        }
+
+        window.gtagLoaded = true;
+
+        // Banner visibility
+        if (stored === null) {
+          document.getElementById('cookie-banner')?.classList.remove('hidden');
+        }
+
+        // Accept handler
+        document.getElementById('cookie-accept')?.addEventListener('click', function() {
+          localStorage.setItem(CONSENT_KEY, 'granted');
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted',
+          });
+          if (pixelId && window.fbq) { fbq('consent', 'grant'); }
+          hideBanner();
+        });
+
+        // Decline handler
+        document.getElementById('cookie-decline')?.addEventListener('click', function() {
+          localStorage.setItem(CONSENT_KEY, 'denied');
+          hideBanner();
+        });
+
+        function hideBanner() {
+          var banner = document.getElementById('cookie-banner');
+          if (banner) {
+            banner.style.opacity = '0';
+            banner.style.transform = 'translateY(100%)';
+            banner.style.transition = 'opacity 0.3s, transform 0.3s';
+            setTimeout(function() { banner.remove(); }, 300);
+          }
+        }
+      })();
+    </script>
+
     <ClientRouter />
 
     <slot name="head" />
@@ -197,6 +295,33 @@ const breadcrumbSchema = {
     <ChatWidget client:load currentPage={Astro.url.pathname} transition:persist />
     <slot />
     <Footer />
+
+    <!-- Cookie consent banner (site-wide) -->
+    <div
+      id="cookie-banner"
+      class="fixed bottom-0 left-0 right-0 z-50 hidden border-t border-white/10 bg-surface-raised/95 backdrop-blur-md"
+      transition:persist
+    >
+      <div class="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-4 sm:flex-row">
+        <p class="text-sm text-text-muted">
+          Vi bruker informasjonskapsler for å måle annonseeffekt. Les mer i vår <a href="/personvern" class="text-brand underline underline-offset-2 transition-colors duration-150 hover:text-brand-light">personvernerklæring</a>.
+        </p>
+        <div class="flex gap-3">
+          <button
+            id="cookie-decline"
+            class="rounded-full bg-slate-700 px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-slate-600"
+          >
+            Avslå
+          </button>
+          <button
+            id="cookie-accept"
+            class="rounded-full bg-brand px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-brand-light"
+          >
+            Godta
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Scroll reveal observer (Level 1 animations) -->
     <script>
