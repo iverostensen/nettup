@@ -24,7 +24,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
 ## Phases
 
 - [x] **Phase 36: Meta Pixel & Full-Site Event Tracking** - Consent-aware Meta Pixel, conversion events on landing page + key site pages, retargeting event infrastructure (completed 2026-03-28)
-- [ ] **Phase 37: Privacy & Compliance** - Privacy page Meta Pixel disclosure, environment-variable kill switch
+- [x] **Phase 37: Privacy & Compliance** - Privacy page Meta Pixel disclosure, environment-variable kill switch (completed 2026-03-28)
 - [ ] **Phase 38: Landing Page Ad Consistency** - Price anchoring against competitors, consent banner parity, custom OG image for social sharing
 - [ ] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan
 - [ ] **Phase 40: Multi-Channel Strategy** - Phased rollout plan (Facebook > Google long-tail > TikTok), budget allocation, KPI targets, scaling rules
@@ -55,7 +55,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. /personvern page includes Meta Pixel disclosure section listing data processor (Meta), purpose (ad measurement and retargeting), and consent mechanism
   2. Setting an environment variable or config flag to disabled stops Meta Pixel from loading entirely -- no code changes required
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
 - [ ] 37-01-PLAN.md -- Meta Pixel privacy disclosure and kill switch documentation
 
@@ -121,7 +121,7 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
-| 37. Privacy & Compliance | 0/1 | Not started | - |
+| 37. Privacy & Compliance | 0/1 | Complete    | 2026-03-28 |
 | 38. Landing Page Ad Consistency | 0/TBD | Not started | - |
 | 39. Campaign Strategy & Documentation | 0/TBD | Not started | - |
 | 40. Multi-Channel Strategy | 0/TBD | Not started | - |

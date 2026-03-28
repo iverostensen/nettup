@@ -4,12 +4,12 @@ milestone: v1.7
 milestone_name: Multi-Channel Ad Campaign
 status: Ready to plan
 stopped_at: Completed 36-02-PLAN.md
-last_updated: "2026-03-28T17:35:39.716Z"
+last_updated: "2026-03-28T17:54:28.865Z"
 progress:
   total_phases: 6
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** Phase 36 — meta-pixel-full-site-event-tracking
+**Current focus:** Phase 37 — privacy-compliance
 
 ## Current Position
 
-Phase: 37
+Phase: 38
 Plan: Not started
 
 ## Performance Metrics
