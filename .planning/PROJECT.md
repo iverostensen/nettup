@@ -80,6 +80,7 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ Faceless video creative plan (5 formats, step-by-step production specs, weekly cadence under 2 hours) — v1.7 Phase 39
 - ✓ Audience targeting (3 layers: cold/warm/hot) with exact Meta Ads Manager option names + 4-field lead form spec — v1.7 Phase 39
 - ✓ A/B testing plan (2x2 matrix, sequential strategy, kill criteria CPL>950/freq>3/CTR<0.5%, 20%-every-3-days scaling) — v1.7 Phase 39
+- ✓ Multi-channel strategy: 3-phase rollout (Facebook 70% mnd 1-3, Google Ads 20% mnd 2-4, TikTok 10% mnd 4+), dual budget tables (5k/10k NOK), hybrid scaling rules, break-even math (1 klient/mnd = lonnsomhet) — v1.7 Phase 40
 
 ### Active
 
@@ -193,4 +194,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Price anchoring against "15 000+ kr" competitor reference | Frames 399 kr/mnd as dramatically cheaper than typical one-time cost | ⚠️ Revisit — ad copy references this but landing page does not show it consistently (INT-01) |
 
 ---
-*Last updated: 2026-03-28 — Phase 37 complete: /personvern updated with full Meta Pixel GDPR disclosure (sections 2.4, 3, 4, 5, 6) and .env.example documents PUBLIC_META_PIXEL_ID kill switch. PRIV-01 and PRIV-02 verified.*
+*Last updated: 2026-03-28 — Phase 40 complete: multi-channel-strategy.md created with 3-phase rollout, budget allocation, KPI progression, hybrid scaling rules, and break-even analysis. STRAT-01 and STRAT-02 verified.*
