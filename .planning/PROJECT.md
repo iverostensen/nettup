@@ -73,6 +73,10 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ Google Ads kampanjedokumentasjon: sokeordanalyse, 5 RSA-varianter, annonsetillegg, kampanjestruktur -- v1.6
 - ✓ 10-stegs Google Ads oppsettguide med konverteringsverifisering og forste-ukes overvakingsplan -- v1.6
 
+- ✓ Competitor price anchor ("Andre byråer tar 15 000–50 000 kr") above offer card in PricingSummary — v1.7 Phase 38
+- ✓ Equal-prominence consent banner buttons (decline: bg-slate-600, accept: bg-brand, both text-surface) — v1.7 Phase 38
+- ✓ Custom OG image for /nettside-for-bedrift (1200×630, dark bg, "0 kr oppstart | 399 kr/mnd") — v1.7 Phase 38
+
 ### Active
 
 ## Current Milestone: v1.7 Multi-Channel Ad Campaign
