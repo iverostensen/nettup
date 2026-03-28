@@ -28,7 +28,7 @@ v1.7 prepares nettup.no for a Facebook/Instagram-led ad campaign. The milestone 
 - [x] **Phase 38: Landing Page Ad Consistency** - Price anchoring against competitors, consent banner parity, custom OG image for social sharing (completed 2026-03-28)
 - [x] **Phase 39: Campaign Strategy & Documentation** - Facebook ad copy, video creative plans, audience targeting, lead form spec, A/B testing plan (completed 2026-03-28)
 - [x] **Phase 40: Multi-Channel Strategy** - Phased rollout plan (Facebook > Google long-tail > TikTok), budget allocation, KPI targets, scaling rules (completed 2026-03-28)
-- [ ] **Phase 41: Lead Magnet & Mid-Funnel Asset** - Email-gated checklist page for cheaper mid-funnel lead capture
+- [x] **Phase 41: Lead Magnet & Mid-Funnel Asset** - Email-gated checklist page for cheaper mid-funnel lead capture (completed 2026-03-28)
 
 ## Phase Details
 
@@ -113,7 +113,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. /sjekkliste page exists with a "10 ting nettsiden din trenger i 2026" checklist gated behind a 2-field form (navn, e-post) -- submitted via Formspree to a separate form endpoint
   2. Lead magnet download triggers a Plausible event (LeadMagnetDownload) and Meta Pixel Lead event for conversion tracking
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 41-01-PLAN.md -- Sjekkliste page with React island, form gate, analytics events
 - [ ] 41-02-PLAN.md -- Footer link entry point and visual verification
@@ -137,4 +137,4 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | 38. Landing Page Ad Consistency | 0/2 | Complete    | 2026-03-28 |
 | 39. Campaign Strategy & Documentation | 2/3 | Complete    | 2026-03-28 |
 | 40. Multi-Channel Strategy | 1/1 | Complete    | 2026-03-28 |
-| 41. Lead Magnet & Mid-Funnel Asset | 0/TBD | Not started | - |
+| 41. Lead Magnet & Mid-Funnel Asset | 0/2 | Complete    | 2026-03-28 |
