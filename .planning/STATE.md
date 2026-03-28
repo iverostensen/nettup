@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.6
-milestone_name: milestone
-status: completed
-stopped_at: Completed 35-01-PLAN.md
-last_updated: "2026-03-28T15:48:48.945Z"
-last_activity: 2026-03-28
+milestone: v1.7
+milestone_name: multi-channel-ad-campaign
+status: planning
+stopped_at: Defining requirements
+last_updated: "2026-03-28T16:00:00.000Z"
+last_activity: 2026-03-28 -- Milestone v1.7 started
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,15 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup leverer moderne nettsider raskt -- og at kvaliteten beviser det.
-**Current focus:** v1.6 shipped -- planning next milestone
+**Current focus:** Defining requirements for v1.7 Multi-Channel Ad Campaign
 
 ## Current Position
 
-Milestone: v1.6 Landingsside & Google Ads -- SHIPPED 2026-03-28
-Status: Complete -- awaiting next milestone (`/gsd:new-milestone`)
-Last activity: 2026-03-28
+Phase: Not started (defining requirements)
+Plan: --
+Status: Defining requirements
+Last activity: 2026-03-28 -- Milestone v1.7 started
 
-Progress: [██████████] 100%
+Progress: [..........] 0%
 
 ## Performance Metrics
 
