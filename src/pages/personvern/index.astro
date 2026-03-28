@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Section from '@/components/ui/Section.astro';
 
-const lastUpdated = '19. mars 2026';
+const lastUpdated = '28. mars 2026';
 ---
 
 <BaseLayout
@@ -110,6 +110,36 @@ const lastUpdated = '19. mars 2026';
               Ditt valg lagres i nettleserens lokale lagring (localStorage) under nøkkelen
               <code class="rounded bg-surface px-1 text-xs">nettup_ads_consent</code>.
             </p>
+
+            <h3 class="mb-3 mt-6 text-lg font-medium text-text">2.4 Meta Pixel (alle sider)</h3>
+            <p class="mb-3 text-text-muted">
+              Vi bruker Meta Pixel (Facebook) på alle sider for å måle effekten av våre
+              annonser på Facebook og Instagram. Meta Pixel lastes på alle sider via vår
+              hovedmal, men hvordan den fungerer avhenger av ditt samtykke:
+            </p>
+            <div class="mt-4 space-y-4">
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Hvis du godtar</h4>
+                <p class="text-sm text-text-muted">
+                  Meta kan lagre informasjonskapsler (_fbp, _fbc) for å måle om du
+                  gjennomfører en handling etter å ha sett en annonse (konverteringssporing).
+                  Meta kan også bruke dataene til retargeting — altså å vise deg relevante
+                  annonser på Facebook og Instagram.
+                </p>
+              </div>
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Hvis du avslår</h4>
+                <p class="text-sm text-text-muted">
+                  Meta lagrer ingen informasjonskapsler og samler ikke inn personopplysninger.
+                  Pikselen laster ikke, og ingen data sendes til Meta.
+                </p>
+              </div>
+            </div>
+            <p class="mt-4 text-text-muted">
+              Samtykke styres av samme valg som Google Ads — lagret i nettleserens lokale
+              lagring under nøkkelen
+              <code class="rounded bg-surface px-1 text-xs">nettup_ads_consent</code>.
+            </p>
           </section>
 
           <!-- 3. Formål og rettslig grunnlag -->
@@ -135,6 +165,10 @@ const lastUpdated = '19. mars 2026';
                   </tr>
                   <tr class="border-b border-white/5">
                     <td class="py-3">Måle annonseeffekt (Google Ads)</td>
+                    <td class="py-3">Samtykke (GDPR art. 6(1)(a))</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Måle annonseeffekt (Meta Pixel)</td>
                     <td class="py-3">Samtykke (GDPR art. 6(1)(a))</td>
                   </tr>
                 </tbody>
@@ -190,6 +224,17 @@ const lastUpdated = '19. mars 2026';
                   Lokasjon: USA (dekket av EU-US Data Privacy Framework)
                 </p>
               </div>
+
+              <div class="rounded-lg bg-surface p-4">
+                <h4 class="font-medium text-text">Meta (Facebook)</h4>
+                <p class="text-sm text-text-muted">
+                  Meta Pixel for annonsekonvertering og retargeting på alle sider. Lagrer kun
+                  informasjonskapsler etter eksplisitt samtykke. Uten samtykke lastes ikke pikselen.
+                </p>
+                <p class="mt-1 text-xs text-text-muted">
+                  Lokasjon: USA (dekket av EU-US Data Privacy Framework)
+                </p>
+              </div>
             </div>
 
             <p class="mt-4 text-text-muted">
@@ -203,8 +248,10 @@ const lastUpdated = '19. mars 2026';
 
             <h3 class="mb-3 mt-4 text-lg font-medium text-text">Hovedsiden (nettup.no)</h3>
             <p class="text-text-muted">
-              Hovedsiden setter <strong class="text-text">ingen informasjonskapsler</strong>. Vi bruker kun
-              Plausible Analytics som er helt cookiefri.
+              Hovedsiden setter <strong class="text-text">ingen informasjonskapsler</strong> uten ditt samtykke.
+              Vi bruker Plausible Analytics som er helt cookiefri. Dersom du godtar annonsecookies i
+              samtykkebanneret, kan Meta Pixel sette informasjonskapsler (_fbp, _fbc) for
+              konverteringssporing og retargeting.
             </p>
 
             <h3 class="mb-3 mt-6 text-lg font-medium text-text">Landingssider</h3>
@@ -215,6 +262,7 @@ const lastUpdated = '19. mars 2026';
             <ul class="list-inside list-disc space-y-1 text-text-muted">
               <li><strong class="text-text">Godtar:</strong> Google lagrer informasjonskapsler for konverteringssporing og annonsepersonalisering</li>
               <li><strong class="text-text">Avslår:</strong> Ingen informasjonskapsler lagres, kun anonyme signaler sendes</li>
+              <li><strong class="text-text">Meta Pixel:</strong> Lastes kun etter samtykke. Ved godkjenning settes _fbp og _fbc cookies for konverteringssporing</li>
             </ul>
 
             <h3 class="mb-3 mt-6 text-lg font-medium text-text">Hvordan trekke tilbake samtykke</h3>
@@ -248,6 +296,10 @@ const lastUpdated = '19. mars 2026';
                   <tr class="border-b border-white/5">
                     <td class="py-3">Google Ads cookies</td>
                     <td class="py-3">Opptil 90 dager (settes av Google)</td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-3">Meta Pixel cookies (_fbp, _fbc)</td>
+                    <td class="py-3">Opptil 90 dager (settes av Meta)</td>
                   </tr>
                   <tr class="border-b border-white/5">
                     <td class="py-3">Samtykkevalg (localStorage)</td>
