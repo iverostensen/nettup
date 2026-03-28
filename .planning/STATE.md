@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: Multi-Channel Ad Campaign
-status: Ready to execute
-stopped_at: "Completed 39-02-PLAN.md: video creative plan"
-last_updated: "2026-03-28T20:01:40.040Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 39-01-PLAN.md
+last_updated: "2026-03-28T20:02:11.937Z"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 39 (campaign-strategy-documentation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -58,6 +58,8 @@ Plan: 2 of 3
 | Phase 36 P02 | 3min | 2 tasks | 8 files |
 | Phase 38 P01 | 1min | 2 tasks | 2 files |
 | Phase 39-campaign-strategy-documentation P02 | 2 | 1 tasks | 1 files |
+| Phase 39 P01 | 2 | 1 tasks | 1 files |
+| Phase 39-campaign-strategy-documentation P03 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -77,6 +79,8 @@ Key decisions from v1.7 roadmap:
 - [Phase 38]: Price anchor uses understated text-sm muted styling, not aggressive badge or pill
 - [Phase 39]: 9:16 (1080x1920) as primary video format -- covers Reels, Stories, and Feed auto-crop without extra production effort
 - [Phase 39]: Week 1 video priority: bold text-on-screen in CapCut -- lowest barrier, 10-15 min production, highest cold traffic stopping power
+- [Phase 39-01]: 6 static ad variants (vs minimum 4) for richer A/B testing pool on campaign launch
+- [Phase 39-01]: Carousel Variant B uses Wix pricing comparison to frame Nettup as rational choice for cold audiences
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ Key decisions from v1.7 roadmap:
 
 ## Session Continuity
 
-Last session: 2026-03-28T20:01:40.038Z
-Stopped at: Completed 39-02-PLAN.md: video creative plan
+Last session: 2026-03-28T20:02:08.663Z
+Stopped at: Completed 39-01-PLAN.md
 Resume file: None
