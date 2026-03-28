@@ -113,7 +113,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. /sjekkliste page exists with a "10 ting nettsiden din trenger i 2026" checklist gated behind a 2-field form (navn, e-post) -- submitted via Formspree to a separate form endpoint
   2. Lead magnet download triggers a Plausible event (LeadMagnetDownload) and Meta Pixel Lead event for conversion tracking
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 41-01-PLAN.md -- Sjekkliste page with React island, form gate, analytics events
+- [ ] 41-02-PLAN.md -- Footer link entry point and visual verification
 **UI hint**: yes
 
 ## Progress
