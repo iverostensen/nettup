@@ -55,7 +55,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. /personvern page includes Meta Pixel disclosure section listing data processor (Meta), purpose (ad measurement and retargeting), and consent mechanism
   2. Setting an environment variable or config flag to disabled stops Meta Pixel from loading entirely -- no code changes required
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 37-01-PLAN.md -- Meta Pixel privacy disclosure and kill switch documentation
 
 ### Phase 38: Landing Page Ad Consistency
 **Goal**: The landing page reinforces what Facebook ads promise -- price anchoring against competitors is visible, the consent banner has equal-prominence buttons, and social sharing shows the subscription offer instead of a generic image
@@ -119,7 +121,7 @@ Recommended execution: 36 → 37 → 38 → 41, with 39/40 interleaved as parall
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 36. Meta Pixel & Full-Site Event Tracking | 0/2 | Complete    | 2026-03-28 |
-| 37. Privacy & Compliance | 0/TBD | Not started | - |
+| 37. Privacy & Compliance | 0/1 | Not started | - |
 | 38. Landing Page Ad Consistency | 0/TBD | Not started | - |
 | 39. Campaign Strategy & Documentation | 0/TBD | Not started | - |
 | 40. Multi-Channel Strategy | 0/TBD | Not started | - |
