@@ -48,8 +48,8 @@ Exceptions: `pt-32 md:pt-40` on first section to clear fixed navbar (project con
 | Role | Size | Weight | Line Height | Font | Tailwind |
 |------|------|--------|-------------|------|----------|
 | Body | 16px | 400 | 1.5 | Inter | `text-base font-normal` |
-| Label | 14px | 500 | 1.4 | Inter | `text-sm font-medium` |
-| Heading | 20px | 600 | 1.3 | Space Grotesk | `text-xl font-semibold font-display` |
+| Label | 14px | 400 | 1.4 | Inter | `text-sm font-normal` |
+| Heading | 20px | 700 | 1.3 | Space Grotesk | `text-xl font-bold font-display` |
 | Display | 28px (mobile) / 36px (desktop) | 700 | 1.2 | Space Grotesk | `text-3xl md:text-4xl font-bold font-display` |
 
 ---
@@ -110,8 +110,8 @@ Each item is a horizontal row:
                 [Description - 1-2 sentences]
 ```
 
-- Number badge: 32x32px circle, `bg-brand/10 text-brand font-semibold text-sm` for visible items, `bg-white/5 text-text-muted` for locked items
-- Title: `text-base font-semibold text-text`
+- Number badge: 32x32px circle, `bg-brand/10 text-brand font-bold text-sm` for visible items, `bg-white/5 text-text-muted` for locked items
+- Title: `text-base font-bold text-text`
 - Description: `text-sm text-text-muted` at line-height 1.5
 - Vertical gap between items: 16px (`gap-4`)
 
@@ -120,11 +120,11 @@ Each item is a horizontal row:
 - Positioned as an overlay card centered over items 4-10
 - Card: `bg-surface-raised border border-white/10 rounded-xl p-6 md:p-8`
 - Lock icon: 24x24px SVG, `text-brand`, centered above form heading
-- Form heading: `text-lg font-semibold text-text` -- "Fa hele sjekklisten"
+- Form heading: `text-lg font-bold text-text` -- "Fa hele sjekklisten"
 - Form subtext: `text-sm text-text-muted` -- "Skriv inn navn og e-post sa sender vi den til deg."
-- Fields stacked vertically with 12px gap
+- Fields stacked vertically with 8px gap (`gap-2`)
 - Input styling matches HeroMicroForm: `rounded-lg border border-white/10 bg-surface px-4 py-3 text-text placeholder:text-text-muted/50 focus:border-brand focus:ring-1 focus:ring-brand`
-- Submit button: full width, `rounded-lg bg-brand px-6 py-3 font-medium text-surface hover:bg-brand-light`
+- Submit button: full width, `rounded-lg bg-brand px-6 py-3 font-normal text-surface hover:bg-brand-light`
 - Honeypot field: hidden `_gotcha` input (project spam protection convention)
 
 ### Post-Submit CTA Card
@@ -133,7 +133,7 @@ Each item is a horizontal row:
 - Card: `bg-surface-raised border border-white/10 rounded-xl p-6 md:p-8 text-center`
 - Heading: "Vil du at vi fikser dette for deg?"
 - Body: "Vi bygger moderne nettsider fra 399 kr/mnd. Null oppstart, ingen bindingstid."
-- CTA button: `bg-brand text-surface rounded-lg px-6 py-3 font-medium hover:bg-brand-light`
+- CTA button: `bg-brand text-surface rounded-lg px-6 py-3 font-normal hover:bg-brand-light`
 - Links to `/kontakt?tjeneste=nettside`
 
 ---
@@ -176,7 +176,7 @@ Note: No empty state needed (checklist content is static, always present). No de
 | Reveal trigger | Successful Formspree POST response (200 OK) |
 | Blur removal | `filter: blur(8px)` to `filter: blur(0px)` over 400ms, `ease-out` |
 | Item stagger | Each item (4-10) fades in with 80ms stagger delay |
-| Item animation | `opacity: 0 -> 1` + `translateY: 12px -> 0` over 400ms |
+| Item animation | `opacity: 0 -> 1` + `translateY: 8px -> 0` over 400ms |
 | CTA card entrance | Fades in 200ms after last item, `opacity: 0 -> 1` over 300ms |
 | Reduced motion | Skip all animation, reveal items instantly (`prefers-reduced-motion: reduce`) |
 
