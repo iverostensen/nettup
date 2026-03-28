@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import SjekklisteIsland from '@/components/islands/SjekklisteIsland';
+---
+
+<BaseLayout
+  title="10 ting nettsiden din trenger i 2026 - Nettup"
+  description="Sjekk om nettsiden din er klar for fremtiden. Gratis sjekkliste fra Nettup."
+>
+  <main>
+    <Section class="pt-32 md:pt-40">
+      <h1 class="font-display text-3xl font-bold md:text-4xl">
+        10 ting nettsiden din trenger i 2026
+      </h1>
+      <p class="mt-4 text-lg text-text-muted max-w-2xl">
+        Sjekk om nettsiden din er klar for fremtiden. Gratis sjekkliste fra Nettup.
+      </p>
+    </Section>
+    <Section>
+      <SjekklisteIsland client:visible />
+    </Section>
+  </main>
+</BaseLayout>
