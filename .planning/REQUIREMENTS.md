@@ -63,33 +63,31 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRACK-01 | Pending | Pending |
-| TRACK-02 | Pending | Pending |
-| TRACK-03 | Pending | Pending |
-| TRACK-04 | Pending | Pending |
-| TRACK-05 | Pending | Pending |
-| TRACK-06 | Pending | Pending |
-| PRIV-01 | Pending | Pending |
-| PRIV-02 | Pending | Pending |
-| AD-01 | Pending | Pending |
-| AD-02 | Pending | Pending |
-| AD-03 | Pending | Pending |
-| AD-04 | Pending | Pending |
-| CAMP-01 | Pending | Pending |
-| CAMP-02 | Pending | Pending |
-| CAMP-03 | Pending | Pending |
-| CAMP-04 | Pending | Pending |
-| CAMP-05 | Pending | Pending |
+| TRACK-01 | Phase 36 | Pending |
+| TRACK-02 | Phase 36 | Pending |
+| TRACK-03 | Phase 36 | Pending |
+| TRACK-04 | Phase 36 | Pending |
+| TRACK-05 | Phase 36 | Pending |
+| TRACK-06 | Phase 36 | Pending |
+| PRIV-01 | Phase 37 | Pending |
+| PRIV-02 | Phase 37 | Pending |
+| AD-01 | Phase 38 | Pending |
+| AD-02 | Phase 38 | Pending |
+| AD-03 | Phase 38 | Pending |
+| AD-04 | Phase 38 | Pending |
+| CAMP-01 | Phase 39 | Pending |
+| CAMP-02 | Phase 39 | Pending |
+| CAMP-03 | Phase 39 | Pending |
+| CAMP-04 | Phase 39 | Pending |
+| CAMP-05 | Phase 39 | Pending |
 
 **Coverage:**
 - v1.7 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after initial definition*
+*Last updated: 2026-03-28 after roadmap creation*
