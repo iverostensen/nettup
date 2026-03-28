@@ -76,6 +76,10 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 - ✓ Competitor price anchor ("Andre byråer tar 15 000–50 000 kr") above offer card in PricingSummary — v1.7 Phase 38
 - ✓ Equal-prominence consent banner buttons (decline: bg-slate-600, accept: bg-brand, both text-surface) — v1.7 Phase 38
 - ✓ Custom OG image for /nettside-for-bedrift (1200×630, dark bg, "0 kr oppstart | 399 kr/mnd") — v1.7 Phase 38
+- ✓ Facebook ad copy (6 static variants across 3 funnel stages + 2 carousel variants) in Norwegian, ready for Meta Ads Manager — v1.7 Phase 39
+- ✓ Faceless video creative plan (5 formats, step-by-step production specs, weekly cadence under 2 hours) — v1.7 Phase 39
+- ✓ Audience targeting (3 layers: cold/warm/hot) with exact Meta Ads Manager option names + 4-field lead form spec — v1.7 Phase 39
+- ✓ A/B testing plan (2x2 matrix, sequential strategy, kill criteria CPL>950/freq>3/CTR<0.5%, 20%-every-3-days scaling) — v1.7 Phase 39
 
 ### Active
 
