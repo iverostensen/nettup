@@ -185,4 +185,4 @@ En potensiell kunde som lander pa siden skal umiddelbart forsta at Nettup levere
 | Price anchoring against "15 000+ kr" competitor reference | Frames 399 kr/mnd as dramatically cheaper than typical one-time cost | ⚠️ Revisit — ad copy references this but landing page does not show it consistently (INT-01) |
 
 ---
-*Last updated: 2026-03-28 — Phase 36 complete: consent-aware Meta Pixel in both layouts, ViewContent on 5 pages, Lead on /takk, 5-param UTM capture. Human UAT pending (browser Pixel Helper testing).*
+*Last updated: 2026-03-28 — Phase 37 complete: /personvern updated with full Meta Pixel GDPR disclosure (sections 2.4, 3, 4, 5, 6) and .env.example documents PUBLIC_META_PIXEL_ID kill switch. PRIV-01 and PRIV-02 verified.*
