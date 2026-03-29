@@ -11,7 +11,7 @@ declare global {
 
 type FormStatus = 'idle' | 'submitting' | 'error' | 'unlocked';
 
-const SJEKKLISTE_FORMSPREE_ID = 'REPLACE_WITH_NEW_FORMSPREE_ID';
+const SJEKKLISTE_FORMSPREE_ID = 'xnjnzybj';
 
 const CHECKLIST_ITEMS = [
   {

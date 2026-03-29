@@ -1,0 +1,85 @@
+# nettup.no
+
+Marketing website for Nettup, a web development agency based in Norway.
+
+## Stack
+
+| Layer        | Technology                          |
+| ------------ | ----------------------------------- |
+| Framework    | Astro 5 (static output)             |
+| Styling      | Tailwind CSS 4                      |
+| Interactivity| React 19 islands + Framer Motion 12 |
+| Deployment   | Vercel                              |
+| Analytics    | Plausible (cookieless, GDPR)        |
+| Testing      | Vitest                              |
+
+## Architecture
+
+Astro handles static rendering, layout, and SEO. React islands hydrate only where interactivity is required (forms, chat widget, animations). Three animation tiers: CSS transitions, IntersectionObserver reveals, and Framer Motion sequences.
+
+```
+src/
+  components/
+    islands/       React components (ChatWidget, HeroIsland, PrisKalkulator, ...)
+    sections/      Shared Astro sections (CTA, Testimonials, ...)
+    ui/            Primitives (Button, Card, Section, SectionHeader)
+    layout/        Footer, FloatingNav
+  config/          Content and data (services, pricing, locations, brand tokens)
+  content/blogg/   Astro Content Collection (blog articles)
+  layouts/         BaseLayout.astro
+  lib/             Utilities, calculation engine, animation helpers
+  pages/           Route tree (14 pages)
+  scripts/blog/    Automated blog generation pipeline
+  styles/          global.css (animation keyframes, accessibility)
+```
+
+## Development
+
+```bash
+npm install
+npm run dev          # localhost:4321
+npm run build        # Production build
+npm run preview      # Preview production build
+npm run test         # Run tests
+npm run lint         # ESLint
+npm run format       # Prettier
+```
+
+## Pages
+
+| Route                    | Purpose                         |
+| ------------------------ | ------------------------------- |
+| `/`                      | Homepage                        |
+| `/tjenester`             | Service catalog                 |
+| `/tjenester/nettside`    | Website service detail          |
+| `/tjenester/nettbutikk`  | E-commerce service detail       |
+| `/tjenester/landingsside`| Landing page service detail     |
+| `/om-oss`                | About the agency                |
+| `/prosjekter`            | Portfolio                       |
+| `/prosjekter/[slug]`     | Case study pages                |
+| `/kontakt`               | Contact form                    |
+| `/priskalkulator`        | Pricing wizard                  |
+| `/blogg`                 | Blog index                      |
+| `/blogg/[slug]`          | Blog articles                   |
+| `/nettside-for-bedrift`  | B2B landing page                |
+| `/personvern`            | Privacy policy                  |
+
+## Configuration
+
+All content data lives in `src/config/`:
+
+- **services.ts** -- service definitions, pricing, launch discounts
+- **pricing.ts** -- package tiers (Enkel, Standard, Premium)
+- **locations.ts** -- Norwegian cities for geo-targeting
+- **brand.ts** -- design tokens (colors, fonts, spacing, animation timing)
+- **projects.ts** -- portfolio entries
+- **testimonials.ts** -- social proof
+- **chatbot.ts** -- AI chat widget configuration
+
+## Key Conventions
+
+- All user-facing content is in Norwegian (bokmal)
+- Mobile-first design (375px baseline)
+- `prefers-reduced-motion` respected across all animation tiers
+- First section on any page uses `pt-32 md:pt-40` to clear the fixed navbar
+- Forms submit to Formspree (`xnjnzybj`)
